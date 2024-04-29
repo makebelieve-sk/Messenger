@@ -1,0 +1,94 @@
+@import "../../styles/colors.scss";
+
+div.choose-avatar {
+    margin-top: 12px;
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        &__main-text {
+            text-align: center;
+        }
+        &__avatar-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        &__avatar-loading {
+            width: 100%;
+            height: 100%;
+            min-width: 258.67px;
+            min-height: 344.89px;
+            border-radius: 5%;
+        }
+        &__avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 5%;
+        }
+        &__avatar-without-user {
+            background-color: $avatarWithoutUser;
+            width: 100%;
+            min-width: 258.67px;
+            min-height: 344.89px;
+            height: 100%;
+            border-radius: 5%;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 20px;
+            line-height: 344.89px;
+        }
+        &__change-photo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-left: 0;
+            color: $blue;
+            label {
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+.sign-up-form {
+    margin-top: 15px;
+
+    div.phone-input {
+        input {
+            width: 100%;
+        }
+    
+        &__error {
+            input {
+                border: 1px solid $red;
+
+                &:hover {
+                    border: 1px solid $red;
+                }
+
+                &:focus {
+                    border: 1px solid $red;
+                    box-shadow: 0 0 0 1px $red;
+                }
+            }
+
+            .special-label {
+                font-size: 12px;
+                color: $red;
+            }
+        }
+    }
+
+    .phone-text__error {
+        margin: 3px 14px 0;
+        font-size: 12px;
+        color: $red;
+        line-height: 1.66;
+        letter-spacing: 0.03333em;
+        text-align: left;
+    }
+}

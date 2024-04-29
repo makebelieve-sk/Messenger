@@ -1,0 +1,35 @@
+@import "../../../styles/colors.scss";
+
+.modal-carousel-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-width: 480px;
+    max-height: calc(100vh - 100px);
+    background: $light-grey;
+
+    &__user-info {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        width: auto;
+        height: auto;
+        display: flex;
+        align-items: center;
+        
+        &__container {
+            min-width: max-content;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+    }
+
+    &__current-image {
+        max-height: inherit;
+        object-fit: contain;
+        width: 100%;
+        overflow: hidden;
+    }
+}

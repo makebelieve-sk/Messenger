@@ -1,0 +1,38 @@
+# dependencies
+app/node_modules
+server/node_modules
+app/.pnp
+app/.pnp.js
+
+# testing
+app/coverage
+
+# production
+app/build
+server/build
+
+# misc
+.DS_Store
+
+# misc app
+app/.DS_Store
+app/.env
+app/.env.local
+app/.env.development.local
+app/.env.test.local
+app/.env.production.local
+
+# misc server
+server/.DS_Store
+server/.env
+server/.env.local
+server/.env.development.local
+server/.env.test.local
+server/.env.production.local
+
+# npm
+app/npm-debug.log*
+server/npm-debug.log*
+
+# user files
+server/assets
