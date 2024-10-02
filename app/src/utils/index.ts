@@ -12,7 +12,7 @@ export const muchSelected = (number: number, txt: string[]) => {
 
 // Получить полное имя пользователя (Имя + Фамилия)
 export const getFullName = (user: IUser | any) => {
-    return user.firstName + " " + user.thirdName;
+    return user ? user.firstName + " " + user.thirdName : "";
 };
 
 // Установка фокуса HTML элементу в самый конец

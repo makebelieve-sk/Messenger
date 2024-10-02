@@ -4,9 +4,10 @@ import { FriendsNoticeTypes } from "../../types/enums";
 import { IUser } from "../../types/models.types";
 import { ICallData } from "../../types/socket.types";
 import { MainType } from "./slice";
+import { ICarouselImage } from "../../modules/ImagesCarousel/Info";
 
 export default {
-    setIsAuth: (state: MainType, action: PayloadAction<boolean>) => {
+    setAuth: (state: MainType, action: PayloadAction<boolean>) => {
         state.isAuth = action.payload;
     },
     setLoading: (state: MainType, action: PayloadAction<boolean>) => {
@@ -33,7 +34,7 @@ export default {
     setGlobalInCall: (state: MainType, action: PayloadAction<null | ICallData>) => {
         state.globalCall = action.payload;
     },
-    setImagesInCarousel: (state: MainType, action: PayloadAction<{ images: any[], index: number } | null>) => {
+    setImagesInCarousel: (state: MainType, action: PayloadAction<{ images: ICarouselImage[], index: number } | null>) => {
         state.imagesInCarousel = action.payload;
     },
     setMessageNotification: (state: MainType, action: PayloadAction<number>) => {

@@ -13,6 +13,7 @@ import { UserPartial } from "../types/user.types";
 import { IImage } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
+import { MessagesError } from "../errors/controllers";
 
 const SRC = process.env.CLIENT_URL || "http://localhost:3000";
 
@@ -31,9 +32,9 @@ interface IConstructor {
 };
 
 export default class MessagesController {
-    private _app: Express;
-    private _middleware: Middleware;
-    private _database: Database;
+    private readonly _app: Express;
+    private readonly _middleware: Middleware;
+    private readonly _database: Database;
 
     constructor({ app, middleware, database }: IConstructor) {
         this._app = app;
@@ -45,21 +46,21 @@ export default class MessagesController {
 
     // Слушатели запросов контроллера MessagesController
     private _init() {
-        this._app.get(ApiRoutes.getMessageNotification, this._middleware.mustAuthenticated.bind(this), this._getMessageNotification.bind(this));
-        this._app.post(ApiRoutes.getDialogs, this._middleware.mustAuthenticated.bind(this), this._getDialogs.bind(this));
-        this._app.post(ApiRoutes.getMessages, this._middleware.mustAuthenticated.bind(this), this._getMessages.bind(this));
-        this._app.post(ApiRoutes.saveMessage, this._middleware.mustAuthenticated.bind(this), this._saveMessage.bind(this));
-        this._app.post(ApiRoutes.updateMessage, this._middleware.mustAuthenticated.bind(this), this._updateMessage.bind(this));
-        this._app.post(ApiRoutes.readMessage, this._middleware.mustAuthenticated.bind(this), this._readMessage.bind(this));
-        this._app.post(ApiRoutes.getChatId, this._middleware.mustAuthenticated.bind(this), this._getChatId.bind(this));
-        this._app.post(ApiRoutes.getChatInfo, this._middleware.mustAuthenticated.bind(this), this._getChatInfo.bind(this));
-        this._app.post(ApiRoutes.getUsersInChat, this._middleware.mustAuthenticated.bind(this), this._getUsersInChat.bind(this));
-        this._app.post(ApiRoutes.getLastSeen, this._middleware.mustAuthenticated.bind(this), this._getLastSeen.bind(this));
-        this._app.post(ApiRoutes.getChatSoundStatus, this._middleware.mustAuthenticated.bind(this), this._getChatSoundStatus.bind(this));
-        this._app.post(ApiRoutes.setChatSoundStatus, this._middleware.mustAuthenticated.bind(this), this._setChatSoundStatus.bind(this));
-        this._app.post(ApiRoutes.deleteMessage, this._middleware.mustAuthenticated.bind(this), this._deleteMessage.bind(this));
-        this._app.post(ApiRoutes.deleteChat, this._middleware.mustAuthenticated.bind(this), this._deleteChat.bind(this));
-        this._app.post(ApiRoutes.getAttachments, this._middleware.mustAuthenticated.bind(this), this._getAttachments.bind(this));
+        this._app.get(ApiRoutes.getMessageNotification, this._middleware.mustAuthenticated.bind(this._middleware), this._getMessageNotification.bind(this));
+        this._app.post(ApiRoutes.getDialogs, this._middleware.mustAuthenticated.bind(this._middleware), this._getDialogs.bind(this));
+        this._app.post(ApiRoutes.getMessages, this._middleware.mustAuthenticated.bind(this._middleware), this._getMessages.bind(this));
+        this._app.post(ApiRoutes.saveMessage, this._middleware.mustAuthenticated.bind(this._middleware), this._saveMessage.bind(this));
+        this._app.post(ApiRoutes.updateMessage, this._middleware.mustAuthenticated.bind(this._middleware), this._updateMessage.bind(this));
+        this._app.post(ApiRoutes.readMessage, this._middleware.mustAuthenticated.bind(this._middleware), this._readMessage.bind(this));
+        this._app.post(ApiRoutes.getChatId, this._middleware.mustAuthenticated.bind(this._middleware), this._getChatId.bind(this));
+        this._app.post(ApiRoutes.getChatInfo, this._middleware.mustAuthenticated.bind(this._middleware), this._getChatInfo.bind(this));
+        this._app.post(ApiRoutes.getUsersInChat, this._middleware.mustAuthenticated.bind(this._middleware), this._getUsersInChat.bind(this));
+        this._app.post(ApiRoutes.getLastSeen, this._middleware.mustAuthenticated.bind(this._middleware), this._getLastSeen.bind(this));
+        this._app.post(ApiRoutes.getChatSoundStatus, this._middleware.mustAuthenticated.bind(this._middleware), this._getChatSoundStatus.bind(this));
+        this._app.post(ApiRoutes.setChatSoundStatus, this._middleware.mustAuthenticated.bind(this._middleware), this._setChatSoundStatus.bind(this));
+        this._app.post(ApiRoutes.deleteMessage, this._middleware.mustAuthenticated.bind(this._middleware), this._deleteMessage.bind(this));
+        this._app.post(ApiRoutes.deleteChat, this._middleware.mustAuthenticated.bind(this._middleware), this._deleteChat.bind(this));
+        this._app.post(ApiRoutes.getAttachments, this._middleware.mustAuthenticated.bind(this._middleware), this._getAttachments.bind(this));
     }
 
     // Получаем количество непрочитанных сообщений в диалогах
@@ -81,9 +82,11 @@ export default class MessagesController {
             `) as [{ "unReadChatsCount": number }[], number];
 
             return res.json({ success: true, unreadChatIds: unreadChatIds[0] && unreadChatIds[0][0] ? unreadChatIds[0][0].unReadChatsCount : 0 });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -260,10 +263,13 @@ export default class MessagesController {
                 dialogs,
                 isMore
             });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -370,10 +376,13 @@ export default class MessagesController {
             await transaction.commit();
 
             return res.json({ success: true, messages: messagesWithMixins.reverse(), isMore });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -427,10 +436,13 @@ export default class MessagesController {
             await transaction.commit();
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -474,10 +486,13 @@ export default class MessagesController {
             await transaction.commit();
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -504,10 +519,13 @@ export default class MessagesController {
             await transaction.commit();
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -588,10 +606,13 @@ export default class MessagesController {
             await transaction.commit();
 
             return res.json({ success: true, chatId });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -615,9 +636,11 @@ export default class MessagesController {
             }
 
             return res.json({ success: true, chatInfo });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -644,9 +667,11 @@ export default class MessagesController {
             } else {
                 return res.status(HTTPStatuses.NotFound).send({ success: false, message: `Пользователи чата ${chatId} не найдены` });
             }
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -669,9 +694,11 @@ export default class MessagesController {
             }
 
             return res.json({ success: true, lastSeen: chatPartner.lastSeen });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -691,9 +718,11 @@ export default class MessagesController {
             });
 
             return res.json({ success: true, chatSoundStatus: Boolean(chatSoundStatus) });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -722,9 +751,11 @@ export default class MessagesController {
             }
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -770,10 +801,13 @@ export default class MessagesController {
             await transaction.commit();
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -794,9 +828,11 @@ export default class MessagesController {
             });
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -818,7 +854,7 @@ export default class MessagesController {
                 JOIN [VK_CLONE].[dbo].[Files] AS Files ON FilesInMessage.file_id = Files.id
                 WHERE Chats.id = '${chatId}'
                 ORDER BY Messages.create_date DESC, Files.name
-            `) as never as [IAttachmentFile[], number];
+            `) as [IAttachmentFile[], number];
 
             const images: IImage[] = [];
             const files: IAttachmentFile[] = [];
@@ -849,9 +885,11 @@ export default class MessagesController {
             }
 
             return res.json({ success: true, images, files });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof MessagesError
+                ? error
+                : new MessagesError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 };

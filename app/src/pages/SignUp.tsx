@@ -10,15 +10,17 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Stepper, Step, StepLabel, Button } from "@mui/material";
-import { MainClientContext } from "../components/App";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Button from "@mui/material/Button";
+
+import { MainClientContext } from "../service/AppService";
 import SignUpForm from "../modules/SignUp/Form";
 import ChooseAvatar from "../modules/SignUp/ChooseAvatar";
 import Copyright from "../components/Copyright";
-import { ApiRoutes, Pages } from "../types/enums";
+import { Pages } from "../types/enums";
 import { IUser } from "../types/models.types";
-import { useAppDispatch } from "../hooks/useGlobalState";
-import { setUser } from "../state/user/slice";
 
 const THEME = createTheme();
 const steps = ["Основные данные", "Выбор аватара"];
@@ -73,7 +75,6 @@ export default function SignUp() {
     const mainClient = React.useContext(MainClientContext);
     
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
 
     const handleNext = () => {
         if (activeStep + 1 === steps.length) {
@@ -147,23 +148,9 @@ export default function SignUp() {
             avatarUrl: formValues.values.avatarUrl
         };
 
-        mainClient.postRequest(
-            ApiRoutes.signUp, 
+        mainClient.signUp(
             user, 
-            setLoading, 
-            (data: { success: boolean, user: IUser }) => {
-                dispatch(setUser(data.user));
-
-                mainClient.postRequest(
-                    ApiRoutes.uploadAvatar, 
-                    { avatarUrl: user.avatarUrl },
-                    undefined,
-                    () => navigate(Pages.profile)
-                );
-            },
-            undefined,
-            undefined,
-            undefined,
+            setLoading,
             (error) => {
                 if (error && typeof error === "object" && error.message) {
                     setActiveStep(0);
@@ -187,7 +174,7 @@ export default function SignUp() {
             case 1:
                 return <ChooseAvatar 
                     username={formValues.values.firstName + " " + formValues.values.thirdName} 
-                    initialAvatarUrl={formValues.values.avatarUrl} 
+                    avatarUrl={formValues.values.avatarUrl} 
                     onChange={onChange} 
                 />;
             default:

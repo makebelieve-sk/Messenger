@@ -21,7 +21,7 @@ function init() {
         console.error(`Возникла ошибка при запуске экземпляра сервера: ${error}`);
 
         // Закрываем соединение с бд
-        mainServer.closeDatabase();
+        mainServer.close();
         // Завершаем выполнение процесса NodeJS
         process.exit(1);
     }

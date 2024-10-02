@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { NavigateFunction } from "react-router-dom";
+
 import { HTTPStatuses, Pages } from "../types/enums";
 import { setError } from "../state/error/slice";
 import { AppDispatch } from "../types/redux.types";
@@ -9,32 +10,28 @@ export type CatchType = BadRequestType | string | null;
 
 interface IConstructor {
     dispatch: AppDispatch;
+    navigate: NavigateFunction;
 };
 
+const ERROR_MESSAGE = "Ошибка";
+const ERROR_TIMEOUT = "Возникли проблемы с БД или время ожидания ответа превысило 15 секунд";
+
 export default class CatchErrors {
-    private _errorMessage = "Ошибка";
-    private _errorTimeout = "Возникли проблемы с БД или время ожидания ответа превысило 15 секунд";
     private _errorText: string = "";
     private _axiosError: AxiosError | undefined = undefined;
-    private _navigate: NavigateFunction | undefined = undefined;
-    private _dispatch: AppDispatch;
+    
+    private readonly _navigate: NavigateFunction;
+    private readonly _dispatch: AppDispatch;
 
-    constructor({ dispatch }: IConstructor) {
+    constructor({ dispatch, navigate }: IConstructor) {
         this._dispatch = dispatch;
+        this._navigate = navigate;
     }
 
     get error() {
         return this._axiosError 
         ? this._axiosError.message 
-        : this._errorText || this._errorMessage;
-    }
-
-    get navigate() {
-        return this._navigate as NavigateFunction;
-    }
-
-    public setNavigate(navigate: NavigateFunction) {
-        this._navigate = navigate;
+        : this._errorText || ERROR_MESSAGE;
     }
 
     public catch(errorText: string, axiosError?: AxiosError): CatchType {
@@ -68,7 +65,7 @@ export default class CatchErrors {
 
     // Статус 308
     private _permanentRedirect(): null {
-        this.navigate(Pages.profile);
+        this._navigate(Pages.profile);
         return null;
     };
 
@@ -78,18 +75,18 @@ export default class CatchErrors {
             ? this._axiosError.response
                 ? this._axiosError.response.data as BadRequestType
                 : this._axiosError.message
-            : this._errorText || this._errorMessage;
+            : this._errorText || ERROR_MESSAGE;
     };
 
     // Статус 401
     private _unauthorized(): null {
-        this.navigate(window.location.pathname !== Pages.signUp ? Pages.signIn : Pages.signUp);
+        this._navigate(window.location.pathname !== Pages.signUp ? Pages.signIn : Pages.signUp);
         return null;
     };
 
     // Статус 403
     private _forbidden(): null {
-        this.navigate(Pages.signIn);
+        this._navigate(Pages.signIn);
         return null;
     };
 
@@ -107,7 +104,7 @@ export default class CatchErrors {
 
     // Время ожидания ответа от сервера
     private _timeoutError(): null {
-        this._dispatch(setError(this._errorTimeout));
+        this._dispatch(setError(ERROR_TIMEOUT));
         return null;
     };
 };

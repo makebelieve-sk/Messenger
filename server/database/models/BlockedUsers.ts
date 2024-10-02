@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IBlockUsers } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 // Тип модели BlockUsers, унаследованного от Sequelize
 export type BlockUsersInstance = IBlockUsers & Model & {};
 
 export default class BlockUsers {
-  private _sequelize: Sequelize;
-  private _blockUsersModel: ModelStatic<BlockUsersInstance> | undefined = undefined;
+  private _blockUsersModel!: ModelStatic<BlockUsersInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get blockUsers() {
-    return this._blockUsersModel as ModelStatic<BlockUsersInstance>;
+    return this._blockUsersModel;
   }
 
   private _init() {

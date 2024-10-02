@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IChatSoundNotifications } from "../../types/models.types";
 
-interface IConstructor {
-    sequelize: Sequelize;
-};
-
 // Тип модели ChatSoundNotifications, унаследованного от Sequelize
 export type ChatSoundNotificationsInstance = IChatSoundNotifications & Model & {};
 
 export default class ChatSoundNotifications {
-    private _sequelize: Sequelize;
-    private _chatSoundNotificationsModel: ModelStatic<ChatSoundNotificationsInstance> | undefined = undefined;
+    private _chatSoundNotificationsModel!: ModelStatic<ChatSoundNotificationsInstance>;
 
-    constructor({ sequelize }: IConstructor) {
-        this._sequelize = sequelize;
+    constructor(private readonly _sequelize: Sequelize) {
         this._init();
     }
 
     get chatSoundNotifications() {
-        return this._chatSoundNotificationsModel as ModelStatic<ChatSoundNotificationsInstance>;
+        return this._chatSoundNotificationsModel;
     }
 
     private _init() {

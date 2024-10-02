@@ -2,7 +2,8 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import PhoneInput from "react-phone-input-2"
+import PhoneInput from "react-phone-input-2";
+
 import { REQUIRED_FIELD } from "../../utils/constants";
 import { ISignUpState } from "../../pages/SignUp";
 
@@ -75,9 +76,7 @@ export default React.memo(function SignUpForm({ formValues, setFormValues, onCha
     };
 
     return (
-        <Box className="sign-up-form">
-            <React.Suspense fallback={<></>}></React.Suspense>
-            
+        <Box className="sign-up-form">            
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                     <TextField

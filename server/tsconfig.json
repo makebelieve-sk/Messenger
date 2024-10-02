@@ -7,6 +7,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["**/*.ts", "types.d.ts"],
+  "include": ["**/*.ts", "types.d.ts", "errors/controllers"],
   "exclude": ["node_modules"]
 }

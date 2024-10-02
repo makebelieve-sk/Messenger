@@ -15,12 +15,9 @@
     background: $white;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    &__text {
-        margin-top: 10px;
-    }
+    gap: 15px;
+
     &__error {
-        margin-top: 10px;
         border: 1px solid $very-light-grey;
         padding: 10px;
         &:hover {
@@ -28,6 +25,8 @@
         }
     }
     &__button {
-        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
 }

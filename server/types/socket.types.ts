@@ -5,14 +5,14 @@ import { IFullChatInfo } from "./chat.types";
 import { UserPartial } from "./user.types";
 import { IEditMessage } from "./message.types";
 
-interface ISocketUsers {
-    [userId: string]: {
-        userID: string;
-        socketID: string;
-        user: IUser;
-        call?: { id: string; chatInfo: IFullChatInfo; usersInCall: any[]; };
-    };
+interface ISocketUser {
+    userID: string;
+    socketID: string;
+    user: IUser;
+    call?: { id: string; chatInfo: IFullChatInfo; usersInCall: any[]; };
 };
+
+type ISocketUsers = Map<string, ISocketUser>;
 
 interface ICallData {
     roomId: string; 

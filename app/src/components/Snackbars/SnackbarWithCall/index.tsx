@@ -1,7 +1,6 @@
 import React from "react";
 import { Socket } from "socket.io-client";
 import Snackbar from "@mui/material/Snackbar";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import PhoneCallbackOutlinedIcon from "@mui/icons-material/PhoneCallbackOutlined";
 import PhoneForwardedOutlinedIcon from "@mui/icons-material/PhoneForwardedOutlined";
@@ -11,6 +10,7 @@ import { selectUserState } from "../../../state/user/slice";
 import { useAppSelector } from "../../../hooks/useGlobalState";
 import { SocketActions } from "../../../types/enums";
 import { ClientToServerEvents, ServerToClientEvents } from "../../../types/socket.types";
+import Avatar from "../../Common/Avatar";
 
 import "./snackbar-with-call.scss";
 
@@ -64,8 +64,9 @@ export default React.memo(function SnackBarWithCall() {
                             {globalCall.users.map(user => {
                                 return <Avatar
                                     alt={user.friendName}
-                                    src={user.avatarUrl} key={user.id}
-                                    className="snackbar__global-call__info__avatar"
+                                    src={user.avatarUrl} 
+                                    key={user.id}
+                                    avatarClassName="snackbar__global-call__info__avatar"
                                 />
                             })}
                         </div>

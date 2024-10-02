@@ -1,5 +1,7 @@
 // Максимальный размер файла в байтах (10 МБ)
 export const MAX_FILE_SIZE = 10000000;
+// Наименование поля аватара пользователя
+export const AVATAR_URL = "avatarUrl";
 
 // Расчёт размера файла
 export const currentSize = (size: number) => {

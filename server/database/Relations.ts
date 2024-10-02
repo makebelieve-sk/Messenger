@@ -1,15 +1,7 @@
 import Models from "./models/Models";
 
-interface IContructor {
-    models: Models;
-}
-
 export default class Relations {
-    private _models: Models;
-
-    constructor({ models }: IContructor) {
-        this._models = models;
-
+    constructor(private readonly _models: Models) {
         this._oneToOne();
         this._oneToMany();
         this._manyToMany();

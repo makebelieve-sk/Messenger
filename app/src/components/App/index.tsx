@@ -1,29 +1,35 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import MainClient from "../../core/MainClient";
-import { useAppDispatch } from "../../hooks/useGlobalState";
+
+import { selectMainState } from "../../state/main/slice";
+import { useAppSelector } from "../../hooks/useGlobalState";
 import Router from "../../service/Router";
 import ServiceComponents from "../../service/ServiceComponents";
-import store from "../../state/store";
+import Header from "../Header";
+import MenuComponent from "../Menu";
 
 import "./app.scss";
 
-export const MainClientContext = React.createContext<MainClient>(undefined as never);
-
 export default function App() {
-  const dispatch = useAppDispatch();
-  
-  const mainClient = new MainClient({ store, dispatch });
+  const { isAuth, loading } = useAppSelector(selectMainState);
 
-  return (
-    <div className="root">
-      <MainClientContext.Provider value={mainClient}>
-        <ServiceComponents />
+  return <div className="root">
+    <ServiceComponents />
 
-        <BrowserRouter>
-          <Router />
-        </BrowserRouter>
-      </MainClientContext.Provider>
-    </div>
-  );
+    {loading
+      ? null
+      : <>
+        {isAuth ? <Header /> : null}
+
+        <div className="root__wrapper">
+          <div className={`root__wrapper__container ${isAuth ? "" : "root__wrapper__container__no-auth"}`}>
+            {isAuth ? <MenuComponent /> : null}
+
+            <div className="root__wrapper__container__content">
+              <Router />
+            </div>
+          </div>
+        </div>
+      </>
+    }
+  </div>
 };

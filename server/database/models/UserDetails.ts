@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IUserDetails } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 // Тип модели User, унаследованного от Sequelize
 export type UserDetailsInstance = IUserDetails & Model & {};
 
 export default class UserDetail {
-  private _sequelize: Sequelize;
-  private _userDetailsModel: ModelStatic<UserDetailsInstance> | undefined = undefined;
+  private _userDetailsModel!: ModelStatic<UserDetailsInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get userDetails() {
-    return this._userDetailsModel as ModelStatic<UserDetailsInstance>;
+    return this._userDetailsModel;
   }
 
   private _init() {

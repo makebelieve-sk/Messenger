@@ -3,20 +3,20 @@ import Modal from "@mui/material/Modal";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
+
+import { MainClientContext } from "../../../service/AppService";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useGlobalState";
 import { selectMessagesState, setAttachments } from "../../../state/messages/slice";
 import { setImagesInCarousel } from "../../../state/main/slice";
-import { ApiRoutes } from "../../../types/enums";
 import { IFile } from "../../../types/models.types";
 import { currentSize } from "../../../utils/files";
 import { getHoursWithMinutes, transformDate } from "../../../utils/time";
-// import { IImage } from "../message-types/image-message";
+import Spinner from "../../Common/Spinner";
+import { ICarouselImage } from "../../../modules/ImagesCarousel/Info";
 
 import "./modal-with-attachments.scss";
-import { MainClientContext } from "../../App";
 
 const modalTitle = "modal-attachments-title";
 const modalDescription = "modal-attachments-description";
@@ -49,11 +49,10 @@ export default React.memo(function ModalWithAttachments() {
             setOpen(attachmentsModal.isOpen);
 
             if (attachmentsModal) {
-                mainClient.postRequest(
-                    ApiRoutes.getAttachments, 
+                mainClient.getAttachments(
                     { chatId: attachmentsModal.chatId }, 
                     setLoading,
-                    (data: { images: any[]; files: IAttachmentFile[] }) => {
+                    (data: { images: ICarouselImage[]; files: IAttachmentFile[] }) => {
                         setImages(data.images);
                         setFiles(data.files);
                     }
@@ -84,10 +83,7 @@ export default React.memo(function ModalWithAttachments() {
     const onOpenFile = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, filePath: string) => {
         event.stopPropagation();
 
-        mainClient.postRequest(
-            ApiRoutes.openFile,
-            { path: filePath }
-        );
+        mainClient.openFile({ path: filePath });
     };
 
     // Переход к сообщению в чате
@@ -109,9 +105,7 @@ export default React.memo(function ModalWithAttachments() {
                 </Tabs>
 
                 {loading
-                    ? <div className="modal-attachments-container__loading">
-                        <CircularProgress />
-                    </div>
+                    ? <Spinner />
                     : null
                 }
 

@@ -2,24 +2,18 @@ import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { MessageReadStatus, MessageTypes } from "../../types/enums";
 import { IMessage } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 // Тип модели Messages, унаследованного от Sequelize
 export type MessagesInstance = IMessage & Model & {};
 
 export default class Messages {
-  private _sequelize: Sequelize;
-  private _messagesModel: ModelStatic<MessagesInstance> | undefined = undefined;
+  private _messagesModel!: ModelStatic<MessagesInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get messages() {
-    return this._messagesModel as ModelStatic<MessagesInstance>;
+    return this._messagesModel;
   }
 
   private _init() {

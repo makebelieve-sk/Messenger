@@ -21,3 +21,7 @@ export interface IFormValues {
     phone: string;
     email: string;
 };
+
+export type TimeoutType = ReturnType<typeof setTimeout>;
+
+export type ErrorType = unknown | Error;

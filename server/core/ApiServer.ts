@@ -19,13 +19,13 @@ interface IConstructor {
     passport: PassportStatic;
 };
 
-export default class Controller {
-    private _middleware: Middleware;
-    private _redisWork: RedisWorks;
-    private _app: Express;
-    private _users: ISocketUsers;
-    private _database: Database;
-    private _passport: PassportStatic;
+export default class ApiServer {
+    private readonly _middleware: Middleware;
+    private readonly _redisWork: RedisWorks;
+    private readonly _app: Express;
+    private readonly _users: ISocketUsers;
+    private readonly _database: Database;
+    private readonly _passport: PassportStatic;
 
     constructor({ redisWork, app, users, database, passport }: IConstructor) {
         this._redisWork = redisWork;
@@ -34,7 +34,7 @@ export default class Controller {
         this._database = database;
         this._passport = passport;
 
-        this._middleware = new Middleware({ redisWork: this._redisWork });
+        this._middleware = new Middleware(this._redisWork);
 
         this._init();
     }

@@ -2,27 +2,26 @@ import { io } from "socket.io-client";
 import { NavigateFunction } from "react-router-dom";
 
 import { SOCKET_IO_CLIENT } from "../../utils/constants";
-import { AppDispatch, RootState, StoreType } from "../../types/redux.types";
+import { AppDispatch, StoreType } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
 import { IUser } from "../../types/models.types";
 import SocketController from "./SocketController";
+import Profile from "../profile/Profile";
 
 interface IConstructor {
-    store: StoreType;
+    myProfile: Profile;
     navigate: NavigateFunction;
     dispatch: AppDispatch;
 };
 
 export default class Socket {
-    private _store: StoreType;
-    private _socket: SocketType;
-    private _user: IUser;
-    private _navigate: AppDispatch;
-    private _dispatch: AppDispatch;
+    private readonly _socket: SocketType;
+    private readonly _user: IUser;
+    private readonly _navigate: AppDispatch;
+    private readonly _dispatch: AppDispatch;
 
-    constructor({ store, navigate, dispatch }: IConstructor) {
-        this._store = store;
-        this._user = (this._store.getState() as RootState).users.user;
+    constructor({ myProfile, navigate, dispatch }: IConstructor) {
+        this._user = myProfile.user;
         this._socket = io(SOCKET_IO_CLIENT, { transports: ["websocket"] });
         this._navigate = navigate;
         this._dispatch = dispatch;
@@ -36,6 +35,10 @@ export default class Socket {
     }
 
     private _init() {
+        if (!this._user) {
+            throw new Error("Объект пользователя не существует");
+        }
+
         this._socket.auth = { user: this._user };
         this._socket.connect();
 

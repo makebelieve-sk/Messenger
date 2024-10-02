@@ -105,6 +105,7 @@ export interface IPhoto {
     id: string;
     userId: string;
     path: string;
+    createDate: string;
 };
 
 // Интерфейс атрибутов модели UsersInChat

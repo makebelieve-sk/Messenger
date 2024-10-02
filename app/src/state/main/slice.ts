@@ -29,8 +29,8 @@ export const mainSlice = createSlice({
 export const selectMainState = (state: RootState) => state.main;
 
 // Экшены
-export const { 
-  setIsAuth,
+export const {
+  setAuth, 
   setLoading,
   setFriendNotification,
   setGlobalInCall, 

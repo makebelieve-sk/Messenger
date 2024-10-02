@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { ISubscriber } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 // Тип модели Subscribers, унаследованного от Sequelize
 export type SubscribersInstance = ISubscriber & Model & {};
 
 export default class Subscribers {
-  private _sequelize: Sequelize;
-  private _subscribersModel: ModelStatic<SubscribersInstance> | undefined = undefined;
+  private _subscribersModel!: ModelStatic<SubscribersInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get subscribers() {
-    return this._subscribersModel as ModelStatic<SubscribersInstance>;
+    return this._subscribersModel;
   }
 
   private _init() {

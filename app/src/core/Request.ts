@@ -1,33 +1,52 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
+
 import { ApiRoutes } from "../types/enums";
 import CatchErrors, { CatchType } from "./CatchErrors";
 import { SERVER_URL } from "../utils/constants";
 
-interface IConstructor {
-    catchErrors: CatchErrors;
+interface IGetRequest {
+    route: ApiRoutes | string;
+    setLoading?: ((value: any) => any);
+    successCb?: ((result: any) => any);
+    failedText?: string;
+};
+
+interface IPostRequest {
+    route: ApiRoutes;
+    data: any;
+    setLoading?: ((value: React.SetStateAction<boolean>) => void);
+    successCb?: ((result: any) => any);
+    failedText?: string;
+    finallyCb?: () => any;
+    config?: { headers?: { [key: string]: string; }; };
+    failedCb?: (error: CatchType) => any;
+};
+
+interface IDownloadFileRequest {
+    window: Window & typeof globalThis;
+    document: Document;
+    params: string;
+    extra: { name: string; };
+    failedText: string;
+};
+
+const OPTIONS = {
+    baseURL: SERVER_URL,
+    withCredentials: true,
+    timeout: 15000,
+    headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": SERVER_URL ?? false,
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE"
+    }
 };
 
 // Класс, отвечающий за запросы к серверу
 export default class Request {
-    private _instance: AxiosInstance;
-    private _catchErrors: CatchErrors;
+    private readonly _instance: AxiosInstance;
 
-    constructor({ catchErrors }: IConstructor) {
-        this._instance = this._createInstance();
-        this._catchErrors = catchErrors;
-    };
-
-    private _createInstance() {
-        return axios.create({
-            baseURL: SERVER_URL,
-            withCredentials: true,
-            timeout: 15000,
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": SERVER_URL ?? false,
-                "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE"
-            }
-        });
+    constructor(private readonly _catchErrors: CatchErrors) {
+        this._instance = axios.create(OPTIONS);
     };
 
     private _errorHandler(error: AxiosError, failedText?: string): CatchType {
@@ -35,12 +54,7 @@ export default class Request {
     }
 
     // GET запрос на сервер
-    public get(
-        route: ApiRoutes | string,
-        setLoading: ((value: any) => any) | undefined,
-        successCb: ((result: any) => any) | undefined,
-        failedText?: string
-    ): void {
+    public get({ route, setLoading, successCb, failedText }: IGetRequest): void {
         setLoading ? setLoading(true) : undefined;
 
         this._instance
@@ -59,16 +73,7 @@ export default class Request {
     };
 
     // POST запрос на сервер
-    public post(
-        route: ApiRoutes,
-        data: any,
-        setLoading?: ((value: React.SetStateAction<boolean>) => void) | undefined,
-        successCb?: ((result: any) => any) | undefined,
-        failedText?: string,
-        finallyCb?: () => any,
-        config?: { headers?: { [key: string]: string; }; },
-        failedCb?: (error: CatchType) => any
-    ): void {
+    public post({ route, data, setLoading, successCb, failedText, finallyCb, config, failedCb }: IPostRequest): void {
         setLoading ? setLoading(true) : undefined;
 
         this._instance
@@ -92,13 +97,7 @@ export default class Request {
     };
 
     // GET запрос на скачивание файла с сервера
-    public downloadFile(
-        window: Window & typeof globalThis,
-        document: Document,
-        params: string,
-        extra: { name: string; },
-        failedText: string
-    ) {
+    public downloadFile({ window, document, params, extra, failedText }: IDownloadFileRequest) {
         this._instance
             .get(`${ApiRoutes.downloadFile}?${params}`, { responseType: "blob" })
             .then(response => {

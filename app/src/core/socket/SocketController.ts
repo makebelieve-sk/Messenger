@@ -19,11 +19,13 @@ interface IConstructor {
     navigate: NavigateFunction;
 };
 
+const SERVER_DISCONNECT = "io server disconnect";
+
 export default class SocketController {
-    private _socket: SocketType;
-    private _user: IUser;
-    private _dispatch: AppDispatch;
-    private _navigate: NavigateFunction;
+    private readonly _socket: SocketType;
+    private readonly _user: IUser;
+    private readonly _dispatch: AppDispatch;
+    private readonly _navigate: NavigateFunction;
 
     constructor({ socket, user, dispatch, navigate }: IConstructor) {
         this._socket = socket;
@@ -32,6 +34,11 @@ export default class SocketController {
         this._navigate = navigate;
         
         this._init();
+    }
+
+    private _reconnect() {
+        this._socket.auth = { user: this._user };
+        this._socket.connect();
     }
 
     private _init() {
@@ -94,7 +101,7 @@ export default class SocketController {
                         this._dispatch(setMessage({ message, showUnreadDie: true, userId: this._user.id }));
                     } else {
                         // Проигрываем аудио при получении нового сообщения
-                        const playAudio = new PlayAudio("/audios/new-message-notification.mp3", this._dispatch, true, message.chatId);
+                        const playAudio = new PlayAudio("/assets/audios/new-message-notification.mp3", this._dispatch, true, message.chatId);
                         playAudio.init();
                     }
 
@@ -220,22 +227,28 @@ export default class SocketController {
         });
 
         // Событие возникает при невозможности установить соединение или соединение было отклонено сервером (к примеру мидлваром)
-        this._socket.on("connect_error", () => {
-            // TODO Подключить логгер
-            console.error("connect_error");
+        this._socket.on("connect_error", (error: Error) => {
+            const isSocketActive = this._socket.active;
 
-            // Обновляем авторизацию юзера
-            this._socket.auth = { user: this._user };
-            this._socket.connect();
+            console.error(`Ошибка соединения [socket.active: ${isSocketActive}]: ${error.message}`);
+
+            // Означает, что соединение было отклонено сервером
+            if (!isSocketActive) {
+                this._reconnect();
+            }
+
+            // Иначе сокет попытается переподключиться автоматически (временный разрыв соединения)
         });
 
         this._socket.on("disconnect", (reason) => {
-            // Если сокет отключился по инициативе сервера
-            if (reason === "io server disconnect") {
-                if (this._socket) this._socket.connect();
+            const isSocketActive = this._socket.active;
+
+            // Если сокет отключился по инициативе сервера, то перезапускаем сокет
+            if (!isSocketActive && reason === SERVER_DISCONNECT) {
+                this._reconnect();
             }
 
-            // Иначе сокет попытается самостоятельно переподключиться
+            // Иначе сокет попытается переподключиться автоматически (временный разрыв соединения)
         });
     }
 }

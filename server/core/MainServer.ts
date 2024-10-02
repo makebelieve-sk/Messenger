@@ -1,10 +1,11 @@
 import express, { Express } from "express";
+import path from "path";
 import http from "http";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
 
-import Controller from "./Controller";
+import ApiServer from "./ApiServer";
 import RedisWorks from "./Redis";
 import { ISocketUsers } from "../types/socket.types";
 import PassportWorks from "./Passport";
@@ -21,15 +22,16 @@ interface IContructor {
 };
 
 export default class MainServer {
-    private _app: Express;
-    private _users: ISocketUsers;
-    private _redisWork: RedisWorks;
-    private _database: Database;
-    private _passport: PassportWorks;
+    private readonly _app: Express;
+    private readonly _users: ISocketUsers;
+    private readonly _redisWork: RedisWorks;
+    private readonly _database: Database;
+    private readonly _passport: PassportWorks;
+    private readonly _socket: SocketWorks;
 
     constructor({ app, server }: IContructor) {
         this._app = app;
-        this._users = {};
+        this._users = new Map();
 
         // Инициализируем работу Redis
         this._redisWork = new RedisWorks();
@@ -40,7 +42,7 @@ export default class MainServer {
         // Инициализируем работу Passport (мидлвары)
         this._passport = new PassportWorks({ app: this._app, database: this._database });
         // Инициализируем работу API
-        new Controller({ 
+        new ApiServer({ 
             redisWork: this._redisWork, 
             app: this._app, 
             users: this._users,
@@ -48,7 +50,7 @@ export default class MainServer {
             passport: this._passport.passport
         });
         // Инициализируем работу socket.io
-        new SocketWorks({ server, users: this._users, database: this._database });
+        this._socket = new SocketWorks({ server, users: this._users, database: this._database });
     }
 
     private _useExpressMiddlewares() {
@@ -68,10 +70,13 @@ export default class MainServer {
             rolling: true,                      // Продлевает maxAge при каждом новом запросе
             saveUninitialized: false            // Не помещает в store пустые сессии
         }));
+        this._app.use(express.static(path.join(__dirname, "../assets")));          // Указываем Express использовать папку assets для обслуживания статических файлов
     }
 
-    // Закрываем соединение с бд
-    public closeDatabase() {
+    // Закрытие сервера
+    public close() {
         this._database.close();
+        this._redisWork.close();
+        this._socket.close();
     }
 };

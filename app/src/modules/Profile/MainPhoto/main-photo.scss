@@ -1,0 +1,20 @@
+.main-photo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .photo {
+        max-width: fit-content;
+        max-height: 350px;
+        overflow: hidden;
+        margin: 0 auto;
+    }
+
+    &__edit-button {
+        width: 100%;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

@@ -5,12 +5,11 @@ import useStateWithCallback from "./useStateWithCallback";
 import { selectCallsState, setChatInfo, setLocalStream, setModalVisible, setStatus, setUsers } from "../state/calls/slice";
 import { useAppDispatch, useAppSelector } from "./useGlobalState";
 import { selectUserState } from "../state/user/slice";
-import catchErrors from "../core/CatchErrors";
 import { AppDispatch } from "../types/redux.types";
 import { setSystemError } from "../state/error/slice";
 import { getFullName } from "../utils";
 import { IUser } from "../types/models.types";
-import { MainClientContext } from "../components/App";
+import { MainClientContext } from "../service/AppService";
 
 const LOCAL_VIDEO = "LOCAL_VIDEO";
 

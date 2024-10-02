@@ -229,7 +229,7 @@ enum FriendsNoticeTypes {
     UPDATE = "update"
 };
 
-// Типы изображений, передаваемых в компонент ImageWithHover
+// Типы изображений, передаваемых в компонент Common/Photo.tsx
 enum ImgComponentTypes {
     PHOTO = "photo",
     AVATAR = "avatar"

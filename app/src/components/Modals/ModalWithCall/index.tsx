@@ -1,7 +1,6 @@
 import React from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import CircularProgress from "@mui/material/CircularProgress";
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import Status from "./status";
 import Buttons from "./buttons";
@@ -12,6 +11,7 @@ import { selectCallsState } from "../../../state/calls/slice";
 import { setError } from "../../../state/error/slice";
 import { CallStatus } from "../../../types/enums";
 import { NO_PHOTO } from "../../../utils/constants";
+import Spinner from "../../Common/Spinner";
 
 import "./modal-with-call.scss";
 
@@ -127,7 +127,7 @@ export default React.memo(function ModalWithCall() {
                         />
                     </div>
                 </div>
-                : <CircularProgress />
+                : <Spinner />
             }
         </DialogContent>
     </Dialog>

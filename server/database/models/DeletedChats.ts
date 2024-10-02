@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IDeletedChats } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 // Тип модели Deleted_chats, унаследованного от Sequelize
 export type DeletedChatsInstance = IDeletedChats & Model & {};
 
 export default class DeletedChats {
-  private _sequelize: Sequelize;
-  private _deletedChatsModel: ModelStatic<DeletedChatsInstance> | undefined = undefined;
+  private _deletedChatsModel!: ModelStatic<DeletedChatsInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get deletedChats() {
-    return this._deletedChatsModel as ModelStatic<DeletedChatsInstance>;
+    return this._deletedChatsModel;
   }
 
   private _init() {

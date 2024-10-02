@@ -2,24 +2,18 @@ import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { CallNames, CallTypes } from "../../types/enums";
 import { ICall } from "../../types/models.types";
 
-interface IConstructor {
-    sequelize: Sequelize;
-};
-
 // Тип модели Calls, унаследованного от Sequelize
 export type CallsInstance = ICall & Model & {};
 
 export default class Calls {
-    private _sequelize: Sequelize;
-    private _callsModel: ModelStatic<CallsInstance> | undefined = undefined;
+    private _callsModel!: ModelStatic<CallsInstance>;
 
-    constructor({ sequelize }: IConstructor) {
-        this._sequelize = sequelize;
+    constructor(private readonly _sequelize: Sequelize) {
         this._init();
     }
 
     get calls() {
-        return this._callsModel as ModelStatic<CallsInstance>;
+        return this._callsModel;
     }
 
     private _init() {

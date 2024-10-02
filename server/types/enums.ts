@@ -197,6 +197,7 @@ enum ErrorTextsApi {
     IMAGE_NOT_FOUND = "Изображение не найдено",
     FILE_NOT_FOUND = "Файл не найден",
     USER_NOT_FOUND_IN_DATABASE = "Запись пользователя в таблице не найдена",
+    IMAGE_NOT_GIVEN = "В req.file не передано изображение",
 };
 
 // Список ключей редиса

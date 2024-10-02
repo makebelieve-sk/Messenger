@@ -1,10 +1,6 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IUser } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 export interface ISaveUser {
   id: string;
   firstName: string;
@@ -19,16 +15,14 @@ export interface ISaveUser {
 export type UserInstance = IUser & Model & {};
 
 export default class Users {
-  private _sequelize: Sequelize;
-  private _usersModel: ModelStatic<UserInstance> | undefined = undefined;
+  private _usersModel!: ModelStatic<UserInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get users() {
-    return this._usersModel as ModelStatic<UserInstance>;
+    return this._usersModel;
   }
 
   private _init() {

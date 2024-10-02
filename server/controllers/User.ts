@@ -6,6 +6,7 @@ import { IUser, IUserDetails } from "../types/models.types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { getSaveUserFields } from "../utils/user";
+import { UsersError } from "../errors/controllers";
 
 interface IConstructor {
     app: Express;
@@ -14,9 +15,9 @@ interface IConstructor {
 };
 
 export default class UserController {
-    private _app: Express;
-    private _middleware: Middleware;
-    private _database: Database;
+    private readonly _app: Express;
+    private readonly _middleware: Middleware;
+    private readonly _database: Database;
 
     constructor({ app, middleware, database }: IConstructor) {
         this._app = app;
@@ -28,8 +29,8 @@ export default class UserController {
 
     // Слушатели запросов контроллера UserController
     private _init() {
-        this._app.get(ApiRoutes.getUserDetail, this._middleware.mustAuthenticated.bind(this), this._getUserDetail.bind(this));
-        this._app.post(ApiRoutes.editInfo, this._middleware.mustAuthenticated.bind(this), this._editInfo.bind(this));
+        this._app.get(ApiRoutes.getUserDetail, this._middleware.mustAuthenticated.bind(this._middleware), this._getUserDetail.bind(this));
+        this._app.post(ApiRoutes.editInfo, this._middleware.mustAuthenticated.bind(this._middleware), this._editInfo.bind(this));
     }
 
     // Получение детальной информации о пользователе
@@ -44,9 +45,11 @@ export default class UserController {
             }
 
             return res.json({ success: true, userDetail });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof UsersError
+                ? error
+                : new UsersError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -105,10 +108,13 @@ export default class UserController {
             await transaction.commit();
 
             return res.json({ success: true, ...result });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof UsersError
+                ? error
+                : new UsersError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 };

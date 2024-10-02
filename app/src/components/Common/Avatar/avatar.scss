@@ -1,9 +1,10 @@
-@import "../../styles/colors.scss";
+@import "../../../styles/colors.scss";
 
 .avatar-badge {
     span {
         visibility: hidden;
         box-shadow: 0 0 0 2px $white;
+
         &::after {
             position: absolute;
             top: 0;
@@ -14,6 +15,7 @@
             content: "";
         }
     }
+
     &__active {
         span {
             visibility: visible;
@@ -21,6 +23,7 @@
             color: $online-green;
         }
     }
+
     &__avatar {
         &:hover {
             cursor: pointer;

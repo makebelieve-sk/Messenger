@@ -10,6 +10,7 @@ import { IUser } from "../types/models.types";
 import RedisWorks from "../core/Redis";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
+import { AuthError } from "../errors/controllers";
 
 const COOKIE_NAME = process.env.COOKIE_NAME || "sid";
 
@@ -22,11 +23,11 @@ interface IConstructor {
 };
 
 export default class AuthController {
-    private _app: Express;
-    private _redisWork: RedisWorks;
-    private _middleware: Middleware;
-    private _database: Database;
-    private _passport: PassportStatic;
+    private readonly _app: Express;
+    private readonly _redisWork: RedisWorks;
+    private readonly _middleware: Middleware;
+    private readonly _database: Database;
+    private readonly _passport: PassportStatic;
 
     constructor({ app, redisWork, middleware, database, passport }: IConstructor) {
         this._app = app;
@@ -42,8 +43,8 @@ export default class AuthController {
     private _init() {
         this._app.post(ApiRoutes.signUp, this._isAuthenticated.bind(this), this._signUp.bind(this));
         this._app.post(ApiRoutes.signIn, this._isAuthenticated.bind(this), this._signIn.bind(this));
-        this._app.get(ApiRoutes.logout, this._middleware.mustAuthenticated.bind(this), this._logout.bind(this));
-        this._app.get(ApiRoutes.getUser, this._middleware.mustAuthenticated.bind(this), this._getUser.bind(this));
+        this._app.get(ApiRoutes.logout, this._middleware.mustAuthenticated.bind(this._middleware), this._logout.bind(this));
+        this._app.get(ApiRoutes.getUser, this._middleware.mustAuthenticated.bind(this._middleware), this._getUser.bind(this));
     }
 
     // Проверяем авторизирован ли пользователь в системе
@@ -60,9 +61,11 @@ export default class AuthController {
             }
     
             next();
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof AuthError
+                ? error
+                : new AuthError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -134,10 +137,13 @@ export default class AuthController {
                         throw new Error(`Создание новой записи в базе данных завершилось не удачно: ${error}`);
                     });
             });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof AuthError
+                ? error
+                : new AuthError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -170,12 +176,14 @@ export default class AuthController {
                     // Обновляем срок жизни токена сессии (куки)
                     req.session.cookie.expires = getExpiredToken(rememberMe);
 
-                    return res.json({ success: true, user });
+                    return res.json({ success: true });
                 });
             })(req, res, next);
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof AuthError
+                ? error
+                : new AuthError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -209,9 +217,11 @@ export default class AuthController {
                     return res.clearCookie(COOKIE_NAME).json({ success: true });
                 });
             });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof AuthError
+                ? error
+                : new AuthError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -223,9 +233,11 @@ export default class AuthController {
             }
 
             return res.json({ success: true, user: req.user });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof AuthError
+                ? error
+                : new AuthError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 };

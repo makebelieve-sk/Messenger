@@ -8,6 +8,7 @@ import { IUser } from "../types/models.types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { ISocketUsers } from "../types/socket.types";
+import { FriendsError } from "../errors/controllers";
 
 interface IConstructor {
     app: Express;
@@ -17,10 +18,10 @@ interface IConstructor {
 };
 
 export default class FriendsController {
-    private _app: Express;
-    private _middleware: Middleware;
-    private _database: Database;
-    private _users: ISocketUsers;
+    private readonly _app: Express;
+    private readonly _middleware: Middleware;
+    private readonly _database: Database;
+    private readonly _users: ISocketUsers;
 
     constructor({ app, middleware, database, users }: IConstructor) {
         this._app = app;
@@ -33,24 +34,24 @@ export default class FriendsController {
 
     // Слушатели запросов контроллера FriendsController
     private _init() {
-        this._app.get(ApiRoutes.getFriendsNotification, this._middleware.mustAuthenticated.bind(this), this._getFriendsNotification.bind(this));
-        this._app.get(ApiRoutes.getPossibleUsers, this._middleware.mustAuthenticated.bind(this), this._getPossibleUsers.bind(this));
-        this._app.get(ApiRoutes.getCountFriends, this._middleware.mustAuthenticated.bind(this), this._getCountFriends.bind(this));
-        this._app.post(ApiRoutes.getFriends, this._middleware.mustAuthenticated.bind(this), this._getFriends.bind(this));
-        this._app.post(ApiRoutes.getFriendInfo, this._middleware.mustAuthenticated.bind(this), this._getFriendInfo.bind(this));
-        this._app.post(ApiRoutes.addToFriend, this._middleware.mustAuthenticated.bind(this), this._addToFriend.bind(this));
-        this._app.post(ApiRoutes.unsubscribeUser, this._middleware.mustAuthenticated.bind(this), this._unsubscribeUser.bind(this));
-        this._app.post(ApiRoutes.acceptUser, this._middleware.mustAuthenticated.bind(this), (req, res) => this._acceptUser(req, res));
-        this._app.post(ApiRoutes.leftInSubscribers, this._middleware.mustAuthenticated.bind(this), this._leftInSubscribers.bind(this));
-        this._app.post(ApiRoutes.deleteFriend, this._middleware.mustAuthenticated.bind(this), this._deleteFriend.bind(this));
-        this._app.post(ApiRoutes.blockFriend, this._middleware.mustAuthenticated.bind(this), this._blockFriend.bind(this));
-        this._app.post(ApiRoutes.checkBlockStatus, this._middleware.mustAuthenticated.bind(this), this._checkBlockStatus.bind(this));
+        this._app.get(ApiRoutes.getFriendsNotification, this._middleware.mustAuthenticated.bind(this._middleware), this._getFriendsNotification.bind(this));
+        this._app.get(ApiRoutes.getPossibleUsers, this._middleware.mustAuthenticated.bind(this._middleware), this._getPossibleUsers.bind(this));
+        this._app.get(ApiRoutes.getCountFriends, this._middleware.mustAuthenticated.bind(this._middleware), this._getCountFriends.bind(this));
+        this._app.post(ApiRoutes.getFriends, this._middleware.mustAuthenticated.bind(this._middleware), this._getFriends.bind(this));
+        this._app.post(ApiRoutes.getFriendInfo, this._middleware.mustAuthenticated.bind(this._middleware), this._getFriendInfo.bind(this));
+        this._app.post(ApiRoutes.addToFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._addToFriend.bind(this));
+        this._app.post(ApiRoutes.unsubscribeUser, this._middleware.mustAuthenticated.bind(this._middleware), this._unsubscribeUser.bind(this));
+        this._app.post(ApiRoutes.acceptUser, this._middleware.mustAuthenticated.bind(this._middleware), (req, res) => this._acceptUser(req, res));
+        this._app.post(ApiRoutes.leftInSubscribers, this._middleware.mustAuthenticated.bind(this._middleware), this._leftInSubscribers.bind(this));
+        this._app.post(ApiRoutes.deleteFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._deleteFriend.bind(this));
+        this._app.post(ApiRoutes.blockFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._blockFriend.bind(this));
+        this._app.post(ApiRoutes.checkBlockStatus, this._middleware.mustAuthenticated.bind(this._middleware), this._checkBlockStatus.bind(this));
     }
 
     // Получение возможных друзей
     private _possibleUsersQuery(userId: string, all: boolean = false, searchValue = "") {
         return `
-            SELECT ${all ? "" : "TOP (5)"} users.[id], [first_name] AS [firstName], [second_name] AS [secondName], [third_name] AS [thirdName], [email], [phone], [avatar_url] as avatarUrl
+            SELECT ${all ? "" : "TOP (5)"} users.[id], [first_name] AS [firstName], [second_name] AS [secondName], [third_name] AS [thirdName], [email], [phone], [avatar_url] AS [avatarUrl]
             FROM [VK_CLONE].[dbo].[Users] AS users
             LEFT JOIN [VK_CLONE].[dbo].[Friends] AS friends ON friends.user_id = users.id
             LEFT JOIN [VK_CLONE].[dbo].[Subscribers] AS subscribers ON subscribers.user_id = users.id
@@ -73,7 +74,7 @@ export default class FriendsController {
     // Получение запросов на дружбу
     private _getFreindsRequestsQuery(userId: string, searchQuery: string = "") {
         return `
-            SELECT users.[id], [first_name] AS [firstName], [second_name] AS [secondName], [third_name] AS [thirdName], [email], [phone], [avatar_url] as avatarUrl
+            SELECT users.[id], [first_name] AS [firstName], [second_name] AS [secondName], [third_name] AS [thirdName], [email], [phone], [avatar_url] AS [avatarUrl]
             FROM [VK_CLONE].[dbo].[Users] AS users
             JOIN [VK_CLONE].[dbo].[Subscribers] AS subscribers ON subscribers.subscriber_id = users.id
             WHERE users.id != '${userId}' AND users.id IN (
@@ -95,9 +96,11 @@ export default class FriendsController {
             } else {
                 throw new Error("Запрос выполнился некорректно и ничего не вернул (getFriendsNotification");
             }
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -113,9 +116,11 @@ export default class FriendsController {
             } else {
                 throw new Error("Запрос выполнился некорректно и ничего не вернул (possibleUsers)");
             }
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -171,10 +176,12 @@ export default class FriendsController {
                 topFriends: topFriends && topFriends[0] ? topFriends[0] : null, 
                 subscribersCount: subscribersCount && subscribersCount[0] ? subscribersCount[0][0].count : null
             });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -214,7 +221,7 @@ export default class FriendsController {
                 // Получение друзей-онлайн
                 case FriendsTab.online: {
                     if (this._users) {
-                        const userObjects = Object.values(this._users);
+                        const userObjects = Array.from(this._users.values());
 
                         if (userObjects && userObjects.length) {
                             const usersOnline = userObjects.map(userObject => userObject.user);
@@ -305,9 +312,11 @@ export default class FriendsController {
                 default:
                     throw new Error("Тип вкладки не распознан");
             };
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -365,10 +374,13 @@ export default class FriendsController {
                     friendName: friendInfo.firstName + " " + friendInfo.thirdName 
                 } 
             });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -408,10 +420,13 @@ export default class FriendsController {
 
                 return res.json({ success: true });
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -434,9 +449,11 @@ export default class FriendsController {
             });
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -477,10 +494,13 @@ export default class FriendsController {
             await transaction.commit();
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -504,9 +524,11 @@ export default class FriendsController {
             );
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -545,10 +567,13 @@ export default class FriendsController {
             await transaction.commit();
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -590,10 +615,13 @@ export default class FriendsController {
             await transaction.commit();
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -628,10 +656,13 @@ export default class FriendsController {
             await transaction.commit();
 
             return res.json({ success: true, isBlockedByMe, meIsBlocked });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FriendsError
+                ? error
+                : new FriendsError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 };

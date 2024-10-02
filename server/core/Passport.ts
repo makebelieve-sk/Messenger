@@ -6,20 +6,21 @@ import { IVerifyOptions, Strategy } from "passport-local";
 import Database from "./Database";
 import { ISaveUser, UserInstance } from "../database/models/Users";
 import { getSaveUserFields } from "../utils/user";
+import { PassportError } from "../errors";
 
 interface IConstructor {
     app: Express;
     database: Database;
 };
 
-type DoneType = (error: any, user?: ISaveUser | false, options?: IVerifyOptions | undefined) => void;
+type DoneType = (error: string | null, user?: ISaveUser | false, options?: IVerifyOptions | undefined) => void;
 
 const errorSign = "Не верно указан логин или пароль";
 
 export default class PassportWorks {
-    private _app: Express;
-    private _passport: PassportStatic;
-    private _database: Database;
+    private readonly _app: Express;
+    private readonly _passport: PassportStatic;
+    private readonly _database: Database;
 
     constructor({ app, database }: IConstructor) {
         this._app = app;
@@ -41,7 +42,7 @@ export default class PassportWorks {
         this._passport.use(new Strategy({ usernameField: "login", passwordField: "password" }, this._verify.bind(this)));
 
         // Достаем данные о пользователе из его сессии
-        this._passport.serializeUser(function (user: any, done) {
+        this._passport.serializeUser((user: any, done) => {
             console.log("serializeUser: ", user);
 
             process.nextTick(() => {
@@ -64,9 +65,11 @@ export default class PassportWorks {
                             return new Error(`Пользователь с id=${userId} не найден`);
                         }
                     })
-                    .catch((error: any) => {
-                        console.log(error);
-                        done(error.message ?? error);
+                    .catch(error => {
+                        const nextError = error instanceof PassportError
+                            ? error
+                            : new PassportError(error);
+                        done(nextError.message);
                     });
             });
         });
@@ -92,9 +95,11 @@ export default class PassportWorks {
                     return done(null, false, { message: errorSign });
                 }
             }
-        } catch (error: any) {
-            console.log(error);
-            done(null, false, { message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof PassportError
+                ? error
+                : new PassportError(error);
+            done(null, false, { message: nextError.message });
         }
     }
 

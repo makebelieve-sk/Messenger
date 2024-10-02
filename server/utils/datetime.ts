@@ -9,3 +9,6 @@ export const sixMonths = oneMonth * 6;
 
 // Разница между часовыми поясами (в часах)
 export const timezoneOffset = Math.abs(new Date().getTimezoneOffset() / 60);
+
+// Получение текущей даты
+export const currentDate = new Date().toUTCString();

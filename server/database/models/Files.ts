@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IFile } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 // Тип модели Files, унаследованного от Sequelize
 export type FilesInstance = IFile & Model & {};
 
 export default class Files {
-  private _sequelize: Sequelize;
-  private _filesModel: ModelStatic<FilesInstance> | undefined = undefined;
+  private _filesModel!: ModelStatic<FilesInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get files() {
-    return this._filesModel as ModelStatic<FilesInstance>;
+    return this._filesModel;
   }
 
   private _init() {

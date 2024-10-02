@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IFilesInMessage } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 // Тип модели FilesInMessages, унаследованного от Sequelize
 export type FilesInMessageInstance = IFilesInMessage & Model & {};
 
 export default class FilesInMessage {
-  private _sequelize: Sequelize;
-  private _filesInMessageModal: ModelStatic<FilesInMessageInstance> | undefined = undefined;
+  private _filesInMessageModal!: ModelStatic<FilesInMessageInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get filesInMessage() {
-    return this._filesInMessageModal as ModelStatic<FilesInMessageInstance>;
+    return this._filesInMessageModal;
   }
 
   private _init() {

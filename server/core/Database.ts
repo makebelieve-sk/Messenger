@@ -19,19 +19,19 @@ const OPTIONS = {
 };
 
 export default class Database {
-    private _sequelize: Sequelize | undefined = undefined;
-    private _models: Models | undefined = undefined;
+    private _sequelize!: Sequelize;
+    private _models!: Models;
 
     constructor() {
         this._init();
     }
 
     get sequelize() {
-        return this._sequelize as Sequelize;
+        return this._sequelize;
     }
 
     get models() {
-        return this._models as Models;
+        return this._models;
     }
 
     // Закрытие базы данных
@@ -58,11 +58,11 @@ export default class Database {
 
     // Инициализация ассоциаций (отношений) между таблицами в базе данных
     private _useRelations() {
-        new Relations({ models: this.models });
+        new Relations(this.models);
     }
 
     // Инициализация моделей базы данных
     private _useModels() {
-        this._models = new Models({ sequelize: this.sequelize });
+        this._models = new Models(this.sequelize);
     }
 }

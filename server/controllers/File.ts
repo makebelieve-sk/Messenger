@@ -1,13 +1,18 @@
 import multer from "multer";
 import { v4 as uuid } from "uuid";
 import fs from "fs";
+import path from "path";
 import { Op, Transaction } from "sequelize";
 import { Request, Response, NextFunction, Express } from "express";
 
 import { ApiRoutes, ErrorTextsApi, HTTPStatuses } from "../types/enums";
 import { IUser } from "../types/models.types";
+import { IRequestWithImagesSharpData, IRequestWithSharpData } from "../types/express.types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
+import { FileError } from "../errors/controllers";
+import { ASSETS_PATH } from "../utils/files";
+import { currentDate } from "../utils/datetime";
 
 interface IConstructor {
     app: Express;
@@ -16,9 +21,12 @@ interface IConstructor {
 };
 
 export default class FileController {
-    private _app: Express;
-    private _middleware: Middleware;
-    private _database: Database;
+    private readonly _app: Express;
+    private readonly _middleware: Middleware;
+    private readonly _database: Database;
+    private readonly _uploader = multer({
+        storage: multer.memoryStorage()
+    });
 
     constructor({ app, middleware, database }: IConstructor) {
         this._app = app;
@@ -30,62 +38,51 @@ export default class FileController {
 
     // Слушатели запросов контроллера FileController
     private _init() {
-        this._app.post(ApiRoutes.saveAvatar, this._uploader.single("avatar"), this._saveAvatar.bind(this));
-        this._app.post(ApiRoutes.uploadAvatar, this._uploader.single("avatar"), this._uploadAvatar.bind(this));
-        this._app.post(ApiRoutes.uploadAvatarAuth, this._middleware.mustAuthenticated.bind(this), this._uploader.single("avatar"), this._uploadAvatarAuth.bind(this));
+        this._app.post(ApiRoutes.saveAvatar, this._uploader.single("avatar"), this._middleware.sharpImage.bind(this._middleware), this._saveAvatar.bind(this));
+        this._app.post(ApiRoutes.uploadAvatar, this._uploadAvatar.bind(this));
+        this._app.post(
+            ApiRoutes.uploadAvatarAuth, 
+            this._middleware.mustAuthenticated.bind(this._middleware), 
+            this._uploader.single("avatar"), 
+            this._middleware.setSharpParams.bind(this._middleware),
+            this._middleware.sharpImage.bind(this._middleware), 
+            this._uploadAvatarAuth.bind(this)
+        );
 
-        this._app.get(ApiRoutes.getPhotos, this._middleware.mustAuthenticated.bind(this), this._getPhotos.bind(this));
-        this._app.post(ApiRoutes.savePhotos, this._middleware.mustAuthenticated.bind(this), this._uploader.array("photo"), this._savePhotos.bind(this));
-        this._app.post(ApiRoutes.deleteImage, this._middleware.mustAuthenticated.bind(this), (req, res, next) => this._deleteImage(req, res, next, undefined));
+        this._app.get(ApiRoutes.getPhotos, this._middleware.mustAuthenticated.bind(this._middleware), this._getPhotos.bind(this));
+        this._app.post(
+            ApiRoutes.savePhotos, 
+            this._middleware.mustAuthenticated.bind(this._middleware), 
+            this._uploader.array("photo"), 
+            this._middleware.sharpImages.bind(this._middleware), 
+            this._savePhotos.bind(this)
+        );
+        this._app.post(ApiRoutes.deleteImage, this._middleware.mustAuthenticated.bind(this._middleware), (req, res, next) => this._deleteImage(req, res, next, undefined));
 
-        this._app.post(ApiRoutes.saveFiles, this._middleware.mustAuthenticated.bind(this), this._uploader.array("file"), this._saveFiles.bind(this));
-        this._app.post(ApiRoutes.deleteFiles, this._middleware.mustAuthenticated.bind(this), this._deleteFiles.bind(this));
-        this._app.post(ApiRoutes.openFile, this._middleware.mustAuthenticated.bind(this), this._openFile.bind(this));
-        this._app.get(ApiRoutes.downloadFile, this._middleware.mustAuthenticated.bind(this), this._downloadFile.bind(this));
+        this._app.post(ApiRoutes.saveFiles, this._middleware.mustAuthenticated.bind(this._middleware), this._uploader.array("file"), this._saveFiles.bind(this));
+        this._app.post(ApiRoutes.deleteFiles, this._middleware.mustAuthenticated.bind(this._middleware), this._deleteFiles.bind(this));
+        this._app.post(ApiRoutes.openFile, this._middleware.mustAuthenticated.bind(this._middleware), this._openFile.bind(this));
+        this._app.get(ApiRoutes.downloadFile, this._middleware.mustAuthenticated.bind(this._middleware), this._downloadFile.bind(this));
     }
 
-    // Обработка multipart формата (файлы) пакетом multer
-    private _uploader = multer({
-        storage: multer.diskStorage({
-            // Создание и проверка директории
-            destination: function (_, file, callback) {
-                const folder = `server/assets/${file.fieldname}s/`;
-
-                if (!fs.existsSync(folder)) {
-                    fs.mkdirSync(folder);
-                }
-
-                callback(null, folder);
-            },
-            // Создание файла в директории
-            filename: function (_, file, callback) {
-                callback(null, file.fieldname + "-" + uuid() + "." + file.mimetype.split("/").pop());
-            }
-        })
-    });
-
-    // Сохраняем аватар при его выборе при регистрации нового пользователя (req.file)
-    private _saveAvatar(req: Request, res: Response) {
+    // Обрезаем и сохраняем аватар пользователя на диск при регистрации
+    private async _saveAvatar(req: Request, res: Response) {
         try {
-            if (!req.file) {
-                throw new Error("В req.file не передано изображение с аватаром");
-            }
-    
-            const file = req.file;
-    
-            return res.json({ success: true, url: `/${file.fieldname}s/${file.filename}` });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.json({ success: true, newAvatarUrl: (req as IRequestWithSharpData).sharpImageUrl });
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
-    // Загрузка аватара при регистрации нового пользователя (req.file)
+    // Загрузка аватара в таблицы Photos и Users при регистрации нового пользователя
     private async _uploadAvatar(req: Request, res: Response) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
-            const { avatarUrl } = req.body as { avatarUrl: string; };
+            const { avatarUrl }: { avatarUrl: string; } = req.body;
             const userId = (req.user as IUser).id;
 
             // Добавляем аватар в таблицу Users
@@ -98,20 +95,24 @@ export default class FileController {
             await this._database.models.photos.create({
                 id: uuid(),
                 userId,
-                path: avatarUrl
+                path: avatarUrl,
+                createDate: currentDate
             }, { transaction });
 
             await transaction.commit();
     
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
-    // Установка/смена аватара на главной странице (req.file)
+    // Установка/смена аватара на главной странице пользователя
     private async _uploadAvatarAuth(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
@@ -122,20 +123,20 @@ export default class FileController {
                 return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.USER_NOT_FOUND });
             }
 
-            if (!req.file) {
-                throw new Error("В req.file не передано изображение с аватаром");
-            }
-
-            const file = req.file;
             const userId = (req.user as IUser).id;
-            const fileUrl = "/" + file.destination.split("/")[1] + "/" + file.filename;
+            const fileUrl = (req as IRequestWithSharpData).sharpImageUrl;
+            const dublicateFileUrl = (req as IRequestWithSharpData).dublicateSharpImageUrl;
 
             if (!userId) {
                 throw "Не найден идентификатор пользователя";
             }
 
-            if (!file) {
-                throw "Не передан изображение с аватаром";
+            if (!fileUrl) {
+                throw "Не найден путь к сжатому файлу аватара";
+            }
+
+            if (!dublicateFileUrl) {
+                throw "Не найден путь к сжатому файлу фотографии";
             }
 
             const findUser = await this._database.models.users.findByPk(userId, {
@@ -151,9 +152,7 @@ export default class FileController {
             // Если у пользователя уже существует аватар, то его необходимо удалить из БД и с диска 
             if (findUser.avatarUrl) {
                 req.body = {
-                    isAvatar: true,
-                    path: findUser.avatarUrl,
-                    returnResponse: false
+                    fileUrl: findUser.avatarUrl
                 }
 
                 await this._deleteImage(req, res, next, { returnResponse: false, currTransaction: transaction });
@@ -165,20 +164,26 @@ export default class FileController {
                 { where: { id: userId }, transaction }
             );
 
+            const newPhotoId = uuid();
+
             // Добавляем данный аватар в фотографии пользователя
             await this._database.models.photos.create({
-                id: uuid(),
+                id: newPhotoId,
                 userId,
-                path: fileUrl
+                path: dublicateFileUrl,
+                createDate: currentDate
             }, { transaction });
 
             await transaction.commit();
 
-            return res.json({ success: true, url: `/${file.fieldname}s/${file.filename}` });
-        } catch (error: any) {
-            console.log(error);
+            return res.json({ success: true, id: newPhotoId, newAvatarUrl: fileUrl, newPhotoUrl: dublicateFileUrl });
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -192,67 +197,78 @@ export default class FileController {
             }
 
             const photos = await this._database.models.photos.findAll({
-                where: { userId }
+                where: { userId },
+                include: [{
+                    model: this._database.models.users,
+                    as: "User",
+                    attributes: ["firstName", "thirdName", "id", "avatarUrl"]
+                }]
             });
 
             return res.json({ success: true, photos });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
-    // Сохраняем файлы (req.files) в таблицу Photos
+    // Сохраняем фотографии в таблицу Photos
     private async _savePhotos(req: Request, res: Response) {
-        const transaction = await this._database.sequelize.transaction();
-
         try {
-            if (req.files) {
-                const images = req.files as Express.Multer.File[];
-                const userId = (req.user as IUser).id;
-
-                if (!userId) {
-                    throw "Не найден идентификатор пользователя";
-                }
-
-                if (images && images.length) {
-                    const photos: { id: string; userId: string; path: string; }[] = images.map(image => ({
-                        id: uuid(),
-                        userId,
-                        path: image.path.slice(6)
-                    }));
-
-                    await this._database.models.photos.bulkCreate(photos, { transaction });
-
-                    await transaction.commit();
-
-                    return res.json({ success: true, photos });
-                }
-            } else {
-                throw "Не переданы изображения";
-            }
-        } catch (error: any) {
-            console.log(error);
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
-        }
-    };
-
-    // Удаление аватара/фотографии
-    private async _deleteImage(req: Request, res: Response, _:NextFunction, params: { returnResponse: boolean; currTransaction?: Transaction } | undefined = { returnResponse: true }) {
-        const transaction = params?.currTransaction || await this._database.sequelize.transaction();
-
-        try {
-            const { path, isAvatar = false } = req.body as { path: string; isAvatar: boolean; };
-
-            const filePath = "app/public" + path;
+            const imagesUrls = (req as IRequestWithImagesSharpData).sharpImagesUrls;
             const userId = (req.user as IUser).id;
 
             if (!userId) {
                 throw "Не найден идентификатор пользователя";
             }
 
-            if (!filePath) {
+            if (!imagesUrls || !imagesUrls.length) {
+                throw "Сжатые фотографии не найдены";
+            }
+
+            const photos: { id: string; userId: string; path: string; }[] = imagesUrls.map(fileUrl => ({
+                id: uuid(),
+                userId,
+                path: fileUrl,
+                createDate: currentDate
+            }));
+
+            await this._database.models.photos.bulkCreate(photos);
+
+            return res.json({ success: true, photos: photos.map(photo => ({
+                ...photo,
+                User: {
+                    id: userId,
+                    firstName: (req.user as IUser).firstName,
+                    thirdName: (req.user as IUser).thirdName,
+                    avatarUrl: (req.user as IUser).avatarUrl
+                }
+            })) });
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+        }
+    };
+
+    // Удаление аватара/фотографии из БД и с диска
+    private async _deleteImage(req: Request, res: Response, _:NextFunction, params: { returnResponse: boolean; currTransaction?: Transaction } | undefined = { returnResponse: true }) {
+        const transaction = params?.currTransaction || await this._database.sequelize.transaction();
+
+        try {
+            const { fileUrl, isAvatar = true }: { fileUrl: string; isAvatar: boolean; } = req.body;
+
+            const filePath = path.join(__dirname, ASSETS_PATH, fileUrl);
+            const userId = (req.user as IUser).id;
+
+            if (!userId) {
+                throw "Не найден идентификатор пользователя";
+            }
+
+            if (!fileUrl) {
                 throw "Не передан путь для удаления изображения";
             }
 
@@ -267,13 +283,13 @@ export default class FileController {
                     { avatarUrl: "" },
                     { where: { id: userId }, transaction }
                 );
+            } else {
+                // Удаляем фотографии из таблицы Photos
+                await this._database.models.photos.destroy({
+                    where: { userId, path: fileUrl },
+                    transaction
+                });
             }
-
-            // Удаляем фотографии из таблицы Photos
-            await this._database.models.photos.destroy({
-                where: { userId, path },
-                transaction
-            });
 
             // Удаление файла с диска
             fs.unlinkSync(filePath);
@@ -282,10 +298,13 @@ export default class FileController {
                 await transaction.commit();
                 return res.json({ success: true });
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -316,10 +335,13 @@ export default class FileController {
             } else {
                 throw "Не переданы файлы";
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -371,10 +393,13 @@ export default class FileController {
             await transaction.commit();
 
             return res.json({ success: true });
-        } catch (error: any) {
-            console.log(error);
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
@@ -392,16 +417,18 @@ export default class FileController {
                 .then((module) => module(path))
                 .then(() => res.json({ success: true }))
                 .catch(error => { throw error });
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 
     // Скачивание файла
     private _downloadFile(req: Request, res: Response) {
         try {
-            const { name, path } = req.query as unknown as { name: string; path: string; };
+            const { name, path } = req.query as { name: string; path: string; };
 
             if (!path) {
                 throw "Не передан путь для скачивания файла";
@@ -412,9 +439,11 @@ export default class FileController {
             } else {
                 return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.FILE_NOT_FOUND });
             }
-        } catch (error: any) {
-            console.log(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: error.message ?? error });
+        } catch (error) {
+            const nextError = error instanceof FileError
+                ? error
+                : new FileError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
 };

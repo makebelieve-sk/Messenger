@@ -1,16 +1,26 @@
 import { createClient } from "redis";
 import RedisStore from "connect-redis";
+
 import { RedisKeys } from "../types/enums";
+import { TimeoutType } from "../types";
 
 export type RedisClient = ReturnType<typeof createClient>;
 export type RedisStoreType = ReturnType<typeof RedisStore>;
 
+const REDIS_CONNECTION_URL = process.env.REDIS_CONNECTION_URL || "redis://localhost:6379";
+const REDIS_TIMEOUT_RECONNECTION = process.env.REDIS_TIMEOUT_RECONNECTION
+    ? JSON.parse(process.env.REDIS_TIMEOUT_RECONNECTION)
+    : 5000;
+
 export default class RedisWorks {
     private _client: RedisClient;
-    private _redisStore: RedisStoreType;
+    private readonly _redisStore: RedisStoreType;
+    private _timeoutReconnect!: TimeoutType;
 
     constructor() {
-        this._client = createClient();
+        this._client = createClient({
+            url: REDIS_CONNECTION_URL,
+        });
         this._client
             .connect()
             .catch(error => this._errorHandler(error));
@@ -28,21 +38,46 @@ export default class RedisWorks {
     }
 
     private _bindListeners() {
-        this.redisClient.on("connect", () => console.log("Соединение с клиентом Redis успешно установлено"));
-        this.redisClient.on("reconnecting", () => console.log("Клиент Redis переподключается..."));
-        this.redisClient.on("error", async error => await this._errorHandler(error));
-        this.redisClient.on("end", () => console.log("Клиент Redis остановлен"));
+        this.redisClient.on("connect", this._connectHandler);
+        this.redisClient.on("ready", this._readyHandler);
+        this.redisClient.on("error", async (error: string) => await this._errorHandler(error));
+        this.redisClient.on("end", this._endHandler);
+    }
+
+    private _connectHandler() {
+        console.log("Соединение с клиентом Redis успешно установлено");
+    }
+
+    private _readyHandler() {
+        console.log("Клиент Redis готов к работе");
     }
 
     private async _errorHandler(error: string) {
         const errorText = "Ошибка в работе клиента Redis: " + error;
         console.log(errorText);
-        
-        await this._disconnect();
+
+        await this.close();
     }
 
-    private async _disconnect() {
-        await this.redisClient.disconnect()
+    private _endHandler() {
+        console.log("Клиент Redis остановлен");
+
+        if (this._timeoutReconnect) {
+            clearTimeout(this._timeoutReconnect);
+        }
+
+        this._timeoutReconnect = setTimeout(() => {
+            console.log("Клиент Redis переподключается...");
+
+            this._client = createClient();
+            this._client
+                .connect()
+                .catch(this._errorHandler);
+        }, REDIS_TIMEOUT_RECONNECTION);
+    }
+
+    public async close() {
+        await this.redisClient.disconnect();
     }
 
     // Получить полный ключ сохраненного значения

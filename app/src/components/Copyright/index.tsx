@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+
 import { Pages } from "../../types/enums";
 
 import "./copyright.scss";

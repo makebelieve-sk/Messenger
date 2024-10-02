@@ -1,14 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import SnackBarComponent from "../../Common/Snackbar";
+
+import { MainClientContext } from "../../../service/AppService";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useGlobalState";
 import { selectErrorState, setError } from "../../../state/error/slice";
-import { MainClientContext } from "../../App";
+import { MAIL_FEEDBACK } from "../../../utils/constants";
+import SnackBarComponent from "../../Common/Snackbar";
 
 import "./modal-with-error.scss";
 
@@ -23,6 +26,7 @@ export default React.memo(function ModalWithError() {
 
     const { error } = useAppSelector(selectErrorState);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         setOpen(Boolean(error));
@@ -30,12 +34,12 @@ export default React.memo(function ModalWithError() {
 
     // Копирование текста в буфер обмена
     const onCopy = () => {
-        if (navigator && navigator.clipboard && error) {
+        if (navigator.clipboard && error) {
             navigator.clipboard.writeText(error)
                 .then(() => {
                     setVisible(true);
                 })
-                .catch(error => {
+                .catch((error: Error) => {
                     mainClient.catchErrors("Ошибка при копировании текста в буфер обмена: " + error);
                 });
         }
@@ -51,7 +55,7 @@ export default React.memo(function ModalWithError() {
 
     // Обновление страницы
     const onReload = () => {
-        window.location.reload();
+        navigate(0);
     };
 
     return <>
@@ -69,21 +73,21 @@ export default React.memo(function ModalWithError() {
             disableEscapeKeyDown
         >
             <Box className="modal-error-container">
-                <Typography id={modalTitle} variant="h6" component="h2">
+                <Typography variant="h6" component="h2">
                     Упс! Возникла ошибка в работе сервера
                 </Typography>
 
-                <Typography id={modalDescription} className="modal-error-container__text">
-                    Пожалуйста, скопируйте текст ошибки и отправьте её на почту разработчикам: skryabin.aleksey99@gmail.com
+                <Typography className="modal-error-container__text">
+                    Пожалуйста, скопируйте текст ошибки и отправьте её на почту разработчикам: {MAIL_FEEDBACK}
                 </Typography>
 
                 <div className="modal-error-container__error" onClick={onCopy}>
                     {error}
                 </div>
 
-                <Typography id={modalDescription} align="right" className="modal-error-container__button">
+                <div className="modal-error-container__button">
                     <Button variant="outlined" startIcon={<RefreshIcon />} onClick={onReload}>Обновить страницу</Button>
-                </Typography>
+                </div>
             </Box>
         </Modal>
     </>

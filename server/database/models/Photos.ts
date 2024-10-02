@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IPhoto } from "../../types/models.types";
 
-interface IConstructor {
-    sequelize: Sequelize;
-};
-
 // Тип модели Photos, унаследованного от Sequelize
 export type PhotosInstance = IPhoto & Model & {};
 
 export default class Photos {
-    private _sequelize: Sequelize;
-    private _photosModel: ModelStatic<PhotosInstance> | undefined = undefined;
+    private _photosModel!: ModelStatic<PhotosInstance>;
 
-    constructor({ sequelize }: IConstructor) {
-        this._sequelize = sequelize;
+    constructor(private readonly _sequelize: Sequelize) {
         this._init();
     }
 
     get photos() {
-        return this._photosModel as ModelStatic<PhotosInstance>;
+        return this._photosModel;
     }
 
     private _init() {
@@ -36,6 +30,11 @@ export default class Photos {
             path: {
                 type: DataTypes.STRING,
                 allowNull: false,
+            },
+            createDate: {
+                type: DataTypes.DATE,
+                allowNull: false,
+                field: "create_date"
             }
         })
     }

@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IFriend } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 // Тип модели Friends, унаследованного от Sequelize
 export type FriendsInstance = IFriend & Model & {};
 
 export default class Friends {
-  private _sequelize: Sequelize;
-  private _friendsModel: ModelStatic<FriendsInstance> | undefined = undefined;
+  private _friendsModel!: ModelStatic<FriendsInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get friends() {
-    return this._friendsModel as ModelStatic<FriendsInstance>;
+    return this._friendsModel;
   }
 
   private _init() {

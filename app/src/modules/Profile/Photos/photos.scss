@@ -1,0 +1,48 @@
+@import "../../../styles/colors.scss";
+
+.photo-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    min-height: 100px;
+    gap: 10px;
+    
+    &__title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &__text {
+            display: flex;
+        }
+        &__link {
+            width: max-content;
+            color: $dark-blue;
+            
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+    &__button-container {
+        padding: 0;
+        width: 100%;
+        text-align: center;
+    }
+    &__photos {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: 5px;
+
+        .photo {
+            max-width: fit-content;
+            max-height: 200px;
+            overflow: hidden;
+        }
+    }
+}

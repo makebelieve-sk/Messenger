@@ -1,24 +1,18 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IChat } from "../../types/models.types";
 
-interface IConstructor {
-  sequelize: Sequelize;
-};
-
 // Тип модели Chats, унаследованного от Sequelize
 export type ChatsInstance = IChat & Model & {};
 
 export default class Chats {
-  private _sequelize: Sequelize;
-  private _chatModel: ModelStatic<ChatsInstance> | undefined = undefined;
+  private _chatModel!: ModelStatic<ChatsInstance>;
 
-  constructor({ sequelize }: IConstructor) {
-    this._sequelize = sequelize;
+  constructor(private readonly _sequelize: Sequelize) {
     this._init();
   }
 
   get chats() {
-    return this._chatModel as ModelStatic<ChatsInstance>;
+    return this._chatModel;
   }
 
   private _init() {
