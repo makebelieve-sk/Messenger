@@ -17,7 +17,7 @@ interface IConstructor {
 export default class Socket {
     private readonly _socket: SocketType;
     private readonly _user: IUser;
-    private readonly _navigate: AppDispatch;
+    private readonly _navigate: NavigateFunction;
     private readonly _dispatch: AppDispatch;
 
     constructor({ myProfile, navigate, dispatch }: IConstructor) {
