@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -197,9 +196,9 @@ export default function SignUp() {
 
                     <Grid container justifyContent="center" sx={{ mb: 3 }}>
                         <Grid item>
-                            <Link href={Pages.signIn} variant="body2" onClick={() => navigate(Pages.signIn)}>
+                            <Typography variant="body2" color="blue" sx={{ cursor: "pointer" }} onClick={() => navigate(Pages.signIn)}>
                                 Уже есть аккаунт? Войдите
-                            </Link>
+                            </Typography>
                         </Grid>
                     </Grid>
 

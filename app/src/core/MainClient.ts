@@ -1,12 +1,11 @@
 import React from "react";
-import { NavigateFunction } from "react-router-dom";
 import EventEmitter from "eventemitter3";
 
-import { setUser } from "../state/user/slice";
 import { setAuth, setFriendNotification, setMessageNotification } from "../state/main/slice";
 import { ApiRoutes, Pages } from "../types/enums";
 import { IUser } from "../types/models.types";
 import { AppDispatch } from "../types/redux.types";
+import { MainClientEvents } from "../types/events";
 import CatchErrors, { CatchType } from "./CatchErrors";
 import Request from "./Request";
 import Socket from "./socket/Socket";
@@ -14,14 +13,11 @@ import ProfilesController from "./profile/ProfilesController";
 import Profile from "./profile/Profile";
 import { MY_ID } from "../utils/constants";
 
-interface IConstructor {
-    dispatch: AppDispatch;
-    navigate: NavigateFunction;
-};
-
 // TODO
 // 1) Создать новый класс User и вынести все упоминания из Profile
-// 2) Подгрузить отдельно аватарку + создать и хранить ее отдельно в таблице Avatars + заменить поле avatarUrl в таблице Users (хранить там ссылку на id записи таблицы Avatars)
+// 2) Объединить методы _getMe и _getUser в профиле Profile
+// 2.0) Создать единый компонент ссылки в проекте на основе MUI (проверить и заменить все <a> или <Link> на собственный компонент, добавив ему стили)
+// 2.1) Подгрузить отдельно аватарку + создать и хранить ее отдельно в таблице Avatars + заменить поле avatarUrl в таблице Users (хранить там ссылку на id записи таблицы Avatars)
 // 3) После работы с профилем: Отрефакторить фронт (заменить throw new Error/throw на catch из mainClient через eventemitter, вынести события eventemitter в отдельный енам)
 // 4) После работы с профилем: Отрефакторить бек (перепроверить возврат данных, создать новый функции для каждого использования - например: отдельно создание/удаление фотки и аватара)
 // 5) После работы с профилем: Отрефакторить БД (не должно быть ссылок на строки и тд, переделать и создать новые поля/таблицы при необходимости)
@@ -44,22 +40,18 @@ export default class MainClient extends EventEmitter {
     private readonly _request: Request;
     private readonly _catchErrors: CatchErrors;
     private readonly _profilesController: ProfilesController;
-    private readonly _navigate: NavigateFunction;
-    private readonly _dispatch: AppDispatch;
     private _socket!: Socket;
 
-    constructor({ dispatch, navigate }: IConstructor) {
+    constructor(private readonly _dispatch: AppDispatch) {
         super();
 
-        this._dispatch = dispatch;
-        this._navigate = navigate;
-
-        this._catchErrors = new CatchErrors({ dispatch: this._dispatch, navigate: this._navigate });
+        this._catchErrors = new CatchErrors(this._dispatch);
         this._request = new Request(this._catchErrors);
 
         this._profilesController = new ProfilesController(this._request, this._dispatch);
 
         this._bindProfileListeners();
+        this._bindCatchErrorsListeners();
     }
 
     public catchErrors(error: string) {
@@ -86,7 +78,7 @@ export default class MainClient extends EventEmitter {
             setLoading,
             successCb: () => {
                 this._profilesController.addProfile();
-                this._navigate(Pages.profile);
+                this.emit(MainClientEvents.REDIRECT, Pages.profile);
             },
             failedCb: cb
         });
@@ -98,8 +90,7 @@ export default class MainClient extends EventEmitter {
             data,
             setLoading,
             successCb: (data: { success: boolean, user: IUser }) => {
-                this._dispatch(setUser(data.user));
-
+                // TODO исправить пиздец (пункт 2.1)
                 this._uploadAvatar({ avatarUrl: data.user.avatarUrl });
             },
             failedCb: cb
@@ -107,15 +98,17 @@ export default class MainClient extends EventEmitter {
     }
 
     public logout() {
+        this.emit(MainClientEvents.REDIRECT, Pages.signIn);
+        this._dispatch(setAuth(false));
+        this._socket.disconnect();
+
         this._request.get({
             route: ApiRoutes.logout,
             successCb: () => {
-                this._dispatch(setAuth(false));
-                this._navigate(Pages.signIn);
+                // Сделано в обработчике специально, так как нужно дождаться размонтирования компонент на странице профиля (они используют текущий профиль)
+                this._profilesController.removeProfile();
             }
         });
-        this._socket.disconnect();
-        this._profilesController.removeProfile();
     }
 
     public uploadAvatarAuth(route: ApiRoutes, data: Object, setLoading: React.Dispatch<React.SetStateAction<boolean>>, cb: (data: { success: boolean; id: string; newAvatarUrl: string; newPhotoUrl: string; }) => void) {
@@ -159,37 +152,58 @@ export default class MainClient extends EventEmitter {
         this._request.post({
             route: ApiRoutes.uploadAvatar,
             data,
-            successCb: () => this._navigate(Pages.profile)
-        })
+            successCb: () => {
+                this._profilesController.addProfile();
+                this.emit(MainClientEvents.REDIRECT, Pages.profile)
+            }
+        });
     }
 
-    // Слушатель события класса ProfilesController
+    // Слушатели событый класса ProfilesController
     private _bindProfileListeners() {
-        this._profilesController.on("get-me", () => this._getMe());
+        this._profilesController.on(MainClientEvents.GET_ME, () => this._getMe());
     }
 
+    // Слушатели событый класса CatchErrors
+    private _bindCatchErrorsListeners() {
+        this._catchErrors.on(MainClientEvents.REDIRECT, (path: string) => {
+            this.emit(MainClientEvents.REDIRECT, path);
+        });
+    }
+
+    // Слушатели событый класса Socket
+    private _bindSocketListeners() {
+        this._socket.on(MainClientEvents.REDIRECT, (path: string) => {
+            this.emit(MainClientEvents.REDIRECT, path);
+        });
+    }
+
+    // Получили информацию о себе
     private _getMe() {
         this._dispatch(setAuth(true));
         this._initSocket();
         this._redirectHandler();
     }
 
+    // Инициализация сокета
     private _initSocket() {
         if (!this._socket) {
             this._socket = new Socket({
                 myProfile: this.getProfile(),
-                navigate: this._navigate as NavigateFunction,
                 dispatch: this._dispatch
             });
+
+            this._bindSocketListeners();
         }
     }
 
+    // Редирект в зависимости от текущего урла
     private _redirectHandler() {
         switch (window.location.pathname) {
             case Pages.main:
             case Pages.signIn:
             case Pages.signUp:
-                this._navigate(Pages.profile);
+                this.emit(MainClientEvents.REDIRECT, Pages.profile);
                 break;
         }
     }

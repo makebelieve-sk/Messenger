@@ -7,6 +7,7 @@ import { setFriendsCount, setSubscribersCount, setTopFriends } from "../../state
 import { ApiRoutes } from "../../types/enums";
 import { IPhoto, IUser, IUserDetails } from "../../types/models.types";
 import { AppDispatch } from "../../types/redux.types";
+import { MainClientEvents } from "../../types/events";
 import { MY_ID, NO_PHOTO } from "../../utils/constants";
 import { currentDate } from "../../utils/datetime";
 import { AVATAR_URL } from "../../utils/files";
@@ -50,8 +51,8 @@ export default class Profile extends EventEmitter {
             successCb: (data: { success: boolean, user: IUser }) => {
                 this._user = data.user;
                 this._dispatch(setUser(this._user));
-                console.log("Подгрузили юзера: ", this._user)
-                this.emit("get-me");
+                console.log("Подгрузили инфу о себе: ", this._user);
+                this.emit(MainClientEvents.GET_ME);
             }
         });
     }

@@ -13,7 +13,7 @@ const modalTitle = "modal-confirm-title";
 const modalDescription = "modal-confirm-description";
 
 export default React.memo(function ModalWithConfirm() {
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     
     const { modalConfirm } = useAppSelector(selectMainState);
     const dispatch = useAppDispatch();

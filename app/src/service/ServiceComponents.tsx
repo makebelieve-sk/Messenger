@@ -9,16 +9,13 @@ import ModalWithImagesCarousel from "../components/Modals/ModalWithImagesCarouse
 import SnackBarWithSocketError from "../components/Snackbars/SnackBarWithSocketError";
 // import SnackBarWithCall from "../components/Snackbars/SnackbarWithCall";
 // import ModalWithCall from "../components/Modals/ModalWithCall";
-import Spinner from "../components/Common/Spinner";
 
 export default React.memo(function ServiceComponents() {
-    const { isAuth, loading } = useAppSelector(selectMainState);
+    const { isAuth } = useAppSelector(selectMainState);
 
     return <>
         <ModalWithError />
         <ModalWithConfirm />
-
-        {loading ? <Spinner /> : null }
 
         {isAuth
             ? <>

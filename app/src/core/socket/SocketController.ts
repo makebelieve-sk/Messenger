@@ -1,4 +1,4 @@
-import { NavigateFunction } from "react-router-dom";
+import EventEmitter from "eventemitter3";
 
 import { setCallId, setChatInfo, setModalVisible, setStatus, setUsers } from "../../state/calls/slice";
 import { setSystemError } from "../../state/error/slice";
@@ -9,6 +9,7 @@ import { CallStatus, FriendsNoticeTypes, Pages, SocketActions, SocketChannelErro
 import { IUser } from "../../types/models.types";
 import { AppDispatch } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
+import { MainClientEvents } from "../../types/events";
 import { getFullName } from "../../utils";
 import PlayAudio from "../../utils/play-audio";
 
@@ -16,22 +17,21 @@ interface IConstructor {
     socket: SocketType;
     user: IUser;
     dispatch: AppDispatch;
-    navigate: NavigateFunction;
 };
 
 const SERVER_DISCONNECT = "io server disconnect";
 
-export default class SocketController {
+export default class SocketController extends EventEmitter {
     private readonly _socket: SocketType;
     private readonly _user: IUser;
     private readonly _dispatch: AppDispatch;
-    private readonly _navigate: NavigateFunction;
 
-    constructor({ socket, user, dispatch, navigate }: IConstructor) {
+    constructor({ socket, user, dispatch }: IConstructor) {
+        super();
+
         this._socket = socket;
         this._user = user;
         this._dispatch = dispatch;
-        this._navigate = navigate;
         
         this._init();
     }
@@ -138,7 +138,7 @@ export default class SocketController {
             this._socket.on(SocketActions.DELETE_CHAT, ({ chatId }) => {
                 // Если собеседник приватного чата находится на странице с чатом - перенаправляем его на страницу всех диалогов
                 if (window.location.pathname.toLowerCase() === Pages.messages + "/" + chatId.toLowerCase()) {
-                    this._navigate(Pages.messages);
+                    this.emit(MainClientEvents.REDIRECT, Pages.messages);
                 }
 
                 this._dispatch(deleteDialog(chatId));

@@ -6,17 +6,18 @@ import Router from "../../service/Router";
 import ServiceComponents from "../../service/ServiceComponents";
 import Header from "../Header";
 import MenuComponent from "../Menu";
+import Spinner from "../Common/Spinner";
 
 import "./app.scss";
 
-export default function App() {
+export default React.memo(function App() {
   const { isAuth, loading } = useAppSelector(selectMainState);
 
   return <div className="root">
     <ServiceComponents />
 
     {loading
-      ? null
+      ? <Spinner />
       : <>
         {isAuth ? <Header /> : null}
 
@@ -32,4 +33,4 @@ export default function App() {
       </>
     }
   </div>
-};
+});

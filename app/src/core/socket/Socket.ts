@@ -1,32 +1,34 @@
+import EventEmitter from "eventemitter3";
 import { io } from "socket.io-client";
-import { NavigateFunction } from "react-router-dom";
 
 import { SOCKET_IO_CLIENT } from "../../utils/constants";
-import { AppDispatch, StoreType } from "../../types/redux.types";
+import { AppDispatch } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
 import { IUser } from "../../types/models.types";
+import { MainClientEvents } from "../../types/events";
 import SocketController from "./SocketController";
 import Profile from "../profile/Profile";
 
 interface IConstructor {
     myProfile: Profile;
-    navigate: NavigateFunction;
     dispatch: AppDispatch;
 };
 
-export default class Socket {
+export default class Socket extends EventEmitter {
     private readonly _socket: SocketType;
     private readonly _user: IUser;
-    private readonly _navigate: AppDispatch;
     private readonly _dispatch: AppDispatch;
+    private _socketController!: SocketController;
 
-    constructor({ myProfile, navigate, dispatch }: IConstructor) {
+    constructor({ myProfile, dispatch }: IConstructor) {
+        super();
+
         this._user = myProfile.user;
         this._socket = io(SOCKET_IO_CLIENT, { transports: ["websocket"] });
-        this._navigate = navigate;
         this._dispatch = dispatch;
 
         this._init();
+        this._bindSocketControllerListeners();
     }
 
     // TODO Удалить после рефакторинга звонков (useWebRTC)
@@ -42,7 +44,13 @@ export default class Socket {
         this._socket.auth = { user: this._user };
         this._socket.connect();
 
-        new SocketController({ socket: this._socket, user: this._user, dispatch: this._dispatch, navigate: this._navigate });
+        this._socketController = new SocketController({ socket: this._socket, user: this._user, dispatch: this._dispatch });
+    }
+
+    private _bindSocketControllerListeners() {  
+        this._socketController.on(MainClientEvents.REDIRECT, (path: string) => {
+            this.emit(MainClientEvents.REDIRECT, path);
+        });
     }
 
     public disconnect() {
