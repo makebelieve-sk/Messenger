@@ -8,7 +8,7 @@ import Friends from "../modules/Profile/Friends";
 import PersonalInfo from "../modules/Profile/PersonalInfo";
 import Photos from "../modules/Profile/Photos";
 
-export default function Profile() {
+export default React.memo(function Profile() {
     const navigate = useNavigate();
 
     // Клик по названию блока
@@ -37,4 +37,4 @@ export default function Profile() {
             <Photos />
         </Grid>
     </Grid>
-};
+});

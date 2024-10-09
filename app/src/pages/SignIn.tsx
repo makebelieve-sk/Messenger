@@ -7,7 +7,6 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { LoadingButton } from "@mui/lab";
@@ -32,7 +31,7 @@ const initialValues = {
 };
 
 export default function SignIn() {
-    const [saveDisabled, setSaveDisabled] = React.useState(false);
+    const [saveDisabled, setSaveDisabled] = React.useState(true);
     const [loading, setLoading] = React.useState(false);
     const [errorFromServer, setErrorFromServer] = React.useState(false);
     const [formValues, setFormValues] = React.useState(initialValues);
@@ -155,15 +154,15 @@ export default function SignIn() {
 
                     <Grid container>
                         <Grid item xs>
-                            <Link href={Pages.resetPassword} variant="body2" onClick={() => navigate(Pages.resetPassword)}>
+                            <Typography variant="body2" color="blue" sx={{ cursor: "pointer" }} onClick={() => navigate(Pages.resetPassword)}>
                                 Забыли пароль?
-                            </Link>
+                            </Typography>
                         </Grid>
 
                         <Grid item>
-                            <Link href={Pages.signUp} variant="body2" onClick={() => navigate(Pages.signUp)}>
+                            <Typography variant="body2" color="blue" sx={{ cursor: "pointer" }} onClick={() => navigate(Pages.signUp)}>
                                 Нет аккаунта? Зарегистрируйтесь!
-                            </Link>
+                            </Typography>
                         </Grid>
                     </Grid>
                 </Box>

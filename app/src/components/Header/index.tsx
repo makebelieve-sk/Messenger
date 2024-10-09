@@ -31,6 +31,7 @@ export default React.memo(function Header() {
         navigate(link);
     };
 
+    // Клик по лого
     const onMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (event.button === 1) {
             window.open(CLIENT_URL);

@@ -1,37 +1,29 @@
+import EventEmitter from "eventemitter3";
 import { AxiosError } from "axios";
-import { NavigateFunction } from "react-router-dom";
 
-import { HTTPStatuses, Pages } from "../types/enums";
 import { setError } from "../state/error/slice";
+import { HTTPStatuses, Pages } from "../types/enums";
 import { AppDispatch } from "../types/redux.types";
+import { MainClientEvents } from "../types/events";
 
 type BadRequestType = { success: boolean; message: string; field?: string; } | string | null;
 export type CatchType = BadRequestType | string | null;
 
-interface IConstructor {
-    dispatch: AppDispatch;
-    navigate: NavigateFunction;
-};
-
 const ERROR_MESSAGE = "Ошибка";
 const ERROR_TIMEOUT = "Возникли проблемы с БД или время ожидания ответа превысило 15 секунд";
 
-export default class CatchErrors {
+export default class CatchErrors extends EventEmitter {
     private _errorText: string = "";
     private _axiosError: AxiosError | undefined = undefined;
-    
-    private readonly _navigate: NavigateFunction;
-    private readonly _dispatch: AppDispatch;
 
-    constructor({ dispatch, navigate }: IConstructor) {
-        this._dispatch = dispatch;
-        this._navigate = navigate;
+    constructor(private readonly _dispatch: AppDispatch) {
+        super();
     }
 
     get error() {
-        return this._axiosError 
-        ? this._axiosError.message 
-        : this._errorText || ERROR_MESSAGE;
+        return this._axiosError
+            ? this._axiosError.message
+            : this._errorText || ERROR_MESSAGE;
     }
 
     public catch(errorText: string, axiosError?: AxiosError): CatchType {
@@ -43,7 +35,7 @@ export default class CatchErrors {
         if (this._axiosError) {
             if (this._axiosError.response) {
                 const { status } = this._axiosError.response;
-    
+
                 switch (status) {
                     case HTTPStatuses.PermanentRedirect: return this._permanentRedirect();
                     case HTTPStatuses.BadRequest: return this._badRequest();
@@ -65,7 +57,7 @@ export default class CatchErrors {
 
     // Статус 308
     private _permanentRedirect(): null {
-        this._navigate(Pages.profile);
+        this.emit(MainClientEvents.REDIRECT, Pages.profile);
         return null;
     };
 
@@ -80,13 +72,13 @@ export default class CatchErrors {
 
     // Статус 401
     private _unauthorized(): null {
-        this._navigate(window.location.pathname !== Pages.signUp ? Pages.signIn : Pages.signUp);
+        this.emit(MainClientEvents.REDIRECT, window.location.pathname !== Pages.signUp ? Pages.signIn : Pages.signUp);
         return null;
     };
 
     // Статус 403
     private _forbidden(): null {
-        this._navigate(Pages.signIn);
+        this.emit(MainClientEvents.REDIRECT, Pages.signIn);
         return null;
     };
 
@@ -95,7 +87,7 @@ export default class CatchErrors {
         this._dispatch(setError(this.error));
         return null;
     };
-    
+
     // Статус 500
     private _serverError(): null {
         this._dispatch(setError(this.error));

@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 import MainClient from "../core/MainClient";
 import { useAppDispatch } from "../hooks/useGlobalState";
@@ -9,9 +8,8 @@ export const MainClientContext = React.createContext<MainClient>(undefined as ne
 
 export default function AppService() {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
-    const mainClient = new MainClient({ dispatch, navigate });
+    const mainClient = new MainClient(dispatch);
 
     return <MainClientContext.Provider value={mainClient}>
         <App />

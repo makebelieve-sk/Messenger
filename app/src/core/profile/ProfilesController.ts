@@ -1,6 +1,7 @@
 import EventEmitter from "eventemitter3";
 
 import { AppDispatch } from "../../types/redux.types";
+import { MainClientEvents } from "../../types/events";
 import Profile from "./Profile";
 import Request from "../Request";
 import { MY_ID } from "../../utils/constants";
@@ -47,6 +48,6 @@ export default class ProfilesController extends EventEmitter {
 
     // Слушатель события класса Profile
     private _bindListeners(profile: Profile) {
-        profile.on("get-me", () => this.emit("get-me"));
+        profile.on(MainClientEvents.GET_ME, () => this.emit(MainClientEvents.GET_ME));
     }
 }
