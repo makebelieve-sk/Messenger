@@ -47,7 +47,7 @@ export default class Socket extends EventEmitter {
         this._socketController = new SocketController({ socket: this._socket, user: this._user, dispatch: this._dispatch });
     }
 
-    private _bindSocketControllerListeners() {  
+    private _bindSocketControllerListeners() {
         this._socketController.on(MainClientEvents.REDIRECT, (path: string) => {
             this.emit(MainClientEvents.REDIRECT, path);
         });
