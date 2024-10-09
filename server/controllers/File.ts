@@ -38,7 +38,13 @@ export default class FileController {
 
     // Слушатели запросов контроллера FileController
     private _init() {
-        this._app.post(ApiRoutes.saveAvatar, this._uploader.single("avatar"), this._middleware.sharpImage.bind(this._middleware), this._saveAvatar.bind(this));
+        this._app.post(
+            ApiRoutes.saveAvatar, 
+            this._uploader.single("avatar"), 
+            this._middleware.setSharpParams.bind(this._middleware),
+            this._middleware.sharpImage.bind(this._middleware), 
+            this._saveAvatar.bind(this)
+        );
         this._app.post(ApiRoutes.uploadAvatar, this._uploadAvatar.bind(this));
         this._app.post(
             ApiRoutes.uploadAvatarAuth, 
