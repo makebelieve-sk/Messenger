@@ -15,7 +15,7 @@ import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { MessagesError } from "../errors/controllers";
 
-const SRC = process.env.CLIENT_URL || "http://localhost:3000";
+const SRC = process.env.CLIENT_URL as string;
 
 interface IAttachmentFile extends IFile {
     firstName: string;

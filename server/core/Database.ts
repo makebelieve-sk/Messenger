@@ -1,12 +1,13 @@
 import { Dialect, Sequelize } from "sequelize";
+
 import Relations from "../database/Relations";
 import Models from "../database/models/Models";
 
-const DATEBASE_NAME = process.env.DATEBASE_NAME || "Project_1";
-const DATEBASE_USERNAME = process.env.DATEBASE_USERNAME || "sannikovadmin";
-const DATEBASE_PASSWORD = process.env.DATEBASE_PASSWORD || "sa";
-const DATEBASE_DIALECT = process.env.DATEBASE_DIALECT as Dialect || "mssql";
-const DATEBASE_HOST = process.env.DATEBASE_HOST || "localhost";
+const DATEBASE_NAME = process.env.DATEBASE_NAME as string;
+const DATEBASE_USERNAME = process.env.DATEBASE_USERNAME as string;
+const DATEBASE_PASSWORD = process.env.DATEBASE_PASSWORD as string;
+const DATEBASE_DIALECT = process.env.DATEBASE_DIALECT as Dialect;
+const DATEBASE_HOST = process.env.DATEBASE_HOST as string;
 
 const OPTIONS = {
     dialect: DATEBASE_DIALECT,

@@ -7,10 +7,8 @@ import { TimeoutType } from "../types";
 export type RedisClient = ReturnType<typeof createClient>;
 export type RedisStoreType = ReturnType<typeof RedisStore>;
 
-const REDIS_CONNECTION_URL = process.env.REDIS_CONNECTION_URL || "redis://localhost:6379";
-const REDIS_TIMEOUT_RECONNECTION = process.env.REDIS_TIMEOUT_RECONNECTION
-    ? JSON.parse(process.env.REDIS_TIMEOUT_RECONNECTION)
-    : 5000;
+const REDIS_CONNECTION_URL = process.env.REDIS_CONNECTION_URL as string;
+const REDIS_TIMEOUT_RECONNECTION = parseInt(process.env.REDIS_TIMEOUT_RECONNECTION as string);
 
 export default class RedisWorks {
     private _client: RedisClient;

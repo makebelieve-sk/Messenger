@@ -12,7 +12,7 @@ import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { AuthError } from "../errors/controllers";
 
-const COOKIE_NAME = process.env.COOKIE_NAME || "sid";
+const COOKIE_NAME = process.env.COOKIE_NAME as string;
 
 interface IConstructor {
     app: Express;

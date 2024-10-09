@@ -12,9 +12,9 @@ import PassportWorks from "./Passport";
 import Database from "./Database";
 import SocketWorks from "./Socket";
 
-const COOKIE_NAME = process.env.COOKIE_NAME || "sid";
-const SECRET_KEY = process.env.SECRET_KEY || "SECRET_KEY";
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
+const COOKIE_NAME = process.env.COOKIE_NAME as string;
+const SECRET_KEY = process.env.SECRET_KEY as string;
+const CLIENT_URL = process.env.CLIENT_URL as string;
 
 interface IContructor {
     app: Express;

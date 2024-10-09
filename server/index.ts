@@ -1,13 +1,11 @@
 import express from "express";
 import http from "http";
-import * as dotenv from "dotenv";
+import "dotenv/config";
 
 import MainServer from "./core/MainServer";
-dotenv.config();
 
-// Константы process.env
-const PORT = process.env.PORT || 8008;
-const MODE = process.env.NODE_ENV || "development";
+const PORT = process.env.PORT;
+const MODE = process.env.NODE_ENV;
 
 // Запуск сервера
 function init() {
