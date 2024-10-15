@@ -1,234 +1,272 @@
-import * as React from "react";
-import { useNavigate } from "react-router-dom";
-import { LoadingButton } from "@mui/lab";
-import Avatar from "@mui/material/Avatar";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
+import * as React from "react"
+import { useNavigate } from "react-router-dom"
+import { LoadingButton } from "@mui/lab"
+import Avatar from "@mui/material/Avatar"
+import CssBaseline from "@mui/material/CssBaseline"
+import Grid from "@mui/material/Grid"
+import Box from "@mui/material/Box"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import Typography from "@mui/material/Typography"
+import Container from "@mui/material/Container"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+import Stepper from "@mui/material/Stepper"
+import Step from "@mui/material/Step"
+import StepLabel from "@mui/material/StepLabel"
+import Button from "@mui/material/Button"
 
-import { MainClientContext } from "../service/AppService";
-import SignUpForm from "../modules/SignUp/Form";
-import ChooseAvatar from "../modules/SignUp/ChooseAvatar";
-import Copyright from "../components/Copyright";
-import { Pages } from "../types/enums";
-import { IUser } from "../types/models.types";
+import { MainClientContext } from "../service/AppService"
+import SignUpForm from "../modules/SignUp/Form"
+import ChooseAvatar from "../modules/SignUp/ChooseAvatar"
+import Copyright from "../components/Copyright"
+import { Pages } from "../types/enums"
+import { IUser } from "../types/models.types"
+import styles from "../styles/pages/sign-up.module.scss"
 
-const THEME = createTheme();
-const steps = ["Основные данные", "Выбор аватара"];
+const THEME = createTheme()
+const steps = ["Основные данные", "Выбор аватара"]
 
 const initialValues = {
-    values: {
-        firstName: "",
-        thirdName: "",
-        email: "",
-        phone: "",
-        password: "",
-        passwordConfirm: "",
-        avatarUrl: ""
-    },
-    errors: {
-        firstName: "",
-        thirdName: "",
-        email: "",
-        phone: "",
-        password: "",
-        passwordConfirm: "",
-        avatarUrl: ""
-    }
-};
+  values: {
+    firstName: "",
+    thirdName: "",
+    email: "",
+    phone: "",
+    password: "",
+    passwordConfirm: "",
+    avatarUrl: "",
+  },
+  errors: {
+    firstName: "",
+    thirdName: "",
+    email: "",
+    phone: "",
+    password: "",
+    passwordConfirm: "",
+    avatarUrl: "",
+  },
+}
 
 export interface ISignUpState {
-    values: {
-        firstName: string;
-        thirdName: string;
-        email: string;
-        phone: string;
-        password: string;
-        passwordConfirm: string;
-        avatarUrl: string;
-    };
-    errors: {
-        firstName: string;
-        thirdName: string;
-        email: string;
-        phone: string;
-        password: string;
-        passwordConfirm: string;
-        avatarUrl: string;
-    };
-};
+  values: {
+    firstName: string
+    thirdName: string
+    email: string
+    phone: string
+    password: string
+    passwordConfirm: string
+    avatarUrl: string
+  }
+  errors: {
+    firstName: string
+    thirdName: string
+    email: string
+    phone: string
+    password: string
+    passwordConfirm: string
+    avatarUrl: string
+  }
+}
 
 export default function SignUp() {
-    const [activeStep, setActiveStep] = React.useState(0);
-    const [loading, setLoading] = React.useState(false);
-    const [formValues, setFormValues] = React.useState(initialValues);
+  const [activeStep, setActiveStep] = React.useState(0)
+  const [loading, setLoading] = React.useState(false)
+  const [formValues, setFormValues] = React.useState(initialValues)
 
-    const mainClient = React.useContext(MainClientContext);
-    
-    const navigate = useNavigate();
+  const mainClient = React.useContext(MainClientContext)
 
-    const handleNext = () => {
-        if (activeStep + 1 === steps.length) {
-            handleSubmit();
+  const navigate = useNavigate()
+
+  const handleNext = () => {
+    if (activeStep + 1 === steps.length) {
+      handleSubmit()
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1)
+    }
+  }
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
+
+  const checkValidation = (step: number) => {
+    switch (step) {
+      case 0:
+        return (
+          Object.values(formValues.errors).some(Boolean) ||
+          Object.values(formValues.values)
+            .map((field, index) => field === "" && index !== 6)
+            .some(Boolean)
+        )
+      default:
+        return false
+    }
+  }
+
+  const onChange = (
+    field: string,
+    value: string,
+    validateCallback?: (value: string) => string,
+    anotherField?: string
+  ) => {
+    let hasError = ""
+
+    if (validateCallback) {
+      hasError = validateCallback(value)
+
+      if (hasError) {
+        if (anotherField) {
+          setFormValues({
+            values: { ...formValues.values, [field]: value },
+            errors: {
+              ...formValues.errors,
+              [field]: hasError,
+              [anotherField]: hasError,
+            },
+          })
         } else {
-            setActiveStep(prevActiveStep => prevActiveStep + 1);
+          setFormValues({
+            values: { ...formValues.values, [field]: value },
+            errors: { ...formValues.errors, [field]: hasError },
+          })
         }
-    };
+      }
+    }
 
-    const handleBack = () => {
-        setActiveStep(prevActiveStep => prevActiveStep - 1);
-    };
+    if (!hasError) {
+      if (anotherField) {
+        setFormValues({
+          values: { ...formValues.values, [field]: value },
+          errors: {
+            ...formValues.errors,
+            [field]: hasError,
+            [anotherField]: "",
+          },
+        })
+      } else {
+        setFormValues({
+          values: { ...formValues.values, [field]: value },
+          errors: { ...formValues.errors, [field]: "" },
+        })
+      }
+    }
+  }
 
-    const checkValidation = (step: number) => {
-        switch (step) {
-            case 0:                
-                return Object.values(formValues.errors).some(Boolean) || Object.values(formValues.values).map((field, index) => field === "" && index !== 6).some(Boolean);
-            default:
-                return false;
-        }
-    };
+  const handleSubmit = async () => {
+    formValues.values.phone = formValues.values.phone
+      .replace(/\s/g, "")
+      .replace("(", "")
+      .replace(")", "")
 
-    const onChange = (field: string, value: string, validateCallback?: (value: string) => string, anotherField?: string) => {
-        let hasError = "";
+    const user: Omit<IUser, "id" | "secondName" | "salt"> = {
+      firstName: formValues.values.firstName,
+      thirdName: formValues.values.thirdName,
+      email: formValues.values.email,
+      phone: formValues.values.phone,
+      password: formValues.values.password,
+      avatarUrl: formValues.values.avatarUrl,
+    }
 
-        if (validateCallback) {
-            hasError = validateCallback(value);
+    mainClient.signUp(user, setLoading, (error) => {
+      if (error && typeof error === "object" && error.message) {
+        setActiveStep(0)
+        setFormValues({
+          ...formValues,
+          errors: {
+            ...formValues.errors,
+            [error.field as string]: error.message,
+          },
+        })
+      }
+    })
+  }
 
-            if (hasError) {
-                if (anotherField) {
-                    setFormValues({
-                        values: { ...formValues.values, [field]: value },
-                        errors: { ...formValues.errors, [field]: hasError, [anotherField]: hasError }
-                    });
-                } else {
-                    setFormValues({
-                        values: { ...formValues.values, [field]: value },
-                        errors: { ...formValues.errors, [field]: hasError }
-                    });
-                }
+  const getStepContent = (step: number) => {
+    switch (step) {
+      case 0:
+        return (
+          <SignUpForm
+            formValues={formValues}
+            setFormValues={setFormValues}
+            onChange={onChange}
+          />
+        )
+      case 1:
+        return (
+          <ChooseAvatar
+            username={
+              formValues.values.firstName + " " + formValues.values.thirdName
             }
-        }
+            avatarUrl={formValues.values.avatarUrl}
+            onChange={onChange}
+          />
+        )
+      default:
+        return "Неизвестный шаг"
+    }
+  }
 
-        if (!hasError) {
-            if (anotherField) {
-                setFormValues({
-                    values: { ...formValues.values, [field]: value },
-                    errors: { ...formValues.errors, [field]: hasError, [anotherField]: "" }
-                });
-            } else {
-                setFormValues({
-                    values: { ...formValues.values, [field]: value },
-                    errors: { ...formValues.errors, [field]: "" }
-                });
-            }
-        }
-    };
+  return (
+    <ThemeProvider theme={THEME}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box component="form" noValidate className={styles.signUpForm}>
+          <Avatar className={styles.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
 
-    const handleSubmit = async () => {
-        formValues.values.phone = formValues.values.phone
-            .replace(/\s/g, "")
-            .replace("(", "")
-            .replace(")", "");
+          <Typography className={styles.title} component="h1" variant="h5">
+            Регистрация
+          </Typography>
 
-        const user: Omit<IUser, "id" | "secondName" | "salt"> = {
-            firstName: formValues.values.firstName,
-            thirdName: formValues.values.thirdName,
-            email: formValues.values.email,
-            phone: formValues.values.phone,
-            password: formValues.values.password,
-            avatarUrl: formValues.values.avatarUrl
-        };
+          <Grid container justifyContent="center" className={styles.signInArea}>
+            <Grid item>
+              <Typography
+                variant="body2"
+                color="blue"
+                className={styles.secondaryButton}
+                onClick={() => navigate(Pages.signIn)}
+              >
+                Уже есть аккаунт? Войдите
+              </Typography>
+            </Grid>
+          </Grid>
 
-        mainClient.signUp(
-            user, 
-            setLoading,
-            (error) => {
-                if (error && typeof error === "object" && error.message) {
-                    setActiveStep(0);
-                    setFormValues({
-                        ...formValues,
-                        errors: { ...formValues.errors, [error.field as string]: error.message }
-                    });
-                }
-            }
-        );
-    };
+          <Stepper activeStep={activeStep}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
 
-    const getStepContent = (step: number) => {
-        switch (step) {
-            case 0:
-                return <SignUpForm 
-                    formValues={formValues} 
-                    setFormValues={setFormValues} 
-                    onChange={onChange} 
-                />;
-            case 1:
-                return <ChooseAvatar 
-                    username={formValues.values.firstName + " " + formValues.values.thirdName} 
-                    avatarUrl={formValues.values.avatarUrl} 
-                    onChange={onChange} 
-                />;
-            default:
-                return "Неизвестный шаг";
-        }
-    };
+          {getStepContent(activeStep)}
 
-    return (
-        <ThemeProvider theme={THEME}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box component="form" noValidate sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
+          <Box className={styles.footerButtonArea}>
+            <Button
+              fullWidth
+              className={styles.backButton}
+              disabled={activeStep === 0}
+              onClick={handleBack}
+            >
+              Назад
+            </Button>
 
-                    <Typography component="h1" variant="h5">
-                        Регистрация
-                    </Typography>
+            <LoadingButton
+              fullWidth
+              variant="contained"
+              className={styles.loadingButton}
+              loading={loading}
+              color="primary"
+              disabled={checkValidation(activeStep)}
+              onClick={handleNext}
+            >
+              {activeStep === steps.length - 1 ? "Зарегистрироваться" : "Далее"}
+            </LoadingButton>
+          </Box>
+        </Box>
 
-                    <Grid container justifyContent="center" sx={{ mb: 3 }}>
-                        <Grid item>
-                            <Typography variant="body2" color="blue" sx={{ cursor: "pointer" }} onClick={() => navigate(Pages.signIn)}>
-                                Уже есть аккаунт? Войдите
-                            </Typography>
-                        </Grid>
-                    </Grid>
-
-                    <Stepper activeStep={activeStep}>
-                        {steps.map(label => <Step key={label}><StepLabel>{label}</StepLabel></Step>)}
-                    </Stepper>
-
-                    {getStepContent(activeStep)}
-
-                    <Box sx={{ display: "flex", flexDirection: "row", pt: 3 }}>
-                        <Button fullWidth sx={{ mr: 1 }} disabled={activeStep === 0} onClick={handleBack}>
-                            Назад
-                        </Button>
-
-                        <LoadingButton
-                            fullWidth
-                            variant="contained"
-                            sx={{ ml: 1, width: "250%" }}
-                            loading={loading}
-                            color="primary"
-                            disabled={checkValidation(activeStep)}
-                            onClick={handleNext}
-                        >
-                            {activeStep === steps.length - 1 ? "Зарегистрироваться" : "Далее"}
-                        </LoadingButton>
-                    </Box>
-                </Box>
-
-                <Copyright />
-            </Container>
-        </ThemeProvider>
-    );
-};
+        <Copyright />
+      </Container>
+    </ThemeProvider>
+  )
+}
