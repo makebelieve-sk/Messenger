@@ -1,0 +1,47 @@
+@import "../colors.scss";
+@import "../variables.scss";
+
+.mainGrid {
+  height: calc(100vh - 40px);
+  .background {
+    background-size: cover;
+    background-position: center;
+    background-image: url(https://source.unsplash.com/random);
+    background-repeat: no-repeat;
+
+    &.light {
+      background-color: $background-light;
+    }
+    &.dark {
+      background-color: $background-dark;
+    }
+  }
+
+  .signInForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: $signMarginXLarge $signMarginLarge;
+
+    .avatar {
+      margin: $signMarginXSmall;
+      background-color: $avatar-color;
+    }
+  }
+
+  .layoutInput {
+    margin-top: $signMarginXSmall;
+    .loadingButton {
+      margin-top: $signMarginMedium;
+      margin-bottom: $signMarginSmall;
+    }
+    .secondaryButton {
+      &:hover {
+        cursor: pointer;
+      }
+      .backButton {
+        margin-right: $signMarginXSmall;
+      }
+    }
+  }
+}
