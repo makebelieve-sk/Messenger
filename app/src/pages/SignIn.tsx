@@ -40,14 +40,16 @@ export default function SignIn() {
   const mainClient = React.useContext(MainClientContext)
 
   const navigate = useNavigate()
-
-  React.useEffect(() => {
-    setSaveDisabled(
+  const disableSave = () => {
+    return (
       loading ||
-        !formValues.values.login ||
-        !formValues.values.password ||
-        Object.values(formValues.errors).some(Boolean)
+      !formValues.values.login ||
+      !formValues.values.password ||
+      Object.values(formValues.errors).some(Boolean)
     )
+  }
+  React.useEffect(() => {
+    setSaveDisabled(disableSave())
   }, [loading, formValues])
 
   // Изменение поля

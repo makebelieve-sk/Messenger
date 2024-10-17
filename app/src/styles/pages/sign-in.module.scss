@@ -36,7 +36,9 @@
       margin-bottom: $signMarginSmall;
     }
     .secondaryButton {
-      cursor: pointer;
+      &:hover {
+        cursor: pointer;
+      }
       .backButton {
         margin-right: $signMarginXSmall;
       }
