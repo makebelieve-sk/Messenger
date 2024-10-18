@@ -1,12 +1,17 @@
-import { Link as MuiLink } from "@mui/material";
+import { Link as MuiLink, LinkProps } from "@mui/material";
 
 type Ilink = {
 	href?: string;
 	onClick?: () => void;
 	children?: React.ReactNode;
-};
+} & LinkProps;
 
-export default function Link({ children, onClick, href, ...props }: Ilink) {
+export default function LinkComponent({
+	children,
+	onClick,
+	href,
+	...props
+}: Ilink) {
 	return (
 		<MuiLink href={href} onClick={onClick} {...props}>
 			{children}
