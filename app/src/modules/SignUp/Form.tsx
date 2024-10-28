@@ -72,9 +72,7 @@ export default React.memo(function SignUpForm({
 	const validatePhone = (value: string, country: CountryData) => {
 		if (value) {
 			const numbersCount = value.match(/\d/g);
-			const numberLength = (country as CountryData).format.match(
-				/\./g
-			)?.length;
+			const numberLength = country.format.match(/\./g)?.length;
 			return numbersCount &&
 				numbersCount.length &&
 				numbersCount.length !== numberLength
