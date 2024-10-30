@@ -1,6 +1,7 @@
 import { Link as MuiLink, LinkProps } from "@mui/material";
+import { useCallback } from "react";
 
-type Ilink = {
+type LinkComponentType = {
 	href?: string;
 	onClick?: () => void;
 	children?: React.ReactNode;
@@ -11,9 +12,17 @@ export default function LinkComponent({
 	onClick,
 	href,
 	...props
-}: Ilink) {
+}: LinkComponentType) {
+	const onEvent = useCallback(
+		(e: React.MouseEvent<HTMLAnchorElement>) => {
+			e.preventDefault();
+			if (onClick) onClick();
+		},
+		[onClick]
+	);
+
 	return (
-		<MuiLink href={href} onClick={onClick} {...props}>
+		<MuiLink href={href} onClick={onEvent} {...props}>
 			{children}
 		</MuiLink>
 	);
