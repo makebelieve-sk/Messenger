@@ -8,6 +8,7 @@ import { REQUIRED_FIELD } from "../../utils/constants";
 import { ISignUpState } from "../../pages/SignUp";
 import "./sign-up.scss";
 import "react-phone-input-2/lib/material.css";
+import { emailCheck } from "../../utils/email-check";
 
 interface ISignUpForm {
 	formValues: ISignUpState;
@@ -61,9 +62,7 @@ export default React.memo(function SignUpForm({
 
 	const validateEmail = (value: string) => {
 		return value
-			? value.match(
-					/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-			  )
+			? emailCheck(value)
 				? ""
 				: "Не верный формат электронной почты (пример: test01@gmail.com)"
 			: REQUIRED_FIELD;
