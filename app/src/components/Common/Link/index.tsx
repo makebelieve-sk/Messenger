@@ -1,5 +1,4 @@
 import { Link as MuiLink, LinkProps } from "@mui/material";
-import { useCallback } from "react";
 
 type LinkComponentType = {
 	href?: string;
@@ -13,12 +12,11 @@ export default function LinkComponent({
 	href,
 	...props
 }: LinkComponentType) {
-	const onEvent = useCallback(
+	const onEvent = (
 		(e: React.MouseEvent<HTMLAnchorElement>) => {
 			e.preventDefault();
 			if (onClick) onClick();
-		},
-		[onClick]
+		}
 	);
 
 	return (
