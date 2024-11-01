@@ -4,11 +4,12 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import PhoneInput, { CountryData } from "react-phone-input-2";
 
+import { emailCheck } from "../../utils/email-check";
 import { REQUIRED_FIELD } from "../../utils/constants";
 import { ISignUpState } from "../../pages/SignUp";
+
 import "./sign-up.scss";
 import "react-phone-input-2/lib/material.css";
-import { emailCheck } from "../../utils/email-check";
 
 interface ISignUpForm {
 	formValues: ISignUpState;
