@@ -232,6 +232,7 @@ export default function SignUp() {
 					>
 						<Grid item>
 							<LinkComponent
+								variant="body2"
 								className={styles.secondaryButton}
 								onClick={() => navigate(Pages.signIn)}
 								component="p"

@@ -76,6 +76,7 @@ export default React.memo(function Photos() {
 					</div>
 
 					<LinkComponent
+						variant="body2"
 						onClick={() => navigate(Pages.photos)}
 						underline="hover"
 						className="photo-container__title__link"

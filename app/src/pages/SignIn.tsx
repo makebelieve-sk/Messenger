@@ -184,6 +184,7 @@ export default function SignIn() {
 						<Grid container>
 							<Grid item xs>
 								<LinkComponent
+									variant="body2"
 									className={styles.secondaryButton}
 									onClick={() =>
 										navigate(Pages.resetPassword)
@@ -196,6 +197,7 @@ export default function SignIn() {
 
 							<Grid item>
 								<LinkComponent
+									variant="body2"
 									className={styles.secondaryButton}
 									onClick={() => navigate(Pages.signUp)}
 									component="p"

@@ -14,6 +14,7 @@ export default React.memo(function Copyright() {
 			Copyright ©
 			<LinkComponent
 				href={Pages.aboutUs}
+				variant="body2"
 				onClick={() => navigate(Pages.aboutUs)}
 			>
 				ВК-КЛОН

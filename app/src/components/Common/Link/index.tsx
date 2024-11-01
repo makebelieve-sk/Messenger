@@ -20,7 +20,7 @@ export default function LinkComponent({
 	);
 
 	return (
-		<MuiLink href={href} onClick={onEvent} {...props} variant="body2">
+		<MuiLink href={href} onClick={onEvent} {...props}>
 			{children}
 		</MuiLink>
 	);
