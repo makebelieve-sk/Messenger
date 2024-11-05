@@ -85,27 +85,25 @@ export default React.memo(function Photos() {
 					</LinkComponent>
 				</div>
 
-				{loadingPhotos ? (
-					<Spinner />
-				) : photos && photos.length ? (
-					<div className="photo-container__photos">
-						{photos.slice(0, 3).map((photo, index) => {
-							return (
-								<Photo
-									key={photo.id}
-									src={photo.path}
-									alt={getFullName(user) + " " + index}
-									clickHandler={() => onClickPhoto(index)}
-									deleteHandler={() =>
-										deleteOnePhoto(photo.path)
-									}
-								/>
-							);
-						})}
-					</div>
-				) : (
-					<NoItems text="Нет фотографий" />
-				)}
+				{
+					loadingPhotos 
+				    	? <Spinner />
+						: photos && photos.length 
+							? <div className="photo-container__photos">
+								{photos.slice(0, 3).map((photo, index) => {
+									return <Photo
+										key={photo.id}
+										src={photo.path}
+										alt={getFullName(user) + " " + index}
+										clickHandler={() => onClickPhoto(index)}
+										deleteHandler={() =>
+											deleteOnePhoto(photo.path)
+										}
+									/>
+								})}
+							</div>
+							: <NoItems text="Нет фотографий" />
+				}
 
 				<InputImage
 					id="add-new-photos"

@@ -12,10 +12,11 @@ import { SocketType } from "../../types/socket.types";
 import { MainClientEvents } from "../../types/events";
 import { getFullName } from "../../utils";
 import PlayAudio from "../../utils/play-audio";
+import User from "../models/User";
 
 interface IConstructor {
     socket: SocketType;
-    user: IUser;
+    user: User;
     dispatch: AppDispatch;
 };
 
@@ -23,7 +24,7 @@ const SERVER_DISCONNECT = "io server disconnect";
 
 export default class SocketController extends EventEmitter {
     private readonly _socket: SocketType;
-    private readonly _user: IUser;
+    private readonly _user: User;
     private readonly _dispatch: AppDispatch;
 
     constructor({ socket, user, dispatch }: IConstructor) {
@@ -37,7 +38,7 @@ export default class SocketController extends EventEmitter {
     }
 
     private _reconnect() {
-        this._socket.auth = { user: this._user };
+        this._socket.auth = { user: this._user.user };
         this._socket.connect();
     }
 
