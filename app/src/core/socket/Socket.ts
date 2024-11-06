@@ -4,10 +4,10 @@ import { io } from "socket.io-client";
 import { SOCKET_IO_CLIENT } from "../../utils/constants";
 import { AppDispatch } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
-import { IUser } from "../../types/models.types";
 import { MainClientEvents } from "../../types/events";
 import SocketController from "./SocketController";
 import Profile from "../profile/Profile";
+import User from "../models/User";
 
 interface IConstructor {
     myProfile: Profile;
@@ -16,7 +16,7 @@ interface IConstructor {
 
 export default class Socket extends EventEmitter {
     private readonly _socket: SocketType;
-    private readonly _user: IUser;
+    private readonly _user: User;
     private readonly _dispatch: AppDispatch;
     private _socketController!: SocketController;
 
@@ -41,7 +41,7 @@ export default class Socket extends EventEmitter {
             throw new Error("Объект пользователя не существует");
         }
 
-        this._socket.auth = { user: this._user };
+        this._socket.auth = { user: this._user.user };
         this._socket.connect();
 
         this._socketController = new SocketController({ socket: this._socket, user: this._user, dispatch: this._dispatch });
