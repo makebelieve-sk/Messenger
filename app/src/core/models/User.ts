@@ -20,7 +20,9 @@ export default class User extends EventEmitter {
     constructor(private readonly _id: string, private readonly _options: IOptions) {
         super();
 
-        this._getUser();
+        this._id === MY_ID
+            ? this._getMe()
+            : this._getUser();
     }
 
     get id(): string {
@@ -39,16 +41,28 @@ export default class User extends EventEmitter {
         return this._user.avatarUrl ? this._user.avatarUrl : NO_PHOTO;
     }
 
-    // Получение данных пользователя
-    private _getUser() {
+    // Получение данных о себе
+    private _getMe() {
         this._options.request.get({
-            route: ApiRoutes.getUser,
+            route: ApiRoutes.getMe,
             setLoading: (loading: boolean) => this._options.dispatch(setLoading(loading)),
-            successCb: (data: { success: boolean, user: IUser }) => {
+            successCb: (data: { user: IUser }) => {
                 this._user = data.user;
                 this._options.dispatch(setUser(this._user));
                 console.log("Подгрузили инфу о себе: ", this._user);
                 this.emit(MainClientEvents.GET_ME);
+            }
+        });
+    }
+
+    // Получение данных другого пользователя
+    private _getUser() {
+        this._options.request.post({
+            route: ApiRoutes.getUser,
+            data: { id: this._id },
+            successCb: (data: { user: IUser }) => {
+                // this._user = data.user;
+                console.log("Подгрузили инфу о другом пользователе: ", data.user);
             }
         });
     }

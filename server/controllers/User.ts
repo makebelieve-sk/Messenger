@@ -29,9 +29,27 @@ export default class UserController {
 
     // Слушатели запросов контроллера UserController
     private _init() {
+        this._app.get(ApiRoutes.getMe, this._middleware.mustAuthenticated.bind(this._middleware), this._getMe.bind(this));
         this._app.get(ApiRoutes.getUserDetail, this._middleware.mustAuthenticated.bind(this._middleware), this._getUserDetail.bind(this));
         this._app.post(ApiRoutes.editInfo, this._middleware.mustAuthenticated.bind(this._middleware), this._editInfo.bind(this));
+        this._app.post(ApiRoutes.getUser, this._middleware.mustAuthenticated.bind(this._middleware), this._getUser.bind(this));
     }
+
+    // Получение данных о себе
+    private async _getMe(req: Request, res: Response) {
+        try {
+            if (!req.user) {
+                return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.USER_NOT_FOUND });
+            }
+
+            return res.json({ success: true, user: req.user });
+        } catch (error) {
+            const nextError = error instanceof UsersError
+                ? error
+                : new UsersError(error);
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+        }
+    };
 
     // Получение детальной информации о пользователе
     private async _getUserDetail(req: Request, res: Response) {        
@@ -114,6 +132,30 @@ export default class UserController {
                 : new UsersError(error);
 
             await transaction.rollback();
+            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+        }
+    };
+
+    // Получение данных о другом пользователе
+    private async _getUser(req: Request, res: Response) {
+        try {
+            const { id }: { id: string; } = req.body;
+
+            if (!id) {
+                throw new UsersError("id пользователя не передано");
+            }
+
+            const findUser = await this._database.models.users.findByPk(id);
+
+            if (!findUser) {
+                throw new UsersError(`Пользователь с id=${id} не найден`);
+            }
+
+            return res.json({ success: true, user: getSaveUserFields(findUser) });
+        } catch (error) {
+            const nextError = error instanceof UsersError
+                ? error
+                : new UsersError(error);
             return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
         }
     };
