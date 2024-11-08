@@ -162,7 +162,13 @@ export default class MainClient extends EventEmitter {
 
     // Слушатели событый класса ProfilesController
     private _bindProfileListeners() {
-        this._profilesController.on(MainClientEvents.GET_ME, () => this._getMe());
+        this._profilesController.on(MainClientEvents.GET_ME, () => {
+            this._getMe();
+        });
+
+        this._profilesController.on(MainClientEvents.ERROR, (error: string) => {
+            this.catchErrors(error);
+        });
     }
 
     // Слушатели событый класса CatchErrors
@@ -176,6 +182,10 @@ export default class MainClient extends EventEmitter {
     private _bindSocketListeners() {
         this._socket.on(MainClientEvents.REDIRECT, (path: string) => {
             this.emit(MainClientEvents.REDIRECT, path);
+        });
+
+        this._socket.on(MainClientEvents.ERROR, (error: string) => {
+            this.catchErrors(error);
         });
     }
 

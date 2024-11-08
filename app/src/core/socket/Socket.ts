@@ -38,7 +38,8 @@ export default class Socket extends EventEmitter {
 
     private _init() {
         if (!this._user) {
-            throw new Error("Объект пользователя не существует");
+            this.emit(MainClientEvents.ERROR, "Объект пользователя не существует");
+            return;
         }
 
         this._socket.auth = { user: this._user.user };
