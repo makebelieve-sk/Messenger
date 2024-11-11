@@ -1,11 +1,6 @@
 import { Request } from "express";
 
-export interface IRequestWithParams extends Request {
-    goNext?: boolean;
-    dublicateToPhotoFile?: boolean;
-};
-
-export interface IRequestWithSharpData extends IRequestWithParams {
+export interface IRequestWithSharpData extends Request {
     sharpImageUrl: string;
     dublicateSharpImageUrl: string;
 };
