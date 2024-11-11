@@ -28,10 +28,10 @@ export default React.memo(function MenuComponent() {
     React.useEffect(() => {
         if (mainClient) {
             // Уведомления для друзей
-            mainClient.getFriendsNotification();
+            mainClient.mainApi.getFriendsNotification();
 
             // Уведомления для сообщений
-            mainClient.getMessageNotification();
+            mainClient.mainApi.getMessageNotification();
         }
     }, [mainClient]);
 

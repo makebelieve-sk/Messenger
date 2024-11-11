@@ -41,7 +41,7 @@ export default React.memo(function Header() {
     // Выход
     const logout = () => {
         setAnchorElUser(null);
-        mainClient.logout();
+        mainClient.mainApi.logout();
     };
 
     return <header className="header">
