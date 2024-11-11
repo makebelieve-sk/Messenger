@@ -11,11 +11,23 @@ const REDIS_CONNECTION_URL = process.env.REDIS_CONNECTION_URL as string;
 const REDIS_TIMEOUT_RECONNECTION = parseInt(process.env.REDIS_TIMEOUT_RECONNECTION as string);
 
 export default class RedisWorks {
-    private _client: RedisClient;
-    private readonly _redisStore: RedisStoreType;
+    private _client!: RedisClient;
+    private _redisStore!: RedisStoreType;
     private _timeoutReconnect!: TimeoutType;
 
     constructor() {
+        this._connectRedis();
+    }
+
+    get redisClient() {
+        return this._client;
+    }
+
+    get redisStore() {
+        return this._redisStore;
+    }
+
+    private _connectRedis() {
         this._client = createClient({
             url: REDIS_CONNECTION_URL,
         });
@@ -25,14 +37,6 @@ export default class RedisWorks {
 
         this._redisStore = new (RedisStore as any)({ client: this.redisClient });
         this._bindListeners();
-    }
-
-    get redisClient() {
-        return this._client;
-    }
-
-    get redisStore() {
-        return this._redisStore;
     }
 
     private _bindListeners() {
@@ -66,25 +70,21 @@ export default class RedisWorks {
 
         this._timeoutReconnect = setTimeout(() => {
             console.log("Клиент Redis переподключается...");
-
-            this._client = createClient();
-            this._client
-                .connect()
-                .catch(this._errorHandler);
+            this._connectRedis();
         }, REDIS_TIMEOUT_RECONNECTION);
     }
 
-    public async close() {
+    async close() {
         await this.redisClient.disconnect();
     }
 
     // Получить полный ключ сохраненного значения
-    public getKey(key: RedisKeys, id: string) {
+    getKey(key: RedisKeys, id: string) {
         return `${key}:${id}`;
     };
 
     // Получение значения по ключу
-    public async get(redisKey: RedisKeys, id: string): Promise<string | number | boolean | null | void> {
+    async get(redisKey: RedisKeys, id: string): Promise<string | number | boolean | null | void> {
         const key = this.getKey(redisKey, id);
 
         return await this.redisClient
@@ -97,7 +97,7 @@ export default class RedisWorks {
     };
 
     // Запись значения по ключу
-    public async set(redisKey: RedisKeys, id: string, value: string): Promise<void> {
+    async set(redisKey: RedisKeys, id: string, value: string) {
         const key = this.getKey(redisKey, id);
 
         await this.redisClient
@@ -110,7 +110,7 @@ export default class RedisWorks {
     };
 
     // Удаление значения по ключу
-    public async delete(redisKey: RedisKeys, id: string): Promise<void> {
+    async delete(redisKey: RedisKeys, id: string) {
         const key = this.getKey(redisKey, id);
 
         await this.redisClient
