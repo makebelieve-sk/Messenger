@@ -37,7 +37,7 @@ export default React.memo(function ChangeAvatar({ labelText, loading, mustAuth =
         const formData = new FormData();    // Создаем объект FormData
         formData.append("avatar", file);    // Добавляем файл аватара в объект formData
 
-        mainClient.uploadAvatarAuth(
+        mainClient.mainApi.uploadAvatarAuth(
             mustAuth ? ApiRoutes.uploadAvatarAuth : ApiRoutes.saveAvatar,
             formData,
             setLoading,

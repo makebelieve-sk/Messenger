@@ -49,7 +49,7 @@ export default React.memo(function ModalWithAttachments() {
             setOpen(attachmentsModal.isOpen);
 
             if (attachmentsModal) {
-                mainClient.getAttachments(
+                mainClient.mainApi.getAttachments(
                     { chatId: attachmentsModal.chatId }, 
                     setLoading,
                     (data: { images: ICarouselImage[]; files: IAttachmentFile[] }) => {
@@ -83,7 +83,7 @@ export default React.memo(function ModalWithAttachments() {
     const onOpenFile = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, filePath: string) => {
         event.stopPropagation();
 
-        mainClient.openFile({ path: filePath });
+        mainClient.mainApi.openFile({ path: filePath });
     };
 
     // Переход к сообщению в чате

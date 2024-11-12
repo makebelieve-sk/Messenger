@@ -72,7 +72,7 @@ export default function SignIn() {
 		event.preventDefault();
 
 		if (!saveDisabled) {
-			mainClient.signIn(formValues.values, setLoading, (error) => {
+			mainClient.mainApi.signIn(formValues.values, setLoading, (error) => {
 				if (error && typeof error === "object" && error.message) {
 					setErrorFromServer(true);
 					setFormValues({

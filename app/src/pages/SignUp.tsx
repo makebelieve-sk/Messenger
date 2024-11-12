@@ -167,7 +167,7 @@ export default function SignUp() {
 			avatarUrl: formValues.values.avatarUrl,
 		};
 
-		mainClient.signUp(user, setLoading, (error) => {
+		mainClient.mainApi.signUp(user, setLoading, (error) => {
 			if (error && typeof error === "object" && error.message) {
 				setActiveStep(0);
 				setFormValues({

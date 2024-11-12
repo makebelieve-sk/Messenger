@@ -1,17 +1,16 @@
-import React from "react";
 import EventEmitter from "eventemitter3";
 
-import { setAuth, setFriendNotification, setMessageNotification } from "../state/main/slice";
-import { ApiRoutes, Pages } from "../types/enums";
-import { IUser } from "../types/models.types";
+import { setAuth } from "../state/main/slice";
+import { Pages } from "../types/enums";
 import { AppDispatch } from "../types/redux.types";
 import { MainClientEvents } from "../types/events";
-import CatchErrors, { CatchType } from "./CatchErrors";
+import { MY_ID } from "../utils/constants";
+import CatchErrors from "./CatchErrors";
 import Request from "./Request";
 import Socket from "./socket/Socket";
 import ProfilesController from "./profile/ProfilesController";
 import Profile from "./profile/Profile";
-import { MY_ID } from "../utils/constants";
+import MainApi from "./MainApi";
 
 // TODO
 // 1) Создать новый класс User и вынести все упоминания из Profile
@@ -41,6 +40,7 @@ export default class MainClient extends EventEmitter {
     private readonly _request: Request;
     private readonly _catchErrors: CatchErrors;
     private readonly _profilesController: ProfilesController;
+    private readonly _mainApi: MainApi;
     private _socket!: Socket;
 
     constructor(private readonly _dispatch: AppDispatch) {
@@ -50,17 +50,22 @@ export default class MainClient extends EventEmitter {
         this._request = new Request(this._catchErrors);
 
         this._profilesController = new ProfilesController(this._request, this._dispatch);
+        this._mainApi = new MainApi(this._request, this._socket, this._dispatch, this._profilesController);
 
         this._bindProfileListeners();
         this._bindCatchErrorsListeners();
     }
 
-    public catchErrors(error: string) {
+    get mainApi() {
+        return this._mainApi;
+    }
+
+    catchErrors(error: string) {
         this._catchErrors.catch(error);
     }
 
     // TODO Удалить после рефакторинга звонков (useWebRTC)
-    public getSocket() {
+    getSocket() {
         if (!this._socket) {
             this._initSocket();
         }
@@ -68,96 +73,8 @@ export default class MainClient extends EventEmitter {
         return this._socket?.getSocketInstance();
     }
 
-    public getProfile(userId: string = MY_ID): Profile {
+    getProfile(userId: string = MY_ID): Profile {
         return this._profilesController.getProfile(userId);
-    }
-
-    public signIn(data: Object, setLoading: React.Dispatch<React.SetStateAction<boolean>>, cb: (error: CatchType) => void) {
-        this._request.post({
-            route: ApiRoutes.signIn,
-            data,
-            setLoading,
-            successCb: () => {
-                this._profilesController.addProfile();
-                this.emit(MainClientEvents.REDIRECT, Pages.profile);
-            },
-            failedCb: cb
-        });
-    }
-
-    public signUp(data: Object, setLoading: React.Dispatch<React.SetStateAction<boolean>>, cb: (error: CatchType) => void) {
-        this._request.post({
-            route: ApiRoutes.signUp,
-            data,
-            setLoading,
-            successCb: (data: { success: boolean, user: IUser }) => {
-                // TODO исправить пиздец (пункт 2.1)
-                this._uploadAvatar({ avatarUrl: data.user.avatarUrl });
-            },
-            failedCb: cb
-        });
-    }
-
-    public logout() {
-        this.emit(MainClientEvents.REDIRECT, Pages.signIn);
-        this._dispatch(setAuth(false));
-        this._socket.disconnect();
-
-        this._request.get({
-            route: ApiRoutes.logout,
-            successCb: () => {
-                // Сделано в обработчике специально, так как нужно дождаться размонтирования компонент на странице профиля (они используют текущий профиль)
-                this._profilesController.removeProfile();
-            }
-        });
-    }
-
-    public uploadAvatarAuth(route: ApiRoutes, data: Object, setLoading: React.Dispatch<React.SetStateAction<boolean>>, cb: (data: { success: boolean; id: string; newAvatarUrl: string; newPhotoUrl: string; }) => void) {
-        this._request.post({
-            route,
-            data,
-            setLoading,
-            successCb: cb,
-            config: { headers: { "Content-Type": "multipart/form-data" } }
-        });
-    }
-
-    public getFriendsNotification() {
-        this._request.get({
-            route: ApiRoutes.getFriendsNotification,
-            successCb: (data: { success: boolean, friendRequests: number }) => this._dispatch(setFriendNotification(data.friendRequests))
-        });
-    }
-
-    public getMessageNotification() {
-        this._request.get({
-            route: ApiRoutes.getMessageNotification,
-            successCb: (data: { success: boolean, unreadChatsCount: number; }) => this._dispatch(setMessageNotification(data.unreadChatsCount))
-        });
-    }
-
-    public getAttachments(data: Object, setLoading: React.Dispatch<React.SetStateAction<boolean>>, cb: (data: any) => void) {
-        this._request.post({
-            route: ApiRoutes.getAttachments,
-            data,
-            setLoading,
-            failedCb: cb
-        });
-    }
-
-    public openFile(data: Object) {
-        this._request.post({ route: ApiRoutes.openFile, data });
-    }
-
-    private _uploadAvatar(data: Object) {
-        this._request.post({
-            route: ApiRoutes.uploadAvatar,
-            data,
-            successCb: () => {
-                this._profilesController.addProfile();
-                this.emit(MainClientEvents.REDIRECT, Pages.profile)
-            }
-        });
     }
 
     // Слушатели событый класса ProfilesController
