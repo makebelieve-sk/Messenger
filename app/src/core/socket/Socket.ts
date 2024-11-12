@@ -26,17 +26,14 @@ export default class Socket extends EventEmitter {
         this._user = myProfile.user;
         this._socket = io(SOCKET_IO_CLIENT, { transports: ["websocket"] });
         this._dispatch = dispatch;
-
-        this._init();
-        this._bindSocketControllerListeners();
     }
 
     // TODO Удалить после рефакторинга звонков (useWebRTC)
-    public getSocketInstance() {
+    get socket() {
         return this._socket;
     }
 
-    private _init() {
+    init() {
         if (!this._user) {
             this.emit(MainClientEvents.ERROR, "Объект пользователя не существует");
             return;
@@ -46,15 +43,17 @@ export default class Socket extends EventEmitter {
         this._socket.connect();
 
         this._socketController = new SocketController({ socket: this._socket, user: this._user, dispatch: this._dispatch });
+
+        this._bindSocketControllerListeners();
+    }
+
+    disconnect() {
+        this._socket.disconnect();
     }
 
     private _bindSocketControllerListeners() {
         this._socketController.on(MainClientEvents.REDIRECT, (path: string) => {
             this.emit(MainClientEvents.REDIRECT, path);
         });
-    }
-
-    public disconnect() {
-        this._socket.disconnect();
     }
 }

@@ -64,7 +64,8 @@ export default class MainServer {
             cookie: {
                 secure: false,
                 httpOnly: true,
-                domain: "localhost"
+                domain: "localhost",
+                maxAge: undefined               // Устанавливаем время жизни сессий только до закрытия браузера. При входе перезаписываем. При переоткрытии вкладки сессия восстанавливается
             },
             resave: true,                       // Продлевает maxAge при каждом новом запросе
             rolling: true,                      // Продлевает maxAge при каждом новом запросе
