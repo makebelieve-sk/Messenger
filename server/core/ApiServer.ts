@@ -1,8 +1,8 @@
 import { Express } from "express";
 import { PassportStatic } from "passport";
 
-import RedisWorks from "./Redis";
 import { ISocketUsers } from "../types/socket.types";
+import RedisWorks from "./Redis";
 import Middleware from "./Middleware";
 import Database from "./Database";
 import AuthController from "../controllers/Auth";

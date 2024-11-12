@@ -5,9 +5,9 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
 
+import { ISocketUsers } from "../types/socket.types";
 import ApiServer from "./ApiServer";
 import RedisWorks from "./Redis";
-import { ISocketUsers } from "../types/socket.types";
 import PassportWorks from "./Passport";
 import Database from "./Database";
 import SocketWorks from "./Socket";

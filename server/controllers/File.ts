@@ -41,7 +41,6 @@ export default class FileController {
         this._app.post(
             ApiRoutes.saveAvatar, 
             this._uploader.single("avatar"), 
-            this._middleware.setSharpParams.bind(this._middleware),
             this._middleware.sharpImage.bind(this._middleware), 
             this._saveAvatar.bind(this)
         );
@@ -50,7 +49,6 @@ export default class FileController {
             ApiRoutes.uploadAvatarAuth, 
             this._middleware.mustAuthenticated.bind(this._middleware), 
             this._uploader.single("avatar"), 
-            this._middleware.setSharpParams.bind(this._middleware),
             this._middleware.sharpImage.bind(this._middleware), 
             this._uploadAvatarAuth.bind(this)
         );
