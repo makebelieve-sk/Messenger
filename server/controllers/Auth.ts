@@ -44,7 +44,6 @@ export default class AuthController {
         this._app.post(ApiRoutes.signUp, this._isAuthenticated.bind(this), this._signUp.bind(this));
         this._app.post(ApiRoutes.signIn, this._isAuthenticated.bind(this), this._signIn.bind(this));
         this._app.get(ApiRoutes.logout, this._middleware.mustAuthenticated.bind(this._middleware), this._logout.bind(this));
-        this._app.get(ApiRoutes.getUser, this._middleware.mustAuthenticated.bind(this._middleware), this._getUser.bind(this));
     }
 
     // Проверяем авторизирован ли пользователь в системе
@@ -217,22 +216,6 @@ export default class AuthController {
                     return res.clearCookie(COOKIE_NAME).json({ success: true });
                 });
             });
-        } catch (error) {
-            const nextError = error instanceof AuthError
-                ? error
-                : new AuthError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
-        }
-    };
-
-    // Получение пользователя
-    private async _getUser(req: Request, res: Response) {
-        try {
-            if (!req.user) {
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.USER_NOT_FOUND });
-            }
-
-            return res.json({ success: true, user: req.user });
         } catch (error) {
             const nextError = error instanceof AuthError
                 ? error
