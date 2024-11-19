@@ -1,0 +1,23 @@
+.edit-container {
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+    &__tabs {
+        border-right: 1px solid #e0e0e0;
+        width: 20%;
+    }
+    &__tab-name {
+        font-size: 14px;
+    }
+    &__module {
+        width: 80%;
+        padding: 0 20px;
+        &__loading-button {
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+        &__spinner {
+            margin-top: 10px;
+        }
+    }
+}
