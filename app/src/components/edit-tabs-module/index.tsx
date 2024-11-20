@@ -2,6 +2,7 @@ import React from "react";
 import { IFormErrors, IFormValues } from "../../pages/edit";
 import Contacts from "./contacts";
 import Main from "./main";
+import { Dayjs } from "dayjs";
 
 interface IEditTabsModule extends ITabModule {
     tab: number;
@@ -10,7 +11,7 @@ interface IEditTabsModule extends ITabModule {
 export interface ITabModule {
     formValues: IFormValues;
     formErrors: IFormErrors | null;
-    onChange: (field: string, value: string | boolean | Date | null) => void;
+    onChange: (field: string, value: string | boolean | Date | null | Dayjs) => void;
 };
 
 enum TAB_NUMBER {

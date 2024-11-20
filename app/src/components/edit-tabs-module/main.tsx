@@ -10,9 +10,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ITabModule } from ".";
 
 import  "../../styles/pages/edit-tab.scss";
+import dayjs, { Dayjs } from "dayjs";
 
 export default React.memo(function Main({ formValues, formErrors, onChange }: ITabModule) {
-    const onChangeField = (field: string, value: string | boolean | Date | null) => {
+    const onChangeField = (field: string, value: string | boolean | Date | null | Dayjs) => {
         onChange(field, value);
     };
     
@@ -70,11 +71,19 @@ export default React.memo(function Main({ formValues, formErrors, onChange }: IT
             <DatePicker
                 disableFuture
                 label="День рождения"
-                inputFormat="YYYY-MM-DD"
-                value={formValues.birthday}
-                onChange={(newValue: Date | null) => onChangeField("birthday", newValue)}
-                renderInput={(params) => {
-                    return <TextField { ...params } fullWidth inputProps={{ placeholder: "Укажите дату", ...params.inputProps }} />
+                // inputFormat="YYYY-MM-DD"
+                value={dayjs(formValues.birthday)}
+                onChange={(newValue: Dayjs | null) =>{
+                    const formattedValue = newValue ? newValue.format('YYYY-MM-DD') : null;
+                    onChangeField("birthday", formattedValue);
+                }}
+                slotProps={{
+                    textField: {
+                        fullWidth: true,
+                        inputProps: {
+                            placeholder: "Укажите дату",
+                        },
+                    },
                 }}
             />
         </LocalizationProvider>
