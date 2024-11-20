@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 // import AlertComponent from "../components/alert";
 import { ApiRoutes } from "../types/enums";
 import { IUser, IUserDetails } from "../types/models.types";
-// import Request from "../core/request";
+import Request from "../core/Request";
 import { selectUserState, setUser, setUserDetail } from "../state/user/slice";
 import { useAppDispatch, useAppSelector } from "../hooks/useGlobalState";
 import CatchErrors from "../core/CatchErrors";
@@ -51,6 +51,8 @@ export default function Edit() {
     const dispatch = useAppDispatch();
     // const router = useRouter();
     const catchErrors = new CatchErrors(dispatch);
+    const request = new Request(catchErrors);
+
     // Установка disabled кнопке "Сохранить"
    useEffect(() => {
         setSaveDisabled(loading || Boolean(formErrors && Object.values(formErrors).some(Boolean)));
@@ -59,11 +61,12 @@ export default function Edit() {
     // Получаем детальную информацию о пользователе
     useEffect(() => {
         if (!userDetail && user) {
-            Request.post(ApiRoutes.getUserDetail, { userId: user.id }, undefined,
-                (data: { success: boolean, userDetail: IUserDetails }) => dispatch(setUserDetail(data.userDetail ? data.userDetail : null)),
+            request.post({ route: ApiRoutes.getUserDetail,
+                data: { userId: user.id },
+                successCb:(data: { success: boolean, userDetail: IUserDetails }) => dispatch(setUserDetail(data.userDetail ? data.userDetail : null)),
                 // (error: any) => CatchErrors.catch(error, router, dispatch)
-                (error: any) => catchErrors.catch(error)
-            );
+                failedCb: (error: any) => catchErrors.catch(error)
+        });
         }
     }, [user]);
 
@@ -116,7 +119,11 @@ export default function Edit() {
                     result["birthday"] = (result["birthday"] as dayjs.Dayjs).format("YYYY-MM-DD");
                 }
 
-                Request.post(ApiRoutes.editInfo, result, setLoading,
+                request.post({
+                    route: ApiRoutes.editInfo,
+                    data: result,
+                     setLoading,
+                    successCb:
                     (data: { success: boolean, user: IUser, userDetails: IUserDetails }) => {
                         if (data.success) {
                             dispatch(setUser(data.user));
@@ -124,9 +131,10 @@ export default function Edit() {
                             setShowAlert(true);
                         }
                     },
+
                     // (error) => CatchErrors.catch(error, router, dispatch)
-                    (error: any) => catchErrors.catch(error)
-                );
+                    failedCb: (error: any) => catchErrors.catch(error)
+            });
             } else {
                 throw new Error("Нет пользователя");
             }
