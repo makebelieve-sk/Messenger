@@ -75,7 +75,7 @@ export default function useWebRTC() {
     });
 
     const mainClient = React.useContext(MainClientContext);
-    const socket = mainClient.getSocket();
+    const socket = mainClient.socket;
     const dispatch = useAppDispatch();
 
     const { callId, chatInfo, localStream, users, status } = useAppSelector(selectCallsState);

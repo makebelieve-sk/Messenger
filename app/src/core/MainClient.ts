@@ -41,7 +41,7 @@ export default class MainClient extends EventEmitter {
     private readonly _catchErrors: CatchErrors;
     private readonly _profilesController: ProfilesController;
     private readonly _mainApi: MainApi;
-    private _socket!: Socket;
+    private readonly _socket: Socket;
 
     constructor(private readonly _dispatch: AppDispatch) {
         super();
@@ -50,8 +50,14 @@ export default class MainClient extends EventEmitter {
         this._request = new Request(this._catchErrors);
 
         this._profilesController = new ProfilesController(this._request, this._dispatch);
+        
+        this._socket = new Socket({
+            myProfile: this.getProfile(),
+            dispatch: this._dispatch
+        });
         this._mainApi = new MainApi(this._request, this._socket, this._dispatch, this._profilesController);
 
+        this._bindSocketListeners();
         this._bindProfileListeners();
         this._bindCatchErrorsListeners();
     }
@@ -60,17 +66,13 @@ export default class MainClient extends EventEmitter {
         return this._mainApi;
     }
 
-    catchErrors(error: string) {
-        this._catchErrors.catch(error);
+    // TODO Удалить после рефакторинга звонков (useWebRTC)
+    get socket() {
+        return this._socket.socket;
     }
 
-    // TODO Удалить после рефакторинга звонков (useWebRTC)
-    getSocket() {
-        if (!this._socket) {
-            this._initSocket();
-        }
-
-        return this._socket?.getSocketInstance();
+    catchErrors(error: string) {
+        this._catchErrors.catch(error);
     }
 
     getProfile(userId: string = MY_ID): Profile {
@@ -115,14 +117,7 @@ export default class MainClient extends EventEmitter {
 
     // Инициализация сокета
     private _initSocket() {
-        if (!this._socket) {
-            this._socket = new Socket({
-                myProfile: this.getProfile(),
-                dispatch: this._dispatch
-            });
-
-            this._bindSocketListeners();
-        }
+        this._socket.init();
     }
 
     // Редирект в зависимости от текущего урла

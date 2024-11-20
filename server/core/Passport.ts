@@ -7,6 +7,7 @@ import Database from "./Database";
 import { ISaveUser, UserInstance } from "../database/models/Users";
 import { getSaveUserFields } from "../utils/user";
 import { PassportError } from "../errors";
+import { IUser } from "../types/models.types";
 
 interface IConstructor {
     app: Express;
@@ -42,11 +43,11 @@ export default class PassportWorks {
         this._passport.use(new Strategy({ usernameField: "login", passwordField: "password" }, this._verify.bind(this)));
 
         // Достаем данные о пользователе из его сессии
-        this._passport.serializeUser((user: any, done) => {
+        this._passport.serializeUser<string>((user, done) => {
             console.log("serializeUser: ", user);
 
             process.nextTick(() => {
-                done(null, user.id);
+                done(null, (user as IUser).id);
             });
         });
 
