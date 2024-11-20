@@ -8,6 +8,7 @@ import { Pages } from "../types/enums";
 import { MainClientContext } from "./AppService";
 import { selectMainState } from "../state/main/slice";
 import { useAppSelector } from "../hooks/useGlobalState";
+import Edit from "../pages/edit";
 
 export default function Router() {
     const { isAuth } = useAppSelector(selectMainState);
@@ -23,6 +24,7 @@ export default function Router() {
     return isAuth
         ? <Routes>
             <Route path={Pages.profile} element={<Profile />} />
+            <Route path={Pages.edit} element={<Edit/>} />
             <Route path={Pages.messages} element={<div>228</div>} />
             <Route path={Pages.notExists} element={<Navigate to={Pages.profile} />} />
         </Routes>
