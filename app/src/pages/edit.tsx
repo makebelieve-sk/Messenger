@@ -6,19 +6,17 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { LoadingButton } from "@mui/lab";
-import dayjs from "dayjs";
-// import EditTabsModule from "../components/edit-tabs-module";
-// import AlertComponent from "../components/alert";
+import dayjs, { Dayjs } from "dayjs";
+import EditTabsModule from "../components/edit-tabs-module";
+import AlertComponent from "../components/Common/Alert";
 import { ApiRoutes } from "../types/enums";
 import { IUser, IUserDetails } from "../types/models.types";
 import Request from "../core/Request";
 import { selectUserState, setUser, setUserDetail } from "../state/user/slice";
 import { useAppDispatch, useAppSelector } from "../hooks/useGlobalState";
 import CatchErrors from "../core/CatchErrors";
-// import { REQUIRED_FIELD } from "../common";
-
-// import styles from "../styles/pages/edit.module.scss";
-import "../styles/pages/edit.module.scss";
+import { REQUIRED_FIELD } from "../utils/constants";
+import "../styles/pages/edit.scss";
 
 export interface IFormValues {
     name: string;
@@ -49,7 +47,6 @@ export default function Edit() {
     const { user, userDetail } = useAppSelector(selectUserState);
 
     const dispatch = useAppDispatch();
-    // const router = useRouter();
     const catchErrors = new CatchErrors(dispatch);
     const request = new Request(catchErrors);
 
@@ -64,7 +61,6 @@ export default function Edit() {
             request.post({ route: ApiRoutes.getUserDetail,
                 data: { userId: user.id },
                 successCb:(data: { success: boolean, userDetail: IUserDetails }) => dispatch(setUserDetail(data.userDetail ? data.userDetail : null)),
-                // (error: any) => CatchErrors.catch(error, router, dispatch)
                 failedCb: (error: any) => catchErrors.catch(error)
         });
         }
@@ -90,7 +86,7 @@ export default function Edit() {
         setShowAlert(false);
     };
 
-    const onChange = (field: string, value: string | boolean | Date | null) => {
+    const onChange = (field: string, value: string | boolean | Date | null | Dayjs) => {
         if (formValues) {
             setFormValues({
                 ...formValues,
@@ -99,7 +95,7 @@ export default function Edit() {
 
             if (["name", "surName", "phone", "email"].includes(field)) {
                 setFormErrors({
-                    // [field]: value ? "" : REQUIRED_FIELD
+                    [field]: value ? "" : REQUIRED_FIELD
                 })
             }
         }
@@ -131,8 +127,6 @@ export default function Edit() {
                             setShowAlert(true);
                         }
                     },
-
-                    // (error) => CatchErrors.catch(error, router, dispatch)
                     failedCb: (error: any) => catchErrors.catch(error)
             });
             } else {
@@ -140,7 +134,6 @@ export default function Edit() {
             }
         } catch (error) {
             setLoading(false);
-            // CatchErrors.catch("Произошла ошибка при изменении информации о пользователе: " + error, router, dispatch)
             catchErrors.catch("Произошла ошибка при изменении информации о пользователе: " + error);
         }
     };
@@ -160,7 +153,7 @@ export default function Edit() {
         <div className={"edit-container__module"}>
             {user && userDetail && formValues
                 ? <Box component="form" noValidate onSubmit={onSubmit}>
-                    {/* <EditTabsModule tab={tab} formValues={formValues} formErrors={formErrors} onChange={onChange} /> */}
+                    <EditTabsModule tab={tab} formValues={formValues} formErrors={formErrors} onChange={onChange} />
 
                     <LoadingButton
                         fullWidth
@@ -173,12 +166,12 @@ export default function Edit() {
                         Сохранить
                     </LoadingButton>
 
-                    {/* {showAlert
+                    {showAlert
                         ? <AlertComponent show={showAlert}>
                             <><b>Изменения сохранены</b> - новые данные будут отражены на Вашей странице.</>
                         </AlertComponent>
                         : null
-                    } */}
+                    }
                 </Box>
                 : <div className={"edit-container__module__spinner"}><CircularProgress /></div>
             }
