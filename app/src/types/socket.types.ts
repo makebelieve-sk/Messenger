@@ -9,7 +9,6 @@ type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
 interface ISocketUsers {
     [userId: string]: {
-        userID: string;
         socketID: string;
         user: IUser;
         call?: { id: string; chatInfo: any; usersInCall: any[]; };
@@ -60,7 +59,7 @@ interface ClientToServerEvents {
 
 // Отправляем события с сервера на фронт
 interface ServerToClientEvents {
-    [SocketActions.GET_ALL_USERS]: (users: ISocketUsers) => void;
+    [SocketActions.GET_ALL_USERS]: (users: IUser[]) => void;
     [SocketActions.GET_NEW_USER]: (user: IUser) => void;
     [SocketActions.USER_DISCONNECT]: (userId: string) => void;
     [SocketActions.ADD_TO_FRIENDS]: () => void;

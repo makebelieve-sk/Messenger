@@ -4,6 +4,11 @@ enum MainClientEvents {
     ERROR = "error",
 };
 
+enum SocketEvents {
+    RECONNECT = "reconnect"
+};
+
 export {
-    MainClientEvents
+    MainClientEvents,
+    SocketEvents
 };
