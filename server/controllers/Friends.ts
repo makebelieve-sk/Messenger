@@ -5,23 +5,23 @@ import { Transaction } from "sequelize";
 import { getSearchWhere } from "../utils/where";
 import { ApiRoutes, ErrorTexts, FriendsTab, HTTPStatuses } from "../types/enums";
 import { IUser } from "../types/models.types";
+import { UsersType } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
-import { ISocketUsers } from "../types/socket.types";
 import { FriendsError } from "../errors/controllers";
 
 interface IConstructor {
     app: Express;
     middleware: Middleware;
     database: Database;
-    users: ISocketUsers;
+    users: UsersType;
 };
 
 export default class FriendsController {
     private readonly _app: Express;
     private readonly _middleware: Middleware;
     private readonly _database: Database;
-    private readonly _users: ISocketUsers;
+    private readonly _users: UsersType;
 
     constructor({ app, middleware, database, users }: IConstructor) {
         this._app = app;
@@ -221,11 +221,9 @@ export default class FriendsController {
                 // Получение друзей-онлайн
                 case FriendsTab.online: {
                     if (this._users) {
-                        const userObjects = Array.from(this._users.values());
+                        const usersOnline = Array.from(this._users.values());
 
-                        if (userObjects && userObjects.length) {
-                            const usersOnline = userObjects.map(userObject => userObject.user);
-
+                        if (usersOnline && usersOnline.length) {
                             const filterUsersOnline = usersOnline.filter(onlineUser => {
                                 const searchFN = onlineUser.firstName.toLowerCase();
                                 const searchTN = onlineUser.thirdName.toLowerCase();

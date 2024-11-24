@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import { SOCKET_IO_CLIENT } from "../../utils/constants";
 import { AppDispatch } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
-import { MainClientEvents } from "../../types/events";
+import { MainClientEvents, SocketEvents } from "../../types/events";
 import SocketController from "./SocketController";
 import Profile from "../profile/Profile";
 import User from "../models/User";
@@ -24,7 +24,11 @@ export default class Socket extends EventEmitter {
         super();
 
         this._user = myProfile.user;
-        this._socket = io(SOCKET_IO_CLIENT, { transports: ["websocket"] });
+        this._socket = io(SOCKET_IO_CLIENT, { 
+            transports: ["websocket"],
+            autoConnect: false,             // Отключаем автоподключение
+            reconnection: true              // Включаем восстановление соединения
+        });
         this._dispatch = dispatch;
     }
 
@@ -39,8 +43,7 @@ export default class Socket extends EventEmitter {
             return;
         }
 
-        this._socket.auth = { user: this._user.user };
-        this._socket.connect();
+        this._connect();
 
         this._socketController = new SocketController({ socket: this._socket, user: this._user, dispatch: this._dispatch });
 
@@ -51,9 +54,18 @@ export default class Socket extends EventEmitter {
         this._socket.disconnect();
     }
 
+    _connect() {
+        this._socket.auth = { userId: this._user.id };
+        this._socket.connect();
+    }
+
     private _bindSocketControllerListeners() {
         this._socketController.on(MainClientEvents.REDIRECT, (path: string) => {
             this.emit(MainClientEvents.REDIRECT, path);
+        });
+
+        this._socketController.on(SocketEvents.RECONNECT, () => {
+            this._connect();
         });
     }
 }

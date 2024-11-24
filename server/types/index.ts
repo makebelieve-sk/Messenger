@@ -1,3 +1,7 @@
+import { IUser } from "./models.types";
+
+export type UsersType = Map<string, IUser>;
+
 export interface IImage {
     id: string;
     src: string;
