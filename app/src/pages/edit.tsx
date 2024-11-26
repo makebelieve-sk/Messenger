@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/useGlobalState";
 import CatchErrors from "../core/CatchErrors";
 import { REQUIRED_FIELD } from "../utils/constants";
 import "../styles/pages/edit.scss";
+import Profile from "../core/profile/Profile";
 
 export interface IFormValues {
     name: string;
@@ -49,6 +50,7 @@ export default function Edit() {
     const dispatch = useAppDispatch();
     const catchErrors = new CatchErrors(dispatch);
     const request = new Request(catchErrors);
+    const profile = new Profile( user.id, request, dispatch)
 
     // Установка disabled кнопке "Сохранить"
    useEffect(() => {
@@ -115,20 +117,22 @@ export default function Edit() {
                     result["birthday"] = (result["birthday"] as dayjs.Dayjs).format("YYYY-MM-DD");
                 }
 
-                request.post({
-                    route: ApiRoutes.editInfo,
-                    data: result,
-                     setLoading,
-                    successCb:
-                    (data: { success: boolean, user: IUser, userDetails: IUserDetails }) => {
-                        if (data.success) {
-                            dispatch(setUser(data.user));
-                            dispatch(setUserDetail(data.userDetails));
-                            setShowAlert(true);
-                        }
-                    },
-                    failedCb: (error: any) => catchErrors.catch(error)
-            });
+            //     request.post({
+            //         route: ApiRoutes.editInfo,
+            //         data: result,
+            //          setLoading,
+            //         successCb:
+            //         (data: { success: boolean, user: IUser, userDetails: IUserDetails }) => {
+            //             if (data.success) {
+            //                 dispatch(setUser(data.user));
+            //                 dispatch(setUserDetail(data.userDetails));
+            //                 setShowAlert(true);
+            //             }
+            //         },
+            //         failedCb: (error: any) => catchErrors.catch(error)
+            // });
+            profile.editInfo(result, setLoading, setShowAlert)
+            
             } else {
                 throw new Error("Нет пользователя");
             }

@@ -3,7 +3,7 @@ import EventEmitter from "eventemitter3";
 import Request from "../Request";
 import User from "../models/User";
 import { setImagesInCarousel } from "../../state/main/slice";
-import { addPhotos, changeUserField, deletePhoto, setPhotos, setPhotosCount, setUserDetail } from "../../state/user/slice";
+import { addPhotos, changeUserField, deletePhoto, setPhotos, setPhotosCount, setUserDetail, setUser } from "../../state/user/slice";
 import { setFriendsCount, setSubscribersCount, setTopFriends } from "../../state/friends/slice";
 import { ApiRoutes } from "../../types/enums";
 import { IPhoto, IUser, IUserDetails } from "../../types/models.types";
@@ -13,6 +13,8 @@ import { NO_PHOTO } from "../../utils/constants";
 import { currentDate } from "../../utils/datetime";
 import { AVATAR_URL } from "../../utils/files";
 import { getFullName } from "../../utils";
+import CatchErrors from "../CatchErrors";
+import dayjs from "dayjs";
 
 // Класс, отвечающий за полный объект пользователя
 export default class Profile extends EventEmitter {
@@ -24,6 +26,7 @@ export default class Profile extends EventEmitter {
         this._user = User.create(this._userId, { request: this._request, dispatch: this._dispatch });
         this._bindUserListeners();
     }
+
 
     get user() {
         return this._user;
@@ -63,10 +66,10 @@ export default class Profile extends EventEmitter {
     // Установка/обновление аватара
     public onSetAvatar({ id, newAvatarUrl, newPhotoUrl }: { id: string; newAvatarUrl: string; newPhotoUrl: string; }) {
         this._user.changeField(AVATAR_URL, newAvatarUrl);
-        this._dispatch(addPhotos([{ 
-            id, 
-            userId: this._user.id, 
-            path: newPhotoUrl, 
+        this._dispatch(addPhotos([{
+            id,
+            userId: this._user.id,
+            path: newPhotoUrl,
             createDate: currentDate
         }]));
     }
@@ -95,9 +98,9 @@ export default class Profile extends EventEmitter {
     public onClickPhoto(photos: IPhoto[], index: number) {
         if (photos && photos.length) {
             this._dispatch(setImagesInCarousel({
-                images: photos.map(photo => ({ 
-                    src: photo.path, 
-                    alt: photo.id, 
+                images: photos.map(photo => ({
+                    src: photo.path,
+                    alt: photo.id,
                     authorName: getFullName(photo.User),
                     dateTime: photo.createDate,
                     authorAvatarUrl: photo.User?.avatarUrl || NO_PHOTO
@@ -131,7 +134,7 @@ export default class Profile extends EventEmitter {
 
                     if (deletedPhoto) {
                         const indexOf = photos.indexOf(deletedPhoto);
-        
+
                         this._dispatch(deletePhoto(indexOf));
                     }
                 }
@@ -144,7 +147,7 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     public getUserDetail(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.get({
-            route: ApiRoutes.getUserDetail, 
+            route: ApiRoutes.getUserDetail,
             setLoading,
             successCb: (data: { success: boolean, userDetail: IUserDetails }) => {
                 this._dispatch(setUserDetail(data.userDetail))
@@ -157,7 +160,7 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     public getFriends(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.get({
-            route: ApiRoutes.getCountFriends, 
+            route: ApiRoutes.getCountFriends,
             setLoading,
             successCb: (data: { success: boolean, friendsCount: number, topFriends: IUser[] | null, subscribersCount: number; }) => {
                 this._dispatch(setFriendsCount(data.friendsCount));
@@ -166,4 +169,24 @@ export default class Profile extends EventEmitter {
             }
         });
     }
+
+    catchErrors = new CatchErrors(this._dispatch);
+    public editInfo(result: { userId: string, birthday: dayjs.Dayjs | string }, setLoading: (value: React.SetStateAction<boolean>) => void, setShowAlert: (value: React.SetStateAction<boolean>) => void) {
+        this._request.post({
+            route: ApiRoutes.editInfo,
+            data: result,
+            setLoading,
+            successCb:
+                (data: { success: boolean, user: IUser, userDetails: IUserDetails }) => {
+                    if (data.success) {
+                        this._dispatch(setUser(data.user));
+                        this._dispatch(setUserDetail(data.userDetails));
+                        setShowAlert(true);
+                    }
+                },
+            failedCb: (error: any) => this.catchErrors.catch(error)
+        });
+
+    }
+
 }
