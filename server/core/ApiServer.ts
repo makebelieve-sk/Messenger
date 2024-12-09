@@ -1,7 +1,6 @@
 import { Express } from "express";
 import { PassportStatic } from "passport";
 
-import { ISocketUsers } from "../types/socket.types";
 import RedisWorks from "./Redis";
 import Middleware from "./Middleware";
 import Database from "./Database";
@@ -10,6 +9,7 @@ import FileController from "../controllers/File";
 import FriendsController from "../controllers/Friends";
 import MessagesController from "../controllers/Messages";
 import UserController from "../controllers/User";
+import { ISocketUsers } from "../types/socket.types";
 
 interface IConstructor { 
     redisWork: RedisWorks; 
@@ -19,6 +19,7 @@ interface IConstructor {
     passport: PassportStatic;
 };
 
+// Класс, отвечает за обработку HTTP-запросов от клиента
 export default class ApiServer {
     private readonly _middleware: Middleware;
     private readonly _redisWork: RedisWorks;

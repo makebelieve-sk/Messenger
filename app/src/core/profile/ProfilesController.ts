@@ -22,7 +22,7 @@ export default class ProfilesController extends EventEmitter {
     }
 
     // Получение объекта пользователя
-    public getProfile(userId: string = MY_ID): Profile {
+    getProfile(userId: string = MY_ID): Profile {
         if (this._profiles.has(userId)) {
             return this._profiles.get(userId)!;
         }
@@ -32,7 +32,12 @@ export default class ProfilesController extends EventEmitter {
     }
 
     // Добавление нового профиля пользователя
-    public addProfile(userId: string = MY_ID) {
+    addProfile(userId: string = MY_ID) {
+        if (this._profiles.has(userId)) {
+            this.emit(MainClientEvents.ERROR, `Профиль с id: ${userId} уже существует.`);
+            return undefined;
+        }
+
         const newProfile = new Profile(userId, this._request, this._dispatch);
 
         this._profiles.set(userId, newProfile);
@@ -40,7 +45,7 @@ export default class ProfilesController extends EventEmitter {
     }
 
     // Удаление профиля пользователя
-    public removeProfile(userId: string = MY_ID) {
+    removeProfile(userId: string = MY_ID) {
         this._profiles.has(userId)
             ? this._profiles.delete(userId)
             : this.emit(MainClientEvents.ERROR, `Профиля с id: ${userId} не существует.`);
