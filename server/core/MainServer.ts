@@ -5,12 +5,12 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
 
-import { ISocketUsers } from "../types/socket.types";
 import ApiServer from "./ApiServer";
 import RedisWorks from "./Redis";
 import PassportWorks from "./Passport";
 import Database from "./Database";
 import SocketWorks from "./Socket";
+import { UsersType } from "../types";
 
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 const SECRET_KEY = process.env.SECRET_KEY as string;
@@ -23,7 +23,7 @@ interface IContructor {
 
 export default class MainServer {
     private readonly _app: Express;
-    private readonly _users: ISocketUsers;
+    private readonly _users: UsersType;
     private readonly _redisWork: RedisWorks;
     private readonly _database: Database;
     private readonly _passport: PassportWorks;
@@ -40,7 +40,7 @@ export default class MainServer {
         // Инициализируем работу базы данных (модели, отношения)
         this._database = new Database();
         // Инициализируем работу Passport (мидлвары)
-        this._passport = new PassportWorks({ app: this._app, database: this._database });
+        this._passport = new PassportWorks({ app: this._app, database: this._database, users: this._users });
         // Инициализируем работу API
         new ApiServer({ 
             redisWork: this._redisWork, 

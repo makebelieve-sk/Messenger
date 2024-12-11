@@ -9,16 +9,19 @@ import { IFullChatInfo } from "../types/chat.types";
 import { getFullName } from "../utils";
 import Database from "./Database";
 import { SocketError } from "../errors";
+import { UsersType } from "../types";
+import { getSaveUserFields } from "../utils/user";
 
 interface IConstructor {
     server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
-    users: ISocketUsers;
+    users: UsersType;
     database: Database;
 };
 
 export default class SocketWorks {
     private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
-    private readonly _users: ISocketUsers;
+    private readonly _users: UsersType;
+    private readonly _socketUsers: ISocketUsers;
     private readonly _database: Database;
 
     private _io!: Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>;
@@ -27,6 +30,7 @@ export default class SocketWorks {
     constructor({ server, users, database }: IConstructor) {
         this._server = server;
         this._users = users;
+        this._socketUsers = new Map();
         this._database = database;
 
         this._init();
@@ -34,10 +38,6 @@ export default class SocketWorks {
 
     get io() {
         return this._io;
-    }
-
-    get socket() {
-        return this._socket;
     }
 
     private _init() {
@@ -53,45 +53,66 @@ export default class SocketWorks {
     private _useMiddlewares() {
         // Милдвар сокета - проверка пользователя в сокете
         this.io.use((socket: SocketWithUser, next) => {
-            const user = socket.handshake.auth.user as IUser;
+            const userId: string = socket.handshake.auth.userId;
     
-            if (!user) {
-                return next(new Error("Не передан пользователь"));
+            if (!userId) {
+                return next(new SocketError("Не передан идентификатор пользователя"));
             }
     
-            socket.user = user;
+            socket.userId = userId;
             next();
         });
     }
 
-    private _getUser(userId: string) {
+    private async _getMe(userId: string) {
         if (this._users.has(userId)) {
-            return undefined;
+            return this._users.get(userId) as IUser;
+        } else {
+            try {
+                const currentUser = await this._database.models.users.findByPk(userId);
+
+                if (currentUser) {
+                    const user = getSaveUserFields(currentUser) as IUser;
+
+                    this._users.set(user.id, user as IUser);
+
+                    return user;
+                } else {
+                    throw new SocketError(`Пользователь с id=${userId} не найден.`);
+                }
+            } catch (error) {
+                const nextError = error instanceof SocketError
+                    ? error
+                    : new SocketError(error);
+
+                throw nextError;
+            }
+        }
+    }
+
+    private _getUser(userId: string) {
+        if (!this._socketUsers.has(userId)) {
+            throw new SocketError(`Не существует пользователя с id=${userId}`);
         }
 
-        return this._users.get(userId);
+        return this._socketUsers.get(userId);
     }
 
     private _useSocketBus() {
-        // Инициализация io
         this.io.on("connection", async (socket: SocketWithUser) => {
             try {
                 this._socket = socket;
 
-                if (!socket.user) {
-                    throw new Error("Не передан пользователь");
-                }
-
-                const userID = socket.user.id;
+                const userId = socket.userId as string;
                 const socketID = socket.id;
-                const user: IUser = socket.handshake.auth.user || socket.user;
+                const user = await this._getMe(userId);
 
-                this._users.set(userID, {
-                    ...this._users.get(userID),
-                    userID,
-                    socketID,
-                    user
-                });
+                if (!this._socketUsers.has(userId)) {
+                    this._socketUsers.set(userId, {
+                        user,
+                        socketID
+                    });
+                }
 
                 // Уведомление по сокету меня самого
                 const notifyMe = (type: any, payload?: Object) => {
@@ -101,8 +122,8 @@ export default class SocketWorks {
                 // Уведомление по сокету конкретного пользователя
                 const notifyAnotherUser = (userTo: string, type: any, payload?: Object) => {
                     // Если получатель - это я, то выводим ошибку
-                    if (userTo === userID) {
-                        throw new Error(`Не подходящий идентификатор пользователя id=${userTo}`);
+                    if (userTo === userId) {
+                        throw new SocketError(`Не подходящий идентификатор пользователя id=${userTo} (необходимо использовать метод notifyMe)`);
                     }
 
                     const findUser = this._getUser(userTo);
@@ -117,7 +138,7 @@ export default class SocketWorks {
                     for (const user of allUsers) {
                         const findUser = this._getUser(user.id);
 
-                        if (findUser && user.id !== userID) {
+                        if (findUser && user.id !== userId) {
                             this.io.to(findUser.socketID).emit(type, payload);
                         }
                     }
@@ -131,7 +152,7 @@ export default class SocketWorks {
                     if (clientsInRoom && clientsInRoom.length) {
                         clientsInRoom.forEach((clientId) => {
                             // Уведомляем других участников звонка о нашем уходе
-                            notifyAnotherUser(clientId, SocketActions.REMOVE_PEER, { peerId: socketID, userId: userID });
+                            notifyAnotherUser(clientId, SocketActions.REMOVE_PEER, { peerId: socketID, userId });
                         });
 
                         // Уведомляем пользователей, которые еще не приняли звонок о том, что звонок был отменен
@@ -139,7 +160,7 @@ export default class SocketWorks {
                             notifyAnotherUsers(usersInCall, SocketActions.CANCEL_CALL);
                         }
 
-                        const findUser = this._getUser(userID);
+                        const findUser = this._getUser(userId);
 
                         // Удаляем из своего сокета id звонка 
                         if (findUser && findUser.call) {
@@ -160,16 +181,16 @@ export default class SocketWorks {
                 // Обновляем дату моего последнего захода
                 await this._database.models.userDetails.update(
                     { lastSeen: null },
-                    { where: { userId: userID } }
+                    { where: { userId } }
                 );
 
                 // Отправляем всем пользователям обновленный список активных пользователей
-                socket.emit(SocketActions.GET_ALL_USERS, this._users);
+                socket.emit(SocketActions.GET_ALL_USERS, Array.from(this._socketUsers.values()).map(socketUser => socketUser.user));
 
                 // Оповещаем все сокеты (кроме себя) о новом пользователе
                 socket.broadcast.emit(SocketActions.GET_NEW_USER, user);
 
-                const findUser = this._getUser(userID);
+                const findUser = this._getUser(userId);
 
                 // Если мы открываем приложение со второй вкладки
                 if (findUser && findUser.call) {
@@ -198,7 +219,7 @@ export default class SocketWorks {
                         }
 
                         case SocketActions.BLOCK_FRIEND: {
-                            notifyAnotherUser(data.payload.to, SocketActions.BLOCK_FRIEND, { userId: userID });
+                            notifyAnotherUser(data.payload.to, SocketActions.BLOCK_FRIEND, { userId });
                             break;
                         }
 
@@ -214,7 +235,7 @@ export default class SocketWorks {
                 socket.on(SocketActions.MESSAGE, ({ data, usersInChat }) => {
                     notifyAnotherUsers(usersInChat, SocketActions.SEND_MESSAGE, { 
                         ...data, 
-                        User: { id: userID, firstName: user.firstName, thirdName: user.thirdName, avatarUrl: user.avatarUrl } 
+                        User: { id: userId, firstName: user.firstName, thirdName: user.thirdName, avatarUrl: user.avatarUrl } 
                     });
                 });
 
@@ -256,7 +277,7 @@ export default class SocketWorks {
                         if (isSingle) {
                             const userTo = usersInCall[1];
                             const findUser = this._getUser(userTo.id);
-                            const findMe = this._getUser(userID);
+                            const findMe = this._getUser(userId);
 
                             if (findUser) {
                                 if (findMe) {
@@ -370,7 +391,7 @@ export default class SocketWorks {
                                 this.io.to(clientId).emit(SocketActions.ADD_PEER, {
                                     peerId: socketID,
                                     createOffer: false,
-                                    userId: userID
+                                    userId
                                 });
 
                                 let clientUserId: string | null = null;
@@ -380,7 +401,7 @@ export default class SocketWorks {
                                     const findUser = this._getUser(key);
 
                                     if (findUser && findUser.socketID === clientId) {
-                                        clientUserId = findUser.userID;
+                                        clientUserId = findUser.user.id;
                                     }
                                 }
 
@@ -394,7 +415,7 @@ export default class SocketWorks {
                                 }
                             });
 
-                            const findMe = this._getUser(userID);
+                            const findMe = this._getUser(userId);
 
                             if (findMe) {
                                 // При принятии звонка сохраняем id звонка у себя в сокете
@@ -511,7 +532,7 @@ export default class SocketWorks {
 
                                     await transaction.commit();
 
-                                    const findMe = this._getUser(userID);
+                                    const findMe = this._getUser(userId);
 
                                     if (message && call) {
                                         const newMessage = {
@@ -555,7 +576,7 @@ export default class SocketWorks {
                                 break;
                             }
                             default: {
-                                const findMe = this._getUser(userID);
+                                const findMe = this._getUser(userId);
 
                                 if (findMe) {
                                     this.io.to(findMe.socketID).emit(SocketActions.SOCKET_CHANNEL_ERROR, {
@@ -578,14 +599,14 @@ export default class SocketWorks {
                 socket.on("disconnecting", (reason) => {
                     console.log("[SOCKET.disconnecting]: ", reason);
 
-                    const rooms = Array.from(socket.rooms);
+                    // const rooms = Array.from(socket.rooms);
 
-                    // Выходим из всех комнат только, если пользователь использует 1 (последнюю) вкладку
-                    if (rooms && rooms.length) {
-                        rooms.forEach(roomId => {
-                            leaveRoom({ roomId });
-                        });
-                    }
+                    // // Выходим из всех комнат только, если пользователь использует 1 (последнюю) вкладку
+                    // if (rooms && rooms.length) {
+                    //     rooms.forEach(roomId => {
+                    //         leaveRoom({ roomId });
+                    //     });
+                    // }
                 });
 
                 // Отключение сокета
@@ -593,15 +614,16 @@ export default class SocketWorks {
                     try {
                         console.log(`Сокет с id: ${socketID} отключился по причине: ${reason}`);
 
-                        this._users.delete(userID);
+                        this._users.delete(userId);
+                        this._socketUsers.delete(userId);
 
                         // Оповещаем все сокеты (кроме себя) об отключении пользователя
-                        socket.broadcast.emit(SocketActions.USER_DISCONNECT, userID);
+                        socket.broadcast.emit(SocketActions.USER_DISCONNECT, userId);
 
                         // Обновляем дату моего последнего захода
                         await this._database.models.userDetails.update(
                             { lastSeen: new Date().toUTCString() },
-                            { where: { userId: userID } }
+                            { where: { userId } }
                         );
                     } catch (error) {
                         const nextError = error instanceof SocketError
