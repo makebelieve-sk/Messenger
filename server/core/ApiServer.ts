@@ -9,12 +9,12 @@ import FileController from "../controllers/File";
 import FriendsController from "../controllers/Friends";
 import MessagesController from "../controllers/Messages";
 import UserController from "../controllers/User";
-import { ISocketUsers } from "../types/socket.types";
+import { UsersType } from "../types";
 
 interface IConstructor { 
     redisWork: RedisWorks; 
     app: Express; 
-    users: ISocketUsers; 
+    users: UsersType; 
     database: Database;
     passport: PassportStatic;
 };
@@ -24,7 +24,7 @@ export default class ApiServer {
     private readonly _middleware: Middleware;
     private readonly _redisWork: RedisWorks;
     private readonly _app: Express;
-    private readonly _users: ISocketUsers;
+    private readonly _users: UsersType;
     private readonly _database: Database;
     private readonly _passport: PassportStatic;
 
@@ -42,7 +42,7 @@ export default class ApiServer {
 
     // Запуск контроллеров обработки API запросов
     private _init() {
-        new AuthController({ app: this._app, database: this._database, middleware: this._middleware, redisWork: this._redisWork, passport: this._passport });
+        new AuthController({ app: this._app, database: this._database, middleware: this._middleware, redisWork: this._redisWork, passport: this._passport, users: this._users });
         new FileController({ app: this._app, database: this._database, middleware: this._middleware });
         new FriendsController({ app: this._app, database: this._database, middleware: this._middleware, users: this._users });
         new MessagesController({ app: this._app, database: this._database, middleware: this._middleware });

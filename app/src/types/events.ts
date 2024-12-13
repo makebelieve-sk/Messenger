@@ -6,6 +6,11 @@ enum MainClientEvents {
     LOG_OUT = "logout",
 };
 
+enum SocketEvents {
+    RECONNECT = "reconnect"
+};
+
 export {
-    MainClientEvents
+    MainClientEvents,
+    SocketEvents
 };

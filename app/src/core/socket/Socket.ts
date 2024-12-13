@@ -5,13 +5,14 @@ import SocketController from "./SocketController";
 import { SOCKET_IO_CLIENT } from "../../utils/constants";
 import { AppDispatch } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
-import { MainClientEvents } from "../../types/events";
+import { MainClientEvents, SocketEvents } from "../../types/events";
 import { IUser } from "../../types/models.types";
 
 // Класс, являющийся оберткой для socket.io-client, позволяющий давать запросы на сервер по протоколу ws через транспорт websocket
 export default class Socket extends EventEmitter {
     private _socket!: SocketType;
     private _socketController!: SocketController;
+    private _me!: IUser;
 
     constructor(private readonly _dispatch: AppDispatch) {
         super();
@@ -28,6 +29,8 @@ export default class Socket extends EventEmitter {
             return;
         }
 
+        this._me = myUser;
+
         this._socket = io(SOCKET_IO_CLIENT, { 
             transports: ["websocket"],
             autoConnect: true,
@@ -38,9 +41,9 @@ export default class Socket extends EventEmitter {
             closeOnBeforeunload: true,
             withCredentials: true,
         });
-        this._socket.auth = { user: myUser };
+        this._socket.auth = { user: this._me };
 
-        this._socketController = new SocketController({ socket: this._socket, myUser, dispatch: this._dispatch });
+        this._socketController = new SocketController({ socket: this._socket, myUser: this._me, dispatch: this._dispatch });
 
         this._bindSocketControllerListeners();
     }
@@ -49,9 +52,18 @@ export default class Socket extends EventEmitter {
         this._socket.disconnect();
     }
 
+    _connect() {
+        this._socket.auth = { user: this._me };
+        this._socket.connect();
+    }
+
     private _bindSocketControllerListeners() {
         this._socketController.on(MainClientEvents.REDIRECT, (path: string) => {
             this.emit(MainClientEvents.REDIRECT, path);
+        });
+
+        this._socketController.on(SocketEvents.RECONNECT, () => {
+            this._connect();
         });
     }
 }

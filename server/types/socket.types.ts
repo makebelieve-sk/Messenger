@@ -6,7 +6,6 @@ import { UserPartial } from "./user.types";
 import { IEditMessage } from "./message.types";
 
 interface ISocketUser {
-    userID: string;
     socketID: string;
     user: IUser;
     call?: { id: string; chatInfo: IFullChatInfo; usersInCall: any[]; };
@@ -50,7 +49,7 @@ interface ClientToServerEvents {
 
 // Отправляем события с сервера на фронт
 interface ServerToClientEvents {
-    [SocketActions.GET_ALL_USERS]: (users: ISocketUsers) => void;
+    [SocketActions.GET_ALL_USERS]: (users: IUser[]) => void;
     [SocketActions.GET_NEW_USER]: (user: IUser) => void;
     [SocketActions.USER_DISCONNECT]: (userId: string) => void;
     [SocketActions.ADD_TO_FRIENDS]: () => void;

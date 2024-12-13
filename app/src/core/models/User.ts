@@ -63,6 +63,11 @@ export default class User extends EventEmitter {
         });
     }
 
+    // Обновление данных о себе (так как после входа уже существует в мапе мой профиль и сущность Пользователь)
+    updateMe() {
+        this._getMe();
+    }
+
     // Замена поля пользователя и обновление в глобальном состоянии
     changeField(field: string, value: string) {
         this._user[field] = value;

@@ -9,7 +9,7 @@ import { CallStatus, FriendsNoticeTypes, Pages, SocketActions, SocketChannelErro
 import { IUser } from "../../types/models.types";
 import { AppDispatch } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
-import { MainClientEvents } from "../../types/events";
+import { MainClientEvents, SocketEvents } from "../../types/events";
 import { getFullName } from "../../utils";
 import PlayAudio from "../../utils/play-audio";
 
@@ -48,19 +48,11 @@ export default class SocketController extends EventEmitter {
 
         // Список всех онлайн пользователей
         this._socket.on(SocketActions.GET_ALL_USERS, (users) => {
-            const allOnlineUsers = Object.values(users).map(onlineUser => {
-                if (onlineUser.userID !== this._myUser.id) {
-                    return onlineUser.user;
+            users.forEach(onlineUser => {
+                if (onlineUser && onlineUser.id !== this._myUser.id) {
+                    this._dispatch(setOnlineUsers(onlineUser));
                 }
             });
-
-            if (allOnlineUsers && allOnlineUsers.length) {
-                allOnlineUsers.forEach(onlineUser => {
-                    if (onlineUser) {
-                        this._dispatch(setOnlineUsers(onlineUser));
-                    }
-                });
-            }
 
             console.log('Юзеры онлайн: ', users);
         });
@@ -236,7 +228,7 @@ export default class SocketController extends EventEmitter {
 
             // Означает, что соединение было отклонено сервером
             if (!isSocketActive) {
-                this._reconnect();
+                this.emit(SocketEvents.RECONNECT);
             }
 
             // Иначе сокет попытается переподключиться автоматически (временный разрыв соединения)
@@ -247,7 +239,7 @@ export default class SocketController extends EventEmitter {
 
             // Если сокет отключился по инициативе сервера, то перезапускаем сокет
             if (!isSocketActive && reason === SERVER_DISCONNECT) {
-                this._reconnect();
+                this.emit(SocketEvents.RECONNECT);
             }
 
             // Иначе сокет попытается переподключиться автоматически (временный разрыв соединения)

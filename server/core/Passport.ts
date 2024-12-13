@@ -8,6 +8,7 @@ import { ISaveUser, UserInstance } from "../database/models/Users";
 import { getSaveUserFields } from "../utils/user";
 import { PassportError } from "../errors";
 import { IUser } from "../types/models.types";
+import { UsersType } from "../types";
 
 type DoneType = (error: string | null, user?: ISaveUser | false, options?: IVerifyOptions | undefined) => void;
 
@@ -17,7 +18,7 @@ const errorSign = "Не верно указан логин или пароль";
 export default class PassportWorks {
     private readonly _passport: PassportStatic = Passport;
 
-    constructor(private readonly _app: Express, private readonly _database: Database) {
+    constructor(private readonly _app: Express, private readonly _database: Database, private readonly _users: UsersType) {
         this._init();
     }
 
@@ -37,6 +38,10 @@ export default class PassportWorks {
             console.log("serializeUser: ", user);
 
             process.nextTick(() => {
+                if (!this._users.has((user as IUser).id)) {
+                    this._users.set((user as IUser).id, user as IUser);
+                }
+                
                 done(null, (user as IUser).id);
             });
         });
@@ -46,22 +51,31 @@ export default class PassportWorks {
             console.log("deserializeUser: ", userId);
 
             process.nextTick(() => {
-                this._database.models.users
-                    .findByPk(userId)
-                    .then(currectUser => {
-                        if (currectUser) {
-                            const user = getSaveUserFields(currectUser);
-                            return done(null, user);
-                        } else {
-                            return new Error(`Пользователь с id=${userId} не найден`);
-                        }
-                    })
-                    .catch(error => {
-                        const nextError = error instanceof PassportError
-                            ? error
-                            : new PassportError(error);
-                        done(nextError.message);
-                    });
+                const user = this._users.get(userId);
+
+                if (user) {
+                    return done(null, user);
+                } else {
+                    this._database.models.users
+                        .findByPk(userId)
+                        .then(currectUser => {
+                            if (currectUser) {
+                                const user = getSaveUserFields(currectUser);
+
+                                this._users.set(user.id, user as IUser);
+
+                                return done(null, user);
+                            } else {
+                                return new PassportError(`Пользователь с id=${userId} не найден`);
+                            }
+                        })
+                        .catch(error => {
+                            const nextError = error instanceof PassportError
+                                ? error
+                                : new PassportError(error);
+                            done(nextError.message);
+                        });
+                }
             });
         });
     }

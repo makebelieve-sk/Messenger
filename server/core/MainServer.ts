@@ -10,8 +10,8 @@ import RedisWorks from "./Redis";
 import PassportWorks from "./Passport";
 import Database from "./Database";
 import SocketWorks from "./Socket";
-import { ISocketUsers } from "../types/socket.types";
 import { oneHour } from "../utils/datetime";
+import { UsersType } from "../types";
 
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 const SECRET_KEY = process.env.SECRET_KEY as string;
@@ -19,7 +19,7 @@ const CLIENT_URL = process.env.CLIENT_URL as string;
 
 // Класс, являющийся ядром бизнес логики приложения на стороне сервера.
 export default class MainServer {
-    private readonly _users: ISocketUsers;
+    private readonly _users: UsersType;
     private readonly _redisWork: RedisWorks;
     private readonly _database: Database;
     private readonly _passport: PassportWorks;
@@ -35,7 +35,7 @@ export default class MainServer {
         // Инициализируем мидлвары Express
         const sessionMiddleware = this._useExpressMiddlewares();
         // Инициализируем работу Passport (мидлвары)
-        this._passport = new PassportWorks(this._app, this._database);
+        this._passport = new PassportWorks(this._app, this._database, this._users);
         // Инициализируем работу API
         new ApiServer({ 
             redisWork: this._redisWork, 

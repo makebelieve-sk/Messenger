@@ -86,8 +86,15 @@ export default class MainClient extends EventEmitter {
     // Слушатели событый класса MainApi
     private _bindMainApiListeners() {
         this._mainApi.on(MainClientEvents.SIGN_IN, () => {
-            this._profilesController.addProfile();
-            this.emit(MainClientEvents.REDIRECT, Pages.profile);
+            // Это условие необходимо для того, что если пользователь вышел, его профиль удалился и без обновления страницы вернется EmptyProfile
+            if (this._profilesController.profiles.has(MY_ID)) {
+                // Необходимо обновить информацию о себе, так как после входа/регистрации информации о себе нет
+                // Но при этом, уже созданы сущности "Профиль" и "Пользователь" 
+                const myProfile = this.getProfile();
+                myProfile.user.updateMe();
+            } else {
+                this._profilesController.addProfile();
+            }
         });
 
         this._mainApi.on(MainClientEvents.LOG_OUT, () => {

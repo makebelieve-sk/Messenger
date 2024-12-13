@@ -11,6 +11,7 @@ import RedisWorks from "../core/Redis";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { AuthError } from "../errors/controllers";
+import { UsersType } from "../types";
 
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 
@@ -20,6 +21,7 @@ interface IConstructor {
     middleware: Middleware;
     database: Database;
     passport: PassportStatic;
+    users: UsersType;
 };
 
 export default class AuthController {
@@ -28,13 +30,15 @@ export default class AuthController {
     private readonly _middleware: Middleware;
     private readonly _database: Database;
     private readonly _passport: PassportStatic;
+    private readonly _users: UsersType;
 
-    constructor({ app, redisWork, middleware, database, passport }: IConstructor) {
+    constructor({ app, redisWork, middleware, database, passport, users }: IConstructor) {
         this._app = app;
         this._redisWork = redisWork;
         this._middleware = middleware;
         this._database = database;
         this._passport = passport;
+        this._users = users;
 
         this._init();
     }
@@ -197,7 +201,7 @@ export default class AuthController {
                     throw new Error(`удаление пользователя из запроса завершилось неудачно: ${error}`);
                 }
 
-                // Удаляем текущую сессию пользователя
+                // Удаляем текущую сессию express.js пользователя
                 req.session.destroy(async (error: string) => {
                     if (error) {
                         throw new Error(`удаление сессии пользователя завершилось не удачно: ${error}`);
@@ -209,6 +213,9 @@ export default class AuthController {
 
                     // Удаляем флаг rememberMe из Redis
                     await this._redisWork.delete(RedisKeys.REMEMBER_ME, userId);
+
+                    // Удаляем пользователя из списка пользователей
+                    this._users.delete(userId);
 
                     // Удаляем session-cookie (sid)
                     return res.clearCookie(COOKIE_NAME).json({ success: true });
