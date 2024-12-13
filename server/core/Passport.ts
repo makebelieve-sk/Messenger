@@ -10,28 +10,15 @@ import { PassportError } from "../errors";
 import { IUser } from "../types/models.types";
 import { UsersType } from "../types";
 
-interface IConstructor {
-    app: Express;
-    database: Database;
-    users: UsersType;
-};
-
 type DoneType = (error: string | null, user?: ISaveUser | false, options?: IVerifyOptions | undefined) => void;
 
 const errorSign = "Не верно указан логин или пароль";
 
+// Класс, отвечает за стратегию аутентификации пользователя
 export default class PassportWorks {
-    private readonly _app: Express;
-    private readonly _passport: PassportStatic;
-    private readonly _database: Database;
-    private readonly _users: UsersType;
+    private readonly _passport: PassportStatic = Passport;
 
-    constructor({ app, database, users }: IConstructor) {
-        this._app = app;
-        this._database = database;
-        this._users = users;
-        this._passport = Passport;
-
+    constructor(private readonly _app: Express, private readonly _database: Database, private readonly _users: UsersType) {
         this._init();
     }
 

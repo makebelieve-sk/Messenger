@@ -12,6 +12,7 @@ export type CatchType = BadRequestType | string | null;
 const ERROR_MESSAGE = "Ошибка";
 const ERROR_TIMEOUT = "Возникли проблемы с БД или время ожидания ответа превысило 15 секунд";
 
+// Класс, отвечающий за обработку ошибок. Обрабатывает как ошибки по HTTP API, так и прочие ошибки, возникающие на стороне клиента
 export default class CatchErrors extends EventEmitter {
     private _errorText: string = "";
     private _axiosError: AxiosError | undefined = undefined;
@@ -26,7 +27,7 @@ export default class CatchErrors extends EventEmitter {
             : this._errorText || ERROR_MESSAGE;
     }
 
-    public catch(errorText: string, axiosError?: AxiosError): CatchType {
+    catch(errorText: string, axiosError?: AxiosError): CatchType {
         this._errorText = errorText;
         this._axiosError = axiosError;
 
@@ -42,17 +43,18 @@ export default class CatchErrors extends EventEmitter {
                     case HTTPStatuses.Unauthorized: return this._unauthorized();
                     case HTTPStatuses.Forbidden: return this._forbidden();
                     case HTTPStatuses.NotFound: return this._notFound();
-                    case HTTPStatuses.ServerError: return this._serverError();
-                    default: return this._serverError();
+                    case HTTPStatuses.ServerError:
+                    default: 
+                        return this._serverError();
                 };
-            } else if (this._axiosError.request) {
-                return this._timeoutError();
-            } else {
-                return this._serverError();
             }
-        } else {
-            return this._serverError();
+            
+            if (this._axiosError.request) {
+                return this._timeoutError();
+            }
         }
+
+        return this._serverError();
     };
 
     // Статус 308

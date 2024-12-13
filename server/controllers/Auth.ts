@@ -3,7 +3,7 @@ import { Request, Response, NextFunction, Express } from "express";
 import { v4 as uuid } from "uuid";
 import { PassportStatic } from "passport";
 
-import { getExpiredToken } from "../utils/token";
+import { updateSessionMaxAge } from "../utils/session";
 import { getSaveUserFields } from "../utils/user";
 import { ApiRoutes, ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
 import { IUser } from "../types/models.types";
@@ -57,8 +57,8 @@ export default class AuthController {
                 // Получаем поле rememberMe из Redis
                 const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, (req.user as IUser).id);
 
-                // Обновляем время жизни токена сессии (куки)
-                req.session.cookie.expires = getExpiredToken(Boolean(rememberMe));
+                // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
+                await updateSessionMaxAge(req.session, Boolean(rememberMe));
     
                 return res.status(HTTPStatuses.PermanentRedirect).send({ success: false, message: ErrorTextsApi.YOU_ALREADY_AUTH });
             }
@@ -176,8 +176,8 @@ export default class AuthController {
                     // Записываем в Redis значение поля rememberMe
                     await this._redisWork.set(RedisKeys.REMEMBER_ME, user.id, JSON.stringify(rememberMe));
 
-                    // Обновляем срок жизни токена сессии (куки)
-                    req.session.cookie.expires = getExpiredToken(rememberMe);
+                    // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
+                    await updateSessionMaxAge(req.session, Boolean(rememberMe));
 
                     return res.json({ success: true });
                 });
@@ -211,8 +211,6 @@ export default class AuthController {
                         throw new Error(`отсутствует id сессии пользователя (session=${req.session})`);
                     }
 
-                    // Удаляем сессию из Redis
-                    await this._redisWork.delete(RedisKeys.SESSION, req.sessionID);
                     // Удаляем флаг rememberMe из Redis
                     await this._redisWork.delete(RedisKeys.REMEMBER_ME, userId);
 

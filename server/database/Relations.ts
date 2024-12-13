@@ -1,5 +1,6 @@
 import Models from "./models/Models";
 
+// Класс, предоставляет отношения между таблицами для корректной работы ORM Sequelize
 export default class Relations {
     constructor(private readonly _models: Models) {
         this._oneToOne();

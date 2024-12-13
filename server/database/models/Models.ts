@@ -18,6 +18,7 @@ import UsersInCall from "./UsersInCalls";
 import UsersInChat from "./UsersInChat";
 import Users from "./Users";
 
+// Класс, содержит доступы ко всем таблицам базы данных
 export default class Models {
     private _blockUsers!: BlockUsers;
     private _calls!: Calls;

@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import path from "path";
 
+import RedisWorks from "./Redis";
 import { ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
 import { IUser } from "../types/models.types";
 import { IRequestWithImagesSharpData, IRequestWithSharpData } from "../types/express.types";
-import { getExpiredToken } from "../utils/token";
-import RedisWorks from "./Redis";
+import { updateSessionMaxAge } from "../utils/session";
 import { MiddlewareError } from "../errors";
 import { createSharpedFile } from "../utils/files";
 
+// Класс, отвечает за выполнение мидлваров для HTTP-запросов
 export default class Middleware {
     constructor(private readonly _redisWork: RedisWorks) {}
 
@@ -24,8 +25,8 @@ export default class Middleware {
             // Получаем поле rememberMe из Redis
             const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, userId);
         
-            // Обновляем время жизни токена сессии
-            req.session.cookie.expires = getExpiredToken(Boolean(rememberMe));
+            // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
+            await updateSessionMaxAge(req.session, Boolean(rememberMe));
         
             next();
         } catch (error) {

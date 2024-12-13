@@ -19,6 +19,7 @@ interface IConstructor {
     passport: PassportStatic;
 };
 
+// Класс, отвечает за обработку HTTP-запросов от клиента
 export default class ApiServer {
     private readonly _middleware: Middleware;
     private readonly _redisWork: RedisWorks;

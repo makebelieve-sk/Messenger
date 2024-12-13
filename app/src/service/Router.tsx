@@ -5,6 +5,7 @@ import Profile from "../pages/Profile";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import { Pages } from "../types/enums";
+import { MainClientEvents } from "../types/events";
 import { MainClientContext } from "./AppService";
 import { selectMainState } from "../state/main/slice";
 import { useAppSelector } from "../hooks/useGlobalState";
@@ -12,10 +13,11 @@ import { useAppSelector } from "../hooks/useGlobalState";
 export default function Router() {
     const { isAuth } = useAppSelector(selectMainState);
     const navigate = useNavigate();
+
     const mainClient = React.useContext(MainClientContext);
 
     React.useEffect(() => {
-        mainClient.on("redirect", (path: string) => {
+        mainClient.on(MainClientEvents.REDIRECT, (path: string) => {
             navigate(path);
         });
     }, []);
