@@ -50,8 +50,8 @@ export default class MainClient extends EventEmitter {
         this._catchErrors.catch(error);
     }
 
-    getProfile(userId: string = MY_ID): Profile {
-        return this._profilesController.getProfile(userId);
+    getProfile(userId: string = MY_ID, showError: boolean = true) {
+        return this._profilesController.getProfile(userId, showError) as Profile;
     }
 
     // Слушатели событый класса CatchErrors
@@ -86,15 +86,14 @@ export default class MainClient extends EventEmitter {
     // Слушатели событый класса MainApi
     private _bindMainApiListeners() {
         this._mainApi.on(MainClientEvents.SIGN_IN, () => {
-            // Это условие необходимо для того, что если пользователь вышел, его профиль удалился и без обновления страницы вернется EmptyProfile
-            if (this._profilesController.profiles.has(MY_ID)) {
-                // Необходимо обновить информацию о себе, так как после входа/регистрации информации о себе нет
-                // Но при этом, уже созданы сущности "Профиль" и "Пользователь" 
-                const myProfile = this.getProfile();
-                myProfile.user.updateMe();
-            } else {
-                this._profilesController.addProfile();
-            }
+            // Необходимо обновить информацию о себе, так как после входа/регистрации информации о себе нет
+            // Но при этом, уже созданы сущности "Профиль" и "Пользователь"
+            // Если профиля не существует (только после выхода и без перезагрузки страницы, так как профиль удаляется только в этом случае), то необходимо заново его создать
+            const myProfile = this.getProfile(MY_ID, false);
+
+            myProfile
+                ? myProfile.user.updateMe()
+                : this._profilesController.addProfile();
         });
 
         this._mainApi.on(MainClientEvents.LOG_OUT, () => {
@@ -114,8 +113,8 @@ export default class MainClient extends EventEmitter {
 
     // Инициализация сокета
     private _initSocket() {
-        const myUser = this.getProfile().user.user;
-        this._socket.init(myUser);
+        const userInstance = this.getProfile().user;
+        this._socket.init(userInstance.user);
     }
 
     // Редирект в зависимости от текущего урла

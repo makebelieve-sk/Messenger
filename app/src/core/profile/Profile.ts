@@ -36,7 +36,6 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     // Методы главной фотографии (аватара)
     //-------------------------------------------------
-
     // Клик по аватару
     onClickAvatar() {
         this._dispatch(setImagesInCarousel({
@@ -74,7 +73,6 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     // Методы блока с фотографиями
     //-------------------------------------------------
-
     // Получить все фотографии
     getAllPhotos(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.get({
@@ -142,6 +140,7 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     // Методы блока с основной информацией
     //-------------------------------------------------
+    // Получение дополнительной информации о пользователе
     getUserDetail(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.get({
             route: ApiRoutes.getUserDetail, 
@@ -155,6 +154,7 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     // Методы блока с друзьями
     //-------------------------------------------------
+    // Получение друзей топ-6
     getFriends(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.get({
             route: ApiRoutes.getCountFriends, 
