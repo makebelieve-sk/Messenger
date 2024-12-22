@@ -1,17 +1,23 @@
+import EventEmitter from "events";
 import crypto from "crypto";
 import { Request, Response, NextFunction, Express } from "express";
 import { v4 as uuid } from "uuid";
 import { PassportStatic } from "passport";
+import { IVerifyOptions } from "passport-local";
+import { Transaction } from "sequelize";
 
 import { getExpiredToken } from "../utils/token";
 import { getSaveUserFields } from "../utils/user";
+import { UsersType } from "../types";
 import { ApiRoutes, ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
 import { IUser } from "../types/models.types";
+import { ApiServerEvents } from "../types/events";
 import RedisWorks from "../core/Redis";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { AuthError } from "../errors/controllers";
-import { UsersType } from "../types";
+import { PassportError } from "../errors";
+import { ISaveUser } from "../database/models/Users";
 
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 
@@ -24,7 +30,7 @@ interface IConstructor {
     users: UsersType;
 };
 
-export default class AuthController {
+export default class AuthController extends EventEmitter {
     private readonly _app: Express;
     private readonly _redisWork: RedisWorks;
     private readonly _middleware: Middleware;
@@ -33,6 +39,8 @@ export default class AuthController {
     private readonly _users: UsersType;
 
     constructor({ app, redisWork, middleware, database, passport, users }: IConstructor) {
+        super();
+
         this._app = app;
         this._redisWork = redisWork;
         this._middleware = middleware;
@@ -50,6 +58,13 @@ export default class AuthController {
         this._app.get(ApiRoutes.logout, this._middleware.mustAuthenticated.bind(this._middleware), this._logout.bind(this));
     }
 
+    // Обработка ошибки
+    private async _handleError(error: unknown, res: Response, transaction?: Transaction) {
+        if (transaction) await transaction.rollback();
+
+        this.emit(ApiServerEvents.ERROR, { error, res });
+    }
+
     // Проверяем авторизирован ли пользователь в системе
     private async _isAuthenticated(req: Request, res: Response, next: NextFunction) {
         try {
@@ -59,16 +74,13 @@ export default class AuthController {
 
                 // Обновляем время жизни токена сессии (куки)
                 req.session.cookie.expires = getExpiredToken(Boolean(rememberMe));
-    
-                return res.status(HTTPStatuses.PermanentRedirect).send({ success: false, message: ErrorTextsApi.YOU_ALREADY_AUTH });
+
+                throw new AuthError(ErrorTextsApi.YOU_ALREADY_AUTH, HTTPStatuses.PermanentRedirect);
             }
-    
+
             next();
         } catch (error) {
-            const nextError = error instanceof AuthError
-                ? error
-                : new AuthError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -83,15 +95,13 @@ export default class AuthController {
             const checkDublicateEmail = await this._database.models.users.findOne({ where: { email }, transaction });
 
             if (checkDublicateEmail) {
-                await transaction.rollback();
-                return res.status(HTTPStatuses.BadRequest).send({ success: false, message: `Пользователь с почтовым адресом ${email} уже существует`, field: "email" });
+                throw new AuthError(`Пользователь с почтовым адресом ${email} уже существует`, HTTPStatuses.BadRequest, { field: "email" });
             }
 
             const checkDublicatePhone = await this._database.models.users.findOne({ where: { phone }, transaction });
 
             if (checkDublicatePhone) {
-                await transaction.rollback();
-                return res.status(HTTPStatuses.BadRequest).send({ success: false, message: `Пользователь с номером телефона ${phone} уже существует`, field: "phone" });
+                throw new AuthError(`Пользователь с номером телефона ${phone} уже существует`, HTTPStatuses.BadRequest, { field: "phone" });
             }
 
             // "Соль"
@@ -100,7 +110,7 @@ export default class AuthController {
 
             crypto.pbkdf2(password, saltString, 4096, 256, "sha256", (error, hash) => {
                 if (error) {
-                    throw error;
+                    throw new AuthError(error.message);
                 }
 
                 // Генерируем хеш пароля, приправленным "солью"
@@ -116,9 +126,9 @@ export default class AuthController {
                                 .create({ userId: user.id }, { transaction })
                                 .then(newUserDetail => {
                                     if (newUserDetail) {
-                                        req.login(user, async function (error: string) {
+                                        req.login(user, async function (error?: PassportError) {
                                             if (error) {
-                                                throw new Error(error);
+                                                throw error;
                                             }
 
                                             await transaction.commit();
@@ -126,27 +136,22 @@ export default class AuthController {
                                             return res.json({ success: true, user });
                                         });
                                     } else {
-                                        throw new Error("Пользователь не создался в базе данных в таблице UserDetails");
+                                        throw new AuthError(ErrorTextsApi.ERROR_CREATING_USER_DETAILS);
                                     }
                                 })
                                 .catch((error: Error) => {
-                                    throw new Error(`Ошибка при создании записи в таблице UserDetails: ${error}`);
+                                    throw new AuthError(error.message);
                                 });
                         } else {
-                            throw new Error("Пользователь не создался в базе данных в таблице Users");
+                            throw new AuthError(ErrorTextsApi.ERROR_CREATING_USER);
                         }
                     })
                     .catch((error: Error) => {
-                        throw new Error(`Создание новой записи в базе данных завершилось не удачно: ${error}`);
+                        throw new AuthError(error.message);
                     });
             });
         } catch (error) {
-            const nextError = error instanceof AuthError
-                ? error
-                : new AuthError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res, transaction);
         }
     };
 
@@ -155,22 +160,18 @@ export default class AuthController {
         try {
             const { rememberMe }: { rememberMe: boolean } = req.body;
 
-            this._passport.authenticate("local", { session: true }, async (error: string, user: IUser, info: { message: string }) => {
+            this._passport.authenticate("local", { session: true }, async (error: PassportError | null, user: ISaveUser, _?: IVerifyOptions) => {
                 if (error) {
-                    throw new Error(error);
-                }
-
-                if (!user) {
-                    return res.status(HTTPStatuses.BadRequest).send({ success: false, message: info.message });
+                    throw new AuthError(error.message, error.status);
                 }
 
                 if (!req.sessionID) {
-                    throw new Error("уникальный идентификатор сессии не существует");
+                    throw new AuthError(ErrorTextsApi.SESSION_ID_NOT_EXISTS);
                 }
 
-                return req.logIn(user, async (error: string) => {
+                return req.logIn(user, async (error?: PassportError) => {
                     if (error) {
-                        throw new Error(error);
+                        throw new AuthError(error.message);
                     }
 
                     // Записываем в Redis значение поля rememberMe
@@ -183,10 +184,7 @@ export default class AuthController {
                 });
             })(req, res, next);
         } catch (error) {
-            const nextError = error instanceof AuthError
-                ? error
-                : new AuthError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -196,19 +194,19 @@ export default class AuthController {
             const userId = (req.user as IUser).id;
 
             // Выход из passport.js
-            req.logout((error) => {
+            req.logout((error?: Error) => {
                 if (error) {
-                    throw new Error(`удаление пользователя из запроса завершилось неудачно: ${error}`);
+                    throw new AuthError(error.message);
                 }
 
                 // Удаляем текущую сессию express.js пользователя
-                req.session.destroy(async (error: string) => {
+                req.session.destroy(async (error?: Error) => {
                     if (error) {
-                        throw new Error(`удаление сессии пользователя завершилось не удачно: ${error}`);
+                        throw new AuthError(error.message);
                     }
 
                     if (!req.sessionID) {
-                        throw new Error(`отсутствует id сессии пользователя (session=${req.session})`);
+                        throw new AuthError(`Отсутствует идентификатор сессии пользователя (session=${req.session})`);
                     }
 
                     // Удаляем сессию из Redis
@@ -224,10 +222,7 @@ export default class AuthController {
                 });
             });
         } catch (error) {
-            const nextError = error instanceof AuthError
-                ? error
-                : new AuthError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 };

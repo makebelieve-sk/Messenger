@@ -5,12 +5,11 @@ import { v4 as uuid } from "uuid";
 import { ClientToServerEvents, ISocketUsers, InterServerEvents, ServerToClientEvents, SocketWithUser } from "../types/socket.types";
 import { IUser } from "../types/models.types";
 import { CallNames, CallTypes, ErrorTextsApi, MessageReadStatus, MessageTypes, SocketActions, SocketChannelErrorTypes } from "../types/enums";
-import { IFullChatInfo } from "../types/chat.types";
+import { UsersType } from "../types";
 import { getFullName } from "../utils";
+import { getSaveUserFields } from "../utils/user";
 import Database from "./Database";
 import { SocketError } from "../errors";
-import { UsersType } from "../types";
-import { getSaveUserFields } from "../utils/user";
 
 interface IConstructor {
     server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
@@ -56,7 +55,7 @@ export default class SocketWorks {
             const userId: string = socket.handshake.auth.userId;
     
             if (!userId) {
-                return next(new SocketError("Не передан идентификатор пользователя"));
+                next(new SocketError(ErrorTextsApi.USER_ID_NOT_GIVEN));
             }
     
             socket.userId = userId;
@@ -66,7 +65,7 @@ export default class SocketWorks {
 
     private async _getMe(userId: string) {
         if (this._users.has(userId)) {
-            return this._users.get(userId) as IUser;
+            return this._users.get(userId)!;
         } else {
             try {
                 const currentUser = await this._database.models.users.findByPk(userId);
@@ -81,11 +80,8 @@ export default class SocketWorks {
                     throw new SocketError(`Пользователь с id=${userId} не найден.`);
                 }
             } catch (error) {
-                const nextError = error instanceof SocketError
-                    ? error
-                    : new SocketError(error);
-
-                throw nextError;
+                // Пробрасываем ошибку выше, так как там присутствует обработчик SocketError
+                throw error;
             }
         }
     }
@@ -100,11 +96,29 @@ export default class SocketWorks {
 
     private _useSocketBus() {
         this.io.on("connection", async (socket: SocketWithUser) => {
+            const socketID = socket.id;
+
+            // Уведомление по сокету меня самого
+            const notifyMe = (type: any, payload?: Object) => {
+                this._io.to(socketID).emit(type, payload);
+            };
+
+            // Обрабокта ошибок
+            const handleError = (message: string, type?: SocketChannelErrorTypes) => {
+                const nextError = new SocketError(message);
+        
+                if (socket && socketID) {
+                    notifyMe(SocketActions.SOCKET_CHANNEL_ERROR, {
+                        message: nextError.message,
+                        type
+                    });
+                }
+            }
+
             try {
                 this._socket = socket;
 
                 const userId = socket.userId as string;
-                const socketID = socket.id;
                 const user = await this._getMe(userId);
 
                 if (!this._socketUsers.has(userId)) {
@@ -113,11 +127,6 @@ export default class SocketWorks {
                         socketID
                     });
                 }
-
-                // Уведомление по сокету меня самого
-                const notifyMe = (type: any, payload?: Object) => {
-                    this.io.to(socketID).emit(type, payload);
-                };
             
                 // Уведомление по сокету конкретного пользователя
                 const notifyAnotherUser = (userTo: string, type: any, payload?: Object) => {
@@ -171,10 +180,7 @@ export default class SocketWorks {
                         // Покидаем комнату (звонок)
                         socket.leave(roomId);
                     } else {
-                        notifyMe(SocketActions.SOCKET_CHANNEL_ERROR, {
-                            message: ErrorTextsApi.CANNOT_FIND_CALL,
-                            type: SocketChannelErrorTypes.CALLS
-                        });
+                        handleError(ErrorTextsApi.CANNOT_FIND_CALL, SocketChannelErrorTypes.CALLS);
                     }
                 };
 
@@ -224,9 +230,7 @@ export default class SocketWorks {
                         }
 
                         default:
-                            this.io.to(socketID).emit(SocketActions.SOCKET_CHANNEL_ERROR, {
-                                message: "Не передан тип передаваемых данных"
-                            });
+                            handleError(ErrorTextsApi.INCORRECT_TYPE_IN_FRIENDS);
                             break;
                     }
                 });
@@ -331,7 +335,7 @@ export default class SocketWorks {
                                 } catch (error) {
                                     const nextError = error instanceof SocketError
                                         ? error
-                                        : new SocketError(error);
+                                        : new SocketError((error as Error).message);
 
                                     this.io.to(socketID).emit(SocketActions.SOCKET_CHANNEL_ERROR, {
                                         message: `Возникла ошибка при создании записей звонка и сообщения в базу данных: ${nextError.message}`,
@@ -434,7 +438,7 @@ export default class SocketWorks {
                             } catch (error) {
                                 const nextError = error instanceof SocketError
                                     ? error
-                                    : new SocketError(error);
+                                    : new SocketError((error as Error).message);
 
                                 this.io.to(socketID).emit(SocketActions.SOCKET_CHANNEL_ERROR, {
                                     message: `Возникла ошибка при обновлении времени начала звонка: ${nextError.message}`,
@@ -532,8 +536,6 @@ export default class SocketWorks {
 
                                     await transaction.commit();
 
-                                    const findMe = this._getUser(userId);
-
                                     if (message && call) {
                                         const newMessage = {
                                             ...message,
@@ -552,38 +554,21 @@ export default class SocketWorks {
                                                 }
                                             });
                                         } else {
-                                            if (findMe) {
-                                                this.io.to(findMe.socketID).emit(SocketActions.SOCKET_CHANNEL_ERROR, {
-                                                    message: `Не заполнен массив пользователей в звонке: ${id}`,
-                                                    type: SocketChannelErrorTypes.CALLS
-                                                });
-                                            }
+                                            handleError(`Не заполнен массив пользователей в звонке: ${id}`, SocketChannelErrorTypes.CALLS);
                                         }
                                     } else {
-                                        if (findMe) {
-                                            this.io.to(findMe.socketID).emit(SocketActions.SOCKET_CHANNEL_ERROR, {
-                                                message: `Запись звонка с id = ${id} не найдена.`,
-                                                type: SocketChannelErrorTypes.CALLS
-                                            });
-                                        }
+                                        handleError(`Запись звонка с id = ${id} не найдена.`, SocketChannelErrorTypes.CALLS);
                                     }
                                 } catch (error) {
                                     await transaction.rollback();
-
+                                    // Пробрасываем ошибку выше, так как там присутствует обработка SocketError
                                     throw error;
                                 }
 
                                 break;
                             }
                             default: {
-                                const findMe = this._getUser(userId);
-
-                                if (findMe) {
-                                    this.io.to(findMe.socketID).emit(SocketActions.SOCKET_CHANNEL_ERROR, {
-                                        message: `Передан неизвестный тип сообщения: ${type}`,
-                                        type: SocketChannelErrorTypes.CALLS
-                                    });
-                                }
+                                handleError(`Передан неизвестный тип сообщения: ${type}`, SocketChannelErrorTypes.CALLS);
                                 break;
                             }
                         }
@@ -626,41 +611,24 @@ export default class SocketWorks {
                             { where: { userId } }
                         );
                     } catch (error) {
-                        const nextError = error instanceof SocketError
-                            ? error
-                            : new SocketError(error);
-
-                        notifyMe(SocketActions.SOCKET_CHANNEL_ERROR, {
-                            message: `Возникла ошибка при обновлении времени последнего захода пользователя: ${nextError.message}`,
-                        });
+                        handleError(`Возникла ошибка при обновлении времени последнего захода пользователя: ${(error as Error).message}`);
                     }
                 });
             } catch (error) {
-                const nextError = error instanceof SocketError
-                    ? error
-                    : new SocketError(error);
-
-                if (socket && socket.id) {
-                    this.io.to(socket.id).emit(SocketActions.SOCKET_CHANNEL_ERROR, {
-                        message: `Произошла ошибка при работе с сокетом: ${nextError.message}`
-                    });
-                }
-
-                console.error("Произошла ошибка при работе с сокетом: ", nextError.message);
-                return null;
+                handleError(`Произошла ошибка при работе с сокетом: ${(error as Error).message}`);
             }
         });
     }
 
     private _useEngineHandlers() {
         // Не нормальное отключение io
-        this.io.engine.on("connection_error", (error: { req: string; code: number; message: string; context: string; }) => {
+        this._io.engine.on("connection_error", (error: { req: string; code: number; message: string; context: string; }) => {
             const { req, code, message, context } = error;
-            console.log(`Не нормальное отключение сокета с кодом ${code}.\nОбъект запроса: ${req}.\nТекст ошибки: ${message}.\nДополнительный контекст: ${context}.`);
+            new SocketError(`Не нормальное отключение сокета с кодом ${code}.\nОбъект запроса: ${req}.\nТекст ошибки: ${message}.\nДополнительный контекст: ${context}.`);
         });
     }
 
     public close() {
-        this.io.close();
+        this._io.close();
     }
 }

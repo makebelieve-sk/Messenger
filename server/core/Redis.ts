@@ -3,6 +3,7 @@ import RedisStore from "connect-redis";
 
 import { RedisKeys } from "../types/enums";
 import { TimeoutType } from "../types";
+import { RedisError } from "../errors";
 
 export type RedisClient = ReturnType<typeof createClient>;
 export type RedisStoreType = ReturnType<typeof RedisStore>;
@@ -33,7 +34,7 @@ export default class RedisWorks {
         });
         this._client
             .connect()
-            .catch(error => this._errorHandler(error));
+            .catch((error: Error) => this._errorHandler(error.message));
 
         this._redisStore = new (RedisStore as any)({ client: this.redisClient });
         this._bindListeners();
@@ -42,7 +43,7 @@ export default class RedisWorks {
     private _bindListeners() {
         this.redisClient.on("connect", this._connectHandler);
         this.redisClient.on("ready", this._readyHandler);
-        this.redisClient.on("error", async (error: string) => await this._errorHandler(error));
+        this.redisClient.on("error", async (error: Error) => await this._errorHandler("Ошибка в работе клиента Redis: " + error.message, true));
         this.redisClient.on("end", this._endHandler);
     }
 
@@ -54,11 +55,10 @@ export default class RedisWorks {
         console.log("Клиент Redis готов к работе");
     }
 
-    private async _errorHandler(error: string) {
-        const errorText = "Ошибка в работе клиента Redis: " + error;
-        console.log(errorText);
+    private async _errorHandler(errorText: string, close: boolean = false) {
+        new RedisError(errorText);
 
-        await this.close();
+        if (close) await this.close();
     }
 
     private _endHandler() {
@@ -90,9 +90,8 @@ export default class RedisWorks {
         return await this.redisClient
             .get(key)
             .then(result => result ? JSON.parse(result) : null)
-            .catch(async error => {
-                const errorText = `Произошла ошибка при получении значения по ключу [${key}] из Redis: ${error}`;
-                await this._errorHandler(errorText);
+            .catch((error: Error) => {
+                this._errorHandler(`Произошла ошибка при получении значения по ключу [${key}] из Redis: ${error.message}`);
             });
     };
 
@@ -103,9 +102,8 @@ export default class RedisWorks {
         await this.redisClient
             .set(key, value)
             .then(() => console.log(`Новая пара [${key}:${value}] успешно записана в Redis`))
-            .catch(async error => {
-                const errorText = `Произошла ошибка при записи новой пары [${key}:${value}] в Redis: ${error}`;
-                await this._errorHandler(errorText);
+            .catch((error: Error) => {
+                this._errorHandler(`Произошла ошибка при записи новой пары [${key}:${value}] в Redis: ${error.message}`);
             });
     };
 
@@ -116,9 +114,8 @@ export default class RedisWorks {
         await this.redisClient
             .del(key)
             .then(() => console.log(`Ключ [${key}] успешно удален из Redis`))
-            .catch(async error => {
-                const errorText = `Произошла ошибка при удалении ключа [${key}] из Redis: ${error}`;
-                await this._errorHandler(errorText);
+            .catch((error: Error) => {
+                this._errorHandler(`Произошла ошибка при удалении ключа [${key}] из Redis: ${error.message}`);
             });
     };
 };

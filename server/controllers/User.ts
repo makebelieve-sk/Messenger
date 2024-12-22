@@ -1,12 +1,16 @@
+import EventEmitter from "events";
 import { Request, Response, Express } from "express";
+import { Transaction } from "sequelize";
 
 import { ApiRoutes, ErrorTextsApi, HTTPStatuses } from "../types/enums";
+import { ApiServerEvents } from "../types/events";
 import { IFormValues } from "../types";
 import { IUser, IUserDetails } from "../types/models.types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { getSaveUserFields } from "../utils/user";
 import { UsersError } from "../errors/controllers";
+import { ISaveUser } from "../database/models/Users";
 
 interface IConstructor {
     app: Express;
@@ -14,12 +18,14 @@ interface IConstructor {
     database: Database;
 };
 
-export default class UserController {
+export default class UserController extends EventEmitter {
     private readonly _app: Express;
     private readonly _middleware: Middleware;
     private readonly _database: Database;
 
     constructor({ app, middleware, database }: IConstructor) {
+        super();
+
         this._app = app;
         this._middleware = middleware;
         this._database = database;
@@ -35,19 +41,23 @@ export default class UserController {
         this._app.post(ApiRoutes.getUser, this._middleware.mustAuthenticated.bind(this._middleware), this._getUser.bind(this));
     }
 
+    // Обработка ошибки
+    private async _handleError(error: unknown, res: Response, transaction?: Transaction) {
+        if (transaction) await transaction.rollback();
+
+        this.emit(ApiServerEvents.ERROR, { error, res });
+    }
+
     // Получение данных о себе
     private async _getMe(req: Request, res: Response) {
         try {
             if (!req.user) {
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.USER_NOT_FOUND });
+                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound);
             }
 
             return res.json({ success: true, user: req.user });
         } catch (error) {
-            const nextError = error instanceof UsersError
-                ? error
-                : new UsersError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -59,15 +69,12 @@ export default class UserController {
             const userDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
             if (!userDetail) {
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE });
+                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound);
             }
 
             return res.json({ success: true, userDetail });
         } catch (error) {
-            const nextError = error instanceof UsersError
-                ? error
-                : new UsersError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -79,60 +86,47 @@ export default class UserController {
             const { name, surName, sex, birthday, work, city, phone, email }: IFormValues = req.body;
             const userId = (req.user as IUser).id;
 
-            const result: { user: Omit<IUser, "password" | "salt"> | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = { 
+            const result: { user: ISaveUser | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = { 
                 user: null, 
                 userDetails: null 
             };
 
             const findUser = await this._database.models.users.findByPk(userId, { transaction });
 
-            if (findUser) {
-                result.user = {
-                    ...getSaveUserFields(findUser),
-                    firstName: name, 
-                    thirdName: surName, 
-                    email, 
-                    phone
-                };
+            if (!findUser) {
+                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound);
+            } 
 
-                await this._database.models.users.update(result.user, { where: { id: userId }, transaction });
-            } else {
-                await transaction.rollback();
-                return res.status(HTTPStatuses.NotFound).send({ 
-                    success: false, 
-                    message: ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE 
-                });
-            }
+            result.user = {
+                ...getSaveUserFields(findUser),
+                firstName: name, 
+                thirdName: surName, 
+                email, 
+                phone
+            };
+
+            await this._database.models.users.update(result.user, { where: { id: userId }, transaction });
 
             const findUserDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
-            if (findUserDetail) {
-                result.userDetails = {
-                    sex, 
-                    birthday, 
-                    work,
-                    city
-                };
-
-                await this._database.models.userDetails.update(result.userDetails, { where: { userId }, transaction });
-            } else {
-                await transaction.rollback();
-                return res.status(HTTPStatuses.NotFound).send({ 
-                    success: false, 
-                    message: ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE 
-                });
+            if (!findUserDetail) {
+                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound);
             }
+
+            result.userDetails = {
+                sex, 
+                birthday, 
+                work,
+                city
+            };
+
+            await this._database.models.userDetails.update(result.userDetails, { where: { userId }, transaction });
 
             await transaction.commit();
 
             return res.json({ success: true, ...result });
         } catch (error) {
-            const nextError = error instanceof UsersError
-                ? error
-                : new UsersError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res, transaction);
         }
     };
 
@@ -142,7 +136,7 @@ export default class UserController {
             const { id }: { id: string; } = req.body;
 
             if (!id) {
-                throw new UsersError("id пользователя не передано");
+                throw new UsersError(ErrorTextsApi.USER_ID_NOT_FOUND);
             }
 
             const findUser = await this._database.models.users.findByPk(id);
@@ -153,10 +147,7 @@ export default class UserController {
 
             return res.json({ success: true, user: getSaveUserFields(findUser) });
         } catch (error) {
-            const nextError = error instanceof UsersError
-                ? error
-                : new UsersError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 };

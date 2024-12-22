@@ -1,15 +1,17 @@
+import EventEmitter from "events";
 import { v4 as uuid } from "uuid";
 import { Request, Response, Express } from "express";
-import { Op } from "sequelize";
+import { Op, Transaction } from "sequelize";
 import { Literal, Where } from "sequelize/types/utils";
 
 import { getSearchWhere } from "../utils/where";
 import { LIMIT, LOAD_MORE_LIMIT } from "../utils/limits";
 import { isImage } from "../utils/files";
-import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "../types/enums";
+import { ApiRoutes, ErrorTextsApi, HTTPStatuses, MessageReadStatus, MessageTypes } from "../types/enums";
 import { ICall, IFile, IMessage, IUser } from "../types/models.types";
 import { IChatInfo, IDialog } from "../types/chat.types";
 import { UserPartial } from "../types/user.types";
+import { ApiServerEvents } from "../types/events";
 import { IImage } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
@@ -31,12 +33,14 @@ interface IConstructor {
     database: Database;
 };
 
-export default class MessagesController {
+export default class MessagesController extends EventEmitter {
     private readonly _app: Express;
     private readonly _middleware: Middleware;
     private readonly _database: Database;
 
     constructor({ app, middleware, database }: IConstructor) {
+        super();
+
         this._app = app;
         this._middleware = middleware;
         this._database = database;
@@ -63,14 +67,17 @@ export default class MessagesController {
         this._app.post(ApiRoutes.getAttachments, this._middleware.mustAuthenticated.bind(this._middleware), this._getAttachments.bind(this));
     }
 
+    // Обработка ошибки
+    private async _handleError(error: unknown, res: Response, transaction?: Transaction) {
+        if (transaction) await transaction.rollback();
+
+        this.emit(ApiServerEvents.ERROR, { error, res });
+    }
+
     // Получаем количество непрочитанных сообщений в диалогах
     private async _getMessageNotification(req: Request, res: Response) {
         try {
             const userId = (req.user as IUser).id;
-
-            if (!userId) {
-                throw "Не передан Ваш уникальный идентификатор";
-            }
 
             // Невозможно сделать через include, так как идет LOIN Read_Messages.id (а мне нужно поле message_id)
             const unreadChatIds = await this._database.sequelize.query(`
@@ -83,10 +90,7 @@ export default class MessagesController {
 
             return res.json({ success: true, unreadChatIds: unreadChatIds[0] && unreadChatIds[0][0] ? unreadChatIds[0][0].unReadChatsCount : 0 });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -97,10 +101,6 @@ export default class MessagesController {
         try {
             const { page, search, loadMore = false }: { page: number; search: string; loadMore: boolean; } = req.body;
             const userId = (req.user as IUser).id;
-
-            if (!userId) {
-                throw new Error("Не передан id пользователя");
-            }
 
             const dialogsLimit = loadMore ? LOAD_MORE_LIMIT : LIMIT;
 
@@ -166,7 +166,7 @@ export default class MessagesController {
                             ? unReadMessages[0].map(unReadMessageId => unReadMessageId.messageId)
                             : [];
                     } else {
-                        throw "Запрос выполнился некорректно и ничего не вернул (getDialogs/unReadMessagesCount)";
+                        throw new MessagesError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_DIALOGS);
                     }
 
                     // Получаем список пользователей для чата
@@ -184,7 +184,7 @@ export default class MessagesController {
                     if (usersInChat && usersInChat.length) {
                         chatObject.usersInChat = usersInChat;
                     } else {
-                        throw `Пользователи в чате ${chat.name} не найдены`;
+                        throw new MessagesError(`Пользователи в чате ${chat.name} не найдены`);
                     }
 
                     // Получаем статус звукового уведомления чата
@@ -264,12 +264,7 @@ export default class MessagesController {
                 isMore
             });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res, transaction);
         }
     };
 
@@ -282,7 +277,7 @@ export default class MessagesController {
             const userId = (req.user as IUser).id;
 
             if (!chatId) {
-                throw new Error("Не передан уникальный идентификатор чата");
+                throw new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND);
             }
 
             const messagesLimit = loadMore ? LOAD_MORE_LIMIT : LIMIT;
@@ -377,12 +372,7 @@ export default class MessagesController {
 
             return res.json({ success: true, messages: messagesWithMixins.reverse(), isMore });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res, transaction);
         }
     };
 
@@ -395,15 +385,15 @@ export default class MessagesController {
             const userId = (req.user as IUser).id;
 
             if (!message.userId) {
-                throw "Не передан Ваш уникальный идентификатор";
+                throw new MessagesError(ErrorTextsApi.USER_ID_IN_MESSAGE_NOT_FOUND);
             }
 
             if (!message.chatId) {
-                throw "Не передан уникальный идентификатор чата";
+                throw new MessagesError(ErrorTextsApi.CHAT_ID_IN_MESSAGE_NOT_FOUND);
             }
 
             if (!usersInChat || !usersInChat.length) {
-                throw `Пользователи в чате ${message.chatId} не найдены`;
+                throw new MessagesError(`Пользователи в чате ${message.chatId} не найдены`);
             }
 
             // Сохраняем сообщение в таблицу Messages
@@ -437,12 +427,7 @@ export default class MessagesController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res, transaction);
         }
     };
 
@@ -454,11 +439,11 @@ export default class MessagesController {
             const { id, type, message, files }: { id: string; type: MessageTypes; message: IMessage; files: string[] | null; } = req.body;
 
             if (!id) {
-                throw "Не передан уникальный идентификатор сообщения.";
+                throw new MessagesError(ErrorTextsApi.MESSAGE_ID_NOT_FOUND);
             }
 
             if (!message && (!files || !files.length)) {
-                throw "Ошибка при изменении сообщения, оно не может быть пустым без прикрепленных файлов.";
+                throw new MessagesError(ErrorTextsApi.MESSAGE_CAN_NOT_BE_EMPTY_WITHOUT_FILES);
             }
 
             if (files && files.length) {
@@ -487,12 +472,7 @@ export default class MessagesController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res, transaction);
         }
     };
 
@@ -520,12 +500,7 @@ export default class MessagesController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res, transaction);
         }
     };
 
@@ -537,12 +512,8 @@ export default class MessagesController {
             const { friendId }: { friendId: string; } = req.body;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw "Не передан Ваш уникальный идентификатор";
-            }
-
             if (!friendId) {
-                throw "Не передан уникальный идентификатор собеседника";
+                throw new MessagesError(ErrorTextsApi.CHAT_PARTNER_ID_NOT_FOUND);
             }
 
             let chatId: string | null = null;
@@ -607,12 +578,7 @@ export default class MessagesController {
 
             return res.json({ success: true, chatId });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res, transaction);
         }
     };
 
@@ -622,7 +588,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw "Не передан уникальный идентификатор чата";
+                throw new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND);
             }
 
             // Ищем чат в БД
@@ -632,15 +598,12 @@ export default class MessagesController {
 
             // Если чата в БД нет, то возвращаем 404 статус
             if (!chatInfo) {
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: `Чат с идентификатором ${chatId} не найден` });
+                throw new MessagesError(`Чат с идентификатором ${chatId} не найден`, HTTPStatuses.NotFound);
             }
 
             return res.json({ success: true, chatInfo });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -650,7 +613,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw "Не передан уникальный идентификатор чата";
+                throw new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND);
             }
 
             const usersInChat = await this._database.models.usersInChat.findAll({
@@ -665,13 +628,10 @@ export default class MessagesController {
             if (usersInChat && usersInChat.length) {
                 return res.json({ success: true, usersInChat: usersInChat.map(userInChat => userInChat.User) });
             } else {
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: `Пользователи чата ${chatId} не найдены` });
+                throw new MessagesError(`Пользователи чата ${chatId} не найдены`, HTTPStatuses.NotFound);
             }
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -681,7 +641,7 @@ export default class MessagesController {
             const { chatPartnerId }: { chatPartnerId: string; } = req.body;
 
             if (!chatPartnerId) {
-                throw "Не передан уникальный идентификатор собеседника чата";
+                throw new MessagesError(ErrorTextsApi.CHAT_PARTNER_ID_NOT_FOUND);
             }
 
             const chatPartner = await this._database.models.userDetails.findOne({ 
@@ -690,15 +650,12 @@ export default class MessagesController {
             });
 
             if (!chatPartner) {
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: "Собеседник чата не найден" });
+                throw new MessagesError(ErrorTextsApi.CHAT_PARTNER_NOT_FOUND, HTTPStatuses.NotFound);
             }
 
             return res.json({ success: true, lastSeen: chatPartner.lastSeen });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -709,7 +666,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw "Не передан уникальный идентификатор чата";
+                throw new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND);
             }
 
             const chatSoundStatus = await this._database.models.chatSoundNotifications.findOne({ 
@@ -719,10 +676,7 @@ export default class MessagesController {
 
             return res.json({ success: true, chatSoundStatus: Boolean(chatSoundStatus) });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -733,7 +687,7 @@ export default class MessagesController {
             const { chatId, status }: { chatId: string; status: boolean; } = req.body;
 
             if (!chatId) {
-                throw "Не передан уникальный идентификатор чата";
+                throw new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND);
             }
 
             // Удаляем запись из БД, если статус "Выключен" 
@@ -752,10 +706,7 @@ export default class MessagesController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -768,7 +719,7 @@ export default class MessagesController {
             const { messageId, privateDelete }: { messageId: string; privateDelete: boolean; } = req.body;
 
             if (!messageId) {
-                throw "Не передан уникальный идентификатор удаляемого сообщения";
+                throw new MessagesError(ErrorTextsApi.DELETED_MESSAGE_ID_NOT_FOUND);
             }
 
             const findDeletedMessage = await this._database.models.deletedMessages.findOne({
@@ -777,7 +728,7 @@ export default class MessagesController {
             });
 
             if (findDeletedMessage) {
-                throw "Данное сообщение уже было Вами удалено";
+                throw new MessagesError(ErrorTextsApi.YOUR_ALREADY_DELETE_THIS_MESSAGE);
             }
 
             if (privateDelete) {
@@ -802,12 +753,7 @@ export default class MessagesController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res, transaction);
         }
     };
 
@@ -818,7 +764,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw "Не передан уникальный идентификатор удаляемого приватного чата";
+                throw new MessagesError(ErrorTextsApi.DELETED_CHAT_ID_NOT_FOUND);
             }
 
             await this._database.models.deletedChats.create({
@@ -829,10 +775,7 @@ export default class MessagesController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -842,7 +785,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw "Не передан уникальный идентификатор удаляемого приватного чата";
+                throw new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND);
             }
 
             const attachments = await this._database.sequelize.query(`
@@ -886,10 +829,7 @@ export default class MessagesController {
 
             return res.json({ success: true, images, files });
         } catch (error) {
-            const nextError = error instanceof MessagesError
-                ? error
-                : new MessagesError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 };

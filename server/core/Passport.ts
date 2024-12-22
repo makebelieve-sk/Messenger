@@ -9,6 +9,7 @@ import { getSaveUserFields } from "../utils/user";
 import { PassportError } from "../errors";
 import { IUser } from "../types/models.types";
 import { UsersType } from "../types";
+import { ErrorTextsApi, HTTPStatuses } from "../types/enums";
 
 interface IConstructor {
     app: Express;
@@ -16,9 +17,7 @@ interface IConstructor {
     users: UsersType;
 };
 
-type DoneType = (error: string | null, user?: ISaveUser | false, options?: IVerifyOptions | undefined) => void;
-
-const errorSign = "Не верно указан логин или пароль";
+type DoneType = (error: PassportError | null, user?: ISaveUser | false, options?: IVerifyOptions) => void;
 
 export default class PassportWorks {
     private readonly _app: Express;
@@ -47,7 +46,7 @@ export default class PassportWorks {
         this._passport.use(new Strategy({ usernameField: "login", passwordField: "password" }, this._verify.bind(this)));
 
         // Достаем данные о пользователе из его сессии
-        this._passport.serializeUser<string>((user, done) => {
+        this._passport.serializeUser<string>((user, done: (error: PassportError | null, userId: string) => void) => {
             console.log("serializeUser: ", user);
 
             process.nextTick(() => {
@@ -60,14 +59,14 @@ export default class PassportWorks {
         });
 
         // Сохраняем данные о пользователе в его сессию
-        this._passport.deserializeUser((userId: string, done) => {
+        this._passport.deserializeUser((userId: string, done: DoneType) => {
             console.log("deserializeUser: ", userId);
 
             process.nextTick(() => {
                 const user = this._users.get(userId);
 
                 if (user) {
-                    return done(null, user);
+                    done(null, user);
                 } else {
                     this._database.models.users
                         .findByPk(userId)
@@ -77,16 +76,17 @@ export default class PassportWorks {
 
                                 this._users.set(user.id, user as IUser);
 
-                                return done(null, user);
+                                done(null, user);
                             } else {
-                                return new PassportError(`Пользователь с id=${userId} не найден`);
+                                throw new PassportError(`Пользователь с id=${userId} не найден`);
                             }
                         })
-                        .catch(error => {
+                        .catch((error: Error) => {
                             const nextError = error instanceof PassportError
                                 ? error
-                                : new PassportError(error);
-                            done(nextError.message);
+                                : new PassportError(error.message);
+
+                            done(nextError);
                         });
                 }
             });
@@ -94,30 +94,30 @@ export default class PassportWorks {
     }
 
     // Проверка подлинности пользователя
-    private async _verify(login: string, password: string, done: DoneType): Promise<void> {
+    private async _verify(login: string, password: string, done: DoneType) {
         try {
             const candidateEmail = await this._database.models.users.findOne({ where: { email: login } });
     
             if (candidateEmail) {
-                return this._comparePasswords(candidateEmail, password, done);
+                this._comparePasswords(candidateEmail, password, done);
             } else {
                 let phone = login.replace(/[^0-9]/g, "");
-    
                 phone = phone[0] === "8" ? "+7" + phone.slice(1) : "+" + phone;
     
                 const candidatePhone = await this._database.models.users.findOne({ where: { phone } });
-    
+
                 if (candidatePhone) {
-                    return this._comparePasswords(candidatePhone, password, done);
+                    this._comparePasswords(candidatePhone, password, done);
                 } else {
-                    return done(null, false, { message: errorSign });
+                    done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
                 }
             }
         } catch (error) {
             const nextError = error instanceof PassportError
                 ? error
-                : new PassportError(error);
-            done(null, false, { message: nextError.message });
+                : new PassportError((error as Error).message);
+
+            done(nextError);
         }
     }
 
@@ -125,7 +125,7 @@ export default class PassportWorks {
     private _comparePasswords(candidate: UserInstance, password: string, done: DoneType) {
         crypto.pbkdf2(password, candidate.salt, 4096, 256, "sha256", function (error, hash) {
             if (error) {
-                throw error;
+                throw new PassportError(error.message);
             }
     
             // Генерируем хеш пароля, приправленным "солью"
@@ -134,7 +134,7 @@ export default class PassportWorks {
     
             hashString === candidate.password
                 ? done(null, user)
-                : done(null, false, { message: errorSign });
+                : done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
         });
     }
 }

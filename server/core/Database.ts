@@ -2,6 +2,8 @@ import { Dialect, Sequelize } from "sequelize";
 
 import Relations from "../database/Relations";
 import Models from "../database/models/Models";
+import { DatabaseError } from "../errors";
+import { ErrorTextsApi } from "../types/enums";
 
 const DATEBASE_NAME = process.env.DATEBASE_NAME as string;
 const DATEBASE_USERNAME = process.env.DATEBASE_USERNAME as string;
@@ -39,7 +41,7 @@ export default class Database {
     public close() {
         this.sequelize.close()
             .then(() => console.log("Соединение с бд успешно закрыто"))
-            .catch((error: string) => console.error("Соединение с бд завершилось с ошибкой: ", error));
+            .catch((error: Error) => new DatabaseError(`${ErrorTextsApi.ERROR_IN_CLOSE_DB}: ${error.message}`));
     }
 
     // Соединение базы данных
@@ -54,7 +56,7 @@ export default class Database {
                 // Инициализируем ассоциации (отношения) между таблицами в базе данных
                 this._useRelations();
             })
-            .catch(error => console.error("Ошибка при соединении с базой данных:", error));
+            .catch((error: Error) => new DatabaseError(`${ErrorTextsApi.ERROR_IN_CONNECT_DB}: ${error.message}`));
     }
 
     // Инициализация ассоциаций (отношений) между таблицами в базе данных
