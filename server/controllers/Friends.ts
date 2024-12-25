@@ -178,7 +178,7 @@ export default class FriendsController extends EventEmitter {
                 subscribersCount: subscribersCount && subscribersCount[0] ? subscribersCount[0][0].count : null
             });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -359,7 +359,7 @@ export default class FriendsController extends EventEmitter {
                 } 
             });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -396,7 +396,7 @@ export default class FriendsController extends EventEmitter {
                 return res.json({ success: true });
             }
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -454,7 +454,7 @@ export default class FriendsController extends EventEmitter {
 
             return res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -511,7 +511,7 @@ export default class FriendsController extends EventEmitter {
 
             return res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -550,7 +550,7 @@ export default class FriendsController extends EventEmitter {
 
             return res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -582,7 +582,7 @@ export default class FriendsController extends EventEmitter {
 
             return res.json({ success: true, isBlockedByMe, meIsBlocked });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 };

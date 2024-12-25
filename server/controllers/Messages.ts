@@ -264,7 +264,7 @@ export default class MessagesController extends EventEmitter {
                 isMore
             });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -372,7 +372,7 @@ export default class MessagesController extends EventEmitter {
 
             return res.json({ success: true, messages: messagesWithMixins.reverse(), isMore });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -427,7 +427,7 @@ export default class MessagesController extends EventEmitter {
 
             return res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -472,7 +472,7 @@ export default class MessagesController extends EventEmitter {
 
             return res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -500,7 +500,7 @@ export default class MessagesController extends EventEmitter {
 
             return res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -578,7 +578,7 @@ export default class MessagesController extends EventEmitter {
 
             return res.json({ success: true, chatId });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -753,7 +753,7 @@ export default class MessagesController extends EventEmitter {
 
             return res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 

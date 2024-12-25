@@ -1,7 +1,7 @@
 import { createClient } from "redis";
 import RedisStore from "connect-redis";
 
-import { RedisKeys } from "../types/enums";
+import { ErrorTextsApi, RedisKeys } from "../types/enums";
 import { TimeoutType } from "../types";
 import { RedisError } from "../errors";
 
@@ -34,7 +34,7 @@ export default class RedisWorks {
         });
         this._client
             .connect()
-            .catch((error: Error) => this._errorHandler(error.message));
+            .catch(async (error: Error) => await this._errorHandler(ErrorTextsApi.ERROR_IN_CLIENT_CONNECT + error.message, true));
 
         this._redisStore = new (RedisStore as any)({ client: this.redisClient });
         this._bindListeners();
@@ -43,7 +43,7 @@ export default class RedisWorks {
     private _bindListeners() {
         this.redisClient.on("connect", this._connectHandler);
         this.redisClient.on("ready", this._readyHandler);
-        this.redisClient.on("error", async (error: Error) => await this._errorHandler("Ошибка в работе клиента Redis: " + error.message, true));
+        this.redisClient.on("error", async (error: Error) => await this._errorHandler(ErrorTextsApi.ERROR_IN_CLIENT_WORK + error.message, true));
         this.redisClient.on("end", this._endHandler);
     }
 

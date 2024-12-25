@@ -151,7 +151,7 @@ export default class AuthController extends EventEmitter {
                     });
             });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 

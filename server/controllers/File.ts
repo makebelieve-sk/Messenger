@@ -115,7 +115,7 @@ export default class FileController extends EventEmitter {
     
             return res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -174,7 +174,7 @@ export default class FileController extends EventEmitter {
 
             return res.json({ success: true, id: newPhotoId, newAvatarUrl: fileUrl, newPhotoUrl: dublicateFileUrl });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -274,7 +274,7 @@ export default class FileController extends EventEmitter {
                 return res.json({ success: true });
             }
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -306,7 +306,7 @@ export default class FileController extends EventEmitter {
                 throw new FileError(ErrorTextsApi.FILES_NOT_FOUND);
             }
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -359,7 +359,7 @@ export default class FileController extends EventEmitter {
 
             return res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 

@@ -126,7 +126,7 @@ export default class UserController extends EventEmitter {
 
             return res.json({ success: true, ...result });
         } catch (error) {
-            this._handleError(error, res, transaction);
+            await this._handleError(error, res, transaction);
         }
     };
 
