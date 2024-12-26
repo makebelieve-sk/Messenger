@@ -1,37 +1,31 @@
+import express from "express";
 import { Server } from "socket.io";
 import http from "http";
 import { v4 as uuid } from "uuid";
 
-import { ClientToServerEvents, ISocketUsers, InterServerEvents, ServerToClientEvents, SocketWithUser } from "../types/socket.types";
+import { ClientToServerEvents, ISocketData, ISocketUsers, InterServerEvents, ServerToClientEvents, SocketWithUser } from "../types/socket.types";
 import { IUser } from "../types/models.types";
 import { CallNames, CallTypes, ErrorTextsApi, MessageReadStatus, MessageTypes, SocketActions, SocketChannelErrorTypes } from "../types/enums";
-import { UsersType } from "../types";
 import { getFullName } from "../utils";
 import { getSaveUserFields } from "../utils/user";
 import Database from "./Database";
 import { SocketError } from "../errors";
+import { UsersType } from "../types";
 
-interface IConstructor {
-    server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
-    users: UsersType;
-    database: Database;
-};
+const CLIENT_URL = process.env.CLIENT_URL as string;
 
+// Класс, отвечает за установку сокет соединения с клиентом по транспорту websocket
 export default class SocketWorks {
-    private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
-    private readonly _users: UsersType;
-    private readonly _socketUsers: ISocketUsers;
-    private readonly _database: Database;
-
-    private _io!: Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>;
+    private _io!: Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, ISocketData>;
     private _socket!: SocketWithUser;
+    private readonly _socketUsers: ISocketUsers = new Map();
 
-    constructor({ server, users, database }: IConstructor) {
-        this._server = server;
-        this._users = users;
-        this._socketUsers = new Map();
-        this._database = database;
-
+    constructor(
+        private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>, 
+        private readonly _users: UsersType, 
+        private readonly _database: Database,
+        private readonly _expressSession: express.RequestHandler
+    ) {
         this._init();
     }
 
@@ -40,8 +34,20 @@ export default class SocketWorks {
     }
 
     private _init() {
-        this._io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>(this._server, {
-            transports: ["websocket"]
+        this._io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, ISocketData>(this._server, {
+            transports: ["websocket"],      // Транспорт для соединений
+            cors: {
+                origin: CLIENT_URL,         // Список разрешенных доменов
+                methods: ["GET"],           // Список разрешенных методов запроса (разрешен только самый первый запрос для установки соединения между сервером и клиентом)
+                credentials: true           // Разрешает отправку cookie и других авторизационных данных
+            },
+            pingInterval: 25000,            // Указываем с какой частотой идет heartbeat на клиент
+            pingTimeout: 5000,              // Указываем сколько может ожидать ответ от клиента сервер перед тем, как посчитает соединение закрытым (если клиент все равно не ответит)
+            upgradeTimeout: 10000,          // Время, которое будет ожидать сервер до обновления 1-ого запроса (handshake) до указанного транспорта websocket
+            connectionStateRecovery: {
+                maxDisconnectionDuration: 5000, // Указывает время, в течении которого клиент может переподключиться 
+                skipMiddlewares: false          // При разрыве соединении пропускаем мидлвары socket.io
+            }                                   // Опция для восстановления соединения клиента из-за временного разрыва (например, спящий режим или потеря сети)
         });
 
         this._useMiddlewares();
@@ -50,15 +56,18 @@ export default class SocketWorks {
     }
 
     private _useMiddlewares() {
+        // Милдвар сокета - добавление сессии express-session в соединение socket.io
+        this.io.engine.use(this._expressSession);
+
         // Милдвар сокета - проверка пользователя в сокете
         this.io.use((socket: SocketWithUser, next) => {
-            const userId: string = socket.handshake.auth.userId;
+            const user: IUser = socket.handshake.auth.user;
     
-            if (!userId) {
+            if (!user) {
                 next(new SocketError(ErrorTextsApi.USER_ID_NOT_GIVEN));
             }
     
-            socket.userId = userId;
+            socket.user = user;
             next();
         });
     }
@@ -87,10 +96,6 @@ export default class SocketWorks {
     }
 
     private _getUser(userId: string) {
-        if (!this._socketUsers.has(userId)) {
-            throw new SocketError(`Не существует пользователя с id=${userId}`);
-        }
-
         return this._socketUsers.get(userId);
     }
 
@@ -117,8 +122,10 @@ export default class SocketWorks {
 
             try {
                 this._socket = socket;
+                console.log("Пример сессии: ", (this._socket.request as express.Request).session);
 
-                const userId = socket.userId as string;
+                const userId = (this._socket.user as IUser).id;
+                const socketID = this._socket.id;
                 const user = await this._getMe(userId);
 
                 if (!this._socketUsers.has(userId)) {
@@ -628,7 +635,7 @@ export default class SocketWorks {
         });
     }
 
-    public close() {
+    close() {
         this._io.close();
     }
 }

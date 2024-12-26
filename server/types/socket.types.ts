@@ -82,14 +82,20 @@ interface InterServerEvents {
     
 };
 
-interface SocketWithUser extends Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any> { 
-    userId?: string;
+// Данные, которые моэно хранить в соединении socket.io
+interface ISocketData {
+    
+};
+
+interface SocketWithUser extends Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, ISocketData> { 
+    user?: IUser;
 };
 
 export type {
     ClientToServerEvents, 
     ServerToClientEvents, 
     InterServerEvents,
+    ISocketData,
     SocketWithUser,
     ICallData,
     ISocketUsers

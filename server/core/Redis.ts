@@ -1,19 +1,19 @@
-import { createClient } from "redis";
-import RedisStore from "connect-redis";
+import { createClient, RedisClientType } from "redis";
+import { RedisStore } from "connect-redis";
 
 import { ErrorTextsApi, RedisKeys } from "../types/enums";
 import { TimeoutType } from "../types";
 import { RedisError } from "../errors";
 
-export type RedisClient = ReturnType<typeof createClient>;
-export type RedisStoreType = ReturnType<typeof RedisStore>;
-
 const REDIS_CONNECTION_URL = process.env.REDIS_CONNECTION_URL as string;
+const REDIS_PREFIX = process.env.REDIS_PREFIX as string;
+const REDIS_TTL = parseInt(process.env.REDIS_TTL as string);
 const REDIS_TIMEOUT_RECONNECTION = parseInt(process.env.REDIS_TIMEOUT_RECONNECTION as string);
 
+// Класс, отвечает за работу с клиентом Redis. Также, содержит внутри себя сущность хранилища RedisStore
 export default class RedisWorks {
-    private _client!: RedisClient;
-    private _redisStore!: RedisStoreType;
+    private _client!: RedisClientType;
+    private _redisStore!: RedisStore;
     private _timeoutReconnect!: TimeoutType;
 
     constructor() {
@@ -30,13 +30,18 @@ export default class RedisWorks {
 
     private _connectRedis() {
         this._client = createClient({
-            url: REDIS_CONNECTION_URL,
+            url: REDIS_CONNECTION_URL,   // URL-адрес для подключения к Redis серверу
         });
         this._client
             .connect()
             .catch(async (error: Error) => await this._errorHandler(ErrorTextsApi.ERROR_IN_CLIENT_CONNECT + error.message, true));
 
-        this._redisStore = new (RedisStore as any)({ client: this.redisClient });
+        this._redisStore = new RedisStore({ 
+            client: this._client,   // Клиент Redis
+            prefix: REDIS_PREFIX,   // Префикс ключа по умолчанию
+            ttl: REDIS_TTL          // Устанавливаем начальное время жизни записи в хранилище
+        });
+
         this._bindListeners();
     }
 
@@ -75,7 +80,7 @@ export default class RedisWorks {
     }
 
     async close() {
-        await this.redisClient.disconnect();
+        await this._client.disconnect();
     }
 
     // Получить полный ключ сохраненного значения
@@ -87,7 +92,7 @@ export default class RedisWorks {
     async get(redisKey: RedisKeys, id: string): Promise<string | number | boolean | null | void> {
         const key = this.getKey(redisKey, id);
 
-        return await this.redisClient
+        return await this._client
             .get(key)
             .then(result => result ? JSON.parse(result) : null)
             .catch((error: Error) => {
@@ -99,7 +104,7 @@ export default class RedisWorks {
     async set(redisKey: RedisKeys, id: string, value: string) {
         const key = this.getKey(redisKey, id);
 
-        await this.redisClient
+        await this._client
             .set(key, value)
             .then(() => console.log(`Новая пара [${key}:${value}] успешно записана в Redis`))
             .catch((error: Error) => {
@@ -111,7 +116,7 @@ export default class RedisWorks {
     async delete(redisKey: RedisKeys, id: string) {
         const key = this.getKey(redisKey, id);
 
-        await this.redisClient
+        await this._client
             .del(key)
             .then(() => console.log(`Ключ [${key}] успешно удален из Redis`))
             .catch((error: Error) => {

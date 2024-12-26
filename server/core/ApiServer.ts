@@ -25,6 +25,7 @@ interface IConstructor {
 
 type ListenerType<E> = { error: Error | E; res: Response };
 
+// Класс, отвечает за обработку HTTP-запросов от клиента
 export default class ApiServer extends EventEmitter {
     private readonly _middleware: Middleware;
     private readonly _redisWork: RedisWorks;

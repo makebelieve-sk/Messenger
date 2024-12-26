@@ -267,7 +267,6 @@ enum ErrorTextsApi {
 
 // Список ключей редиса
 enum RedisKeys {
-    SESSION = "sess",
     REMEMBER_ME = "rememberMe"
 };
 

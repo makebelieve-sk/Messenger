@@ -21,6 +21,7 @@ const OPTIONS = {
     logging: false
 };
 
+// Класс, отвечает за работу с базой данных. Предоставляет доступ к таблицам и отношениям базы данных
 export default class Database {
     private _sequelize!: Sequelize;
     private _models!: Models;
@@ -38,8 +39,8 @@ export default class Database {
     }
 
     // Закрытие базы данных
-    public close() {
-        this.sequelize.close()
+    close() {
+        this._sequelize.close()
             .then(() => console.log("Соединение с бд успешно закрыто"))
             .catch((error: Error) => new DatabaseError(`${ErrorTextsApi.ERROR_IN_CLOSE_DB}: ${error.message}`));
     }
@@ -48,7 +49,7 @@ export default class Database {
     private _init() {
         this._sequelize = new Sequelize(DATEBASE_NAME, DATEBASE_USERNAME, DATEBASE_PASSWORD, OPTIONS);
 
-        this.sequelize.authenticate()
+        this._sequelize.authenticate()
             .then(() => {
                 console.log("Соединение с базой данных успешно установлено");
                 // Инициализируем модели базы данных
@@ -61,11 +62,11 @@ export default class Database {
 
     // Инициализация ассоциаций (отношений) между таблицами в базе данных
     private _useRelations() {
-        new Relations(this.models);
+        new Relations(this._models);
     }
 
     // Инициализация моделей базы данных
     private _useModels() {
-        this._models = new Models(this.sequelize);
+        this._models = new Models(this._sequelize);
     }
 }

@@ -13,14 +13,14 @@ const MODE = process.env.NODE_ENV;
 function init() {
     const app = express();
     const server = http.createServer(app);
-    const mainServer = new MainServer({ app, server });
+    const mainServer = new MainServer(app, server);
 
     try {
         server.listen(PORT, () => console.log(`Экземпляр сервера запущен на порту: ${PORT} в режиме: ${MODE}`));
     } catch (error) {
         new BaseError(`${ErrorTextsApi.START_SERVER_ERROR}: ${error}`);
 
-        // Закрываем соединение с бд
+        // Закрываем соединение с бд, сокетом и редисом
         mainServer.close();
         // Завершаем выполнение процесса NodeJS
         process.exit(1);

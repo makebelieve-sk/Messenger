@@ -1,35 +1,21 @@
 import EventEmitter from "eventemitter3";
 import { io } from "socket.io-client";
 
+import SocketController from "./SocketController";
 import { SOCKET_IO_CLIENT } from "../../utils/constants";
 import { AppDispatch } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
 import { MainClientEvents, SocketEvents } from "../../types/events";
-import SocketController from "./SocketController";
-import Profile from "../profile/Profile";
-import User from "../models/User";
+import { IUser } from "../../types/models.types";
 
-interface IConstructor {
-    myProfile: Profile;
-    dispatch: AppDispatch;
-};
-
+// Класс, являющийся оберткой для socket.io-client, позволяющий давать запросы на сервер по протоколу ws через транспорт websocket
 export default class Socket extends EventEmitter {
-    private readonly _socket: SocketType;
-    private readonly _user: User;
-    private readonly _dispatch: AppDispatch;
+    private _socket!: SocketType;
     private _socketController!: SocketController;
+    private _me!: IUser;
 
-    constructor({ myProfile, dispatch }: IConstructor) {
+    constructor(private readonly _dispatch: AppDispatch) {
         super();
-
-        this._user = myProfile.user;
-        this._socket = io(SOCKET_IO_CLIENT, { 
-            transports: ["websocket"],
-            autoConnect: false,             // Отключаем автоподключение
-            reconnection: true              // Включаем восстановление соединения
-        });
-        this._dispatch = dispatch;
     }
 
     // TODO Удалить после рефакторинга звонков (useWebRTC)
@@ -37,15 +23,27 @@ export default class Socket extends EventEmitter {
         return this._socket;
     }
 
-    init() {
-        if (!this._user) {
+    init(myUser: IUser) {
+        if (!myUser) {
             this.emit(MainClientEvents.ERROR, "Объект пользователя не существует");
             return;
         }
 
-        this._connect();
+        this._me = myUser;
 
-        this._socketController = new SocketController({ socket: this._socket, user: this._user, dispatch: this._dispatch });
+        this._socket = io(SOCKET_IO_CLIENT, { 
+            transports: ["websocket"],
+            autoConnect: true,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 5000,
+            forceNew: false,
+            upgrade: true,
+            closeOnBeforeunload: true,
+            withCredentials: true,
+        });
+        this._socket.auth = { user: this._me };
+
+        this._socketController = new SocketController({ socket: this._socket, myUser: this._me, dispatch: this._dispatch });
 
         this._bindSocketControllerListeners();
     }
@@ -55,7 +53,7 @@ export default class Socket extends EventEmitter {
     }
 
     _connect() {
-        this._socket.auth = { userId: this._user.id };
+        this._socket.auth = { user: this._me };
         this._socket.connect();
     }
 
