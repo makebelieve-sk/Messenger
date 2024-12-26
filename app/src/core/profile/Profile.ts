@@ -14,14 +14,14 @@ import { currentDate } from "../../utils/datetime";
 import { AVATAR_URL } from "../../utils/files";
 import { getFullName } from "../../utils";
 
-// Класс, отвечающий за полный объект пользователя
+// Класс, являющийся полной сущностью пользователя на стороне клиента. Содержит все данные, относящиеся к пользователю
 export default class Profile extends EventEmitter {
-    private _user: User;
+    private readonly _user: User;
 
     constructor(private readonly _userId: string, private readonly _request: Request, private readonly _dispatch: AppDispatch) {
         super();
 
-        this._user = User.create(this._userId, { request: this._request, dispatch: this._dispatch });
+        this._user = User.create(this._userId, this._dispatch, this._request);
         this._bindUserListeners();
     }
 
@@ -36,9 +36,8 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     // Методы главной фотографии (аватара)
     //-------------------------------------------------
-
     // Клик по аватару
-    public onClickAvatar(): void {
+    onClickAvatar() {
         this._dispatch(setImagesInCarousel({
             images: [{
                 src: this._user.avatarUrl,
@@ -52,7 +51,7 @@ export default class Profile extends EventEmitter {
     }
 
     // Удаление аватара
-    public onDeleteAvatar() {
+    onDeleteAvatar() {
         this._request.post({
             route: ApiRoutes.deleteImage,
             data: { fileUrl: this._user.avatarUrl },
@@ -61,7 +60,7 @@ export default class Profile extends EventEmitter {
     }
 
     // Установка/обновление аватара
-    public onSetAvatar({ id, newAvatarUrl, newPhotoUrl }: { id: string; newAvatarUrl: string; newPhotoUrl: string; }) {
+    onSetAvatar({ id, newAvatarUrl, newPhotoUrl }: { id: string; newAvatarUrl: string; newPhotoUrl: string; }) {
         this._user.changeField(AVATAR_URL, newAvatarUrl);
         this._dispatch(addPhotos([{ 
             id, 
@@ -74,9 +73,8 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     // Методы блока с фотографиями
     //-------------------------------------------------
-
     // Получить все фотографии
-    public getAllPhotos(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+    getAllPhotos(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.get({
             route: ApiRoutes.getPhotos,
             setLoading,
@@ -87,12 +85,12 @@ export default class Profile extends EventEmitter {
     }
 
     // Обновить количество фотографий
-    public updatePhotosCount(count: number) {
+    updatePhotosCount(count: number) {
         this._dispatch(setPhotosCount(count));
     }
 
     // Клик по фотографии
-    public onClickPhoto(photos: IPhoto[], index: number) {
+    onClickPhoto(photos: IPhoto[], index: number) {
         if (photos && photos.length) {
             this._dispatch(setImagesInCarousel({
                 images: photos.map(photo => ({ 
@@ -108,7 +106,7 @@ export default class Profile extends EventEmitter {
     }
 
     // Добавление одной/нескольких фтографий
-    public addPhotos(data: Object, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+    addPhotos(data: Object, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.post({
             route: ApiRoutes.savePhotos,
             data,
@@ -121,7 +119,7 @@ export default class Profile extends EventEmitter {
     }
 
     // Удаление фотографии
-    public deletePhoto(data: Object, photos: IPhoto[], path: string) {
+    deletePhoto(data: Object, photos: IPhoto[], path: string) {
         this._request.post({
             route: ApiRoutes.deleteImage,
             data,
@@ -142,7 +140,8 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     // Методы блока с основной информацией
     //-------------------------------------------------
-    public getUserDetail(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+    // Получение дополнительной информации о пользователе
+    getUserDetail(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.get({
             route: ApiRoutes.getUserDetail, 
             setLoading,
@@ -155,7 +154,8 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     // Методы блока с друзьями
     //-------------------------------------------------
-    public getFriends(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+    // Получение друзей топ-6
+    getFriends(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.get({
             route: ApiRoutes.getCountFriends, 
             setLoading,
