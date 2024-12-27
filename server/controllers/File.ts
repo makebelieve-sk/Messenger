@@ -1,3 +1,4 @@
+import EventEmitter from "events";
 import multer from "multer";
 import { v4 as uuid } from "uuid";
 import fs from "fs";
@@ -8,6 +9,7 @@ import { Request, Response, NextFunction, Express } from "express";
 import { ApiRoutes, ErrorTextsApi, HTTPStatuses } from "../types/enums";
 import { IUser } from "../types/models.types";
 import { IRequestWithImagesSharpData, IRequestWithSharpData } from "../types/express.types";
+import { ApiServerEvents } from "../types/events";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { FileError } from "../errors/controllers";
@@ -20,7 +22,7 @@ interface IConstructor {
     database: Database;
 };
 
-export default class FileController {
+export default class FileController extends EventEmitter {
     private readonly _app: Express;
     private readonly _middleware: Middleware;
     private readonly _database: Database;
@@ -29,6 +31,8 @@ export default class FileController {
     });
 
     constructor({ app, middleware, database }: IConstructor) {
+        super();
+
         this._app = app;
         this._middleware = middleware;
         this._database = database;
@@ -69,15 +73,19 @@ export default class FileController {
         this._app.get(ApiRoutes.downloadFile, this._middleware.mustAuthenticated.bind(this._middleware), this._downloadFile.bind(this));
     }
 
+    // Обработка ошибки
+    private async _handleError(error: unknown, res: Response, transaction?: Transaction) {
+        if (transaction) await transaction.rollback();
+
+        this.emit(ApiServerEvents.ERROR, { error, res });
+    }
+
     // Обрезаем и сохраняем аватар пользователя на диск при регистрации
     private async _saveAvatar(req: Request, res: Response) {
         try {
             return res.json({ success: true, newAvatarUrl: (req as IRequestWithSharpData).sharpImageUrl });
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -107,12 +115,7 @@ export default class FileController {
     
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -121,26 +124,16 @@ export default class FileController {
         const transaction = await this._database.sequelize.transaction();
 
         try {
-            // Если пользователь не передан при установке/смене аватара на своей странице - выдаем ошибку
-            if (!req.user) {
-                await transaction.rollback();
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.USER_NOT_FOUND });
-            }
-
             const userId = (req.user as IUser).id;
             const fileUrl = (req as IRequestWithSharpData).sharpImageUrl;
             const dublicateFileUrl = (req as IRequestWithSharpData).dublicateSharpImageUrl;
 
-            if (!userId) {
-                throw "Не найден идентификатор пользователя";
-            }
-
             if (!fileUrl) {
-                throw "Не найден путь к сжатому файлу аватара";
+                throw new FileError(ErrorTextsApi.SHARP_AVATAR_PATH_NOT_FOUND);
             }
 
             if (!dublicateFileUrl) {
-                throw "Не найден путь к сжатому файлу фотографии";
+                throw new FileError(ErrorTextsApi.SHARP_PHOTO_PATH_NOT_FOUND);
             }
 
             const findUser = await this._database.models.users.findByPk(userId, {
@@ -149,8 +142,7 @@ export default class FileController {
             });
 
             if (!findUser) {
-                await transaction.rollback();
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.USER_NOT_FOUND });
+                throw new FileError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound);
             }
 
             // Если у пользователя уже существует аватар, то его необходимо удалить из БД и с диска 
@@ -182,12 +174,7 @@ export default class FileController {
 
             return res.json({ success: true, id: newPhotoId, newAvatarUrl: fileUrl, newPhotoUrl: dublicateFileUrl });
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -195,10 +182,6 @@ export default class FileController {
     private async _getPhotos(req: Request, res: Response) {
         try {
             const userId = (req.user as IUser).id;
-
-            if (!userId) {
-                throw "Не найден идентификатор пользователя";
-            }
 
             const photos = await this._database.models.photos.findAll({
                 where: { userId },
@@ -211,10 +194,7 @@ export default class FileController {
 
             return res.json({ success: true, photos });
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -224,12 +204,8 @@ export default class FileController {
             const imagesUrls = (req as IRequestWithImagesSharpData).sharpImagesUrls;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw "Не найден идентификатор пользователя";
-            }
-
             if (!imagesUrls || !imagesUrls.length) {
-                throw "Сжатые фотографии не найдены";
+                throw new FileError(ErrorTextsApi.SHARP_PHOTO_PATHS_NOT_FOUND);
             }
 
             const photos: { id: string; userId: string; path: string; }[] = imagesUrls.map(fileUrl => ({
@@ -241,20 +217,20 @@ export default class FileController {
 
             await this._database.models.photos.bulkCreate(photos);
 
-            return res.json({ success: true, photos: photos.map(photo => ({
-                ...photo,
-                User: {
-                    id: userId,
-                    firstName: (req.user as IUser).firstName,
-                    thirdName: (req.user as IUser).thirdName,
-                    avatarUrl: (req.user as IUser).avatarUrl
-                }
-            })) });
+            return res.json({ 
+                success: true, 
+                photos: photos.map(photo => ({
+                    ...photo,
+                    User: {
+                        id: userId,
+                        firstName: (req.user as IUser).firstName,
+                        thirdName: (req.user as IUser).thirdName,
+                        avatarUrl: (req.user as IUser).avatarUrl
+                    }
+                })) 
+            });
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -268,17 +244,12 @@ export default class FileController {
             const filePath = path.join(__dirname, ASSETS_PATH, fileUrl);
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw "Не найден идентификатор пользователя";
-            }
-
             if (!fileUrl) {
-                throw "Не передан путь для удаления изображения";
+                throw new FileError(ErrorTextsApi.DELETE_PHOTO_PATH_NOT_FOUND);
             }
 
             if (!fs.existsSync(filePath)) {
-                await transaction.rollback();
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.IMAGE_NOT_FOUND });
+                throw new FileError(ErrorTextsApi.PHOTO_NOT_FOUND, HTTPStatuses.NotFound);
             }
 
             // Если это аватар, то удаляем из таблицы Users
@@ -303,12 +274,7 @@ export default class FileController {
                 return res.json({ success: true });
             }
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -337,15 +303,10 @@ export default class FileController {
                     return res.json({ success: true, files: prepFiles });
                 }
             } else {
-                throw "Не переданы файлы";
+                throw new FileError(ErrorTextsApi.FILES_NOT_FOUND);
             }
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -357,7 +318,7 @@ export default class FileController {
             const { messageId }: { messageId: string; } = req.body;
 
             if (!messageId) {
-                throw "Не передан уникальный идентификатор сообщения";
+                throw new FileError(ErrorTextsApi.MESSAGE_ID_NOT_FOUND);
             }
 
             const findFilesInMessage = await this._database.models.filesInMessage.findAll({
@@ -398,12 +359,7 @@ export default class FileController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -413,19 +369,16 @@ export default class FileController {
             const { path }: { path: string; } = req.body;
 
             if (!path) {
-                throw "Не передан путь для открытия файла";
+                throw new FileError(ErrorTextsApi.FILE_PATH_OPEN_NOT_FOUND);
             }
 
             const moduleSpecifier = "open";
             import(moduleSpecifier)
                 .then((module) => module(path))
                 .then(() => res.json({ success: true }))
-                .catch(error => { throw error });
+                .catch((error: Error) => { throw new FileError(error.message) });
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -435,19 +388,16 @@ export default class FileController {
             const { name, path } = req.query as { name: string; path: string; };
 
             if (!path) {
-                throw "Не передан путь для скачивания файла";
+                throw new FileError(ErrorTextsApi.FILE_PATH_DOWNLOAD_NOT_FOUND);
             }
 
-            if (fs.existsSync(path)) {
-                return res.download(path, name);
-            } else {
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.FILE_NOT_FOUND });
+            if (!fs.existsSync(path)) {
+                throw new FileError(ErrorTextsApi.FILE_NOT_FOUND, HTTPStatuses.NotFound);
             }
+
+            return res.download(path, name);
         } catch (error) {
-            const nextError = error instanceof FileError
-                ? error
-                : new FileError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 };

@@ -1,39 +1,42 @@
 import { Request, Response, NextFunction } from "express";
 import path from "path";
+import EventEmitter from "events";
 
 import RedisWorks from "./Redis";
 import { ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
 import { IUser } from "../types/models.types";
 import { IRequestWithImagesSharpData, IRequestWithSharpData } from "../types/express.types";
-import { updateSessionMaxAge } from "../utils/session";
+import { ApiServerEvents } from "../types/events";
 import { MiddlewareError } from "../errors";
 import { createSharpedFile } from "../utils/files";
+import { updateSessionMaxAge } from "../utils/session";
 
 // Класс, отвечает за выполнение мидлваров для HTTP-запросов
-export default class Middleware {
-    constructor(private readonly _redisWork: RedisWorks) {}
+export default class Middleware extends EventEmitter {
+    constructor(private readonly _redisWork: RedisWorks) {
+        super();
+    }
 
     // Пользователь должен быть авторизован в системе
     async mustAuthenticated(req: Request, res: Response, next: NextFunction) {
         try {
             if (!req.isAuthenticated()) {
-                return res.status(HTTPStatuses.Unauthorized).send({ success: false, message: ErrorTextsApi.NOT_AUTH_OR_TOKEN_EXPIRED });
+                throw new MiddlewareError(ErrorTextsApi.NOT_AUTH_OR_TOKEN_EXPIRED, HTTPStatuses.Unauthorized);
             }
 
-            const userId = (req.user as IUser).id;
+            if (!req.user) {
+                throw new MiddlewareError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound);
+            }
 
             // Получаем поле rememberMe из Redis
-            const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, userId);
+            const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, (req.user as IUser).id);
         
             // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
             await updateSessionMaxAge(req.session, Boolean(rememberMe));
         
             next();
         } catch (error) {
-            const nextError = error instanceof MiddlewareError
-                ? error
-                : new MiddlewareError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     }
 
@@ -44,15 +47,11 @@ export default class Middleware {
             const { folderPath, outputFile } = await createSharpedFile({ ...req.file!, fieldname: "photo" });
             (req as IRequestWithSharpData).dublicateSharpImageUrl = path.join(folderPath, outputFile);
 
-            // TODO as написано для того, чтобы не было конфликта типа this._getSharpedUrl (исправиться при рефакторинге ошибок https://tracker.yandex.ru/MESSANGER-7)
-            (req as IRequestWithSharpData).sharpImageUrl = await this._getSharpedUrl(req, res) as string;
+            (req as IRequestWithSharpData).sharpImageUrl = await this._getSharpedUrl(req);
         
             next();
         } catch (error) {
-            const nextError = error instanceof MiddlewareError
-                ? error
-                : new MiddlewareError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     }
 
@@ -62,14 +61,13 @@ export default class Middleware {
             const files = req.files as Express.Multer.File[];
 
             if (!files || !files.length) {
-                next("Не переданы файлы");
+                throw new MiddlewareError(ErrorTextsApi.PHOTOS_NOT_FOUND);
             }
 
             Promise
                 .all(files.map(async file => {
                     req.file = file;
-                    // TODO as написано для того, чтобы не было конфликта типа this._getSharpedUrl (исправиться при рефакторинге ошибок https://tracker.yandex.ru/MESSANGER-7)
-                    return await this._getSharpedUrl(req, res) as string;
+                    return await this._getSharpedUrl(req);
                 }))
                 .then(result => {
                     // Сохраняем массив обрезанных изображений
@@ -78,24 +76,21 @@ export default class Middleware {
                     delete req.files;
                     next();
                 })
-                .catch(error => {
-                    throw new MiddlewareError(`Возникла ошибка при обрезке изображений: ${error}`);
+                .catch((error: Error) => {
+                    throw new MiddlewareError(`Возникла ошибка при обрезке изображений: ${error.message}`);
                 });
         } catch (error) {
-            const nextError = error instanceof MiddlewareError
-                ? error
-                : new MiddlewareError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     }
 
     // Получение пути к сжатому изображению
-    private async _getSharpedUrl(req: Request, res: Response) {
+    private async _getSharpedUrl(req: Request) {
         try {
             const file = req.file;
 
             if (!file) {
-                return res.status(HTTPStatuses.NotFound).send({ success: false, message: ErrorTextsApi.IMAGE_NOT_GIVEN });
+                throw new MiddlewareError(ErrorTextsApi.PHOTO_NOT_GIVEN, HTTPStatuses.NotFound);
             }
 
             const { folderPath, outputFile } = await createSharpedFile(file);
@@ -105,10 +100,13 @@ export default class Middleware {
 
             return path.join(folderPath, outputFile);
         } catch (error) {
-            const nextError = error instanceof MiddlewareError
-                ? error
-                : new MiddlewareError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            // Объект ошибки попросту прокидывается выше, так как все равно там будет обработка через MiddlewareError
+            throw error;
         }
+    }
+
+    // Обработка ошибки
+    private _handleError(error: unknown, res: Response) {
+        this.emit(ApiServerEvents.ERROR, { error, res });
     }
 }

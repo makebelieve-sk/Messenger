@@ -1,10 +1,12 @@
+import EventEmitter from "events";
 import { v4 as uuid } from "uuid";
 import { Request, Response, Express } from "express";
 import { Transaction } from "sequelize";
 
 import { getSearchWhere } from "../utils/where";
-import { ApiRoutes, ErrorTexts, FriendsTab, HTTPStatuses } from "../types/enums";
+import { ApiRoutes, ErrorTextsApi, FriendsTab } from "../types/enums";
 import { IUser } from "../types/models.types";
+import { ApiServerEvents } from "../types/events";
 import { UsersType } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
@@ -17,13 +19,15 @@ interface IConstructor {
     users: UsersType;
 };
 
-export default class FriendsController {
+export default class FriendsController extends EventEmitter {
     private readonly _app: Express;
     private readonly _middleware: Middleware;
     private readonly _database: Database;
     private readonly _users: UsersType;
 
     constructor({ app, middleware, database, users }: IConstructor) {
+        super();
+
         this._app = app;
         this._middleware = middleware;
         this._database = database;
@@ -46,6 +50,13 @@ export default class FriendsController {
         this._app.post(ApiRoutes.deleteFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._deleteFriend.bind(this));
         this._app.post(ApiRoutes.blockFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._blockFriend.bind(this));
         this._app.post(ApiRoutes.checkBlockStatus, this._middleware.mustAuthenticated.bind(this._middleware), this._checkBlockStatus.bind(this));
+    }
+
+    // Обработка ошибки
+    private async _handleError(error: unknown, res: Response, transaction?: Transaction) {
+        if (transaction) await transaction.rollback();
+
+        this.emit(ApiServerEvents.ERROR, { error, res });
     }
 
     // Получение возможных друзей
@@ -94,13 +105,10 @@ export default class FriendsController {
             if (friends && friends[0]) {
                 return res.json({ success: true, friendRequests: friends[0].length });
             } else {
-                throw new Error("Запрос выполнился некорректно и ничего не вернул (getFriendsNotification");
+                throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_NOTIFICATIONS);
             }
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -114,13 +122,10 @@ export default class FriendsController {
             if (possibleUsers && possibleUsers[0]) {
                 return res.json({ success: true, possibleUsers: possibleUsers[0] });
             } else {
-                throw new Error("Запрос выполнился некорректно и ничего не вернул (possibleUsers)");
+                throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_POSSIBLE_USERS);
             }
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -130,10 +135,6 @@ export default class FriendsController {
 
         try {
             const userId = (req.user as IUser).id;
-
-            if (!userId) {
-                throw new Error("Не передан id пользователя");
-            }
 
             const friendsCount: [any[], any] = await this._database.sequelize.query(`
                 SELECT COUNT(*) AS count
@@ -177,11 +178,7 @@ export default class FriendsController {
                 subscribersCount: subscribersCount && subscribersCount[0] ? subscribersCount[0][0].count : null
             });
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -215,38 +212,34 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new Error("Запрос выполнился некорректно и ничего не вернул (tab=0)");
+                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_0);
                     }
                 }
                 // Получение друзей-онлайн
                 case FriendsTab.online: {
-                    if (this._users) {
+                    if (this._users.size) {
                         const usersOnline = Array.from(this._users.values());
 
-                        if (usersOnline && usersOnline.length) {
-                            const filterUsersOnline = usersOnline.filter(onlineUser => {
-                                const searchFN = onlineUser.firstName.toLowerCase();
-                                const searchTN = onlineUser.thirdName.toLowerCase();
+                        const filterUsersOnline = usersOnline.filter(onlineUser => {
+                            const searchFN = onlineUser.firstName.toLowerCase();
+                            const searchTN = onlineUser.thirdName.toLowerCase();
 
-                                if (onlineUser.id !== userId) {
-                                    if (searchValue && (searchFN.includes(searchValue) || searchTN.includes(searchValue))) {
-                                        return true;
-                                    } else if (searchValue && !searchFN.includes(searchValue) && !searchTN.includes(searchValue)) {
-                                        return false;
-                                    }
-
+                            if (onlineUser.id !== userId) {
+                                if (searchValue && (searchFN.includes(searchValue) || searchTN.includes(searchValue))) {
                                     return true;
+                                } else if (searchValue && !searchFN.includes(searchValue) && !searchTN.includes(searchValue)) {
+                                    return false;
                                 }
 
-                                return false;
-                            });
+                                return true;
+                            }
 
-                            return res.json({ success: true, friends: filterUsersOnline });
-                        } else {
-                            throw new Error("Ошибка на сервере: нет пользователей (tab=1)");
-                        }
+                            return false;
+                        });
+
+                        return res.json({ success: true, friends: filterUsersOnline });
                     } else {
-                        throw new Error("Ошибка на сервере: нет пользователей (tab=1)");
+                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_1);
                     }
                 }
                 // Получение подписчиков
@@ -265,7 +258,7 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new Error("Запрос выполнился некорректно и ничего не вернул (tab=2)");
+                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_2);
                     }
                 }
                 // Получение входящих заявок
@@ -275,7 +268,7 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new Error("Запрос выполнился некорректно и ничего не вернул (tab=3)");
+                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_3);
                     }
                 }
                 // Получение исходящих заявок
@@ -294,7 +287,7 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new Error("Запрос выполнился некорректно и ничего не вернул (tab=4)");
+                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_4);
                     }
                 }
                 // Поиск друзей
@@ -304,17 +297,14 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new Error("Запрос выполнился некорректно и ничего не вернул (tab=5)");
+                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_5);
                     }
                 }
                 default:
-                    throw new Error("Тип вкладки не распознан");
+                    throw new FriendsError(ErrorTextsApi.UNKNOWN_TAB);
             };
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -326,12 +316,8 @@ export default class FriendsController {
             const { chatId }: { chatId: string; } = req.body;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw new Error("Не передан Ваш уникальный идентификатор");
-            }
-
             if (!chatId) {
-                throw new Error("Не передан уникальный идентификатор чата");
+                throw new FriendsError(ErrorTextsApi.CHAT_ID_NOT_FOUND);
             }
 
             const userIdsInChat: any = await this._database.models.chats.findOne({ 
@@ -359,7 +345,7 @@ export default class FriendsController {
                 : null;
 
             if (!friendInfo) {
-                throw new Error(ErrorTexts.NOT_TEMP_CHAT_ID);
+                throw new FriendsError(ErrorTextsApi.NOT_TEMPORAL_CHAT_ID);
             }
 
             await transaction.commit();
@@ -373,12 +359,7 @@ export default class FriendsController {
                 } 
             });
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -390,12 +371,8 @@ export default class FriendsController {
             const { friendId }: { friendId: string; } = req.body;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw new Error("Не передан id пользователя");
-            }
-
             if (!friendId) {
-                throw new Error("Не передан id добавляемого пользователя");
+                throw new FriendsError(ErrorTextsApi.SUBSCRIBED_ID_NOT_FOUND);
             }
 
             const existSubscriber = await this._database.models.subscribers.findOne({
@@ -419,12 +396,7 @@ export default class FriendsController {
                 return res.json({ success: true });
             }
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -434,12 +406,8 @@ export default class FriendsController {
             const { friendId }: { friendId: string; } = req.body;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw new Error("Не передан id пользователя");
-            }
-
             if (!friendId) {
-                throw new Error("Не передан id отписываемого пользователя");
+                throw new FriendsError(ErrorTextsApi.UNSUBSCRIBED_ID_NOT_FOUND);
             }
 
             await this._database.models.subscribers.destroy({
@@ -448,10 +416,7 @@ export default class FriendsController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -463,12 +428,8 @@ export default class FriendsController {
             const { friendId }: { friendId: string; } = req.body;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw new Error("Не передан id пользователя");
-            }
-
             if (!friendId) {
-                throw new Error("Не передан id принимаемого пользователя");
+                throw new FriendsError(ErrorTextsApi.ADD_TO_FRIEND_ID_NOT_FOUND);
             }
 
             // Удаляем пользователя из подписчиков
@@ -493,12 +454,7 @@ export default class FriendsController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -508,12 +464,8 @@ export default class FriendsController {
             const { friendId }: { friendId: string; } = req.body;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw new Error("Не передан id пользователя");
-            }
-
             if (!friendId) {
-                throw new Error("Не передан id подписанного пользователя");
+                throw new FriendsError(ErrorTextsApi.LEFT_TO_SUBSCRIBED_ID_NOT_FOUND);
             }
 
             await this._database.models.subscribers.update(
@@ -523,10 +475,7 @@ export default class FriendsController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            this._handleError(error, res);
         }
     };
 
@@ -538,12 +487,8 @@ export default class FriendsController {
             const { friendId }: { friendId: string; } = req.body;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw new Error("Не передан id пользователя");
-            }
-
             if (!friendId) {
-                throw new Error("Не передан id удаляемого пользователя");
+                throw new FriendsError(ErrorTextsApi.DELETED_ID_NOT_FOUND);
             }
 
             await this._database.models.friends.destroy({
@@ -566,12 +511,7 @@ export default class FriendsController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -583,12 +523,8 @@ export default class FriendsController {
             const { friendId }: { friendId: string; } = req.body;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw new Error("Не передан id пользователя");
-            }
-
             if (!friendId) {
-                throw new Error("Не передан id удаляемого пользователя");
+                throw new FriendsError(ErrorTextsApi.BLOCKED_ID_NOT_FOUND);
             }
 
             await this._database.models.friends.destroy({
@@ -614,12 +550,7 @@ export default class FriendsController {
 
             return res.json({ success: true });
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 
@@ -631,12 +562,8 @@ export default class FriendsController {
             const { checkingUser }: { checkingUser: string; } = req.body;
             const userId = (req.user as IUser).id;
 
-            if (!userId) {
-                throw new Error("Не передан id пользователя");
-            }
-
             if (!checkingUser) {
-                throw new Error("Не передан id проверяемого пользователя");
+                throw new FriendsError(ErrorTextsApi.CHECK_BLOCKED_ID_NOT_FOUND);
             }
 
             // Проверяем, заблокировали ли мы такого пользователя
@@ -655,12 +582,7 @@ export default class FriendsController {
 
             return res.json({ success: true, isBlockedByMe, meIsBlocked });
         } catch (error) {
-            const nextError = error instanceof FriendsError
-                ? error
-                : new FriendsError(error);
-
-            await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            await this._handleError(error, res, transaction);
         }
     };
 };
