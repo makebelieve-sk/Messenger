@@ -12,8 +12,9 @@ import "./modal-with-confirm.scss";
 const modalTitle = "modal-confirm-title";
 const modalDescription = "modal-confirm-description";
 
-export default React.memo(function ModalWithConfirm() {
+export default function ModalWithConfirm() {
     const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
     
     const { modalConfirm } = useAppSelector(selectMainState);
     const dispatch = useAppDispatch();
@@ -25,15 +26,13 @@ export default React.memo(function ModalWithConfirm() {
     // Выполнение действия
     const onAction = () => {
         if (modalConfirm && modalConfirm.cb) {
-            modalConfirm.cb();
-            dispatch(setModalConfirm(null));
+            modalConfirm.cb(setLoading);
         }
     };
 
     // Закрытие модального окна
     const onClose = () => {
         dispatch(setModalConfirm(null));
-        setOpen(false);
     };
 
     return <Modal open={open} onClose={onClose} aria-labelledby={modalTitle} aria-describedby={modalDescription}>
@@ -48,4 +47,4 @@ export default React.memo(function ModalWithConfirm() {
             </Typography>
         </Box>
     </Modal>
-});
+};

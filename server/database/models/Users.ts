@@ -1,16 +1,6 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
 import { IUser } from "../../types/models.types";
 
-export interface ISaveUser {
-  id: string;
-  firstName: string;
-  secondName: string;
-  thirdName: string;
-  email: string;
-  phone: string;
-  avatarUrl: string;
-};
-
 // Тип модели User, унаследованного от Sequelize
 export type UserInstance = IUser & Model & {};
 

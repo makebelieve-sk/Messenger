@@ -8,16 +8,16 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 
-import { MainClientContext } from "../../service/AppService";
 import { Pages } from "../../types/enums";
 import { useAppDispatch, useAppSelector } from "../../hooks/useGlobalState";
+import useMainClient from "../../hooks/useMainClient";
 import { selectMainState, setMessageNotification } from "../../state/main/slice";
 import { selectMessagesState } from "../../state/messages/slice";
 
 import "./menu.scss";
 
-export default React.memo(function MenuComponent() {
-    const mainClient = React.useContext(MainClientContext);
+export default function MenuComponent() {
+    const { mainApi } = useMainClient();
 
     const { friendNotification, messageNotification } = useAppSelector(selectMainState);
     const { unRead } = useAppSelector(selectMessagesState);
@@ -26,14 +26,12 @@ export default React.memo(function MenuComponent() {
 
     // Получаем уведомления для отрисовки в Badge
     React.useEffect(() => {
-        if (mainClient) {
             // Уведомления для друзей
-            mainClient.mainApi.getFriendsNotification();
+            mainApi.getFriendsNotification();
 
             // Уведомления для сообщений
-            mainClient.mainApi.getMessageNotification();
-        }
-    }, [mainClient]);
+            mainApi.getMessageNotification();
+    }, []);
 
     // При изменении непрочитанных сообщений в чатах изменяем количество чатов, содержащих непрочитанные сообщения
     React.useEffect(() => {
@@ -83,4 +81,4 @@ export default React.memo(function MenuComponent() {
             </div>
         </Stack>
     </div>
-});
+};

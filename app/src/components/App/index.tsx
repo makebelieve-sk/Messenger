@@ -10,7 +10,7 @@ import Spinner from "../Common/Spinner";
 
 import "./app.scss";
 
-export default React.memo(function App() {
+export default function App() {
   const { isAuth, loading } = useAppSelector(selectMainState);
 
   return <div className="root">
@@ -33,4 +33,4 @@ export default React.memo(function App() {
       </>
     }
   </div>
-});
+};

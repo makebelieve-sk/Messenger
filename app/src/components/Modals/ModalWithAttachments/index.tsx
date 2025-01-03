@@ -6,8 +6,8 @@ import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-import { MainClientContext } from "../../../service/AppService";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useGlobalState";
+import useMainClient from "../../../hooks/useMainClient";
 import { selectMessagesState, setAttachments } from "../../../state/messages/slice";
 import { setImagesInCarousel } from "../../../state/main/slice";
 import { IFile } from "../../../types/models.types";
@@ -31,14 +31,14 @@ export interface IAttachmentFile extends IFile {
     createDate: string;
 };
 
-export default React.memo(function ModalWithAttachments() {
+export default function ModalWithAttachments() {
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState(TABS.PHOTOS);
     const [loading, setLoading] = React.useState(false);
     const [images, setImages] = React.useState<any[]>([]);
     const [files, setFiles] = React.useState<IAttachmentFile[]>([]);
 
-    const mainClient = React.useContext(MainClientContext);
+    const { mainApi } = useMainClient();
 
     const { attachmentsModal } = useAppSelector(selectMessagesState);
     const dispatch = useAppDispatch();
@@ -49,7 +49,7 @@ export default React.memo(function ModalWithAttachments() {
             setOpen(attachmentsModal.isOpen);
 
             if (attachmentsModal) {
-                mainClient.mainApi.getAttachments(
+                mainApi.getAttachments(
                     { chatId: attachmentsModal.chatId }, 
                     setLoading,
                     (data: { images: ICarouselImage[]; files: IAttachmentFile[] }) => {
@@ -83,7 +83,7 @@ export default React.memo(function ModalWithAttachments() {
     const onOpenFile = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, filePath: string) => {
         event.stopPropagation();
 
-        mainClient.mainApi.openFile({ path: filePath });
+        mainApi.openFile({ path: filePath });
     };
 
     // Переход к сообщению в чате
@@ -162,4 +162,4 @@ export default React.memo(function ModalWithAttachments() {
             </Box>
         </Modal>
     </>
-});
+};

@@ -28,7 +28,7 @@ export default React.memo(function ChooseAvatar({ username, avatarUrl, onChange 
 
     // Удаление аватара
     const deleteAvatar = () => {
-        onChange(AVATAR_URL, "")
+        onChange(AVATAR_URL, "");
     };
 
     // Изменение своей аватарки

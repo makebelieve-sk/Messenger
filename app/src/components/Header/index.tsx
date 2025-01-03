@@ -4,12 +4,12 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 
+import useMainClient from "../../hooks/useMainClient";
+import useProfile from "../../hooks/useProfile";
 import { CLIENT_URL } from "../../utils/constants";
-import { getFullName } from "../../utils";
-import {  Pages } from "../../types/enums";
-import { MainClientContext } from "../../service/AppService";
-import { selectUserState } from "../../state/user/slice";
-import { useAppSelector } from "../../hooks/useGlobalState";
+import { AVATAR_URL } from "../../utils/files";
+import { Pages } from "../../types/enums";
+import { UserEvents } from "../../types/events";
 import Avatar from "../Common/Avatar";
 import Logo from "./Logo";
 
@@ -17,13 +17,23 @@ import "./header.scss";
 
 const anchorOrigin = { vertical: "top", horizontal: "left" } as const;
 
-export default React.memo(function Header() {
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
-    const mainClient = React.useContext(MainClientContext);
-
-    const { user } = useAppSelector(selectUserState);
+export default function Header() {
+    const mainClient = useMainClient();
+    const profile = useProfile();
     const navigate = useNavigate();
+
+    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+    const [avatarUrl, setAvatarUrl] = React.useState<string>(profile.user.avatarUrl);
+
+    // Необходимо подписаться на события профиля в компоненте, иначе этот компонент не обновляется вовсе (пропсов нет, состояние не затрагивается)
+    React.useEffect(() => {
+        // После обновления поля пользователя необходимо добавить проверку на обновление аватара
+        profile.on(UserEvents.CHANGE_FIELD, (field: string) => {
+            if (field === AVATAR_URL) {
+                setAvatarUrl(profile.user.avatarUrl);
+            }
+        });
+    }, []);
 
     // Переход на страницу
     const goTo = (link: Pages) => {
@@ -53,7 +63,7 @@ export default React.memo(function Header() {
 
                 <div className="header-container__toolbar__avatar">
                     <div onClick={event => setAnchorElUser(event.currentTarget)}>
-                        <Avatar src={user.avatarUrl} alt={getFullName(user)} />
+                        <Avatar src={avatarUrl} alt={profile.user.fullName} />
                     </div>
 
                     <Menu
@@ -86,4 +96,4 @@ export default React.memo(function Header() {
             </div>
         </div>
     </header>
-});
+};

@@ -2,18 +2,15 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
-import { useAppSelector } from "../../../hooks/useGlobalState";
 import useProfile from "../../../hooks/useProfile";
-import { selectUserState } from "../../../state/user/slice";
 import ChangeAvatar from "../../../components/ChangeAvatar";
 import Photo from "../../../components/Common/Photo";
 
 import "./main-photo.scss";
 
-export default React.memo(function MainPhoto() {
+export default function MainPhoto() {
     const [loading, setLoading] = React.useState(false);
 
-    const { user } = useAppSelector(selectUserState);
     const profile = useProfile();
     
     // Клик по своей аватарке
@@ -22,8 +19,8 @@ export default React.memo(function MainPhoto() {
     };
 
     // Удаление аватара
-    const deleteAvatar = () => {
-        profile.onDeleteAvatar();
+    const deleteAvatar = (setLoading?: React.Dispatch<React.SetStateAction<boolean>>) => {
+        profile.onDeleteAvatar(setLoading);
     };
 
     // Установка/обновление своего аватара
@@ -34,7 +31,7 @@ export default React.memo(function MainPhoto() {
     return <Grid item>
         <Paper className="main-photo paper-block">
             <Photo
-                src={user.avatarUrl}
+                src={profile.user.avatarUrl}
                 alt="user-avatar"
                 clickHandler={onClickMainPhoto}
                 deleteHandler={deleteAvatar}
@@ -51,4 +48,4 @@ export default React.memo(function MainPhoto() {
             </div>
         </Paper>
     </Grid>
-});
+};

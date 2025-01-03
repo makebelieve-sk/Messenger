@@ -6,7 +6,7 @@ import { Pages } from "../../types/enums";
 
 import "./copyright.scss";
 
-export default React.memo(function Copyright() {
+export default function Copyright() {
 	const navigate = useNavigate();
 
 	return (
@@ -22,4 +22,4 @@ export default React.memo(function Copyright() {
 			{new Date().getFullYear()}.
 		</div>
 	);
-});
+};

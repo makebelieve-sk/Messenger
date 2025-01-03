@@ -1,8 +1,8 @@
 import React from "react";
 
 import { ApiRoutes } from "../../types/enums";
-import { MainClientContext } from "../../service/AppService";
 import InputImage from "../Common/InputImage";
+import useMainClient from "../../hooks/useMainClient";
 
 interface ChangeAvatar {
     labelText: string;
@@ -13,7 +13,7 @@ interface ChangeAvatar {
 };
 
 export default React.memo(function ChangeAvatar({ labelText, loading, mustAuth = false, onChange, setLoading }: ChangeAvatar) {
-    const mainClient = React.useContext(MainClientContext);
+    const { mainApi } = useMainClient();
 
     // Функция изменения аватарки
     const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,15 +37,13 @@ export default React.memo(function ChangeAvatar({ labelText, loading, mustAuth =
         const formData = new FormData();    // Создаем объект FormData
         formData.append("avatar", file);    // Добавляем файл аватара в объект formData
 
-        mainClient.mainApi.uploadAvatarAuth(
-            mustAuth ? ApiRoutes.uploadAvatarAuth : ApiRoutes.saveAvatar,
+        mainApi.uploadAvatarAuth(
+            mustAuth ? ApiRoutes.changeAvatar : ApiRoutes.uploadAvatar,
             formData,
             setLoading,
             (data: { success: boolean; id: string; newAvatarUrl: string; newPhotoUrl: string; }) => {
-                if (data.success) {
-                    // Обновляем поле avatarUrl в объекте пользователя
-                    onChange({ id: data.id, newAvatarUrl: data.newAvatarUrl, newPhotoUrl: data.newPhotoUrl });
-                }
+                // Обновляем поле avatarUrl в объекте пользователя
+                onChange(data);
             }
         );
     };

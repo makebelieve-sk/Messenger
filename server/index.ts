@@ -30,7 +30,6 @@ function init() {
 // Обработываем пробрасываемые исключения синхронного кода
 process.on("uncaughtException", (error: Error) => {
     new BaseError(`${ErrorTextsApi.UNHANDLED_SYNC_ERROR}: ${error.message}`);
-    console.error(error.stack);
 
     // Завершаем выполнение процесса NodeJS
     process.exit(1);

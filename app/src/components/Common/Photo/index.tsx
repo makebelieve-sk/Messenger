@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import useImage from "../../../hooks/useImage";
 import { useAppDispatch } from "../../../hooks/useGlobalState";
 import { setModalConfirm } from "../../../state/main/slice";
+import { NO_PHOTO } from "../../../utils/constants";
 
 import "./photo.scss";
 
@@ -12,7 +13,7 @@ interface IPhoto {
     alt: string;
     showVisibleIcon?: boolean;
     clickHandler?: () => void;
-    deleteHandler?: () => void;
+    deleteHandler?: (setLoading?: React.Dispatch<React.SetStateAction<boolean>>) => void;
 };
 
 export default React.memo(function Photo({ src, alt, showVisibleIcon = true, clickHandler, deleteHandler }: IPhoto) {
@@ -28,7 +29,7 @@ export default React.memo(function Photo({ src, alt, showVisibleIcon = true, cli
     
     // Обработка наведения на изображение
     const onMouseOver = () => {
-        if (showVisibleIcon && src) setVisibleCloseIcon(true);
+        if (showVisibleIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(true);
     };
 
     // Обработка ухода курсора с изображения

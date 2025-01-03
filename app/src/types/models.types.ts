@@ -1,6 +1,6 @@
 import { CallTypes, FileVarieties, MessageTypes } from "./enums";
 
-// Интерфейс атрибутов модели Users
+// Интерфейс атрибутов модели Users (объект пользователя с безопасными полями)
 export interface IUser {
     id: string;
     firstName: string;
@@ -8,9 +8,7 @@ export interface IUser {
     thirdName: string;
     email: string;
     phone: string;
-    password: string;
     avatarUrl: string;
-    salt: string;
 };
 
 // Интерфейс атрибутов модели User_details

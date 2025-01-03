@@ -10,7 +10,7 @@ import { selectMainState, setImagesInCarousel } from "../../../state/main/slice"
 
 import "./modal-with-images-carousel.scss";
 
-export default React.memo(function ModalWithImagesCarousel() {
+export default function ModalWithImagesCarousel() {
     const [open, setOpen] = React.useState(false);
     const [activeKey, setActiveKey] = React.useState(0);
     const [images, setImages] = React.useState<null | ICarouselImage[]>(null);
@@ -77,4 +77,4 @@ export default React.memo(function ModalWithImagesCarousel() {
             </div>
         </Dialog>
     </>;
-});
+};

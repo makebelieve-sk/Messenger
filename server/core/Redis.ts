@@ -88,6 +88,18 @@ export default class RedisWorks {
         return `${key}:${id}`;
     };
 
+    // Обновление времени жизни записи по ключу
+    async expire(redisKey: RedisKeys, id: string, ttl: number = REDIS_TTL) {
+        const key = this.getKey(redisKey, id);
+
+        await this._client
+            .expire(key, ttl)
+            .then(() => console.log(`Время жизни в размере ${ttl} для ключа ${key} успешно обновлено в Redis`))
+            .catch((error: Error) => {
+                this._errorHandler(`Произошла ошибка при обновлении времени жизни записи с ключом [${key}] из Redis: ${error.message}`);
+            });
+    }
+
     // Получение значения по ключу
     async get(redisKey: RedisKeys, id: string): Promise<string | number | boolean | null | void> {
         const key = this.getKey(redisKey, id);
