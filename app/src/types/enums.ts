@@ -16,16 +16,17 @@ enum ApiRoutes {
     getUser = "/get-user",
     editInfo = "/edit-info",
     getUserDetail = "/get-user-detail",
-    getPhotos = "/get-photos",
-    //----file-----------
-    saveAvatar = "/save-avatar",
+    //----images---------
     uploadAvatar = "/upload-avatar",
-    uploadAvatarAuth = "/upload-avatar-auth",
+    saveAvatar = "/save-avatar",
+    changeAvatar = "/change-avatar",
+    getPhotos = "/get-photos",
+    savePhotos = "/save-photos",
+    deletePhoto = "/delete-photo",
+    //----file-----------
     saveFiles = "/save-files",
     openFile = "/open-file",
     downloadFile = "/download-file",
-    savePhotos = "/save-photos",
-    deleteImage = "/delete-image",
     deleteFiles = "/delete-files",
     //----friends--------
     friends = "/friends",
@@ -245,6 +246,24 @@ enum UnReadTypes {
     RESET = "RESET"
 };
 
+// Список возможных кодов ошибок по API
+enum ErrorCodes {
+    ERR_NETWORK = "ERR_NETWORK",
+    ERR_TIMEOUT = "ERR_TIMEOUT",
+    ERR_BAD_REQUEST = "ERR_BAD_REQUEST",
+    ERR_CANCELED = "ERR_CANCELED"
+};
+
+// Список ошибок по API
+enum ErrorTextsApi {
+    ERROR_MESSAGE = "Ошибка.",
+    ERROR_NETWORK = "Ошибка при получении ответа от сервера. Скорее всего сервер недоступен в данный момент. Проверьте интернет соединение.",
+    ERROR_TIMEOUT = "Возникли проблемы с базой данных или время ожидания ответа превысило 15 секунд.",
+    ERROR_BAD_REQUEST = "Ошибка возникла при попытке дать запрос к серверу. Скорее всего сервер недоступен в данный момент. Проверьте интернет соединение.",
+    ERROR_CANCELED = "Запрос был отменен.",
+    ERROR_UNKNOWN = "Неизвестная ошибка.",
+};
+
 export {
     TestMethods,
     ApiRoutes,
@@ -266,4 +285,6 @@ export {
     FriendsNoticeTypes,
     ImgComponentTypes,
     UnReadTypes,
+    ErrorCodes,
+    ErrorTextsApi,
 };

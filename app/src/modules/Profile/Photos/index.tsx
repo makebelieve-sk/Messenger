@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
@@ -8,7 +7,6 @@ import { useAppSelector } from "../../../hooks/useGlobalState";
 import useProfile from "../../../hooks/useProfile";
 import { selectUserState } from "../../../state/user/slice";
 import { Pages } from "../../../types/enums";
-import { getFullName } from "../../../utils";
 import Photo from "../../../components/Common/Photo";
 import InputImage from "../../../components/Common/InputImage";
 import NoItems from "../../../components/Common/NoItems";
@@ -17,13 +15,13 @@ import LinkComponent from "../../../components/Common/Link";
 
 import "./photos.scss";
 
-export default React.memo(function Photos() {
+export default function Photos() {
 	const [loadingPhotos, setLoadingPhotos] = React.useState(false);
 	const [loadingBtn, setLoadingBtn] = React.useState(false);
 
 	const profile = useProfile();
 
-	const { user, photos } = useAppSelector(selectUserState);
+	const { photos } = useAppSelector(selectUserState);
 	const navigate = useNavigate();
 
 	// Получаем все фотографии пользователя
@@ -45,7 +43,7 @@ export default React.memo(function Photos() {
 	const addPhotosHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const fileList = e.target.files;
 
-		if (fileList && fileList.length && user) {
+		if (fileList && fileList.length) {
 			const formData = new FormData();
 			const files = Array.from(fileList);
 
@@ -60,7 +58,7 @@ export default React.memo(function Photos() {
 	// Удаление одной фотографии
 	const deleteOnePhoto = (photoPath: string) => {
 		profile.deletePhoto(
-			{ fileUrl: photoPath, isAvatar: false },
+			{ imageUrl: photoPath, isAvatar: false },
 			photos,
 			photoPath
 		);
@@ -94,11 +92,9 @@ export default React.memo(function Photos() {
 									return <Photo
 										key={photo.id}
 										src={photo.path}
-										alt={getFullName(user) + " " + index}
+										alt={profile.user.fullName + " " + index}
 										clickHandler={() => onClickPhoto(index)}
-										deleteHandler={() =>
-											deleteOnePhoto(photo.path)
-										}
+										deleteHandler={() => deleteOnePhoto(photo.path)}
 									/>
 								})}
 							</div>
@@ -115,4 +111,4 @@ export default React.memo(function Photos() {
 			</Paper>
 		</Grid>
 	);
-});
+};

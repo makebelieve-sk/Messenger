@@ -7,8 +7,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
-import { MainClientContext } from "../../../service/AppService";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useGlobalState";
+import useMainClient from "../../../hooks/useMainClient";
 import { selectErrorState, setError } from "../../../state/error/slice";
 import { MAIL_FEEDBACK } from "../../../utils/constants";
 import SnackBarComponent from "../../Common/Snackbar";
@@ -18,11 +18,11 @@ import "./modal-with-error.scss";
 const modalTitle = "modal-error-title";
 const modalDescription = "modal-error-description";
 
-export default React.memo(function ModalWithError() {
+export default function ModalWithError() {
     const [open, setOpen] = React.useState(false);
     const [visible, setVisible] = React.useState(false);
 
-    const mainClient = React.useContext(MainClientContext);
+    const mainClient = useMainClient();
 
     const { error } = useAppSelector(selectErrorState);
     const dispatch = useAppDispatch();
@@ -91,4 +91,4 @@ export default React.memo(function ModalWithError() {
             </Box>
         </Modal>
     </>
-});
+};

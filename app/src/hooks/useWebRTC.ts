@@ -1,15 +1,15 @@
 import React from "react";
 import freeice from "freeice";
-import { CallStatus, MessageTypes, SettingType, SocketActions } from "../types/enums";
-import useStateWithCallback from "./useStateWithCallback";
+
 import { selectCallsState, setChatInfo, setLocalStream, setModalVisible, setStatus, setUsers } from "../state/calls/slice";
+import useStateWithCallback from "./useStateWithCallback";
 import { useAppDispatch, useAppSelector } from "./useGlobalState";
-import { selectUserState } from "../state/user/slice";
+import useMainClient from "./useMainClient";
+import useUser from "./useUser";
 import { AppDispatch } from "../types/redux.types";
 import { setSystemError } from "../state/error/slice";
-import { getFullName } from "../utils";
 import { IUser } from "../types/models.types";
-import { MainClientContext } from "../service/AppService";
+import { CallStatus, MessageTypes, SettingType, SocketActions } from "../types/enums";
 
 const LOCAL_VIDEO = "LOCAL_VIDEO";
 
@@ -74,12 +74,11 @@ export default function useWebRTC() {
         [SettingType.VIDEO]: false
     });
 
-    const mainClient = React.useContext(MainClientContext);
-    const socket = mainClient.socket;
+    const { socket, catchErrors } = useMainClient();
+    const user = useUser();
     const dispatch = useAppDispatch();
 
     const { callId, chatInfo, localStream, users, status } = useAppSelector(selectCallsState);
-    const { user } = useAppSelector(selectUserState);
 
     // Все RTC соединения (свой + других клиентов в комнате (звонке))
     const peerConnections = React.useRef<{ [key: string]: RTCPeerConnection }>({});
@@ -167,7 +166,7 @@ export default function useWebRTC() {
     // Если в звонке остается только 1 человек - завершаем его
     // При размонтировании компонента очищаем все сохраненные локально потоки (стримы)
     React.useEffect(() => {
-        if (user && users && users.length && users.length === 1) {
+        if (users && users.length && users.length === 1) {
             // Уведомляем всех участников звонка о его завершении
             if (socket && callId) {
                 socket.emit(SocketActions.GET_NEW_MESSAGE_ON_SERVER, { id: callId, type: MessageTypes.CALL });
@@ -242,7 +241,7 @@ export default function useWebRTC() {
                     if (user) {
                         addNewClient({
                             peerId: LOCAL_VIDEO,
-                            name: getFullName(user),
+                            name: user.fullName,
                             avatarUrl: user.avatarUrl,
                             video: Boolean(settings[SettingType.VIDEO]),
                             audio: Boolean(settings[SettingType.AUDIO]),
@@ -387,7 +386,7 @@ export default function useWebRTC() {
                                         break;
                                     default:
                                         const errorText = "Невозможно изменить настройки звонка, так как пришел неизвестный тип: " + type;
-                                        mainClient.catchErrors(errorText);
+                                        catchErrors(errorText);
                                         break;
                                 }
 
@@ -432,7 +431,7 @@ export default function useWebRTC() {
             // Добавляем себя в качестве клиента (для отрисовки)
             addNewClient({
                 peerId: LOCAL_VIDEO,
-                name: getFullName(user),
+                name: user.fullName,
                 avatarUrl: user.avatarUrl,
                 video: Boolean(settings[SettingType.VIDEO]),
                 audio: Boolean(settings[SettingType.AUDIO]),
@@ -457,7 +456,7 @@ export default function useWebRTC() {
         if (socket && callId && chatInfo && users) {
             startCapture()
                 .then(() => socket.emit(SocketActions.ACCEPT_CALL, { roomId: callId, chatInfo, usersInCall: users }))
-                .catch((error) => mainClient.catchErrors(error));
+                .catch((error) => catchErrors(error));
         }
     }, [socket, callId, chatInfo, users, dispatch]);
 
@@ -525,7 +524,7 @@ export default function useWebRTC() {
 
                 default:
                     const errorText = "Невозможно изменить настройки звонка, так как пришел неизвестный тип: " + type;
-                    mainClient.catchErrors(errorText)
+                    catchErrors(errorText)
                     break;
             }
         }

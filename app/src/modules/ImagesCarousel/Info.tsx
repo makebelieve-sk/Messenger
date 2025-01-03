@@ -1,9 +1,7 @@
 import React from "react";
 
+import useUser from "../../hooks/useUser";
 import { transformDate } from "../../utils/time";
-import { useAppSelector } from "../../hooks/useGlobalState";
-import { selectUserState } from "../../state/user/slice";
-import { getFullName } from "../../utils";
 import Avatar from "../../components/Common/Avatar";
 
 import "./info.scss";
@@ -20,10 +18,10 @@ export default React.memo(function Info({ activeImage }: { activeImage: ICarouse
     const [name, setName] = React.useState("");
     const [createDate, setCreateDate] = React.useState("");
 
-    const { user } = useAppSelector(selectUserState);
+    const user = useUser();
 
     React.useEffect(() => {
-        setName(user && getFullName(user) === activeImage.authorName
+        setName(user.fullName === activeImage.authorName
             ? "Вы"
             : activeImage.authorName
         );

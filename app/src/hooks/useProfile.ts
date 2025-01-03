@@ -1,9 +1,8 @@
-import React from "react";
-
-import { MainClientContext } from "../service/AppService";
 import { MY_ID } from "../utils/constants";
+import useMainClient from "./useMainClient";
 
+// Возврат сущности "Профиль" конкретного пользователя по переданному идентификатору
 export default function useProfile(userId: string = MY_ID) {
-    const mainClient = React.useContext(MainClientContext);
+    const mainClient = useMainClient();
     return mainClient.getProfile(userId);
 };

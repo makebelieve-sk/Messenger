@@ -2,26 +2,22 @@ import React from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
+
 import Status from "./status";
 import Buttons from "./buttons";
-import { useAppDispatch, useAppSelector } from "../../../hooks/useGlobalState";
+import Spinner from "../../Common/Spinner";
+import { useAppSelector } from "../../../hooks/useGlobalState";
 import useWebRTC from "../../../hooks/useWebRTC";
-import { selectUserState } from "../../../state/user/slice";
 import { selectCallsState } from "../../../state/calls/slice";
-import { setError } from "../../../state/error/slice";
 import { CallStatus } from "../../../types/enums";
 import { NO_PHOTO } from "../../../utils/constants";
-import Spinner from "../../Common/Spinner";
 
 import "./modal-with-call.scss";
 
-export default React.memo(function ModalWithCall() {
+export default function ModalWithCall() {
     const [open, setOpen] = React.useState(false);
-
+    
     const { visible, status, chatInfo } = useAppSelector(selectCallsState);
-    const { user } = useAppSelector(selectUserState);
-
-    const dispatch = useAppDispatch();
 
     const {
         LOCAL_VIDEO,
@@ -34,16 +30,6 @@ export default React.memo(function ModalWithCall() {
         provideMediaRef,
     } = useWebRTC();
 
-    // Ошибка, если нет текущего пользователя
-    React.useEffect(() => {
-        if (!user && open) {
-            dispatch(setError(`
-                Невозможно открыть меню вызовов, так как произошла ошибка в загрузке информации звонке. 
-                Пожалуйста, обновите страницу.
-            `));
-        }
-    }, [user, open]);
-
     // Открываем модальное окно только, если есть исходящий/входящий звонок 
     React.useEffect(() => {
         setOpen(Boolean(visible && status !== CallStatus.NOT_CALL));
@@ -51,7 +37,7 @@ export default React.memo(function ModalWithCall() {
 
     return <Dialog fullWidth maxWidth="xl" open={open}>
         <DialogContent className="call-container">
-            {chatInfo && user && status
+            {chatInfo && status
                 ? <div className="call-container__content-block">
                     {/* Статус звонка */}
                     <div className="call-container__content-block__text">
@@ -131,4 +117,4 @@ export default React.memo(function ModalWithCall() {
             }
         </DialogContent>
     </Dialog>
-});
+};

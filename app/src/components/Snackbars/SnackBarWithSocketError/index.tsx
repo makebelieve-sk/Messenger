@@ -5,7 +5,7 @@ import { useAppSelector } from "../../../hooks/useGlobalState";
 import { selectErrorState } from "../../../state/error/slice";
 import SnackBarComponent from "../../Common/Snackbar";
 
-export default React.memo(function SnackBarWithSocketError() {
+export default function SnackBarWithSocketError() {
     const [openSnack, setOpenSnack] = React.useState(false);
 
     const { systemError } = useAppSelector(selectErrorState);
@@ -25,4 +25,4 @@ export default React.memo(function SnackBarWithSocketError() {
             {systemError}
         </Alert>
     </SnackBarComponent>
-});
+};

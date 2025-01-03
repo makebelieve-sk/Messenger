@@ -16,8 +16,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Copyright from "../components/Copyright";
 import { Pages } from "../types/enums";
 import { REQUIRED_FIELD } from "../utils/constants";
-import { MainClientContext } from "../service/AppService";
 import LinkComponent from "../components/Common/Link";
+import useMainClient from "../hooks/useMainClient";
 
 const initialValues = {
 	values: {
@@ -38,9 +38,9 @@ export default function SignIn() {
 	const [errorFromServer, setErrorFromServer] = React.useState(false);
 	const [formValues, setFormValues] = React.useState(initialValues);
 
-	const mainClient = React.useContext(MainClientContext);
-
+	const { mainApi } = useMainClient();
 	const navigate = useNavigate();
+	
 	const disableSave = () => {
 		return (
 			loading ||
@@ -72,7 +72,7 @@ export default function SignIn() {
 		event.preventDefault();
 
 		if (!saveDisabled) {
-			mainClient.mainApi.signIn(formValues.values, setLoading, (error) => {
+			mainApi.signIn(formValues.values, setLoading, (error) => {
 				if (error && typeof error === "object" && error.message) {
 					setErrorFromServer(true);
 					setFormValues({

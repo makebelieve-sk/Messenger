@@ -10,7 +10,12 @@ enum SocketEvents {
     RECONNECT = "reconnect"
 };
 
+enum UserEvents {
+    CHANGE_FIELD = "change-field"
+};
+
 export {
     MainClientEvents,
-    SocketEvents
+    SocketEvents,
+    UserEvents
 };

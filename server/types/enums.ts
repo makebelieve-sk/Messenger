@@ -9,16 +9,17 @@ enum ApiRoutes {
     getUser = "/get-user",
     editInfo = "/edit-info",
     getUserDetail = "/get-user-detail",
-    getPhotos = "/get-photos",
-    //----file-----------
-    saveAvatar = "/save-avatar",
+    //----images---------
     uploadAvatar = "/upload-avatar",
-    uploadAvatarAuth = "/upload-avatar-auth",
+    saveAvatar = "/save-avatar",
+    changeAvatar = "/change-avatar",
+    getPhotos = "/get-photos",
+    savePhotos = "/save-photos",
+    deletePhoto = "/delete-photo",
+    //----file-----------
     saveFiles = "/save-files",
     openFile = "/open-file",
     downloadFile = "/download-file",
-    savePhotos = "/save-photos",
-    deleteImage = "/delete-image",
     deleteFiles = "/delete-files",
     //----friends--------
     friends = "/friends",

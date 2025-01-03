@@ -1,10 +1,10 @@
 import { Request } from "express";
 
-export interface IRequestWithSharpData extends Request {
-    sharpImageUrl: string;
-    dublicateSharpImageUrl: string;
+export interface IRequestWithSharpedAvatar extends Request {
+    sharpedAvatarUrl: string;
+    sharpedPhotoUrl: string;
 };
 
-export interface IRequestWithImagesSharpData extends Request {
-    sharpImagesUrls: string[];
+export interface IRequestWithShapedImages extends Request {
+    sharpedImageUrls: string[];
 };

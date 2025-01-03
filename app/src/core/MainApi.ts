@@ -91,7 +91,7 @@ export default class MainApi extends EventEmitter {
 
     private _uploadAvatar(data: Object) {
         this._request.post({
-            route: ApiRoutes.uploadAvatar,
+            route: ApiRoutes.saveAvatar,
             data,
             successCb: () => this.emit(MainClientEvents.SIGN_IN)
         });

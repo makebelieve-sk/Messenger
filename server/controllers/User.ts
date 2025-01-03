@@ -1,92 +1,63 @@
-import EventEmitter from "events";
-import { Request, Response, Express } from "express";
-import { Transaction } from "sequelize";
+import { Request, Response, Express, NextFunction } from "express";
 
 import { ApiRoutes, ErrorTextsApi, HTTPStatuses } from "../types/enums";
-import { ApiServerEvents } from "../types/events";
 import { IFormValues } from "../types";
-import { IUser, IUserDetails } from "../types/models.types";
+import { IUserDetails } from "../types/models.types";
+import { ISafeUser } from "../types/user.types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
-import { getSaveUserFields } from "../utils/user";
+import { getSafeUserFields } from "../utils/user";
 import { UsersError } from "../errors/controllers";
-import { ISaveUser } from "../database/models/Users";
 
-interface IConstructor {
-    app: Express;
-    middleware: Middleware;
-    database: Database;
-};
-
-export default class UserController extends EventEmitter {
-    private readonly _app: Express;
-    private readonly _middleware: Middleware;
-    private readonly _database: Database;
-
-    constructor({ app, middleware, database }: IConstructor) {
-        super();
-
-        this._app = app;
-        this._middleware = middleware;
-        this._database = database;
-
+// Класс, отвечающий за API пользователей
+export default class UserController {
+    constructor(private readonly _app: Express, private readonly _middleware: Middleware, private readonly _database: Database) {
         this._init();
     }
 
     // Слушатели запросов контроллера UserController
     private _init() {
-        this._app.get(ApiRoutes.getMe, this._middleware.mustAuthenticated.bind(this._middleware), this._getMe.bind(this));
+        this._app.get(ApiRoutes.getMe, this._middleware.mustAuthenticated.bind(this._middleware), this._getMe);
         this._app.get(ApiRoutes.getUserDetail, this._middleware.mustAuthenticated.bind(this._middleware), this._getUserDetail.bind(this));
         this._app.post(ApiRoutes.editInfo, this._middleware.mustAuthenticated.bind(this._middleware), this._editInfo.bind(this));
         this._app.post(ApiRoutes.getUser, this._middleware.mustAuthenticated.bind(this._middleware), this._getUser.bind(this));
     }
 
-    // Обработка ошибки
-    private async _handleError(error: unknown, res: Response, transaction?: Transaction) {
-        if (transaction) await transaction.rollback();
-
-        this.emit(ApiServerEvents.ERROR, { error, res });
-    }
-
     // Получение данных о себе
-    private async _getMe(req: Request, res: Response) {
-        try {
-            if (!req.user) {
-                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound);
-            }
-
-            return res.json({ success: true, user: req.user });
-        } catch (error) {
-            this._handleError(error, res);
+    private _getMe(req: Request, res: Response, next: NextFunction) {
+        if (!req.user) {
+            return next(new UsersError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound));
         }
+
+        res.json({ success: true, user: req.user });
     };
 
     // Получение детальной информации о пользователе
-    private async _getUserDetail(req: Request, res: Response) {        
+    private async _getUserDetail(req: Request, res: Response, next: NextFunction) {        
         try {
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
 
             const userDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
             if (!userDetail) {
-                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound);
+                return next(new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound));
             }
 
-            return res.json({ success: true, userDetail });
+            res.json({ success: true, userDetail });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 
     // Изменение информации о пользователе
-    private async _editInfo(req: Request, res: Response) {
+    private async _editInfo(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
             const { name, surName, sex, birthday, work, city, phone, email }: IFormValues = req.body;
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
 
-            const result: { user: ISaveUser | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = { 
+            const result: { user: ISafeUser | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = { 
                 user: null, 
                 userDetails: null 
             };
@@ -94,11 +65,11 @@ export default class UserController extends EventEmitter {
             const findUser = await this._database.models.users.findByPk(userId, { transaction });
 
             if (!findUser) {
-                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound);
+                return next(new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound));
             } 
 
             result.user = {
-                ...getSaveUserFields(findUser),
+                ...getSafeUserFields(findUser),
                 firstName: name, 
                 thirdName: surName, 
                 email, 
@@ -110,7 +81,7 @@ export default class UserController extends EventEmitter {
             const findUserDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
             if (!findUserDetail) {
-                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound);
+                return next(new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound));
             }
 
             result.userDetails = {
@@ -124,30 +95,31 @@ export default class UserController extends EventEmitter {
 
             await transaction.commit();
 
-            return res.json({ success: true, ...result });
+            res.json({ success: true, ...result });
         } catch (error) {
-            await this._handleError(error, res, transaction);
+            await transaction.rollback();
+            next(error);
         }
     };
 
     // Получение данных о другом пользователе
-    private async _getUser(req: Request, res: Response) {
+    private async _getUser(req: Request, res: Response, next: NextFunction) {
         try {
             const { id }: { id: string; } = req.body;
 
             if (!id) {
-                throw new UsersError(ErrorTextsApi.USER_ID_NOT_FOUND);
+                return next(new UsersError(ErrorTextsApi.USER_ID_NOT_FOUND));
             }
 
             const findUser = await this._database.models.users.findByPk(id);
 
             if (!findUser) {
-                throw new UsersError(`Пользователь с id=${id} не найден`);
+                return next(new UsersError(`Пользователь с id=${id} не найден`));
             }
 
-            return res.json({ success: true, user: getSaveUserFields(findUser) });
+            res.json({ success: true, user: getSafeUserFields(findUser) });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 };

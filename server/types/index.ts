@@ -1,6 +1,6 @@
-import { IUser } from "./models.types";
+import { ISocketUser } from "./socket.types";
 
-export type UsersType = Map<string, IUser>;
+export type UsersType = Map<string, ISocketUser>;
 
 export interface IImage {
     id: string;

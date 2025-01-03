@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 
 import { ApiRoutes } from "../types/enums";
 import CatchErrors, { CatchType } from "./CatchErrors";
-import { SERVER_URL } from "../utils/constants";
+import { AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT, SERVER_URL } from "../utils/constants";
 
 interface IGetRequest {
     route: ApiRoutes | string;
@@ -38,13 +38,13 @@ export default class Request {
         this._instance = axios.create({
             baseURL: SERVER_URL,                                            // Основное URL-адрес для всех запросов
             withCredentials: true,                                          // Разрешает отправлять cookie и авторизационные заголовкис запросами к другому домену
-            timeout: 15000,                                                 // Время ожидания ответа от сервера (иначе будет выброшена ошибка)
+            timeout: AXIOS_TIMEOUT,                                         // Время ожидания ответа от сервера (иначе будет выброшена ошибка)
             headers: {
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": SERVER_URL ?? false,
+                "Access-Control-Allow-Origin": SERVER_URL,
                 "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE"
             },                                                              // Объект заголовков HTTP-запросов
-            responseEncoding: "utf8"                                        // Кодировка, используемая для декодирования ответа от сервера
+            responseEncoding: AXIOS_RESPONSE_ENCODING                       // Кодировка, используемая для декодирования ответа от сервера
         });
     };
 

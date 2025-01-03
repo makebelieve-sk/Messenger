@@ -1,67 +1,96 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, Express } from "express";
 import path from "path";
-import EventEmitter from "events";
 
 import RedisWorks from "./Redis";
 import { ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
-import { IUser } from "../types/models.types";
-import { IRequestWithImagesSharpData, IRequestWithSharpData } from "../types/express.types";
-import { ApiServerEvents } from "../types/events";
-import { MiddlewareError } from "../errors";
-import { createSharpedFile } from "../utils/files";
+import { IRequestWithShapedImages, IRequestWithSharpedAvatar } from "../types/express.types";
+import { ISafeUser } from "../types/user.types";
+import { BaseError, MiddlewareError } from "../errors";
+import { AuthError } from "../errors/controllers";
+import { createSharpedImage } from "../utils/files";
 import { updateSessionMaxAge } from "../utils/session";
 
 // Класс, отвечает за выполнение мидлваров для HTTP-запросов
-export default class Middleware extends EventEmitter {
-    constructor(private readonly _redisWork: RedisWorks) {
-        super();
-    }
+export default class Middleware {
+    constructor(private readonly _redisWork: RedisWorks, private readonly _app: Express) {}
 
     // Пользователь должен быть авторизован в системе
-    async mustAuthenticated(req: Request, res: Response, next: NextFunction) {
+    async mustAuthenticated(req: Request, _: Response, next: NextFunction) {
         try {
+            const user = req.user as ISafeUser;
+
             if (!req.isAuthenticated()) {
-                throw new MiddlewareError(ErrorTextsApi.NOT_AUTH_OR_TOKEN_EXPIRED, HTTPStatuses.Unauthorized);
+                return next(new MiddlewareError(ErrorTextsApi.NOT_AUTH_OR_TOKEN_EXPIRED, HTTPStatuses.Unauthorized));
             }
 
-            if (!req.user) {
-                throw new MiddlewareError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound);
+            if (!user) {
+                return next(new MiddlewareError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound));
             }
 
             // Получаем поле rememberMe из Redis
-            const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, (req.user as IUser).id);
+            const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, user.id);
         
             // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
             await updateSessionMaxAge(req.session, Boolean(rememberMe));
-        
+
+            // Обновляем время жизни записи только в том случае, если пользователь не нажал на "Запомнить меня"
+            if (!rememberMe) {
+                await this._redisWork.expire(RedisKeys.REMEMBER_ME, user.id);
+            }
+
             next();
         } catch (error) {
-            this._handleError(error, res);
+            return next(error);
         }
     }
 
-    // Обрезка одного изображения
-    async sharpImage(req: Request, res: Response, next: NextFunction) {
+    // Общая обработка ошибок, вызванных в контроллерах через next(error)
+    catch() {
+        this._app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
+            const nextError = error instanceof BaseError
+                ? error
+                : new BaseError(error.message);
+
+            let errorMessage = {
+                success: false, 
+                message: nextError.message
+            };
+
+            // При необходимости дополняем возвращаемый объект ошибки (например, при входе)
+            if ((nextError as AuthError).options) {
+                errorMessage = {
+                    ...errorMessage,
+                    ...(nextError as AuthError).options
+                }
+            }
+
+            return res.status(nextError.status).send(errorMessage);
+        });
+    }
+
+    // Сжимаем изображение аватара
+    async sharpAvatar(req: Request, _: Response, next: NextFunction) {
         try {
-            // Дублируем добавленный/измененный аватар в раздел "Фотографии" и сжимаем его
-            const { folderPath, outputFile } = await createSharpedFile({ ...req.file!, fieldname: "photo" });
-            (req as IRequestWithSharpData).dublicateSharpImageUrl = path.join(folderPath, outputFile);
+            // Сживаем переданный аватар пользователя и дублируем его на диск в раздел "Фотографии"
+            const { folderPath, outputFile } = await createSharpedImage({ ...req.file!, fieldname: "photo" });
+            (req as IRequestWithSharpedAvatar).sharpedPhotoUrl = path.join(folderPath, outputFile);
 
-            (req as IRequestWithSharpData).sharpImageUrl = await this._getSharpedUrl(req);
-        
+            // Сжимаем переданный аватар пользователя
+            (req as IRequestWithSharpedAvatar).sharpedAvatarUrl = await this._getSharpedUrl(req);
+
             next();
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     }
 
-    // Обрезка нескольких изображений
-    async sharpImages(req: Request, res: Response, next: NextFunction) {
+    // Сжимаем несколько фотографий
+    async sharpImages(req: Request, _: Response, next: NextFunction) {
         try {
             const files = req.files as Express.Multer.File[];
 
             if (!files || !files.length) {
-                throw new MiddlewareError(ErrorTextsApi.PHOTOS_NOT_FOUND);
+                return next(new MiddlewareError(ErrorTextsApi.PHOTOS_NOT_FOUND));
             }
 
             Promise
@@ -71,16 +100,16 @@ export default class Middleware extends EventEmitter {
                 }))
                 .then(result => {
                     // Сохраняем массив обрезанных изображений
-                    (req as IRequestWithImagesSharpData).sharpImagesUrls = result;
+                    (req as IRequestWithShapedImages).sharpedImageUrls = result;
                     // Удаляем оригинальные объекты файлов из запроса
                     delete req.files;
                     next();
                 })
                 .catch((error: Error) => {
-                    throw new MiddlewareError(`Возникла ошибка при обрезке изображений: ${error.message}`);
+                    return next(new MiddlewareError(`Возникла ошибка при обрезке изображений: ${error.message}`));
                 });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     }
 
@@ -93,7 +122,7 @@ export default class Middleware extends EventEmitter {
                 throw new MiddlewareError(ErrorTextsApi.PHOTO_NOT_GIVEN, HTTPStatuses.NotFound);
             }
 
-            const { folderPath, outputFile } = await createSharpedFile(file);
+            const { folderPath, outputFile } = await createSharpedImage(file);
 
             // Удаляем оригинальный объект файла из запроса
             delete req.file;
@@ -103,10 +132,5 @@ export default class Middleware extends EventEmitter {
             // Объект ошибки попросту прокидывается выше, так как все равно там будет обработка через MiddlewareError
             throw error;
         }
-    }
-
-    // Обработка ошибки
-    private _handleError(error: unknown, res: Response) {
-        this.emit(ApiServerEvents.ERROR, { error, res });
     }
 }

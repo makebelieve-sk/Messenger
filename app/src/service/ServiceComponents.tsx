@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useAppSelector } from "../hooks/useGlobalState";
 import { selectMainState } from "../state/main/slice";
 import ModalWithError from "../components/Modals/ModalWithError";
@@ -10,7 +8,7 @@ import SnackBarWithSocketError from "../components/Snackbars/SnackBarWithSocketE
 // import SnackBarWithCall from "../components/Snackbars/SnackbarWithCall";
 // import ModalWithCall from "../components/Modals/ModalWithCall";
 
-export default React.memo(function ServiceComponents() {
+export default function ServiceComponents() {
     const { isAuth } = useAppSelector(selectMainState);
 
     return <>
@@ -28,4 +26,4 @@ export default React.memo(function ServiceComponents() {
             : null
         }
     </>
-});
+};

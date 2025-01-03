@@ -1,7 +1,7 @@
-import { ISaveUser } from "../database/models/Users";
 import { IUser } from "../types/models.types";
+import { ISafeUser } from "../types/user.types";
 
-export function getSaveUserFields(user: IUser): ISaveUser {
+export function getSafeUserFields(user: IUser): ISafeUser {
     return {
         id: user.id,
         firstName: user.firstName,
