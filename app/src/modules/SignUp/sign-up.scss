@@ -1,4 +1,4 @@
-@import "../../styles/colors.scss";
+@import "../../styles/abstract/colors.scss";
 
 div.choose-avatar {
     margin-top: 12px;
@@ -28,7 +28,7 @@ div.choose-avatar {
             border-radius: 5%;
         }
         &__avatar-without-user {
-            background-color: $avatarWithoutUser;
+            background-color: $avatar-without-user;
             width: 100%;
             min-width: 258.67px;
             min-height: 344.89px;

@@ -1,6 +1,6 @@
 @use "sass:math";
-@import "../../styles/variables.scss";
-@import "../../styles/colors.scss";
+@import "../../styles/abstract/variables.scss";
+@import "../../styles/abstract/colors.scss";
 
 .header {
     background: $white;

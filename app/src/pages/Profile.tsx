@@ -8,6 +8,8 @@ import Friends from "../modules/Profile/Friends";
 import PersonalInfo from "../modules/Profile/PersonalInfo";
 import Photos from "../modules/Profile/Photos";
 
+import "../styles/pages/profile.scss";
+
 export default React.memo(function Profile() {
     const navigate = useNavigate();
 

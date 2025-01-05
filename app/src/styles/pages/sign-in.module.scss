@@ -1,12 +1,13 @@
-@import "../colors.scss";
-@import "../variables.scss";
+@import "../abstract/colors.scss";
+@import "../abstract/variables.scss";
 
 .mainGrid {
 	height: calc(100vh - 40px);
+
 	.background {
 		background-size: cover;
 		background-position: center;
-		background-image: url(https://source.unsplash.com/random);
+		background-image: url("https://api.unsplash.com/photos/random?client_id=2t6S03wS49SKwlnqRPZgChHiZUfKcxouAGZv1a3_LUE");
 		background-repeat: no-repeat;
 
 		&.light {
@@ -31,16 +32,20 @@
 
 	.layoutInput {
 		margin-top: $signMarginXSmall;
+
 		.loadingButton {
 			margin-top: $signMarginMedium;
 			margin-bottom: $signMarginSmall;
 		}
+
 		.secondaryButton {
-			color: blue;
+			color: $blue;
 			text-decoration: none;
+
 			&:hover {
 				cursor: pointer;
 			}
+
 			.backButton {
 				margin-right: $signMarginXSmall;
 			}
