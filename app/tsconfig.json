@@ -17,5 +17,5 @@
     "noImplicitAny": false
   },
   "include": ["**/*.ts", "**/*.tsx", "src/Global.d.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "build"]
 }
