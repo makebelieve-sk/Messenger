@@ -16,6 +16,6 @@
     "incremental": true,
     "noImplicitAny": false
   },
-  "include": ["**/*.ts", "**/*.tsx", "types.d.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "src/Global.d.ts"],
   "exclude": ["node_modules"]
 }
