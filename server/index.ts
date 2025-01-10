@@ -16,7 +16,7 @@ function init() {
     const mainServer = new MainServer(app, server);
 
     try {
-        server.listen(PORT, () => console.log(t("server_started_with_port_and_mode", { mode: MODE, port: PORT })));
+        server.listen(PORT, () => console.log(t("server_started", { mode: MODE, port: PORT })));
     } catch (error) {
         new BaseError(`${t("start_server_error")}: ${error}`);
 
@@ -29,7 +29,7 @@ function init() {
 
 // Обработываем пробрасываемые исключения синхронного кода
 process.on("uncaughtException", (error: Error) => {
-    new BaseError(`${t("unhandled_sync_error")}: ${error.message}`);
+    new BaseError(`${t("error.unhandled_sync")}: ${error.message}`);
     console.error(error.stack);
 
     // Завершаем выполнение процесса NodeJS
@@ -38,7 +38,7 @@ process.on("uncaughtException", (error: Error) => {
 
 // Обработываем пробрасываемые исключения асинхронного кода
 process.on("unhandledRejection", (reason: string, promise: Promise<unknown>) => {
-    new BaseError(`${t("unhandled_async_error")}: ${reason} (${promise})`);
+    new BaseError(`${t("error.unhandled_async")}: ${reason} (${promise})`);
 
     // Завершаем выполнение процесса NodeJS
     process.exit(1);

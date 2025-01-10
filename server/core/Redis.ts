@@ -35,7 +35,7 @@ export default class RedisWorks {
         });
         this._client
             .connect()
-            .catch(async (error: Error) => await this._errorHandler(t("error_in_client_connect") + error.message, true));
+            .catch(async (error: Error) => await this._errorHandler(t("redis.error.client_connect") + error.message, true));
 
         this._redisStore = new RedisStore({ 
             client: this._client,   // Клиент Redis
@@ -49,16 +49,16 @@ export default class RedisWorks {
     private _bindListeners() {
         this.redisClient.on("connect", this._connectHandler);
         this.redisClient.on("ready", this._readyHandler);
-        this.redisClient.on("error", async (error: Error) => await this._errorHandler(t("error_in_client_work") + error.message, true));
+        this.redisClient.on("error", async (error: Error) => await this._errorHandler(t("redis.error.client_work") + error.message, true));
         this.redisClient.on("end", this._endHandler);
     }
 
     private _connectHandler() {
-        console.log(t("redis_connection_successfull"));
+        console.log(t("redis.connection_successfull"));
     }
 
     private _readyHandler() {
-        console.log(t("redis_start_to_work"));
+        console.log(t("redis.start_to_work"));
     }
 
     private async _errorHandler(errorText: string, close: boolean = false) {
@@ -68,14 +68,14 @@ export default class RedisWorks {
     }
 
     private _endHandler() {
-        console.log(t("redis_stopped"));
+        console.log(t("redis.stopped"));
 
         if (this._timeoutReconnect) {
             clearTimeout(this._timeoutReconnect);
         }
 
         this._timeoutReconnect = setTimeout(() => {
-            console.log(t("redis_reconnection"));
+            console.log(t("redis.reconnection"));
             this._connectRedis();
         }, REDIS_TIMEOUT_RECONNECTION);
     }
@@ -97,7 +97,7 @@ export default class RedisWorks {
             .get(key)
             .then(result => result ? JSON.parse(result) : null)
             .catch((error: Error) => {
-                this._errorHandler(`${t("error_get_redis_value", { key })}: ${error.message}`);
+                this._errorHandler(`${t("redis.error.get_value", { key })}: ${error.message}`);
             });
     };
 
@@ -107,9 +107,9 @@ export default class RedisWorks {
 
         await this._client
             .set(key, value)
-            .then(() => console.log(t("new_pair_is_set_to_redis", { key, value })))
+            .then(() => console.log(t("redis.new_pair_is_set", { key, value })))
             .catch((error: Error) => {
-                this._errorHandler(`${t("error_when_setting_new_pair_to_redis", { key, value })}: ${error.message}`);
+                this._errorHandler(`${t("redis.error.setting_new_pair", { key, value })}: ${error.message}`);
             });
     };
 
@@ -119,9 +119,9 @@ export default class RedisWorks {
 
         await this._client
             .del(key)
-            .then(() => console.log(t("key_successfull_deleted_from_redis", { key })))
+            .then(() => console.log(t("redis.key_successfull_deleted", { key })))
             .catch((error: Error) => {
-                this._errorHandler(`${t("error_when_deleted_key_from_redis", { key })}: ${error.message}`);
+                this._errorHandler(`${t("redis.error.deleted_key", { key })}: ${error.message}`);
             });
     };
 };

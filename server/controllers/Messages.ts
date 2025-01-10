@@ -167,7 +167,7 @@ export default class MessagesController extends EventEmitter {
                             ? unReadMessages[0].map(unReadMessageId => unReadMessageId.messageId)
                             : [];
                     } else {
-                        throw new MessagesError(t("not_correct_answer_get_dialogs"));
+                        throw new MessagesError(t("messages.error.get_unread_messages"));
                     }
 
                     // Получаем список пользователей для чата
@@ -185,7 +185,7 @@ export default class MessagesController extends EventEmitter {
                     if (usersInChat && usersInChat.length) {
                         chatObject.usersInChat = usersInChat;
                     } else {
-                        throw new MessagesError(t("users_in_chat_not_found", { chat: chat.name }));
+                        throw new MessagesError(t("chats.error.users_in_chat_not_found", { chat: chat.name }));
                     }
 
                     // Получаем статус звукового уведомления чата
@@ -278,7 +278,7 @@ export default class MessagesController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!chatId) {
-                throw new MessagesError(t("chat_id_not_found"));
+                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             const messagesLimit = loadMore ? LOAD_MORE_LIMIT : LIMIT;
@@ -386,15 +386,15 @@ export default class MessagesController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!message.userId) {
-                throw new MessagesError(t("user_id_in_message_not_found"));
+                throw new MessagesError(t("messages.error.user_id_in_message_not_found"), HTTPStatuses.BadRequest);
             }
 
             if (!message.chatId) {
-                throw new MessagesError(t("chat_id_in_message_not_found"));
+                throw new MessagesError(t("messages.error.chat_id_in_message_not_found"), HTTPStatuses.BadRequest);
             }
 
             if (!usersInChat || !usersInChat.length) {
-                throw new MessagesError(t("users_in_chat_not_found", { chat: message.chatId }));
+                throw new MessagesError(t("chats.error.users_in_chat_not_found", { chat: message.chatId }), HTTPStatuses.BadRequest);
             }
 
             // Сохраняем сообщение в таблицу Messages
@@ -440,11 +440,11 @@ export default class MessagesController extends EventEmitter {
             const { id, type, message, files }: { id: string; type: MessageTypes; message: IMessage; files: string[] | null; } = req.body;
 
             if (!id) {
-                throw new MessagesError(t("message_id_not_found"));
+                throw new MessagesError(t("messages.error.message_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             if (!message && (!files || !files.length)) {
-                throw new MessagesError(t("message_can_not_be_empty_without_files"));
+                throw new MessagesError(t("messages.error.empty_edit_message_without_files"), HTTPStatuses.BadRequest);
             }
 
             if (files && files.length) {
@@ -514,7 +514,7 @@ export default class MessagesController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!friendId) {
-                throw new MessagesError(t("chat_partner_id_not_found"));
+                throw new MessagesError(t("chats.error.partner_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             let chatId: string | null = null;
@@ -589,7 +589,7 @@ export default class MessagesController extends EventEmitter {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chat_id_not_found"));
+                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             // Ищем чат в БД
@@ -599,7 +599,7 @@ export default class MessagesController extends EventEmitter {
 
             // Если чата в БД нет, то возвращаем 404 статус
             if (!chatInfo) {
-                throw new MessagesError(t("chat_with_chat_id_not_found", { chatId }), HTTPStatuses.NotFound);
+                throw new MessagesError(t("chats.error.chat_not_found", { chatId }), HTTPStatuses.NotFound);
             }
 
             return res.json({ success: true, chatInfo });
@@ -614,7 +614,7 @@ export default class MessagesController extends EventEmitter {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chat_id_not_found"));
+                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             const usersInChat = await this._database.models.usersInChat.findAll({
@@ -629,7 +629,7 @@ export default class MessagesController extends EventEmitter {
             if (usersInChat && usersInChat.length) {
                 return res.json({ success: true, usersInChat: usersInChat.map(userInChat => userInChat.User) });
             } else {
-                throw new MessagesError(t("users_in_chat_not_found", { chat: chatId }), HTTPStatuses.NotFound);
+                throw new MessagesError(t("chats.error.users_in_chat_not_found", { chat: chatId }), HTTPStatuses.NotFound);
             }
         } catch (error) {
             this._handleError(error, res);
@@ -642,7 +642,7 @@ export default class MessagesController extends EventEmitter {
             const { chatPartnerId }: { chatPartnerId: string; } = req.body;
 
             if (!chatPartnerId) {
-                throw new MessagesError(t("chat_partner_id_not_found"));
+                throw new MessagesError(t("chats.error.partner_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             const chatPartner = await this._database.models.userDetails.findOne({ 
@@ -651,7 +651,7 @@ export default class MessagesController extends EventEmitter {
             });
 
             if (!chatPartner) {
-                throw new MessagesError(t("chat_partner_not_found"), HTTPStatuses.NotFound);
+                throw new MessagesError(t("chats.error.partner_not_found"), HTTPStatuses.NotFound);
             }
 
             return res.json({ success: true, lastSeen: chatPartner.lastSeen });
@@ -667,7 +667,7 @@ export default class MessagesController extends EventEmitter {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chat_id_not_found"));
+                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             const chatSoundStatus = await this._database.models.chatSoundNotifications.findOne({ 
@@ -688,7 +688,7 @@ export default class MessagesController extends EventEmitter {
             const { chatId, status }: { chatId: string; status: boolean; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chat_id_not_found"));
+                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             // Удаляем запись из БД, если статус "Выключен" 
@@ -720,7 +720,7 @@ export default class MessagesController extends EventEmitter {
             const { messageId, privateDelete }: { messageId: string; privateDelete: boolean; } = req.body;
 
             if (!messageId) {
-                throw new MessagesError(t("deleted_message_id_not_found"));
+                throw new MessagesError(t("messages.error.deleted_message_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             const findDeletedMessage = await this._database.models.deletedMessages.findOne({
@@ -729,7 +729,7 @@ export default class MessagesController extends EventEmitter {
             });
 
             if (findDeletedMessage) {
-                throw new MessagesError(t("your_already_delete_this_message"));
+                throw new MessagesError(t("messages.error.your_already_delete_this_message"));
             }
 
             if (privateDelete) {
@@ -765,7 +765,7 @@ export default class MessagesController extends EventEmitter {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("deleted_chat_id_not_found"));
+                throw new MessagesError(t("chats.error.deleted_chat_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             await this._database.models.deletedChats.create({
@@ -786,7 +786,7 @@ export default class MessagesController extends EventEmitter {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chat_id_not_found"));
+                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             const attachments = await this._database.sequelize.query(`

@@ -35,8 +35,6 @@ export default class PassportWorks {
 
         // Достаем данные о пользователе из его сессии
         this._passport.serializeUser<string>((user, done: (error: PassportError | null, userId: string) => void) => {
-            console.log("serializeUser: ", user);
-
             process.nextTick(() => {
                 if (!this._users.has((user as IUser).id)) {
                     this._users.set((user as IUser).id, user as IUser);
@@ -48,8 +46,6 @@ export default class PassportWorks {
 
         // Сохраняем данные о пользователе в его сессию
         this._passport.deserializeUser((userId: string, done: DoneType) => {
-            console.log("deserializeUser: ", userId);
-
             process.nextTick(() => {
                 const user = this._users.get(userId);
 
@@ -66,7 +62,7 @@ export default class PassportWorks {
 
                                 done(null, user);
                             } else {
-                                throw new PassportError(t("user_with_id_not_found", { id: userId }));
+                                throw new PassportError(t("users.error.user_with_id_not_found", { id: userId }));
                             }
                         })
                         .catch((error: Error) => {
@@ -97,8 +93,7 @@ export default class PassportWorks {
                 if (candidatePhone) {
                     this._comparePasswords(candidatePhone, password, done);
                 } else {
-                    
-                    done(new PassportError(t("incorrect_login_or_password"), HTTPStatuses.BadRequest));
+                    done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
                 }
             }
         } catch (error) {
@@ -123,7 +118,7 @@ export default class PassportWorks {
     
             hashString === candidate.password
                 ? done(null, user)
-                : done(new PassportError(t("incorrect_login_or_password"), HTTPStatuses.BadRequest));
+                : done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
         });
     }
 }

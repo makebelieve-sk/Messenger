@@ -17,7 +17,7 @@ function initI18n(cb: Function) {
       }
     }, (error: Error) => {
       if (error) {
-        new BaseError(`${t("error_when_initialize_i18n")}: ${error.message}`);
+        new BaseError(`${t("error.initialize_i18n")}: ${error.message}`);
         process.exit(1);
       }
 

@@ -22,11 +22,11 @@ export default class Middleware extends EventEmitter {
     async mustAuthenticated(req: Request, res: Response, next: NextFunction) {
         try {
             if (!req.isAuthenticated()) {
-                throw new MiddlewareError(t("not_auth_or_token_expired"), HTTPStatuses.Unauthorized);
+                throw new MiddlewareError(t("auth.error.not_auth_or_token_expired"), HTTPStatuses.Unauthorized);
             }
 
             if (!req.user) {
-                throw new MiddlewareError(t("user_not_found"), HTTPStatuses.NotFound);
+                throw new MiddlewareError(t("users.error.user_not_found"), HTTPStatuses.NotFound);
             }
 
             // Получаем поле rememberMe из Redis
@@ -62,7 +62,7 @@ export default class Middleware extends EventEmitter {
             const files = req.files as Express.Multer.File[];
 
             if (!files || !files.length) {
-                throw new MiddlewareError(t("photos_not_found"));
+                throw new MiddlewareError(t("photos.error.photo_not_found"), HTTPStatuses.BadRequest);
             }
 
             Promise
@@ -78,7 +78,7 @@ export default class Middleware extends EventEmitter {
                     next();
                 })
                 .catch((error: Error) => {
-                    throw new MiddlewareError(`${t("sharped_photo_with_error")}: ${error.message}`);
+                    throw new MiddlewareError(`${t("photos.error.sharped_photo_with_error")}: ${error.message}`);
                 });
         } catch (error) {
             this._handleError(error, res);
@@ -91,7 +91,7 @@ export default class Middleware extends EventEmitter {
             const file = req.file;
 
             if (!file) {
-                throw new MiddlewareError(t("photo_not_given"), HTTPStatuses.NotFound);
+                throw new MiddlewareError(t("photos.error.photo_not_given"), HTTPStatuses.BadRequest);
             }
 
             const { folderPath, outputFile } = await createSharpedFile(file);

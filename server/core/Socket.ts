@@ -65,7 +65,7 @@ export default class SocketWorks {
             const user: IUser = socket.handshake.auth.user;
     
             if (!user) {
-                next(new SocketError(t("user_id_not_given")));
+                next(new SocketError(t("socket.error.user_id_not_found")));
             }
     
             socket.user = user;
@@ -87,7 +87,7 @@ export default class SocketWorks {
 
                     return user;
                 } else {
-                    throw new SocketError(t("user_with_id_not_found", { id: userId }));
+                    throw new SocketError(t("users.error.user_with_id_not_found", { id: userId }));
                 }
             } catch (error) {
                 // Пробрасываем ошибку выше, так как там присутствует обработчик SocketError
@@ -140,7 +140,7 @@ export default class SocketWorks {
                 const notifyAnotherUser = (userTo: string, type: any, payload?: Object) => {
                     // Если получатель - это я, то выводим ошибку
                     if (userTo === userId) {
-                        throw new SocketError(t("not_correct_user_id_in_socket", { userTo }));
+                        throw new SocketError(t("socket.error.not_correct_user_id_in_socket", { userTo }));
                     }
 
                     const findUser = this._getUser(userTo);
@@ -188,7 +188,7 @@ export default class SocketWorks {
                         // Покидаем комнату (звонок)
                         socket.leave(roomId);
                     } else {
-                        handleError(t("cannot_find_call"), SocketChannelErrorTypes.CALLS);
+                        handleError(t("socket.error.cannot_find_call"), SocketChannelErrorTypes.CALLS);
                     }
                 };
 
@@ -238,7 +238,7 @@ export default class SocketWorks {
                         }
 
                         default:
-                            handleError(t("incorrect_type_in_friends"));
+                            handleError(t("socket.error.not_correct_friends_action_type"));
                             break;
                     }
                 });
@@ -590,7 +590,7 @@ export default class SocketWorks {
 
                 // Событие отключения (выполняется немного ранее, чем disconnect) - можно получить доступ к комнатам
                 socket.on("disconnecting", (reason) => {
-                    console.log("[SOCKET.disconnecting]: ", reason);
+                    console.log(t("socket.disconnecting", { reason }));
 
                     // const rooms = Array.from(socket.rooms);
 
@@ -605,7 +605,7 @@ export default class SocketWorks {
                 // Отключение сокета
                 socket.on("disconnect", async (reason) => {
                     try {
-                        console.log(t("socket_disconnected_with_reason", { socketID, reason }));
+                        console.log(t("socket.socket_disconnected_with_reason", { socketID, reason }));
 
                         this._users.delete(userId);
                         this._socketUsers.delete(userId);
@@ -619,11 +619,11 @@ export default class SocketWorks {
                             { where: { userId } }
                         );
                     } catch (error) {
-                        handleError(`${t("error_in_update_last_seen")}: ${(error as Error).message}`);
+                        handleError(`${t("socket.error.update_last_seen")}: ${(error as Error).message}`);
                     }
                 });
             } catch (error) {
-                handleError(`${t("error_on_socket_work")}: ${(error as Error).message}`);
+                handleError(`${t("socket.error.socket_work")}: ${(error as Error).message}`);
             }
         });
     }
@@ -632,7 +632,7 @@ export default class SocketWorks {
         // Не нормальное отключение io
         this._io.engine.on("connection_error", (error: { req: string; code: number; message: string; context: string; }) => {
             const { req, code, message, context } = error;
-            new SocketError(t("error_engine_socket", { req, code: code.toString(), message, context }));
+            new SocketError(t("socket.error.engine_socket", { req, code: code.toString(), message, context }));
         });
     }
 

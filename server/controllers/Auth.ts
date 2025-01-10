@@ -76,7 +76,7 @@ export default class AuthController extends EventEmitter {
                 // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
                 await updateSessionMaxAge(req.session, Boolean(rememberMe));
     
-                throw new AuthError(t("you_already_auth"), HTTPStatuses.PermanentRedirect);
+                throw new AuthError(t("auth.error.you_already_auth"), HTTPStatuses.PermanentRedirect);
             }
 
             next();
@@ -96,13 +96,13 @@ export default class AuthController extends EventEmitter {
             const checkDublicateEmail = await this._database.models.users.findOne({ where: { email }, transaction });
 
             if (checkDublicateEmail) {
-                throw new AuthError(t("user_with_email_already_exists", { email }), HTTPStatuses.BadRequest, { field: "email" });
+                throw new AuthError(t("auth.error.user_with_email_already_exists", { email }), HTTPStatuses.BadRequest, { field: "email" });
             }
 
             const checkDublicatePhone = await this._database.models.users.findOne({ where: { phone }, transaction });
 
             if (checkDublicatePhone) {
-                throw new AuthError(t("user_with_phone_already_exists", { phone }), HTTPStatuses.BadRequest, { field: "phone" });
+                throw new AuthError(t("auth.error.user_with_phone_already_exists", { phone }), HTTPStatuses.BadRequest, { field: "phone" });
             }
 
             // "Соль"
@@ -137,14 +137,14 @@ export default class AuthController extends EventEmitter {
                                             return res.json({ success: true, user });
                                         });
                                     } else {
-                                        throw new AuthError(t("error_creating_user_details"));
+                                        throw new AuthError(t("auth.error.creating_user_details"));
                                     }
                                 })
                                 .catch((error: Error) => {
                                     throw new AuthError(error.message);
                                 });
                         } else {
-                            throw new AuthError(t("error_creating_user"));
+                            throw new AuthError(t("auth.error.creating_user"));
                         }
                     })
                     .catch((error: Error) => {
@@ -167,7 +167,7 @@ export default class AuthController extends EventEmitter {
                 }
 
                 if (!req.sessionID) {
-                    throw new AuthError(t("session_id_not_exists"));
+                    throw new AuthError(t("auth.error.session_id_not_exists"));
                 }
 
                 return req.logIn(user, async (error?: PassportError) => {
@@ -207,7 +207,7 @@ export default class AuthController extends EventEmitter {
                     }
 
                     if (!req.sessionID) {
-                        throw new AuthError(t("session_id_not_exists_on_deleted_session", { session: req.session.toString() }));
+                        throw new AuthError(t("auth.error.session_id_not_exists_on_deleted_session", { session: req.session.toString() }));
                     }
 
                     // Удаляем флаг rememberMe из Redis

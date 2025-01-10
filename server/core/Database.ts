@@ -41,8 +41,8 @@ export default class Database {
     // Закрытие базы данных
     close() {
         this._sequelize.close()
-            .then(() => console.log(t("database_close")))
-            .catch((error: Error) => new DatabaseError(`${t("error_in_close_db")}: ${error.message}`));
+            .then(() => console.log(t("database.close")))
+            .catch((error: Error) => new DatabaseError(`${t("database.error.close")}: ${error.message}`));
     }
 
     // Соединение базы данных
@@ -51,13 +51,13 @@ export default class Database {
 
         this._sequelize.authenticate()
             .then(() => {
-                console.log(t("database_start"));
+                console.log(t("database.start"));
                 // Инициализируем модели базы данных
                 this._useModels();
                 // Инициализируем ассоциации (отношения) между таблицами в базе данных
                 this._useRelations();
             })
-            .catch((error: Error) => new DatabaseError(`${t("error_in_connect_db")}: ${error.message}`));
+            .catch((error: Error) => new DatabaseError(`${t("database.error.connect")}: ${error.message}`));
     }
 
     // Инициализация ассоциаций (отношений) между таблицами в базе данных

@@ -130,11 +130,11 @@ export default class FileController extends EventEmitter {
             const dublicateFileUrl = (req as IRequestWithSharpData).dublicateSharpImageUrl;
 
             if (!fileUrl) {
-                throw new FileError(t("sharp_avatar_path_not_found"));
+                throw new FileError(t("photos.error.sharp_avatar_path_not_found"));
             }
 
             if (!dublicateFileUrl) {
-                throw new FileError(t("sharp_photo_path_not_found"));
+                throw new FileError(t("photos.error.sharp_photo_path_not_found"));
             }
 
             const findUser = await this._database.models.users.findByPk(userId, {
@@ -143,7 +143,7 @@ export default class FileController extends EventEmitter {
             });
 
             if (!findUser) {
-                throw new FileError(t("user_not_found"), HTTPStatuses.NotFound);
+                throw new FileError(t("users.error.user_with_id_not_found", { id: userId }), HTTPStatuses.NotFound);
             }
 
             // Если у пользователя уже существует аватар, то его необходимо удалить из БД и с диска 
@@ -206,7 +206,7 @@ export default class FileController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!imagesUrls || !imagesUrls.length) {
-                throw new FileError(t("sharp_photo_paths_not_found"));
+                throw new FileError(t("photos.error.sharp_photo_paths_not_found"));
             }
 
             const photos: { id: string; userId: string; path: string; }[] = imagesUrls.map(fileUrl => ({
@@ -246,11 +246,11 @@ export default class FileController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!fileUrl) {
-                throw new FileError(t("delete_photo_path_not_found"));
+                throw new FileError(t("photos.error.delete_photo_path_not_found"), HTTPStatuses.BadRequest);
             }
 
             if (!fs.existsSync(filePath)) {
-                throw new FileError(t("photo_not_found"), HTTPStatuses.NotFound);
+                throw new FileError(t("photos.error.photo_not_found"), HTTPStatuses.NotFound);
             }
 
             // Если это аватар, то удаляем из таблицы Users
@@ -304,7 +304,7 @@ export default class FileController extends EventEmitter {
                     return res.json({ success: true, files: prepFiles });
                 }
             } else {
-                throw new FileError(t("files_not_found"));
+                throw new FileError(t("files.error.files_not_found"), HTTPStatuses.BadRequest);
             }
         } catch (error) {
             await this._handleError(error, res, transaction);
@@ -319,7 +319,7 @@ export default class FileController extends EventEmitter {
             const { messageId }: { messageId: string; } = req.body;
 
             if (!messageId) {
-                throw new FileError(t("message_id_not_found"));
+                throw new FileError(t("messages.error.message_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             const findFilesInMessage = await this._database.models.filesInMessage.findAll({
@@ -370,7 +370,7 @@ export default class FileController extends EventEmitter {
             const { path }: { path: string; } = req.body;
 
             if (!path) {
-                throw new FileError(t("file_path_open_not_found"));
+                throw new FileError(t("files.error.file_path_open_not_found"), HTTPStatuses.BadRequest);
             }
 
             const moduleSpecifier = "open";
@@ -389,11 +389,11 @@ export default class FileController extends EventEmitter {
             const { name, path } = req.query as { name: string; path: string; };
 
             if (!path) {
-                throw new FileError(t("file_path_download_not_found"));
+                throw new FileError(t("files.error.file_path_download_not_found"), HTTPStatuses.BadRequest);
             }
 
             if (!fs.existsSync(path)) {
-                throw new FileError(t("file_not_found"), HTTPStatuses.NotFound);
+                throw new FileError(t("files.error.file_not_found"), HTTPStatuses.NotFound);
             }
 
             return res.download(path, name);
