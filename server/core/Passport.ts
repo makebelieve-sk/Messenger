@@ -6,7 +6,7 @@ import { IVerifyOptions, Strategy } from "passport-local";
 import Database from "./Database";
 import { UserInstance } from "../database/models/Users";
 import { getSafeUserFields } from "../utils/user";
-import { validPhoneNumber } from "../utils";
+import { validateEmail, validatePhoneNumber } from "../utils/auth";
 import { PassportError } from "../errors";
 import { UsersType } from "../types";
 import { ErrorTextsApi, HTTPStatuses } from "../types/enums";
@@ -79,7 +79,7 @@ export default class PassportWorks {
 
                                 done(null, user);
                             } else {
-                                done(new PassportError(`Пользователь с id=${userId} не найден`));
+                                done(new PassportError(`Пользователь с id=${userId} не найден`, HTTPStatuses.NotFound));
                             }
                         })
                         .catch((error: Error) => {
@@ -97,13 +97,21 @@ export default class PassportWorks {
     // Проверка подлинности пользователя
     private async _verify(login: string, password: string, done: DoneType) {
         try {
-            const candidateEmail = await this._database.models.users.findOne({ where: { email: login } });
-    
-            if (candidateEmail) {
-                return this._comparePasswords(candidateEmail, password, done);
+            if (!login || !password) {
+                return done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
             }
 
-            const phone = validPhoneNumber(login);
+            const email = validateEmail(login);
+
+            if (email) {
+                const candidateEmail = await this._database.models.users.findOne({ where: { email } });
+    
+                if (candidateEmail) {
+                    return this._comparePasswords(candidateEmail, password, done);
+                }
+            }
+
+            const phone = validatePhoneNumber(login);
 
             if (phone) {
                 const candidatePhone = await this._database.models.users.findOne({ where: { phone } });
