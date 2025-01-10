@@ -9,7 +9,8 @@ import { getSaveUserFields } from "../utils/user";
 import { PassportError } from "../errors";
 import { IUser } from "../types/models.types";
 import { UsersType } from "../types";
-import { ErrorTextsApi, HTTPStatuses } from "../types/enums";
+import { HTTPStatuses } from "../types/enums";
+import { t } from "../service/i18n";
 
 type DoneType = (error: PassportError | null, user?: ISaveUser | false, options?: IVerifyOptions) => void;
 
@@ -65,7 +66,7 @@ export default class PassportWorks {
 
                                 done(null, user);
                             } else {
-                                throw new PassportError(`Пользователь с id=${userId} не найден`);
+                                throw new PassportError(t("user_with_id_not_found", { id: userId }));
                             }
                         })
                         .catch((error: Error) => {
@@ -96,7 +97,8 @@ export default class PassportWorks {
                 if (candidatePhone) {
                     this._comparePasswords(candidatePhone, password, done);
                 } else {
-                    done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
+                    
+                    done(new PassportError(t("incorrect_login_or_password"), HTTPStatuses.BadRequest));
                 }
             }
         } catch (error) {
@@ -121,7 +123,7 @@ export default class PassportWorks {
     
             hashString === candidate.password
                 ? done(null, user)
-                : done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
+                : done(new PassportError(t("incorrect_login_or_password"), HTTPStatuses.BadRequest));
         });
     }
 }

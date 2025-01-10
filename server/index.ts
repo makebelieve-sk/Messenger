@@ -4,10 +4,10 @@ import "dotenv/config";
 
 import MainServer from "./core/MainServer";
 import { BaseError } from "./errors";
-import { ErrorTextsApi } from "./types/enums";
+import { initI18n, t } from "./service/i18n";
 
-const PORT = process.env.PORT;
-const MODE = process.env.NODE_ENV;
+const PORT = process.env.PORT as string;
+const MODE = process.env.NODE_ENV as string;
 
 // Запуск сервера
 function init() {
@@ -16,9 +16,9 @@ function init() {
     const mainServer = new MainServer(app, server);
 
     try {
-        server.listen(PORT, () => console.log(`Экземпляр сервера запущен на порту: ${PORT} в режиме: ${MODE}`));
+        server.listen(PORT, () => console.log(t("server_started_with_port_and_mode", { mode: MODE, port: PORT })));
     } catch (error) {
-        new BaseError(`${ErrorTextsApi.START_SERVER_ERROR}: ${error}`);
+        new BaseError(`${t("start_server_error")}: ${error}`);
 
         // Закрываем соединение с бд, сокетом и редисом
         mainServer.close();
@@ -29,7 +29,7 @@ function init() {
 
 // Обработываем пробрасываемые исключения синхронного кода
 process.on("uncaughtException", (error: Error) => {
-    new BaseError(`${ErrorTextsApi.UNHANDLED_SYNC_ERROR}: ${error.message}`);
+    new BaseError(`${t("unhandled_sync_error")}: ${error.message}`);
     console.error(error.stack);
 
     // Завершаем выполнение процесса NodeJS
@@ -38,10 +38,10 @@ process.on("uncaughtException", (error: Error) => {
 
 // Обработываем пробрасываемые исключения асинхронного кода
 process.on("unhandledRejection", (reason: string, promise: Promise<unknown>) => {
-    new BaseError(`${ErrorTextsApi.UNHANDLED_ASYNC_ERROR}: ${reason} (${promise})`);
+    new BaseError(`${t("unhandled_async_error")}: ${reason} (${promise})`);
 
     // Завершаем выполнение процесса NodeJS
     process.exit(1);
 });
 
-init();
+initI18n(init);

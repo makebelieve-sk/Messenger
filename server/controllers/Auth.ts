@@ -9,7 +9,7 @@ import { Transaction } from "sequelize";
 import { updateSessionMaxAge } from "../utils/session";
 import { getSaveUserFields } from "../utils/user";
 import { UsersType } from "../types";
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
+import { ApiRoutes, HTTPStatuses, RedisKeys } from "../types/enums";
 import { IUser } from "../types/models.types";
 import { ApiServerEvents } from "../types/events";
 import RedisWorks from "../core/Redis";
@@ -18,6 +18,7 @@ import Database from "../core/Database";
 import { AuthError } from "../errors/controllers";
 import { PassportError } from "../errors";
 import { ISaveUser } from "../database/models/Users";
+import { t } from "../service/i18n";
 
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 
@@ -75,7 +76,7 @@ export default class AuthController extends EventEmitter {
                 // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
                 await updateSessionMaxAge(req.session, Boolean(rememberMe));
     
-                throw new AuthError(ErrorTextsApi.YOU_ALREADY_AUTH, HTTPStatuses.PermanentRedirect);
+                throw new AuthError(t("you_already_auth"), HTTPStatuses.PermanentRedirect);
             }
 
             next();
@@ -95,13 +96,13 @@ export default class AuthController extends EventEmitter {
             const checkDublicateEmail = await this._database.models.users.findOne({ where: { email }, transaction });
 
             if (checkDublicateEmail) {
-                throw new AuthError(`Пользователь с почтовым адресом ${email} уже существует`, HTTPStatuses.BadRequest, { field: "email" });
+                throw new AuthError(t("user_with_email_already_exists", { email }), HTTPStatuses.BadRequest, { field: "email" });
             }
 
             const checkDublicatePhone = await this._database.models.users.findOne({ where: { phone }, transaction });
 
             if (checkDublicatePhone) {
-                throw new AuthError(`Пользователь с номером телефона ${phone} уже существует`, HTTPStatuses.BadRequest, { field: "phone" });
+                throw new AuthError(t("user_with_phone_already_exists", { phone }), HTTPStatuses.BadRequest, { field: "phone" });
             }
 
             // "Соль"
@@ -136,14 +137,14 @@ export default class AuthController extends EventEmitter {
                                             return res.json({ success: true, user });
                                         });
                                     } else {
-                                        throw new AuthError(ErrorTextsApi.ERROR_CREATING_USER_DETAILS);
+                                        throw new AuthError(t("error_creating_user_details"));
                                     }
                                 })
                                 .catch((error: Error) => {
                                     throw new AuthError(error.message);
                                 });
                         } else {
-                            throw new AuthError(ErrorTextsApi.ERROR_CREATING_USER);
+                            throw new AuthError(t("error_creating_user"));
                         }
                     })
                     .catch((error: Error) => {
@@ -166,7 +167,7 @@ export default class AuthController extends EventEmitter {
                 }
 
                 if (!req.sessionID) {
-                    throw new AuthError(ErrorTextsApi.SESSION_ID_NOT_EXISTS);
+                    throw new AuthError(t("session_id_not_exists"));
                 }
 
                 return req.logIn(user, async (error?: PassportError) => {
@@ -206,7 +207,7 @@ export default class AuthController extends EventEmitter {
                     }
 
                     if (!req.sessionID) {
-                        throw new AuthError(`Отсутствует идентификатор сессии пользователя (session=${req.session})`);
+                        throw new AuthError(t("session_id_not_exists_on_deleted_session", { session: req.session.toString() }));
                     }
 
                     // Удаляем флаг rememberMe из Redis

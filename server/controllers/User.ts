@@ -2,7 +2,7 @@ import EventEmitter from "events";
 import { Request, Response, Express } from "express";
 import { Transaction } from "sequelize";
 
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses } from "../types/enums";
+import { ApiRoutes, HTTPStatuses } from "../types/enums";
 import { ApiServerEvents } from "../types/events";
 import { IFormValues } from "../types";
 import { IUser, IUserDetails } from "../types/models.types";
@@ -11,6 +11,7 @@ import Database from "../core/Database";
 import { getSaveUserFields } from "../utils/user";
 import { UsersError } from "../errors/controllers";
 import { ISaveUser } from "../database/models/Users";
+import { t } from "../service/i18n";
 
 interface IConstructor {
     app: Express;
@@ -52,7 +53,7 @@ export default class UserController extends EventEmitter {
     private async _getMe(req: Request, res: Response) {
         try {
             if (!req.user) {
-                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound);
+                throw new UsersError(t("user_not_found"), HTTPStatuses.NotFound);
             }
 
             return res.json({ success: true, user: req.user });
@@ -69,7 +70,7 @@ export default class UserController extends EventEmitter {
             const userDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
             if (!userDetail) {
-                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound);
+                throw new UsersError(t("user_not_found_in_database"), HTTPStatuses.NotFound);
             }
 
             return res.json({ success: true, userDetail });
@@ -94,7 +95,7 @@ export default class UserController extends EventEmitter {
             const findUser = await this._database.models.users.findByPk(userId, { transaction });
 
             if (!findUser) {
-                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound);
+                throw new UsersError(t("user_not_found_in_database"), HTTPStatuses.NotFound);
             } 
 
             result.user = {
@@ -110,7 +111,7 @@ export default class UserController extends EventEmitter {
             const findUserDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
             if (!findUserDetail) {
-                throw new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound);
+                throw new UsersError(t("user_not_found_in_database"), HTTPStatuses.NotFound);
             }
 
             result.userDetails = {
@@ -136,13 +137,13 @@ export default class UserController extends EventEmitter {
             const { id }: { id: string; } = req.body;
 
             if (!id) {
-                throw new UsersError(ErrorTextsApi.USER_ID_NOT_FOUND);
+                throw new UsersError(t("user_id_not_found"));
             }
 
             const findUser = await this._database.models.users.findByPk(id);
 
             if (!findUser) {
-                throw new UsersError(`Пользователь с id=${id} не найден`);
+                throw new UsersError(t("user_with_id_not_found", { id }));
             }
 
             return res.json({ success: true, user: getSaveUserFields(findUser) });

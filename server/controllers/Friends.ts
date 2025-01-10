@@ -4,13 +4,14 @@ import { Request, Response, Express } from "express";
 import { Transaction } from "sequelize";
 
 import { getSearchWhere } from "../utils/where";
-import { ApiRoutes, ErrorTextsApi, FriendsTab } from "../types/enums";
+import { ApiRoutes, FriendsTab } from "../types/enums";
 import { IUser } from "../types/models.types";
 import { ApiServerEvents } from "../types/events";
 import { UsersType } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { FriendsError } from "../errors/controllers";
+import { t } from "../service/i18n";
 
 interface IConstructor {
     app: Express;
@@ -105,7 +106,7 @@ export default class FriendsController extends EventEmitter {
             if (friends && friends[0]) {
                 return res.json({ success: true, friendRequests: friends[0].length });
             } else {
-                throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_NOTIFICATIONS);
+                throw new FriendsError(t("not_correct_answer_get_friends_notifications"));
             }
         } catch (error) {
             this._handleError(error, res);
@@ -122,7 +123,7 @@ export default class FriendsController extends EventEmitter {
             if (possibleUsers && possibleUsers[0]) {
                 return res.json({ success: true, possibleUsers: possibleUsers[0] });
             } else {
-                throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_POSSIBLE_USERS);
+                throw new FriendsError(t("not_correct_answer_possible_users"));
             }
         } catch (error) {
             this._handleError(error, res);
@@ -212,7 +213,7 @@ export default class FriendsController extends EventEmitter {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_0);
+                        throw new FriendsError(t("not_correct_answer_get_friends_tab_0"));
                     }
                 }
                 // Получение друзей-онлайн
@@ -239,7 +240,7 @@ export default class FriendsController extends EventEmitter {
 
                         return res.json({ success: true, friends: filterUsersOnline });
                     } else {
-                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_1);
+                        throw new FriendsError(t("not_correct_answer_get_friends_tab_1"));
                     }
                 }
                 // Получение подписчиков
@@ -258,7 +259,7 @@ export default class FriendsController extends EventEmitter {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_2);
+                        throw new FriendsError(t("not_correct_answer_get_friends_tab_2"));
                     }
                 }
                 // Получение входящих заявок
@@ -268,7 +269,7 @@ export default class FriendsController extends EventEmitter {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_3);
+                        throw new FriendsError(t("not_correct_answer_get_friends_tab_3"));
                     }
                 }
                 // Получение исходящих заявок
@@ -287,7 +288,7 @@ export default class FriendsController extends EventEmitter {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_4);
+                        throw new FriendsError(t("not_correct_answer_get_friends_tab_4"));
                     }
                 }
                 // Поиск друзей
@@ -297,11 +298,11 @@ export default class FriendsController extends EventEmitter {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        throw new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_5);
+                        throw new FriendsError(t("not_correct_answer_get_friends_tab_5"));
                     }
                 }
                 default:
-                    throw new FriendsError(ErrorTextsApi.UNKNOWN_TAB);
+                    throw new FriendsError(t("unknown_tab"));
             };
         } catch (error) {
             this._handleError(error, res);
@@ -317,7 +318,7 @@ export default class FriendsController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!chatId) {
-                throw new FriendsError(ErrorTextsApi.CHAT_ID_NOT_FOUND);
+                throw new FriendsError(t("chat_id_not_found"));
             }
 
             const userIdsInChat: any = await this._database.models.chats.findOne({ 
@@ -345,7 +346,7 @@ export default class FriendsController extends EventEmitter {
                 : null;
 
             if (!friendInfo) {
-                throw new FriendsError(ErrorTextsApi.NOT_TEMPORAL_CHAT_ID);
+                throw new FriendsError(t("not_temporal_chat_id"));
             }
 
             await transaction.commit();
@@ -372,7 +373,7 @@ export default class FriendsController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!friendId) {
-                throw new FriendsError(ErrorTextsApi.SUBSCRIBED_ID_NOT_FOUND);
+                throw new FriendsError(t("subscribed_id_not_found"));
             }
 
             const existSubscriber = await this._database.models.subscribers.findOne({
@@ -407,7 +408,7 @@ export default class FriendsController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!friendId) {
-                throw new FriendsError(ErrorTextsApi.UNSUBSCRIBED_ID_NOT_FOUND);
+                throw new FriendsError(t("unsubscribed_id_not_found"));
             }
 
             await this._database.models.subscribers.destroy({
@@ -429,7 +430,7 @@ export default class FriendsController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!friendId) {
-                throw new FriendsError(ErrorTextsApi.ADD_TO_FRIEND_ID_NOT_FOUND);
+                throw new FriendsError(t("add_to_friend_id_not_found"));
             }
 
             // Удаляем пользователя из подписчиков
@@ -465,7 +466,7 @@ export default class FriendsController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!friendId) {
-                throw new FriendsError(ErrorTextsApi.LEFT_TO_SUBSCRIBED_ID_NOT_FOUND);
+                throw new FriendsError(t("left_to_subscribed_id_not_found"));
             }
 
             await this._database.models.subscribers.update(
@@ -488,7 +489,7 @@ export default class FriendsController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!friendId) {
-                throw new FriendsError(ErrorTextsApi.DELETED_ID_NOT_FOUND);
+                throw new FriendsError(t("deleted_id_not_found"));
             }
 
             await this._database.models.friends.destroy({
@@ -524,7 +525,7 @@ export default class FriendsController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!friendId) {
-                throw new FriendsError(ErrorTextsApi.BLOCKED_ID_NOT_FOUND);
+                throw new FriendsError(t("blocked_id_not_found"));
             }
 
             await this._database.models.friends.destroy({
@@ -563,7 +564,7 @@ export default class FriendsController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!checkingUser) {
-                throw new FriendsError(ErrorTextsApi.CHECK_BLOCKED_ID_NOT_FOUND);
+                throw new FriendsError(t("check_blocked_id_not_found"));
             }
 
             // Проверяем, заблокировали ли мы такого пользователя
