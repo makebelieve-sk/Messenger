@@ -2,6 +2,7 @@ import EventEmitter from "eventemitter3";
 import { io } from "socket.io-client";
 
 import SocketController from "./SocketController";
+import i18next from "../../service/i18n";
 import { SOCKET_IO_CLIENT } from "../../utils/constants";
 import { AppDispatch } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
@@ -25,7 +26,7 @@ export default class Socket extends EventEmitter {
 
     init(myUser: IUser) {
         if (!myUser) {
-            this.emit(MainClientEvents.ERROR, "Объект пользователя не существует");
+            this.emit(MainClientEvents.ERROR, i18next.t("core.socket.error.user_not_exists"));
             return;
         }
 

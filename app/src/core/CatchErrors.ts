@@ -1,7 +1,8 @@
 import EventEmitter from "eventemitter3";
 import { AxiosError } from "axios";
 
-import { setError } from "../state/error/slice";
+import i18next from "../service/i18n";
+import { setError } from "../store/error/slice";
 import { HTTPStatuses, Pages } from "../types/enums";
 import { AppDispatch } from "../types/redux.types";
 import { MainClientEvents } from "../types/events";
@@ -9,8 +10,8 @@ import { MainClientEvents } from "../types/events";
 type BadRequestType = { success: boolean; message: string; field?: string; } | string | null;
 export type CatchType = BadRequestType | string | null;
 
-const ERROR_MESSAGE = "Ошибка";
-const ERROR_TIMEOUT = "Возникли проблемы с БД или время ожидания ответа превысило 15 секунд";
+const ERROR_MESSAGE = i18next.t("core.catch-errors.error");
+const ERROR_TIMEOUT = i18next.t("core.catch-errors.error.timeout");
 
 // Класс, отвечающий за обработку ошибок. Обрабатывает как ошибки по HTTP API, так и прочие ошибки, возникающие на стороне клиента
 export default class CatchErrors extends EventEmitter {

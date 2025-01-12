@@ -5,7 +5,7 @@ import { CallStatus } from "./enums";
 import store from "../state/store";
 import { IMessage, IPhoto, IUser, IUserDetails } from "./models.types";
 import { ICallData } from "./socket.types";
-import { ICarouselImage } from "../modules/ImagesCarousel/Info";
+import { ICarouselImage } from "../modules/ImagesCarousel/Info/Info";
 // import { IImage } from "../components/message-types/image-message";
 
 export type InitialStateType = {

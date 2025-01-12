@@ -1,18 +1,20 @@
-import React from "react";
+import { useState, memo } from "react";
+import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
 import { useAppSelector } from "../../../hooks/useGlobalState";
 import useProfile from "../../../hooks/useProfile";
-import { selectUserState } from "../../../state/user/slice";
-import ChangeAvatar from "../../../components/ChangeAvatar";
-import Photo from "../../../components/Common/Photo";
+import { selectUserState } from "../../../store/user/slice";
+import ChangeAvatarComponent from "../../../components/ui/ChangeAvatar";
+import PhotoComponent from "../../../components/ui/Photo";
 
 import "./main-photo.scss";
 
-export default React.memo(function MainPhoto() {
-    const [loading, setLoading] = React.useState(false);
+export default memo(function MainPhoto() {
+    const [loading, setLoading] = useState(false);
 
+    const { t } = useTranslation();
     const { user } = useAppSelector(selectUserState);
     const profile = useProfile();
     
@@ -33,7 +35,7 @@ export default React.memo(function MainPhoto() {
 
     return <Grid item>
         <Paper className="main-photo paper-block">
-            <Photo
+            <PhotoComponent
                 src={user.avatarUrl}
                 alt="user-avatar"
                 clickHandler={onClickMainPhoto}
@@ -41,8 +43,8 @@ export default React.memo(function MainPhoto() {
             />
 
             <div className="main-photo__edit-button">
-                <ChangeAvatar
-                    labelText="Изменить"
+                <ChangeAvatarComponent
+                    labelText={t("profile-module.change")}
                     loading={loading}
                     mustAuth
                     onChange={onSetAvatar}

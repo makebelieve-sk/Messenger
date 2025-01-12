@@ -1,19 +1,20 @@
 import i18next from "i18next";
-import Backend from "i18next-fs-backend";
 import middleware from "i18next-http-middleware";
 
+import ru from "../locales/ru.json";
+import en from "../locales/en.json";
 import { BaseError } from "../errors";
 
 function initI18n(cb: Function) {
   // Настройка интернациональности
   i18next
-    .use(Backend)                             // Подключаем backend для чтения файлов
-    .use(middleware.LanguageDetector)         // Middleware для автоматического определения языка
+    .use(middleware.LanguageDetector)         // Middleware для автоматического определения языка пользователя из заголовков запроса (Accept-Language и тп)
     .init({
       fallbackLng: "ru",                      // Язык по умолчанию
       preload: ["ru", "en"],                  // Предзагрузка переводов
-      backend: {
-        loadPath: "./locales/{{lng}}.json"    // Путь к переводам
+      resources: {
+        ru: { translation: ru },
+        en: { translation: en },
       }
     }, (error: Error) => {
       if (error) {

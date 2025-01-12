@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 
@@ -8,7 +8,7 @@ import Friends from "../modules/Profile/Friends";
 import PersonalInfo from "../modules/Profile/PersonalInfo";
 import Photos from "../modules/Profile/Photos";
 
-export default React.memo(function Profile() {
+export default memo(function Profile() {
     const navigate = useNavigate();
 
     // Клик по названию блока
