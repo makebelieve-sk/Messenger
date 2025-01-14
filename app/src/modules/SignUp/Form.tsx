@@ -1,4 +1,5 @@
-import React from "react";
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -22,11 +23,13 @@ interface ISignUpForm {
 	) => void;
 }
 
-export default React.memo(function SignUpForm({
+export default memo(function SignUpForm({
 	formValues,
 	setFormValues,
 	onChange,
 }: ISignUpForm) {
+	const { t } = useTranslation();
+
 	const checkPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormValues({
 			values: {
@@ -40,14 +43,14 @@ export default React.memo(function SignUpForm({
 					e.target.value === formValues.values.password
 						? ""
 						: e.target.value !== formValues.values.password
-						? "Введенные пароли не совпадают"
+						? t("sign-up-module.password_incorrect")
 						: REQUIRED_FIELD,
 				passwordConfirm:
 					e.target.value &&
 					e.target.value === formValues.values.password
 						? ""
 						: e.target.value !== formValues.values.password
-						? "Введенные пароли не совпадают"
+						? t("sign-up-module.password_incorrect")
 						: REQUIRED_FIELD,
 			},
 		});
@@ -56,7 +59,7 @@ export default React.memo(function SignUpForm({
 	const validateFullName = (value: string) => {
 		return value
 			? value.length < 3
-				? "Длина поля должна быть не менее 3 символов"
+				? t("sign-up-module.short_password")
 				: ""
 			: REQUIRED_FIELD;
 	};
@@ -65,7 +68,7 @@ export default React.memo(function SignUpForm({
 		return value
 			? emailCheck(value)
 				? ""
-				: "Не верный формат электронной почты (пример: test01@gmail.com)"
+				: t("sign-up-module.incorrect_email")
 			: REQUIRED_FIELD;
 	};
 
@@ -76,7 +79,7 @@ export default React.memo(function SignUpForm({
 			return numbersCount &&
 				numbersCount.length &&
 				numbersCount.length !== numberLength
-				? `Длина номера телефона должна быть ${numberLength} символов`
+				? t("sign-up-module.phone_length", { length: numberLength })
 				: "";
 		}
 
@@ -87,7 +90,7 @@ export default React.memo(function SignUpForm({
 		return value
 			? value === formValues.values.passwordConfirm
 				? ""
-				: "Введенные пароли не совпадают"
+				: t("sign-up-module.password_incorrect")
 			: REQUIRED_FIELD;
 	};
 
@@ -100,25 +103,22 @@ export default React.memo(function SignUpForm({
 						name="firstName"
 						margin="normal"
 						variant="outlined"
-						label="Имя"
-						autoComplete="Имя"
+						label={t("sign-up-module.name")}
+						autoComplete={t("sign-up-module.name")}
 						required
 						fullWidth
 						autoFocus
 						error={Boolean(formValues.errors.firstName)}
-						helperText={
-							formValues.errors.firstName
-								? formValues.errors.firstName
-								: null
+						helperText={formValues.errors.firstName
+							? formValues.errors.firstName
+							: null
 						}
 						value={formValues.values.firstName}
-						onChange={(e) =>
-							onChange(
-								"firstName",
-								e.target.value,
-								validateFullName
-							)
-						}
+						onChange={e => onChange(
+							"firstName",
+							e.target.value,
+							validateFullName
+						)}
 					/>
 				</Grid>
 
@@ -128,24 +128,21 @@ export default React.memo(function SignUpForm({
 						name="thirdName"
 						margin="normal"
 						variant="outlined"
-						label="Фамилия"
-						autoComplete="Фамилия"
+						label={t("sign-up-module.surName")}
+						autoComplete={t("sign-up-module.surName")}
 						required
 						fullWidth
 						error={Boolean(formValues.errors.thirdName)}
-						helperText={
-							formValues.errors.thirdName
-								? formValues.errors.thirdName
-								: null
+						helperText={formValues.errors.thirdName
+							? formValues.errors.thirdName
+							: null
 						}
 						value={formValues.values.thirdName}
-						onChange={(e) =>
-							onChange(
-								"thirdName",
-								e.target.value,
-								validateFullName
-							)
-						}
+						onChange={e => onChange(
+							"thirdName",
+							e.target.value,
+							validateFullName
+						)}
 					/>
 				</Grid>
 
@@ -156,20 +153,17 @@ export default React.memo(function SignUpForm({
 						margin="normal"
 						type="email"
 						variant="outlined"
-						label="Электронная почта"
-						autoComplete="Электронная почта"
+						label={t("sign-up-module.email")}
+						autoComplete={t("sign-up-module.email")}
 						required
 						fullWidth
 						error={Boolean(formValues.errors.email)}
-						helperText={
-							formValues.errors.email
-								? formValues.errors.email
-								: null
+						helperText={formValues.errors.email
+							? formValues.errors.email
+							: null
 						}
 						value={formValues.values.email}
-						onChange={(e) =>
-							onChange("email", e.target.value, validateEmail)
-						}
+						onChange={e => onChange("email", e.target.value, validateEmail)}
 					/>
 				</Grid>
 
@@ -178,23 +172,19 @@ export default React.memo(function SignUpForm({
 						country="ru"
 						inputProps={{
 							id: "phone",
-							name: "Телефон",
+							name: t("sign-up-module.phone"),
 							type: "tel",
 							required: true,
 						}}
-						placeholder="Телефон"
-						searchPlaceholder="Поиск"
-						searchNotFound="Совпадений нет"
-						containerClass={`phone-input ${
-							formValues.errors.phone ? "phone-input__error" : ""
-						}`}
-						specialLabel="Телефон * "
+						placeholder={t("sign-up-module.phone")}
+						searchPlaceholder={t("sign-up-module.search")}
+						searchNotFound={t("sign-up-module.no_coincidences")}
+						containerClass={`phone-input ${formValues.errors.phone ? "phone-input__error" : ""}`}
+						specialLabel={t("sign-up-module.phone_number")}
 						value={formValues.values.phone}
-						onChange={(value, country) =>
-							onChange("phone", value, () =>
-								validatePhone(value, country as CountryData)
-							)
-						}
+						onChange={(value, country) => onChange("phone", value, () =>
+							validatePhone(value, country as CountryData)
+						)}
 					/>
 					<div className="phone-text__error">
 						{formValues.errors.phone
@@ -210,25 +200,22 @@ export default React.memo(function SignUpForm({
 						margin="normal"
 						type="password"
 						variant="outlined"
-						label="Пароль"
-						autoComplete="Пароль"
+						label={t("sign-up-module.password")}
+						autoComplete={t("sign-up-module.password")}
 						required
 						fullWidth
 						error={Boolean(formValues.errors.password)}
-						helperText={
-							formValues.errors.password
-								? formValues.errors.password
-								: null
+						helperText={formValues.errors.password
+							? formValues.errors.password
+							: null
 						}
 						value={formValues.values.password}
-						onChange={(e) =>
-							onChange(
-								"password",
-								e.target.value,
-								validatePassword,
-								"passwordConfirm"
-							)
-						}
+						onChange={e => onChange(
+							"password",
+							e.target.value,
+							validatePassword,
+							"passwordConfirm"
+						)}
 					/>
 				</Grid>
 
@@ -239,15 +226,14 @@ export default React.memo(function SignUpForm({
 						margin="normal"
 						type="password"
 						variant="outlined"
-						label="Повторите пароль"
-						autoComplete="Повторите пароль"
+						label={t("sign-up-module.repeat_password")}
+						autoComplete={t("sign-up-module.repeat_password")}
 						required
 						fullWidth
 						error={Boolean(formValues.errors.passwordConfirm)}
-						helperText={
-							formValues.errors.passwordConfirm
-								? formValues.errors.passwordConfirm
-								: null
+						helperText={formValues.errors.passwordConfirm
+							? formValues.errors.passwordConfirm
+							: null
 						}
 						value={formValues.values.passwordConfirm}
 						onChange={checkPassword}

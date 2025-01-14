@@ -3,13 +3,14 @@ import path from "path";
 import EventEmitter from "events";
 
 import RedisWorks from "./Redis";
-import { ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
+import { HTTPStatuses, RedisKeys } from "../types/enums";
 import { IUser } from "../types/models.types";
 import { IRequestWithImagesSharpData, IRequestWithSharpData } from "../types/express.types";
 import { ApiServerEvents } from "../types/events";
 import { MiddlewareError } from "../errors";
 import { createSharpedFile } from "../utils/files";
 import { updateSessionMaxAge } from "../utils/session";
+import { t } from "../service/i18n";
 
 // Класс, отвечает за выполнение мидлваров для HTTP-запросов
 export default class Middleware extends EventEmitter {
@@ -21,11 +22,11 @@ export default class Middleware extends EventEmitter {
     async mustAuthenticated(req: Request, res: Response, next: NextFunction) {
         try {
             if (!req.isAuthenticated()) {
-                throw new MiddlewareError(ErrorTextsApi.NOT_AUTH_OR_TOKEN_EXPIRED, HTTPStatuses.Unauthorized);
+                throw new MiddlewareError(t("auth.error.not_auth_or_token_expired"), HTTPStatuses.Unauthorized);
             }
 
             if (!req.user) {
-                throw new MiddlewareError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound);
+                throw new MiddlewareError(t("users.error.user_not_found"), HTTPStatuses.NotFound);
             }
 
             // Получаем поле rememberMe из Redis
@@ -61,7 +62,7 @@ export default class Middleware extends EventEmitter {
             const files = req.files as Express.Multer.File[];
 
             if (!files || !files.length) {
-                throw new MiddlewareError(ErrorTextsApi.PHOTOS_NOT_FOUND);
+                throw new MiddlewareError(t("photos.error.photo_not_found"), HTTPStatuses.BadRequest);
             }
 
             Promise
@@ -77,7 +78,7 @@ export default class Middleware extends EventEmitter {
                     next();
                 })
                 .catch((error: Error) => {
-                    throw new MiddlewareError(`Возникла ошибка при обрезке изображений: ${error.message}`);
+                    throw new MiddlewareError(`${t("photos.error.sharped_photo_with_error")}: ${error.message}`);
                 });
         } catch (error) {
             this._handleError(error, res);
@@ -90,7 +91,7 @@ export default class Middleware extends EventEmitter {
             const file = req.file;
 
             if (!file) {
-                throw new MiddlewareError(ErrorTextsApi.PHOTO_NOT_GIVEN, HTTPStatuses.NotFound);
+                throw new MiddlewareError(t("photos.error.photo_not_given"), HTTPStatuses.BadRequest);
             }
 
             const { folderPath, outputFile } = await createSharpedFile(file);

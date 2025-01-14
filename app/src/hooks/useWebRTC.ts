@@ -1,15 +1,16 @@
 import React from "react";
 import freeice from "freeice";
+
 import { CallStatus, MessageTypes, SettingType, SocketActions } from "../types/enums";
 import useStateWithCallback from "./useStateWithCallback";
-import { selectCallsState, setChatInfo, setLocalStream, setModalVisible, setStatus, setUsers } from "../state/calls/slice";
+import { selectCallsState, setChatInfo, setLocalStream, setModalVisible, setStatus, setUsers } from "../store/calls/slice";
 import { useAppDispatch, useAppSelector } from "./useGlobalState";
-import { selectUserState } from "../state/user/slice";
+import { selectUserState } from "../store/user/slice";
 import { AppDispatch } from "../types/redux.types";
-import { setSystemError } from "../state/error/slice";
+import { setSystemError } from "../store/error/slice";
 import { getFullName } from "../utils";
 import { IUser } from "../types/models.types";
-import { MainClientContext } from "../service/AppService";
+import { MainClientContext } from "../components/main/Main";
 
 const LOCAL_VIDEO = "LOCAL_VIDEO";
 

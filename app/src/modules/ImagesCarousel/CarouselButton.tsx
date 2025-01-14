@@ -1,4 +1,5 @@
-import React from "react";
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import Button from "@mui/material/Button";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
@@ -9,11 +10,13 @@ interface ICarouselButton {
     handleClick: () => void;
 };
 
-export default React.memo(function CarouselButton({ next, isDisabled, handleClick }: ICarouselButton) {
+export default memo(function CarouselButton({ next, isDisabled, handleClick }: ICarouselButton) {
+    const { t } = useTranslation();
+
     return <Button size="small" onClick={handleClick} disabled={isDisabled}>
         {next
-            ? <>Далее <KeyboardArrowRight /></>
-            : <><KeyboardArrowLeft /> Назад</>
+            ? <>{ t("images-carousel-module.further") } <KeyboardArrowRight /></>
+            : <><KeyboardArrowLeft /> { t("images-carousel-module.back") }</>
         }
     </Button>
 });

@@ -6,7 +6,7 @@ import path from "path";
 import { Op, Transaction } from "sequelize";
 import { Request, Response, NextFunction, Express } from "express";
 
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses } from "../types/enums";
+import { ApiRoutes, HTTPStatuses } from "../types/enums";
 import { IUser } from "../types/models.types";
 import { IRequestWithImagesSharpData, IRequestWithSharpData } from "../types/express.types";
 import { ApiServerEvents } from "../types/events";
@@ -15,6 +15,7 @@ import Database from "../core/Database";
 import { FileError } from "../errors/controllers";
 import { ASSETS_PATH } from "../utils/files";
 import { currentDate } from "../utils/datetime";
+import { t } from "../service/i18n";
 
 interface IConstructor {
     app: Express;
@@ -129,11 +130,11 @@ export default class FileController extends EventEmitter {
             const dublicateFileUrl = (req as IRequestWithSharpData).dublicateSharpImageUrl;
 
             if (!fileUrl) {
-                throw new FileError(ErrorTextsApi.SHARP_AVATAR_PATH_NOT_FOUND);
+                throw new FileError(t("photos.error.sharp_avatar_path_not_found"));
             }
 
             if (!dublicateFileUrl) {
-                throw new FileError(ErrorTextsApi.SHARP_PHOTO_PATH_NOT_FOUND);
+                throw new FileError(t("photos.error.sharp_photo_path_not_found"));
             }
 
             const findUser = await this._database.models.users.findByPk(userId, {
@@ -142,7 +143,7 @@ export default class FileController extends EventEmitter {
             });
 
             if (!findUser) {
-                throw new FileError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound);
+                throw new FileError(t("users.error.user_with_id_not_found", { id: userId }), HTTPStatuses.NotFound);
             }
 
             // Если у пользователя уже существует аватар, то его необходимо удалить из БД и с диска 
@@ -205,7 +206,7 @@ export default class FileController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!imagesUrls || !imagesUrls.length) {
-                throw new FileError(ErrorTextsApi.SHARP_PHOTO_PATHS_NOT_FOUND);
+                throw new FileError(t("photos.error.sharp_photo_paths_not_found"));
             }
 
             const photos: { id: string; userId: string; path: string; }[] = imagesUrls.map(fileUrl => ({
@@ -245,11 +246,11 @@ export default class FileController extends EventEmitter {
             const userId = (req.user as IUser).id;
 
             if (!fileUrl) {
-                throw new FileError(ErrorTextsApi.DELETE_PHOTO_PATH_NOT_FOUND);
+                throw new FileError(t("photos.error.delete_photo_path_not_found"), HTTPStatuses.BadRequest);
             }
 
             if (!fs.existsSync(filePath)) {
-                throw new FileError(ErrorTextsApi.PHOTO_NOT_FOUND, HTTPStatuses.NotFound);
+                throw new FileError(t("photos.error.photo_not_found"), HTTPStatuses.NotFound);
             }
 
             // Если это аватар, то удаляем из таблицы Users
@@ -303,7 +304,7 @@ export default class FileController extends EventEmitter {
                     return res.json({ success: true, files: prepFiles });
                 }
             } else {
-                throw new FileError(ErrorTextsApi.FILES_NOT_FOUND);
+                throw new FileError(t("files.error.files_not_found"), HTTPStatuses.BadRequest);
             }
         } catch (error) {
             await this._handleError(error, res, transaction);
@@ -318,7 +319,7 @@ export default class FileController extends EventEmitter {
             const { messageId }: { messageId: string; } = req.body;
 
             if (!messageId) {
-                throw new FileError(ErrorTextsApi.MESSAGE_ID_NOT_FOUND);
+                throw new FileError(t("messages.error.message_id_not_found"), HTTPStatuses.BadRequest);
             }
 
             const findFilesInMessage = await this._database.models.filesInMessage.findAll({
@@ -369,7 +370,7 @@ export default class FileController extends EventEmitter {
             const { path }: { path: string; } = req.body;
 
             if (!path) {
-                throw new FileError(ErrorTextsApi.FILE_PATH_OPEN_NOT_FOUND);
+                throw new FileError(t("files.error.file_path_open_not_found"), HTTPStatuses.BadRequest);
             }
 
             const moduleSpecifier = "open";
@@ -388,11 +389,11 @@ export default class FileController extends EventEmitter {
             const { name, path } = req.query as { name: string; path: string; };
 
             if (!path) {
-                throw new FileError(ErrorTextsApi.FILE_PATH_DOWNLOAD_NOT_FOUND);
+                throw new FileError(t("files.error.file_path_download_not_found"), HTTPStatuses.BadRequest);
             }
 
             if (!fs.existsSync(path)) {
-                throw new FileError(ErrorTextsApi.FILE_NOT_FOUND, HTTPStatuses.NotFound);
+                throw new FileError(t("files.error.file_not_found"), HTTPStatuses.NotFound);
             }
 
             return res.download(path, name);
