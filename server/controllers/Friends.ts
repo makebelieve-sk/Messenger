@@ -2,8 +2,9 @@ import { v4 as uuid } from "uuid";
 import { Request, Response, Express, NextFunction } from "express";
 import { Transaction } from "sequelize";
 
+import { t } from "../service/i18n";
 import { getSearchWhere } from "../utils/where";
-import { ApiRoutes, ErrorTextsApi, FriendsTab } from "../types/enums";
+import { ApiRoutes, FriendsTab, HTTPStatuses } from "../types/enums";
 import { ISafeUser } from "../types/user.types";
 import { UsersType } from "../types";
 import Middleware from "../core/Middleware";
@@ -78,7 +79,7 @@ export default class FriendsController {
             if (friends && friends[0]) {
                 res.json({ success: true, friendRequests: friends[0].length });
             } else {
-                return next(new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_NOTIFICATIONS));
+                return next(new FriendsError(t("friends.error.get_friends_count")));
             }
         } catch (error) {
             next(error);
@@ -95,7 +96,7 @@ export default class FriendsController {
             if (possibleUsers && possibleUsers[0]) {
                 res.json({ success: true, possibleUsers: possibleUsers[0] });
             } else {
-                return next(new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_POSSIBLE_USERS));
+                return next(new FriendsError(t("friends.error.get_possible_friends")));
             }
         } catch (error) {
             next(error);
@@ -186,7 +187,7 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        return next(new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_0));
+                        return next(new FriendsError(t("friends.error.get_all_friends")));
                     }
                 }
                 // Получение друзей-онлайн
@@ -213,7 +214,7 @@ export default class FriendsController {
 
                         return res.json({ success: true, friends: filterUsersOnline });
                     } else {
-                        return next(new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_1));
+                        return next(new FriendsError(t("friends.error.get_friends_online")));
                     }
                 }
                 // Получение подписчиков
@@ -232,7 +233,7 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        return next(new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_2));
+                        return next(new FriendsError(t("friends.error.get_subscribers")));
                     }
                 }
                 // Получение входящих заявок
@@ -242,7 +243,7 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        return next(new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_3));
+                        return next(new FriendsError(t("friends.error.get_incoming_requests")));
                     }
                 }
                 // Получение исходящих заявок
@@ -261,7 +262,7 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        return next(new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_4));
+                        return next(new FriendsError(t("friends.error.get_outgoing_requests")));
                     }
                 }
                 // Поиск друзей
@@ -271,11 +272,11 @@ export default class FriendsController {
                     if (friends && friends[0]) {
                         return res.json({ success: true, friends: friends[0] });
                     } else {
-                        return next(new FriendsError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_FRIENDS_TAB_5));
+                        return next(new FriendsError(t("friends.error.search_friends")));
                     }
                 }
                 default:
-                    return next(new FriendsError(ErrorTextsApi.UNKNOWN_TAB));
+                    return next(new FriendsError(t("friends.error.unknown_type_friends"), HTTPStatuses.BadRequest));
             };
         } catch (error) {
             next(error);
@@ -291,7 +292,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!chatId) {
-                return next(new FriendsError(ErrorTextsApi.CHAT_ID_NOT_FOUND));
+                return next(new FriendsError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const userIdsInChat: any = await this._database.models.chats.findOne({ 
@@ -319,7 +320,7 @@ export default class FriendsController {
                 : null;
 
             if (!friendInfo) {
-                return next(new FriendsError(ErrorTextsApi.NOT_TEMPORAL_CHAT_ID));
+                return next(new FriendsError(t("friends.error.friend_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             await transaction.commit();
@@ -347,7 +348,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
-                return next(new FriendsError(ErrorTextsApi.SUBSCRIBED_ID_NOT_FOUND));
+                return next(new FriendsError(t("friends.error.subscribed_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const existSubscriber = await this._database.models.subscribers.findOne({
@@ -383,7 +384,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
-                return next(new FriendsError(ErrorTextsApi.UNSUBSCRIBED_ID_NOT_FOUND));
+                return next(new FriendsError(t("friends.error.unsubscribed_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             await this._database.models.subscribers.destroy({
@@ -405,7 +406,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
-                return next(new FriendsError(ErrorTextsApi.ADD_TO_FRIEND_ID_NOT_FOUND));
+                return next(new FriendsError(t("friends.error.added_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             // Удаляем пользователя из подписчиков
@@ -444,7 +445,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
-                return next(new FriendsError(ErrorTextsApi.LEFT_TO_SUBSCRIBED_ID_NOT_FOUND));
+                return next(new FriendsError(t("friends.error.left_to_subscribed_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             await this._database.models.subscribers.update(
@@ -467,7 +468,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
-                return next(new FriendsError(ErrorTextsApi.DELETED_ID_NOT_FOUND));
+                return next(new FriendsError(t("friends.error.deleted_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             await this._database.models.friends.destroy({
@@ -504,7 +505,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
-                return next(new FriendsError(ErrorTextsApi.BLOCKED_ID_NOT_FOUND));
+                return next(new FriendsError(t("friends.error.blocked_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             await this._database.models.friends.destroy({
@@ -544,7 +545,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!checkingUser) {
-                return next(new FriendsError(ErrorTextsApi.CHECK_BLOCKED_ID_NOT_FOUND));
+                return next(new FriendsError(t("friends.error.check_blocked_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             // Проверяем, заблокировали ли мы такого пользователя

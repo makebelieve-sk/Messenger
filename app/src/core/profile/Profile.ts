@@ -2,9 +2,9 @@ import EventEmitter from "eventemitter3";
 
 import Request from "../Request";
 import User from "../models/User";
-import { setImagesInCarousel, setModalConfirm } from "../../state/main/slice";
-import { addPhotos, deletePhoto, setPhotos, setPhotosCount } from "../../state/user/slice";
-import { setFriendsCount, setSubscribersCount, setTopFriends } from "../../state/friends/slice";
+import { setImagesInCarousel, setModalConfirm } from "../../store/main/slice";
+import { addPhotos, deletePhoto, setPhotos, setPhotosCount } from "../../store/user/slice";
+import { setFriendsCount, setSubscribersCount, setTopFriends } from "../../store/friends/slice";
 import { ApiRoutes } from "../../types/enums";
 import { IPhoto, IUser, IUserDetails } from "../../types/models.types";
 import { AppDispatch } from "../../types/redux.types";

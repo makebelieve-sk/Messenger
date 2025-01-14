@@ -1,8 +1,9 @@
+import i18next from "../../service/i18n";
 import { IUserDetails } from "../../types/models.types";
 import { muchSelected } from "../../utils";
 import { getMonthName } from "../../utils/time";
 
-const NOT_COMPLITE = "Не указано";
+const NOT_COMPLITE = i18next.t("profile-module.not_complete");
 
 // Класс, описывающий сущность "Дополнительная информация о пользователе"
 export default class UserDetails {
@@ -49,26 +50,46 @@ export default class UserDetails {
 
     // Получение текста для разного количества друзей
     getFriendsText(count: number) {
-        return this._getText(count, ["друг", "друга", "друзей"]);
+        return this._getText(count, [
+            i18next.t("profile-module.friends_count_0"), 
+            i18next.t("profile-module.friends_count_1"), 
+            i18next.t("profile-module.friends_count_2")
+        ]);
     }
 
     // Получение текста для разного количества подписчиков
     getSubscribersText(count: number) {
-        return this._getText(count, ["подписчик", "подписчика", "подписчиков"]);
+        return this._getText(count, [
+            i18next.t("profile-module.subscribers_count_0"), 
+            i18next.t("profile-module.subscribers_count_1"), 
+            i18next.t("profile-module.subscribers_count_2")
+        ]);
     }
 
     // Получение текста для разного количества фотографий
     getPhotosText(count: number) {
-        return this._getText(count, ["фотография", "фотографии", "фотографий"]);
+        return this._getText(count, [
+            i18next.t("profile-module.photos_count_0"), 
+            i18next.t("profile-module.photos_count_1"), 
+            i18next.t("profile-module.photos_count_2")
+        ]);
     }
 
     // Получение текста для разного количества аудиозаписей
     getAudiosText(count: number) {
-        return this._getText(count, ["аудиозапись", "аудиозаписи", "аудиозаписей"]);
+        return this._getText(count, [
+            i18next.t("profile-module.audios_count_0"), 
+            i18next.t("profile-module.audios_count_1"), 
+            i18next.t("profile-module.audios_count_2")
+        ]);
     }
 
     // Получение текста для разного количества видеозаписей
     getVideosText(count: number) {
-        return this._getText(count, ["видеозапись", "видеозаписи", "видеозаписей"]);
+        return this._getText(count, [
+            i18next.t("profile-module.videos_count_0"), 
+            i18next.t("profile-module.videos_count_1"), 
+            i18next.t("profile-module.videos_count_2")
+        ]);
     }
 }

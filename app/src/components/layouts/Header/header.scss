@@ -1,0 +1,44 @@
+@use "../../../styles/variables.scss" as *;
+@use "../../../styles/colors.scss" as *;
+
+.header {
+    background: $white;
+    height: $headerHeight;
+
+    .header-container {
+        width: $contentWidth;
+        max-width: $contentWidth;
+        color: $black;
+        height: inherit;
+        line-height: $headerHeight;
+        margin: 0 auto;
+
+        &__toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: inherit;
+
+            &__logo {
+                display: flex;
+                align-items: center;
+                padding: 0 10px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            &__avatar {
+                height: inherit;
+                line-height: $headerHeight;
+                display: flex;
+                align-items: center;
+                
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

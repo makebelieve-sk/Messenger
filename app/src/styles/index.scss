@@ -1,2 +1,2 @@
-@import "./globals.scss";
-@import "./ui.scss";
+@use "./globals.scss" as *;
+@use "./ui.scss" as *;

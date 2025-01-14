@@ -1,0 +1,13 @@
+@use "../../../styles/colors.scss" as *;
+
+.spinner {
+    width: 100%;
+    min-height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: $spinnerBackground;
+}

@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction, Express } from "express";
 import path from "path";
 
+import { t } from "../service/i18n";
 import RedisWorks from "./Redis";
-import { ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
+import { HTTPStatuses, RedisKeys } from "../types/enums";
 import { IRequestWithShapedImages, IRequestWithSharpedAvatar } from "../types/express.types";
 import { ISafeUser } from "../types/user.types";
-import { BaseError, MiddlewareError } from "../errors";
-import { AuthError } from "../errors/controllers";
 import { createSharpedImage } from "../utils/files";
 import { updateSessionMaxAge } from "../utils/session";
+import { AuthError } from "../errors/controllers";
+import { BaseError, MiddlewareError } from "../errors";
 
 // Класс, отвечает за выполнение мидлваров для HTTP-запросов
 export default class Middleware {
@@ -20,11 +21,11 @@ export default class Middleware {
             const user = req.user as ISafeUser;
 
             if (!req.isAuthenticated()) {
-                return next(new MiddlewareError(ErrorTextsApi.NOT_AUTH_OR_TOKEN_EXPIRED, HTTPStatuses.Unauthorized));
+                return next(new MiddlewareError(t("auth.error.not_auth_or_token_expired"), HTTPStatuses.Unauthorized));
             }
 
             if (!user) {
-                return next(new MiddlewareError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound));
+                return next(new MiddlewareError(t("users.error.user_not_found"), HTTPStatuses.NotFound));
             }
 
             // Получаем поле rememberMe из Redis
@@ -90,7 +91,7 @@ export default class Middleware {
             const files = req.files as Express.Multer.File[];
 
             if (!files || !files.length) {
-                return next(new MiddlewareError(ErrorTextsApi.PHOTOS_NOT_FOUND));
+                return next(new MiddlewareError(t("photos.error.photo_not_found"), HTTPStatuses.BadRequest));
             }
 
             Promise
@@ -106,7 +107,7 @@ export default class Middleware {
                     next();
                 })
                 .catch((error: Error) => {
-                    return next(new MiddlewareError(`Возникла ошибка при обрезке изображений: ${error.message}`));
+                    return next(new MiddlewareError(t("photos.error.sharped_photo_with_error", { errorMessage: error.message })));
                 });
         } catch (error) {
             next(error);
@@ -119,7 +120,7 @@ export default class Middleware {
             const file = req.file;
 
             if (!file) {
-                throw new MiddlewareError(ErrorTextsApi.PHOTO_NOT_GIVEN, HTTPStatuses.NotFound);
+                throw new MiddlewareError(t("photos.error.photo_not_given"), HTTPStatuses.BadRequest);
             }
 
             const { folderPath, outputFile } = await createSharpedImage(file);

@@ -1,17 +1,18 @@
-import React from "react";
+import { useState, useEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
-import { useAppSelector } from "../../../hooks/useGlobalState";
 import useProfile from "../../../hooks/useProfile";
 import useUser from "../../../hooks/useUser";
 import useUserDetails from "../../../hooks/useUserDetails";
-import { selectFriendState } from "../../../state/friends/slice";
-import { selectUserState } from "../../../state/user/slice";
+import { useAppSelector } from "../../../hooks/useGlobalState";
+import { selectFriendState } from "../../../store/friends/slice";
+import { selectUserState } from "../../../store/user/slice";
 import { FriendsTab, MainFriendTabs, Pages } from "../../../types/enums";
 import { onClickBlockType } from "../Friends";
-import Spinner from "../../../components/Common/Spinner";
+import SpinnerComponent from "../../../components/ui/Spinner";
 
 import "./personal-info.scss";
 
@@ -19,19 +20,20 @@ interface IPersonalInfo {
     onClickBlock: onClickBlockType;
 };
 
-export default React.memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
-    const [loading, setLoading] = React.useState(false);
+export default memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
+    const [loading, setLoading] = useState(false);
 
     const { photosCount } = useAppSelector(selectUserState);
     const { friendsCount, subscribersCount } = useAppSelector(selectFriendState);
 
+    const { t } = useTranslation();
     const profile = useProfile();
     const { fullName } = useUser();
     const userDetails = useUserDetails();
     const navigate = useNavigate();
 
     // Получаем детальную информацию о пользователе
-    React.useEffect(() => {
+    useEffect(() => {
         profile.getUserDetail(setLoading);
     }, []);
 
@@ -43,24 +45,24 @@ export default React.memo(function PersonalInfo({ onClickBlock }: IPersonalInfo)
 
             <div className="info-container__short-info-block">
                 <div className="info-container__short-info-block__edit" onClick={() => navigate(Pages.edit)}>
-                    Редактировать
+                    { t("profile-module.edit") }
                 </div>
 
                 {loading
-                    ? <Spinner />
+                    ? <SpinnerComponent />
                     : <>
                         <div className="info-container__short-info-block__row">
-                            <div className="info-container__short-info-block__row__title">День рождения:</div>
+                            <div className="info-container__short-info-block__row__title">{ t("profile-module.birthday") }:</div>
                             <span>{userDetails.birthday}</span>
                         </div>
 
                         <div className="info-container__short-info-block__row">
-                            <div className="info-container__short-info-block__row__title">Город:</div>
+                            <div className="info-container__short-info-block__row__title">{ t("profile-module.city") }:</div>
                             <span>{userDetails.city}</span>
                         </div>
 
                         <div className="info-container__short-info-block__row">
-                            <div className="info-container__short-info-block__row__title">Место работы:</div>
+                            <div className="info-container__short-info-block__row__title">{ t("profile-module.work") }:</div>
                             <span>{userDetails.work}</span>
                         </div>
                     </>

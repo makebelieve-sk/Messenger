@@ -1,5 +1,5 @@
-@import "../colors.scss";
-@import "../variables.scss";
+@use "../colors.scss" as *;
+@use "../variables.scss" as *;
 
 .signUpForm {
 	display: flex;

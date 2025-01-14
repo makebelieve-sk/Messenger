@@ -3,15 +3,16 @@ import crypto from "crypto";
 import Passport, { PassportStatic } from "passport";
 import { IVerifyOptions, Strategy } from "passport-local";
 
+import { t } from "../service/i18n";
 import Database from "./Database";
 import { UserInstance } from "../database/models/Users";
 import { getSafeUserFields } from "../utils/user";
 import { validateEmail, validatePhoneNumber } from "../utils/auth";
 import { PassportError } from "../errors";
 import { UsersType } from "../types";
-import { ErrorTextsApi, HTTPStatuses } from "../types/enums";
-import { ISocketUser } from "../types/socket.types";
+import { HTTPStatuses } from "../types/enums";
 import { ISafeUser } from "../types/user.types";
+import { ISocketUser } from "../types/socket.types";
 
 type DoneType = (error: PassportError | null, user?: ISafeUser | false, options?: IVerifyOptions) => void;
 
@@ -54,8 +55,6 @@ export default class PassportWorks {
 
         // Сохраняем данные о пользователе в его сессию при каждом запросе
         this._passport.deserializeUser((userId: string, done: DoneType) => {
-            console.log("deserializeUser: ", userId);
-
             process.nextTick(() => {
                 const user = this._users.get(userId);
 
@@ -79,7 +78,7 @@ export default class PassportWorks {
 
                                 done(null, user);
                             } else {
-                                done(new PassportError(`Пользователь с id=${userId} не найден`, HTTPStatuses.NotFound));
+                                done(new PassportError(t("users.error.user_with_id_not_found", { id: userId })));
                             }
                         })
                         .catch((error: Error) => {
@@ -98,7 +97,7 @@ export default class PassportWorks {
     private async _verify(login: string, password: string, done: DoneType) {
         try {
             if (!login || !password) {
-                return done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
+                return done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
             }
 
             const email = validateEmail(login);
@@ -118,10 +117,12 @@ export default class PassportWorks {
 
                 if (candidatePhone) {
                     return this._comparePasswords(candidatePhone, password, done);
+                } else {
+                    return done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
                 }
             }
 
-            done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
+            done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
         } catch (error) {
             const nextError = error instanceof PassportError
                 ? error
@@ -142,7 +143,7 @@ export default class PassportWorks {
     
             return hashString === candidate.password
                 ? done(null, user)
-                : done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
+                : done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
         } catch (error) {
             return done(new PassportError((error as Error).message));
         }

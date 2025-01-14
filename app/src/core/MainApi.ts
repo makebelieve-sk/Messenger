@@ -6,7 +6,7 @@ import { IUser } from "../types/models.types";
 import { ApiRoutes } from "../types/enums";
 import { MainClientEvents } from "../types/events";
 import { AppDispatch } from "../types/redux.types";
-import { setFriendNotification, setMessageNotification } from "../state/main/slice";
+import { setFriendNotification, setMessageNotification } from "../store/main/slice";
 
 // Класс, содержит все HTTP запросы, которые являются глобальными по отношению к приложению
 export default class MainApi extends EventEmitter {

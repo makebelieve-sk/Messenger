@@ -7,7 +7,7 @@ import { IUser, IUserDetails } from "../../types/models.types";
 import { AppDispatch } from "../../types/redux.types";
 import { ApiRoutes } from "../../types/enums";
 import { MainClientEvents, UserEvents } from "../../types/events";
-import { setLoading } from "../../state/main/slice";
+import { setLoading } from "../../store/main/slice";
 
 // Класс, описывающий сущность "Пользователь"
 export default class User extends EventEmitter {

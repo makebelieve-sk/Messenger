@@ -1,16 +1,18 @@
-import React from "react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
 import useProfile from "../../../hooks/useProfile";
-import ChangeAvatar from "../../../components/ChangeAvatar";
-import Photo from "../../../components/Common/Photo";
+import ChangeAvatarComponent from "../../../components/ui/ChangeAvatar";
+import PhotoComponent from "../../../components/ui/Photo";
 
 import "./main-photo.scss";
 
 export default function MainPhoto() {
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = useState(false);
 
+    const { t } = useTranslation();
     const profile = useProfile();
     
     // Клик по своей аватарке
@@ -19,7 +21,7 @@ export default function MainPhoto() {
     };
 
     // Удаление аватара
-    const deleteAvatar = (setLoading?: React.Dispatch<React.SetStateAction<boolean>>) => {
+    const deleteAvatar = () => {
         profile.onDeleteAvatar(setLoading);
     };
 
@@ -30,7 +32,7 @@ export default function MainPhoto() {
 
     return <Grid item>
         <Paper className="main-photo paper-block">
-            <Photo
+            <PhotoComponent
                 src={profile.user.avatarUrl}
                 alt="user-avatar"
                 clickHandler={onClickMainPhoto}
@@ -38,8 +40,8 @@ export default function MainPhoto() {
             />
 
             <div className="main-photo__edit-button">
-                <ChangeAvatar
-                    labelText="Изменить"
+                <ChangeAvatarComponent
+                    labelText={t("profile-module.change")}
                     loading={loading}
                     mustAuth
                     onChange={onSetAvatar}

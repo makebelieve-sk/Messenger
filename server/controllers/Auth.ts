@@ -4,10 +4,11 @@ import { v4 as uuid } from "uuid";
 import { PassportStatic } from "passport";
 import { IVerifyOptions } from "passport-local";
 
+import { t } from "../service/i18n";
 import { updateSessionMaxAge } from "../utils/session";
 import { getSafeUserFields } from "../utils/user";
 import { UsersType } from "../types";
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
+import { ApiRoutes, HTTPStatuses, RedisKeys } from "../types/enums";
 import { ISafeUser } from "../types/user.types";
 import RedisWorks from "../core/Redis";
 import Middleware from "../core/Middleware";
@@ -47,7 +48,7 @@ export default class AuthController {
                 // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
                 await updateSessionMaxAge(req.session, Boolean(rememberMe));
     
-                return next(new AuthError(ErrorTextsApi.YOU_ALREADY_AUTH, HTTPStatuses.PermanentRedirect));
+                return next(new AuthError(t("auth.error.you_already_auth"), HTTPStatuses.PermanentRedirect));
             }
 
             next();
@@ -68,13 +69,13 @@ export default class AuthController {
             const checkDublicateEmail = await this._database.models.users.findOne({ where: { email }, transaction });
 
             if (checkDublicateEmail) {
-                return next(new AuthError(`Пользователь с почтовым адресом ${email} уже существует`, HTTPStatuses.BadRequest, { field: "email" }));
+                return next(new AuthError(t("auth.error.user_with_email_already_exists", { email }), HTTPStatuses.BadRequest, { field: "email" }));
             }
 
             const checkDublicatePhone = await this._database.models.users.findOne({ where: { phone }, transaction });
 
             if (checkDublicatePhone) {
-                return next(new AuthError(`Пользователь с номером телефона ${phone} уже существует`, HTTPStatuses.BadRequest, { field: "phone" }));
+                return next(new AuthError(t("auth.error.user_with_phone_already_exists", { phone }), HTTPStatuses.BadRequest, { field: "phone" }));
             }
 
             // "Соль"
@@ -109,14 +110,14 @@ export default class AuthController {
                                             return res.json({ success: true, user });
                                         });
                                     } else {
-                                        return next(new AuthError(ErrorTextsApi.ERROR_CREATING_USER_DETAILS));
+                                        return next(new AuthError(t("auth.error.creating_user_details")));
                                     }
                                 })
                                 .catch((error: Error) => {
                                     return next(new AuthError(error.message));
                                 });
                         } else {
-                            return next(new AuthError(ErrorTextsApi.ERROR_CREATING_USER));
+                            return next(new AuthError(t("auth.error.creating_user")));
                         }
                     })
                     .catch((error: Error) => {
@@ -141,7 +142,7 @@ export default class AuthController {
                 }
 
                 if (!req.sessionID) {
-                    return next(new AuthError(ErrorTextsApi.SESSION_ID_NOT_EXISTS))
+                    return next(new AuthError(t("auth.error.session_id_not_exists")))
                 }
 
                 req.logIn(user, async (error?: PassportError) => {
@@ -187,7 +188,7 @@ export default class AuthController {
                     }
 
                     if (!req.sessionID) {
-                        return next(new AuthError(`Отсутствует идентификатор сессии пользователя (session=${req.session})`));
+                        return next(new AuthError(t("auth.error.session_id_not_exists_on_deleted_session", { session: req.session.toString() })));
                     }
 
                     // Удаляем флаг rememberMe из Redis

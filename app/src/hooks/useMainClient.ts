@@ -1,7 +1,8 @@
-import React from "react";
+import { useContext } from "react";
 
-import { MainClientContext } from "../service/AppService";
+import { MainClientContext } from "../components/main/Main";
 
+// Возврат сущности "MainClient"
 export default function useMainClient() {
-    return React.useContext(MainClientContext);
+    return useContext(MainClientContext);
 }

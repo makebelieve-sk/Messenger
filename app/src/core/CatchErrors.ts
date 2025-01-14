@@ -1,13 +1,21 @@
 import EventEmitter from "eventemitter3";
 import { AxiosError } from "axios";
 
-import { setError } from "../state/error/slice";
-import { ErrorCodes, ErrorTextsApi, HTTPStatuses, Pages } from "../types/enums";
+import i18next from "../service/i18n";
+import { setError } from "../store/error/slice";
+import { ErrorCodes, HTTPStatuses, Pages } from "../types/enums";
 import { AppDispatch } from "../types/redux.types";
 import { MainClientEvents } from "../types/events";
 
 type BadRequestType = { success: boolean; message: string; field?: string; } | string | null;
 export type CatchType = BadRequestType | string | null;
+
+const ERROR_MESSAGE = i18next.t("core.catch-errors.error");
+const ERROR_NETWORK = i18next.t("core.catch-errors.error.timeout");
+const ERROR_TIMEOUT = i18next.t("core.catch-errors.error.network");
+const ERROR_BAD_REQUEST = i18next.t("core.catch-errors.error.bad_request");
+const ERROR_CANCELED = i18next.t("core.catch-errors.error.canceled");
+const ERROR_UNKNOWN = i18next.t("core.catch-errors.error.unknown");
 
 // Класс, отвечающий за обработку ошибок. Обрабатывает как ошибки по HTTP API, так и прочие ошибки, возникающие на стороне клиента
 export default class CatchErrors extends EventEmitter {
@@ -21,7 +29,7 @@ export default class CatchErrors extends EventEmitter {
     get error() {
         return this._axiosError
             ? this._axiosError.message
-            : this._errorText || ErrorTextsApi.ERROR_MESSAGE;
+            : this._errorText || ERROR_MESSAGE;
     }
 
     catch(errorText: string, axiosError?: AxiosError): CatchType {
@@ -63,23 +71,23 @@ export default class CatchErrors extends EventEmitter {
 
         switch (code) {
             case ErrorCodes.ERR_NETWORK: {
-                errorText = ErrorTextsApi.ERROR_NETWORK;
+                errorText = ERROR_NETWORK;
                 break;
             }
             case ErrorCodes.ERR_TIMEOUT: {
-                errorText = ErrorTextsApi.ERROR_TIMEOUT;
+                errorText = ERROR_TIMEOUT;
                 break;
             }
             case ErrorCodes.ERR_BAD_REQUEST: {
-                errorText = ErrorTextsApi.ERROR_BAD_REQUEST;
+                errorText = ERROR_BAD_REQUEST;
                 break;
             }
             case ErrorCodes.ERR_CANCELED: {
-                errorText = ErrorTextsApi.ERROR_CANCELED;
+                errorText = ERROR_CANCELED;
                 break;
             } 
             default:
-                errorText = ErrorTextsApi.ERROR_UNKNOWN + message;
+                errorText = ERROR_UNKNOWN + message;
         }
 
         this._dispatch(setError(errorText));
@@ -98,7 +106,7 @@ export default class CatchErrors extends EventEmitter {
             ? this._axiosError.response
                 ? this._axiosError.response.data as BadRequestType
                 : this._axiosError.message
-            : this._errorText || ErrorTextsApi.ERROR_MESSAGE;
+            : this._errorText || ERROR_MESSAGE;
     };
 
     // Статус 401

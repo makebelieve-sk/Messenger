@@ -4,7 +4,8 @@ import fs from "fs";
 import { Op } from "sequelize";
 import { Request, Response, NextFunction, Express } from "express";
 
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses } from "../types/enums";
+import { t } from "../service/i18n";
+import { ApiRoutes, HTTPStatuses } from "../types/enums";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { FilesError } from "../errors/controllers";
@@ -60,7 +61,7 @@ export default class FilesController {
                     res.json({ success: true, files: prepFiles });
                 }
             } else {
-                return next(new FilesError(ErrorTextsApi.FILES_NOT_FOUND));
+                return next(new FilesError(t("files.error.files_not_found")));
             }
         } catch (error) {
             await transaction.rollback();
@@ -76,7 +77,7 @@ export default class FilesController {
             const { messageId }: { messageId: string; } = req.body;
 
             if (!messageId) {
-                return next(new FilesError(ErrorTextsApi.MESSAGE_ID_NOT_FOUND));
+                return next(new FilesError(t("files.error.message_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const findFilesInMessage = await this._database.models.filesInMessage.findAll({
@@ -127,7 +128,7 @@ export default class FilesController {
         const { path }: { path: string; } = req.body;
 
         if (!path) {
-            return next(new FilesError(ErrorTextsApi.FILE_PATH_OPEN_NOT_FOUND));
+            return next(new FilesError(t("files.error.file_path_open_not_found"), HTTPStatuses.BadRequest));
         }
 
         const moduleSpecifier = "open";
@@ -143,11 +144,11 @@ export default class FilesController {
             const { name, path } = req.query as { name: string; path: string; };
 
             if (!path) {
-                return next(new FilesError(ErrorTextsApi.FILE_PATH_DOWNLOAD_NOT_FOUND));
+                return next(new FilesError(t("files.error.file_path_download_not_found"), HTTPStatuses.BadRequest));
             }
 
             if (!fs.existsSync(path)) {
-                return next(new FilesError(ErrorTextsApi.FILE_NOT_FOUND, HTTPStatuses.NotFound));
+                return next(new FilesError(t("files.error.file_not_found"), HTTPStatuses.NotFound));
             }
 
             res.download(path, name);

@@ -1,4 +1,4 @@
-@import "../../styles/colors.scss";
+@use "../../styles/colors.scss" as *;
 
 div.choose-avatar {
     margin-top: 12px;

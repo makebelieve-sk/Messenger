@@ -1,0 +1,16 @@
+@use "../../../../styles/colors.scss" as *;
+
+.images-carousel {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-width: 480px;
+    max-height: max-content;
+    background: $light-grey;
+
+    .photo {
+        max-width: 49%;
+        max-height: auto;
+        margin: 0 auto;
+    }
+}

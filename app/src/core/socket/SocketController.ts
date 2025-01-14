@@ -1,10 +1,11 @@
 import EventEmitter from "eventemitter3";
 
-import { setCallId, setChatInfo, setModalVisible, setStatus, setUsers } from "../../state/calls/slice";
-import { setSystemError } from "../../state/error/slice";
-import { addFriend, deleteFriend } from "../../state/friends/slice";
-import { deleteOnlineUser, setFriendNotification, setGlobalInCall, setOnlineUsers } from "../../state/main/slice";
-import { changeLastMessageInDialog, deleteDialog, deleteMessage, editMessage, setMessage, setUnRead, setWriteMessage, updateMessage } from "../../state/messages/slice";
+import i18next from "../../service/i18n";
+import { setCallId, setChatInfo, setModalVisible, setStatus, setUsers } from "../../store/calls/slice";
+import { setSystemError } from "../../store/error/slice";
+import { addFriend, deleteFriend } from "../../store/friends/slice";
+import { deleteOnlineUser, setFriendNotification, setGlobalInCall, setOnlineUsers } from "../../store/main/slice";
+import { changeLastMessageInDialog, deleteDialog, deleteMessage, editMessage, setMessage, setUnRead, setWriteMessage, updateMessage } from "../../store/messages/slice";
 import { CallStatus, FriendsNoticeTypes, Pages, SocketActions, SocketChannelErrorTypes, UnReadTypes } from "../../types/enums";
 import { IUser } from "../../types/models.types";
 import { AppDispatch } from "../../types/redux.types";
@@ -36,14 +37,9 @@ export default class SocketController extends EventEmitter {
         this._init();
     }
 
-    private _reconnect() {
-        this._socket.auth = { user: this._myUser };
-        this._socket.connect();
-    }
-
     private _init() {
         this._socket.on("connect", () => {
-            console.log(`Сокет соединение с сервером установлено [socket.id=${this._socket.id}]`);
+            console.log(i18next.t("core.socket.connection_established", { socketId: this._socket.id }));
         });
 
         // Список всех онлайн пользователей
@@ -54,19 +50,19 @@ export default class SocketController extends EventEmitter {
                 }
             });
 
-            console.log('Юзеры онлайн: ', users);
+            console.log(i18next.t("core.socket.online_users"), users);
         });
 
         // Новый пользователь онлайн
         this._socket.on(SocketActions.GET_NEW_USER, (newUser) => {
             this._dispatch(setOnlineUsers(newUser));
-            console.log('Новый юзер: ', newUser);
+            console.log(i18next.t("core.socket.new_user_connected"), newUser);
         });
 
         // Пользователь отключился
         this._socket.on(SocketActions.USER_DISCONNECT, (userId) => {
             this._dispatch(deleteOnlineUser(userId));
-            console.log('Юзер отключился: ', userId);
+            console.log(i18next.t("core.socket.user_disconnected"), userId);
         });
 
         // Подписываемся на пользователя
@@ -224,7 +220,7 @@ export default class SocketController extends EventEmitter {
         this._socket.on("connect_error", (error: Error) => {
             const isSocketActive = this._socket.active;
 
-            console.error(`Ошибка соединения [socket.active: ${isSocketActive}]: ${error.message}`);
+            console.error(i18next.t("core.socket.error.connection", { isSocketActive: isSocketActive, message: error.message }));
 
             // Означает, что соединение было отклонено сервером
             if (!isSocketActive) {

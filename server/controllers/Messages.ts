@@ -3,10 +3,11 @@ import { Request, Response, Express, NextFunction } from "express";
 import { Op } from "sequelize";
 import { Literal, Where } from "sequelize/types/utils";
 
+import { t } from "../service/i18n";
 import { getSearchWhere } from "../utils/where";
 import { LIMIT, LOAD_MORE_LIMIT } from "../utils/limits";
 import { isImage } from "../utils/files";
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses, MessageReadStatus, MessageTypes } from "../types/enums";
+import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "../types/enums";
 import { ICall, IFile, IMessage } from "../types/models.types";
 import { IChatInfo, IDialog } from "../types/chat.types";
 import { ISafeUser, UserPartial } from "../types/user.types";
@@ -142,7 +143,7 @@ export default class MessagesController {
                             ? unReadMessages[0].map(unReadMessageId => unReadMessageId.messageId)
                             : [];
                     } else {
-                        return next(new MessagesError(ErrorTextsApi.NOT_CORRECT_ANSER_GET_DIALOGS));
+                        return next(new MessagesError(t("messages.error.get_unread_messages")));
                     }
 
                     // Получаем список пользователей для чата
@@ -160,7 +161,7 @@ export default class MessagesController {
                     if (usersInChat && usersInChat.length) {
                         chatObject.usersInChat = usersInChat;
                     } else {
-                        return next(new MessagesError(`Пользователи в чате ${chat.name} не найдены`));
+                        return next(new MessagesError(t("chats.error.users_in_chat_not_found", { chat: chat.name })));
                     }
 
                     // Получаем статус звукового уведомления чата
@@ -254,7 +255,7 @@ export default class MessagesController {
             const userId = (req.user as ISafeUser).id;
 
             if (!chatId) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND));
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const messagesLimit = loadMore ? LOAD_MORE_LIMIT : LIMIT;
@@ -363,15 +364,15 @@ export default class MessagesController {
             const userId = (req.user as ISafeUser).id;
 
             if (!message.userId) {
-                return next(new MessagesError(ErrorTextsApi.USER_ID_IN_MESSAGE_NOT_FOUND));
+                return next(new MessagesError(t("messages.error.user_id_in_message_not_found"), HTTPStatuses.BadRequest));
             }
 
             if (!message.chatId) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_ID_IN_MESSAGE_NOT_FOUND));
+                return next(new MessagesError(t("messages.error.chat_id_in_message_not_found"), HTTPStatuses.BadRequest));
             }
 
             if (!usersInChat || !usersInChat.length) {
-                return next(new MessagesError(`Пользователи в чате ${message.chatId} не найдены`));
+                return next(new MessagesError(t("chats.error.users_in_chat_not_found", { chat: message.chatId }), HTTPStatuses.BadRequest));
             }
 
             // Сохраняем сообщение в таблицу Messages
@@ -418,11 +419,11 @@ export default class MessagesController {
             const { id, type, message, files }: { id: string; type: MessageTypes; message: IMessage; files: string[] | null; } = req.body;
 
             if (!id) {
-                return next(new MessagesError(ErrorTextsApi.MESSAGE_ID_NOT_FOUND));
+                return next(new MessagesError(t("messages.error.message_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             if (!message && (!files || !files.length)) {
-                return next(new MessagesError(ErrorTextsApi.MESSAGE_CAN_NOT_BE_EMPTY_WITHOUT_FILES));
+                return next(new MessagesError(t("messages.error.empty_edit_message_without_files"), HTTPStatuses.BadRequest));
             }
 
             if (files && files.length) {
@@ -494,7 +495,7 @@ export default class MessagesController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_PARTNER_ID_NOT_FOUND));
+                return next(new MessagesError(t("chats.error.partner_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             let chatId: string | null = null;
@@ -570,7 +571,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND));
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             // Ищем чат в БД
@@ -580,7 +581,7 @@ export default class MessagesController {
 
             // Если чата в БД нет, то возвращаем 404 статус
             if (!chatInfo) {
-                return next(new MessagesError(`Чат с идентификатором ${chatId} не найден`, HTTPStatuses.NotFound));
+                return next(new MessagesError(t("chats.error.chat_not_found", { chatId }), HTTPStatuses.NotFound));
             }
 
             res.json({ success: true, chatInfo });
@@ -595,7 +596,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND));
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const usersInChat = await this._database.models.usersInChat.findAll({
@@ -610,7 +611,7 @@ export default class MessagesController {
             if (usersInChat && usersInChat.length) {
                 res.json({ success: true, usersInChat: usersInChat.map(userInChat => userInChat.User) });
             } else {
-                return next(new MessagesError(`Пользователи чата ${chatId} не найдены`, HTTPStatuses.NotFound));
+                return next(new MessagesError(t("chats.error.users_in_chat_not_found", { chat: chatId }), HTTPStatuses.NotFound));
             }
         } catch (error) {
             next(error);
@@ -623,7 +624,7 @@ export default class MessagesController {
             const { chatPartnerId }: { chatPartnerId: string; } = req.body;
 
             if (!chatPartnerId) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_PARTNER_ID_NOT_FOUND));
+                return next(new MessagesError(t("chats.error.partner_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const chatPartner = await this._database.models.userDetails.findOne({ 
@@ -632,7 +633,7 @@ export default class MessagesController {
             });
 
             if (!chatPartner) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_PARTNER_NOT_FOUND, HTTPStatuses.NotFound));
+                return next(new MessagesError(t("chats.error.partner_not_found"), HTTPStatuses.NotFound));
             }
 
             res.json({ success: true, lastSeen: chatPartner.lastSeen });
@@ -648,7 +649,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND));
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const chatSoundStatus = await this._database.models.chatSoundNotifications.findOne({ 
@@ -669,7 +670,7 @@ export default class MessagesController {
             const { chatId, status }: { chatId: string; status: boolean; } = req.body;
 
             if (!chatId) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND));
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             // Удаляем запись из БД, если статус "Выключен" 
@@ -701,7 +702,7 @@ export default class MessagesController {
             const { messageId, privateDelete }: { messageId: string; privateDelete: boolean; } = req.body;
 
             if (!messageId) {
-                return next(new MessagesError(ErrorTextsApi.DELETED_MESSAGE_ID_NOT_FOUND));
+                return next(new MessagesError(t("messages.error.deleted_message_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const findDeletedMessage = await this._database.models.deletedMessages.findOne({
@@ -710,7 +711,7 @@ export default class MessagesController {
             });
 
             if (findDeletedMessage) {
-                return next(new MessagesError(ErrorTextsApi.YOUR_ALREADY_DELETE_THIS_MESSAGE));
+                return next(new MessagesError(t("messages.error.your_already_delete_this_message")));
             }
 
             if (privateDelete) {
@@ -747,7 +748,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                return next(new MessagesError(ErrorTextsApi.DELETED_CHAT_ID_NOT_FOUND));
+                return next(new MessagesError(t("chats.error.deleted_chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             await this._database.models.deletedChats.create({
@@ -768,7 +769,7 @@ export default class MessagesController {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                return next(new MessagesError(ErrorTextsApi.CHAT_ID_NOT_FOUND));
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const attachments = await this._database.sequelize.query(`

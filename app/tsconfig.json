@@ -1,21 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es6", "dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "noImplicitAny": false
+    "lib": ["dom", "dom.iterable", "esnext"],           // Для работы React и последними возможностями JS нужны эти библиотеки   
+    "target": "ESNext",                                 // Vite компилирует код в ES-модули и использование ESNext дает возможность использовать это
+    "types": ["vite/client"],                           // Добавляет типы для Vite (корректная работа с TS)
+    "isolatedModules": true,                            // Позволяет компилировать каждый файл в изоляции, так как Vite использует TS для компиляции через esbuild
+    "skipLibCheck": true,                               // Это рекомендуется для ускорения компиляции, поскольку пропускает проверку типов сторонних библиотек
+    "strict": true,                                     // Включается строгая типизация
+    "forceConsistentCasingInFileNames": true,           // Используется для поддержания консинстентности в названиях файлов (для разных операционных систем)
+    "esModuleInterop": true,                            // Позволяет импортировать CommonJS модули корректно для React и Vite
+    "module": "ESNext",                                 // Vite использует ES модули по умолчанию
+    "moduleResolution": "node",                         // TS будет разрешать модули также, как Node.js
+    "resolveJsonModule": true,                          // Необходимо, если нужно импортировать .json файлы в файлы .ts/.tsx 
+    "jsx": "preserve",                                  // Указываем, чтобы JSX не компилировался в обычный JS, а оставался JSX
+    "incremental": true,                                // Необходимо для ускорения компиляции (TS сохраняет промежуточные данные для последующих компиляций)
+    "noImplicitAny": false                              // Временно разрешаем использовать any (TODO удалим позднее, когда проект будет близок к завершению)
   },
-  "include": ["**/*.ts", "**/*.tsx", "types.d.ts"],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts", "**/*.tsx", "./Global.d.ts"],              // Включаем все файлы с расширением .tsx/.ts и декларации типов для корректной проверки типов
+  "exclude": ["node_modules", "dist", "__tests__", "**/*.test.ts"]  // Исключаем папку с библиотеками проекта, папку с итоговой сборкой продакшена, папки и файлы с тестами
 }

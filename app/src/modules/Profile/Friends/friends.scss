@@ -1,4 +1,4 @@
-@import "../../../styles/colors.scss";
+@use "../../../styles/colors.scss" as *;
 
 .friends-container {
     position: relative;

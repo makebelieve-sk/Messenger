@@ -3,12 +3,13 @@ import { Server } from "socket.io";
 import http from "http";
 import { v4 as uuid } from "uuid";
 
-import { ClientToServerEvents, ISocketData, InterServerEvents, ServerToClientEvents, SocketWithUser } from "../types/socket.types";
-import { CallNames, CallTypes, ErrorTextsApi, MessageReadStatus, MessageTypes, SocketActions, SocketChannelErrorTypes } from "../types/enums";
-import { UsersType } from "../types";
-import { ISafeUser } from "../types/user.types";
-import { getFullName } from "../utils";
+import { t } from "../service/i18n";
 import Database from "./Database";
+import { ClientToServerEvents, ISocketData, InterServerEvents, ServerToClientEvents, SocketWithUser } from "../types/socket.types";
+import { CallNames, CallTypes, MessageReadStatus, MessageTypes, SocketActions, SocketChannelErrorTypes } from "../types/enums";
+import { ISafeUser } from "../types/user.types";
+import { UsersType } from "../types";
+import { getFullName } from "../utils";
 import { SocketError } from "../errors";
 
 const CLIENT_URL = process.env.CLIENT_URL as string;
@@ -67,7 +68,7 @@ export default class SocketWorks {
             const user: ISafeUser = socket.handshake.auth.user;
     
             if (!user) {
-                next(new SocketError(ErrorTextsApi.USER_ID_NOT_GIVEN));
+                next(new SocketError(t("socket.error.user_id_not_found")));
             }
     
             socket.user = user;
@@ -109,7 +110,7 @@ export default class SocketWorks {
                 const user = this._getUser(userId);
 
                 if (!user) {
-                    throw new SocketError(`Пользователя с id=${userId} не существует.`);
+                    throw new SocketError(t("socket.error.user_with_id_not_exists", { userId }));
                 }
 
                 // Обновляем объект подключившегося пользователя
@@ -122,7 +123,7 @@ export default class SocketWorks {
                 const notifyAnotherUser = (userTo: string, type: any, payload?: Object) => {
                     // Если получатель - это я, то выводим ошибку
                     if (userTo === userId) {
-                        throw new SocketError(`Не подходящий идентификатор пользователя id=${userTo} (необходимо использовать метод notifyMe)`);
+                        throw new SocketError(t("socket.error.not_correct_user_id_in_socket", { userTo }));
                     }
 
                     const findUser = this._getUser(userTo);
@@ -170,7 +171,7 @@ export default class SocketWorks {
                         // Покидаем комнату (звонок)
                         socket.leave(roomId);
                     } else {
-                        handleError(ErrorTextsApi.CANNOT_FIND_CALL, SocketChannelErrorTypes.CALLS);
+                        handleError(t("socket.error.cannot_find_call"), SocketChannelErrorTypes.CALLS);
                     }
                 };
 
@@ -218,7 +219,7 @@ export default class SocketWorks {
                         }
 
                         default:
-                            handleError(ErrorTextsApi.INCORRECT_TYPE_IN_FRIENDS);
+                            handleError(t("socket.error.not_correct_friends_action_type"));
                             break;
                     }
                 });
@@ -570,7 +571,7 @@ export default class SocketWorks {
 
                 // Событие отключения (выполняется немного ранее, чем disconnect) - можно получить доступ к комнатам
                 socket.on("disconnecting", (reason) => {
-                    console.log("[SOCKET.disconnecting]: ", reason);
+                    console.log(t("socket.disconnecting", { reason }));
 
                     // const rooms = Array.from(socket.rooms);
 
@@ -585,7 +586,7 @@ export default class SocketWorks {
                 // Отключение сокета
                 socket.on("disconnect", async (reason) => {
                     try {
-                        console.log(`Сокет с id: ${socketID} отключился по причине: ${reason}`);
+                        console.log(t("socket.socket_disconnected_with_reason", { socketID, reason }));
 
                         // Добавляем проверку на тот случай, если клиент разорвал соединение (например, закрыл вкладку/браузер)
                         // Иначе через кнопку выхода пользователь уже удаляется из списка
@@ -602,11 +603,11 @@ export default class SocketWorks {
                             { where: { userId } }
                         );
                     } catch (error) {
-                        handleError(`Возникла ошибка при обновлении времени последнего захода пользователя: ${(error as Error).message}`);
+                        handleError(`${t("socket.error.update_last_seen")}: ${(error as Error).message}`);
                     }
                 });
             } catch (error) {
-                handleError(`Произошла ошибка при работе с сокетом: ${(error as Error).message}`);
+                handleError(`${t("socket.error.socket_work")}: ${(error as Error).message}`);
             }
         });
     }
@@ -615,7 +616,7 @@ export default class SocketWorks {
         // Не нормальное отключение io
         this._io.engine.on("connection_error", (error: { req: string; code: number; message: string; context: string; }) => {
             const { req, code, message, context } = error;
-            new SocketError(`Не нормальное отключение сокета с кодом ${code}.\nОбъект запроса: ${req}.\nТекст ошибки: ${message}.\nДополнительный контекст: ${context}.`);
+            new SocketError(t("socket.error.engine_socket", { req, code: code.toString(), message, context }));
         });
     }
 

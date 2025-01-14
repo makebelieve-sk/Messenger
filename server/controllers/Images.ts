@@ -5,9 +5,10 @@ import path from "path";
 import multer from "multer";
 import { Transaction } from "sequelize";
 
+import { t } from "../service/i18n";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses } from "../types/enums";
+import { ApiRoutes, HTTPStatuses } from "../types/enums";
 import { IRequestWithShapedImages, IRequestWithSharpedAvatar } from "../types/express.types";
 import { ISafeUser } from "../types/user.types";
 import { currentDate } from "../utils/datetime";
@@ -104,11 +105,11 @@ export default class ImagesController {
             const sharpedPhotoUrl = (req as IRequestWithSharpedAvatar).sharpedPhotoUrl;
 
             if (!sharpedAvatarUrl) {
-                return next(new ImagesError(ErrorTextsApi.SHARP_AVATAR_PATH_NOT_FOUND));
+                return next(new ImagesError(t("photos.error.sharp_avatar_path_not_found")));
             }
 
             if (!sharpedPhotoUrl) {
-                return next(new ImagesError(ErrorTextsApi.SHARP_PHOTO_PATH_NOT_FOUND));
+                return next(new ImagesError(t("photos.error.sharp_photo_path_not_found")));
             }
 
             const findUser = await this._database.models.users.findByPk(userId, {
@@ -117,7 +118,7 @@ export default class ImagesController {
             });
 
             if (!findUser) {
-                return next(new ImagesError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound));
+                return next(new ImagesError(t("photos.error.user_not_found"), HTTPStatuses.NotFound));
             }
 
             // Если у пользователя уже существует аватар, то его необходимо удалить из БД и с диска 
@@ -181,7 +182,7 @@ export default class ImagesController {
             const { id: userId, firstName, thirdName, avatarUrl } = req.user as ISafeUser;
 
             if (!imagesUrls || !imagesUrls.length) {
-                return next(new ImagesError(ErrorTextsApi.SHARP_PHOTO_PATHS_NOT_FOUND));
+                return next(new ImagesError(t("photos.error.sharp_photo_paths_not_found")));
             }
 
             const photos: { id: string; userId: string; path: string; }[] = imagesUrls.map(imageUrl => ({
@@ -221,11 +222,11 @@ export default class ImagesController {
             const userId = (req.user as ISafeUser).id;
 
             if (!imageUrl) {
-                return next(new ImagesError(ErrorTextsApi.DELETE_PHOTO_PATH_NOT_FOUND));
+                return next(new ImagesError(t("photos.error.delete_photo_path_not_found")));
             }
 
             if (!fs.existsSync(filePath)) {
-                return next(new ImagesError(ErrorTextsApi.PHOTO_NOT_FOUND, HTTPStatuses.NotFound));
+                return next(new ImagesError(t("photos.error.photo_not_found"), HTTPStatuses.NotFound));
             }
 
             // Если это аватар, то удаляем из таблицы Users

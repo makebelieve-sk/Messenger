@@ -6,7 +6,7 @@ import Socket from "./socket/Socket";
 import ProfilesController from "./profile/ProfilesController";
 import Profile from "./profile/Profile";
 import MainApi from "./MainApi";
-import { setAuth } from "../state/main/slice";
+import { setAuth } from "../store/main/slice";
 import { Pages } from "../types/enums";
 import { AppDispatch } from "../types/redux.types";
 import { MainClientEvents } from "../types/events";

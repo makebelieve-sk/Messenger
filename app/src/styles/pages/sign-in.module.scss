@@ -1,5 +1,5 @@
-@import "../colors.scss";
-@import "../variables.scss";
+@use "../colors.scss" as *;
+@use "../variables.scss" as *;
 
 .mainGrid {
 	height: calc(100vh - 40px);

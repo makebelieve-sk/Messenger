@@ -1,9 +1,10 @@
 import { Request, Response, Express, NextFunction } from "express";
 
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses } from "../types/enums";
-import { IFormValues } from "../types";
+import { t } from "../service/i18n";
+import { ApiRoutes, HTTPStatuses } from "../types/enums";
 import { IUserDetails } from "../types/models.types";
 import { ISafeUser } from "../types/user.types";
+import { IFormValues } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { getSafeUserFields } from "../utils/user";
@@ -26,7 +27,7 @@ export default class UserController {
     // Получение данных о себе
     private _getMe(req: Request, res: Response, next: NextFunction) {
         if (!req.user) {
-            return next(new UsersError(ErrorTextsApi.USER_NOT_FOUND, HTTPStatuses.NotFound));
+            return next(new UsersError(t("users.error.user_not_found"), HTTPStatuses.NotFound));
         }
 
         res.json({ success: true, user: req.user });
@@ -40,7 +41,7 @@ export default class UserController {
             const userDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
             if (!userDetail) {
-                return next(new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound));
+                return next(new UsersError(t("users.error.user_details_not_found"), HTTPStatuses.NotFound));
             }
 
             res.json({ success: true, userDetail });
@@ -65,7 +66,7 @@ export default class UserController {
             const findUser = await this._database.models.users.findByPk(userId, { transaction });
 
             if (!findUser) {
-                return next(new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound));
+                return next(new UsersError(t("users.error.user_with_id_not_found", { id: userId }), HTTPStatuses.NotFound));
             } 
 
             result.user = {
@@ -81,7 +82,7 @@ export default class UserController {
             const findUserDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
             if (!findUserDetail) {
-                return next(new UsersError(ErrorTextsApi.USER_NOT_FOUND_IN_DATABASE, HTTPStatuses.NotFound));
+                return next(new UsersError(t("users.error.user_details_not_found"), HTTPStatuses.NotFound));
             }
 
             result.userDetails = {
@@ -108,13 +109,13 @@ export default class UserController {
             const { id }: { id: string; } = req.body;
 
             if (!id) {
-                return next(new UsersError(ErrorTextsApi.USER_ID_NOT_FOUND));
+                return next(new UsersError(t("users.error.user_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const findUser = await this._database.models.users.findByPk(id);
 
             if (!findUser) {
-                return next(new UsersError(`Пользователь с id=${id} не найден`));
+                return next(new UsersError(t("users.error.user_with_id_not_found", { id }), HTTPStatuses.NotFound));
             }
 
             res.json({ success: true, user: getSafeUserFields(findUser) });

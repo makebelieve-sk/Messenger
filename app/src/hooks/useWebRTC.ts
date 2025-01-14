@@ -1,13 +1,13 @@
 import React from "react";
 import freeice from "freeice";
 
-import { selectCallsState, setChatInfo, setLocalStream, setModalVisible, setStatus, setUsers } from "../state/calls/slice";
 import useStateWithCallback from "./useStateWithCallback";
-import { useAppDispatch, useAppSelector } from "./useGlobalState";
-import useMainClient from "./useMainClient";
 import useUser from "./useUser";
+import useMainClient from "./useMainClient";
+import { useAppDispatch, useAppSelector } from "./useGlobalState";
+import { selectCallsState, setChatInfo, setLocalStream, setModalVisible, setStatus, setUsers } from "../store/calls/slice";
 import { AppDispatch } from "../types/redux.types";
-import { setSystemError } from "../state/error/slice";
+import { setSystemError } from "../store/error/slice";
 import { IUser } from "../types/models.types";
 import { CallStatus, MessageTypes, SettingType, SocketActions } from "../types/enums";
 
