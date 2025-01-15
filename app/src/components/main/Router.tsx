@@ -20,7 +20,7 @@ export default function Router() {
         // Перенаправляем пользователя в зависимости от полученного пути из бизнес-логики
         mainClient.on(MainClientEvents.REDIRECT, onRedirect);
 
-        // Отписываемся от события при размонтировании компонента для избежания уточки памяти
+        // Отписываемся от события при размонтировании компонента для избежания утечки памяти
         return () => {
             mainClient.off(MainClientEvents.REDIRECT, onRedirect);
         }
