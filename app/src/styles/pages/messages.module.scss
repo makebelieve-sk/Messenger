@@ -1,5 +1,5 @@
-@import "styles/colors";
-@import "styles/variables";
+@use "styles/colors" as *;
+@use "styles/variables" as *;
 .messages-container {
     width: 100%;
     min-height: calc(100vh - $calcHeight);

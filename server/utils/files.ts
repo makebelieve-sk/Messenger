@@ -3,6 +3,11 @@ import { v4 as uuid } from "uuid";
 import fs from "fs";
 import path from "path";
 
+const SHARP_QUALITY = parseInt(process.env.SHARP_QUALITY as string);
+
+// 1 МБ
+export const MB_1 = 1024 * 1024;
+
 // Проверка, является ли файл изображением
 export const isImage = (filename: string) => {
     const fileExt = filename.split(".").pop();
@@ -12,10 +17,12 @@ export const isImage = (filename: string) => {
 };
 
 export const ASSETS_PATH = "../assets";
+export const PUBLIC_PATH = "../../app/public";
+
 const JPEG_FORMAT = "jpeg";
 
-// Обрезаем качество файлу до 80% и сохраняем его на диск сервера
-export async function createSharpedFile(file: Express.Multer.File) {
+// Обрезаем качество изображению до 80% и сохраняем его на диск сервера
+export async function createSharpedImage(file: Express.Multer.File) {
     const rootPath = path.join(__dirname, ASSETS_PATH);
     const folderPath = `/${file.fieldname}s/`;
     const outputFile = file.fieldname + "-" + uuid() + "." + file.mimetype.split("/").pop();
@@ -25,16 +32,16 @@ export async function createSharpedFile(file: Express.Multer.File) {
         fs.mkdirSync(rootPath);
     }
 
-    // Проверка на наличие папок "avatars"/"photos"/"files"
+    // Проверка на наличие папок "avatars"/"photos"/
     if (!fs.existsSync(path.join(rootPath, folderPath))) {
         fs.mkdirSync(path.join(rootPath, folderPath));
     }
 
-    // Используем библиотеку sharp для сохранения метаданных изображения => изменения формата на "jpeg" => установки качества изображению 80% => вывод в файл
+    // Используем библиотеку sharp для сохранения метаданных изображения => изменения формата на "jpeg" => установки качества изображению 80% => вывод в новый файл
     await sharp(file.buffer)
         .withMetadata()
         .toFormat(JPEG_FORMAT)
-        .jpeg({ quality: 80 })
+        .jpeg({ quality: SHARP_QUALITY, progressive: true })
         .toFile(path.join(rootPath, folderPath, outputFile));
 
     return { folderPath, outputFile };

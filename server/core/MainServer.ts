@@ -11,11 +11,13 @@ import PassportWorks from "./Passport";
 import Database from "./Database";
 import SocketWorks from "./Socket";
 import { oneHour } from "../utils/datetime";
+import { ASSETS_PATH, PUBLIC_PATH } from "../utils/files";
 import { UsersType } from "../types";
 
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 const SECRET_KEY = process.env.SECRET_KEY as string;
 const CLIENT_URL = process.env.CLIENT_URL as string;
+const EXPRESS_SESSION_DOMAIN = process.env.EXPRESS_SESSION_DOMAIN as string;
 
 // Класс, являющийся ядром бизнес логики приложения на стороне сервера.
 export default class MainServer {
@@ -24,6 +26,7 @@ export default class MainServer {
     private readonly _database: Database;
     private readonly _passport: PassportWorks;
     private readonly _socket: SocketWorks;
+    private _session!: express.RequestHandler;
 
     constructor(private readonly _app: Express, private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>) {
         this._users = new Map();
@@ -33,31 +36,31 @@ export default class MainServer {
         // Инициализируем работу Redis
         this._redisWork = new RedisWorks();
         // Инициализируем мидлвары Express
-        const sessionMiddleware = this._useExpressMiddlewares();
+        this._useExpressMiddlewares();
         // Инициализируем работу Passport (мидлвары)
         this._passport = new PassportWorks(this._app, this._database, this._users);
         // Инициализируем работу API
-        new ApiServer({ 
-            redisWork: this._redisWork, 
-            app: this._app, 
-            users: this._users,
-            database: this._database,
-            passport: this._passport.passport
-        });
+        new ApiServer(
+            this._redisWork, 
+            this._app, 
+            this._users,
+            this._database,
+            this._passport.passport
+        );
         // Инициализируем работу socket.io
-        this._socket = new SocketWorks(this._server, this._users, this._database, sessionMiddleware);
+        this._socket = new SocketWorks(this._server, this._users, this._database, this._session);
     }
 
     private _useExpressMiddlewares() {
         // Инициализируем express-сессию для пользователей с хранилищем в Redis
-        const sessionMiddleware = session({
+        this._session = session({
             store: this._redisWork.redisStore,  // Место хранения сессий (выбран Redis)
             name: COOKIE_NAME,                  // Наименование сессии в хранилище
             secret: SECRET_KEY,                 // Секретный ключ для шифрования данных сессии
             cookie: {
                 secure: false,                  // Требует https (без него установлен в false)
                 httpOnly: true,                 // Доступна только через http/https
-                domain: "localhost",            // На каких доменах доступна куки с id сессии
+                domain: EXPRESS_SESSION_DOMAIN, // На каких доменах доступна куки с id сессии
                 maxAge: undefined               // Устанавливаем время жизни сессий только до закрытия браузера. При входе перезаписываем. При переоткрытии вкладки сессия восстанавливается
             },
             resave: true,                       // Пересохранение сессии (даже если она не была изменена) при каждом запросе
@@ -74,10 +77,34 @@ export default class MainServer {
         }));
         this._app.use(express.json());          // Для парсинга json строки
         this._app.use(cookieParser());          // Парсим cookie (позволяет получить доступ к куки через req.cookie)
-        this._app.use(sessionMiddleware);
-        this._app.use(express.static(path.join(__dirname, "../assets")));   // Указываем Express использовать папку assets для обслуживания статических файлов
+        this._app.use(this._session);
 
-        return sessionMiddleware;
+        // Указываем Express использовать папку assets для обслуживания статических файлов (опции express.static необходимо прописывать каждому мидлвару в отдельности)
+        this._app.use(
+            express.static(
+                path.join(__dirname, ASSETS_PATH),
+                {
+                    dotfiles: "ignore",     // Игнорируем передачу файлов, начинающихся с точки, например, .env, .gitignore и тд
+                    maxAge: "1d",           // Задаем максимальное время жизни кеша со статическими файлами (то есть браузер кеширует данный файл по времени)
+                    fallthrough: true,     // Запрещаем Express искать другие маршруты в случае, если файл не найден
+                    cacheControl: true      // Добавляем заголовок Cache-Control в ответ для лучшего кеширования
+                }
+            )
+        );
+        // Указываем Express использовать папку public для обслуживания статических файлов (опции express.static необходимо прописывать каждому мидлвару в отдельности)
+        this._app.use(
+            "/public", 
+            express.static(
+                path.join(__dirname, PUBLIC_PATH), 
+                {
+                    dotfiles: "ignore",     // Игнорируем пережачу файлов, начинающихся с точки, например, .env, .gitignore и тд
+                    index: "index.html",    // Указываем отдачу файла index.html, если в запросе не указан файл, например, запрос к / или к /folder/
+                    maxAge: "1d",           // Задаем максимальное время жизни кеша со статическими файлами (то есть браузер кеширует данный файл по времени)
+                    fallthrough: true,     // Запрещаем Express искать другие маршруты в случае, если файл не найден
+                    cacheControl: true      // Добавляем заголовок Cache-Control в ответ для лучшего кеширования
+                }
+            )
+        );
     }
 
     // Закрытие сервера

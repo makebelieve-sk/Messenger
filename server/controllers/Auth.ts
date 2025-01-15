@@ -1,53 +1,33 @@
-import EventEmitter from "events";
 import crypto from "crypto";
 import { Request, Response, NextFunction, Express } from "express";
 import { v4 as uuid } from "uuid";
 import { PassportStatic } from "passport";
 import { IVerifyOptions } from "passport-local";
-import { Transaction } from "sequelize";
 
+import { t } from "../service/i18n";
 import { updateSessionMaxAge } from "../utils/session";
-import { getSaveUserFields } from "../utils/user";
+import { getSafeUserFields } from "../utils/user";
 import { UsersType } from "../types";
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
-import { IUser } from "../types/models.types";
-import { ApiServerEvents } from "../types/events";
+import { ApiRoutes, HTTPStatuses, RedisKeys } from "../types/enums";
+import { ISafeUser } from "../types/user.types";
 import RedisWorks from "../core/Redis";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { AuthError } from "../errors/controllers";
 import { PassportError } from "../errors";
-import { ISaveUser } from "../database/models/Users";
 
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 
-interface IConstructor {
-    app: Express;
-    redisWork: RedisWorks;
-    middleware: Middleware;
-    database: Database;
-    passport: PassportStatic;
-    users: UsersType;
-};
-
-export default class AuthController extends EventEmitter {
-    private readonly _app: Express;
-    private readonly _redisWork: RedisWorks;
-    private readonly _middleware: Middleware;
-    private readonly _database: Database;
-    private readonly _passport: PassportStatic;
-    private readonly _users: UsersType;
-
-    constructor({ app, redisWork, middleware, database, passport, users }: IConstructor) {
-        super();
-
-        this._app = app;
-        this._redisWork = redisWork;
-        this._middleware = middleware;
-        this._database = database;
-        this._passport = passport;
-        this._users = users;
-
+// Класс, отвечающий за API авторизации/аутентификации
+export default class AuthController {
+    constructor(
+        private readonly _app: Express,
+        private readonly _middleware: Middleware,
+        private readonly _database: Database,
+        private readonly _redisWork: RedisWorks,
+        private readonly _passport: PassportStatic,
+        private readonly _users: UsersType
+    ) {
         this._init();
     }
 
@@ -58,34 +38,28 @@ export default class AuthController extends EventEmitter {
         this._app.get(ApiRoutes.logout, this._middleware.mustAuthenticated.bind(this._middleware), this._logout.bind(this));
     }
 
-    // Обработка ошибки
-    private async _handleError(error: unknown, res: Response, transaction?: Transaction) {
-        if (transaction) await transaction.rollback();
-
-        this.emit(ApiServerEvents.ERROR, { error, res });
-    }
-
     // Проверяем авторизирован ли пользователь в системе
-    private async _isAuthenticated(req: Request, res: Response, next: NextFunction) {
+    private async _isAuthenticated(req: Request, _: Response, next: NextFunction) {
         try {
             if (req.isAuthenticated()) {
                 // Получаем поле rememberMe из Redis
-                const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, (req.user as IUser).id);
+                const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, (req.user as ISafeUser).id);
 
                 // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
                 await updateSessionMaxAge(req.session, Boolean(rememberMe));
     
-                throw new AuthError(ErrorTextsApi.YOU_ALREADY_AUTH, HTTPStatuses.PermanentRedirect);
+                return next(new AuthError(t("auth.error.you_already_auth"), HTTPStatuses.PermanentRedirect));
             }
 
             next();
         } catch (error) {
-            this._handleError(error, res);
+            // return необходим для точного возврата ошибки в мидлвар ошибки (так как этот метод и сам является мидлваром только для текущих ендпоинтов)
+            return next(error);
         }
     };
 
     // Регистрация пользователя
-    private async _signUp(req: Request, res: Response) {
+    private async _signUp(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
@@ -95,13 +69,13 @@ export default class AuthController extends EventEmitter {
             const checkDublicateEmail = await this._database.models.users.findOne({ where: { email }, transaction });
 
             if (checkDublicateEmail) {
-                throw new AuthError(`Пользователь с почтовым адресом ${email} уже существует`, HTTPStatuses.BadRequest, { field: "email" });
+                return next(new AuthError(t("auth.error.user_with_email_already_exists", { email }), HTTPStatuses.BadRequest, { field: "email" }));
             }
 
             const checkDublicatePhone = await this._database.models.users.findOne({ where: { phone }, transaction });
 
             if (checkDublicatePhone) {
-                throw new AuthError(`Пользователь с номером телефона ${phone} уже существует`, HTTPStatuses.BadRequest, { field: "phone" });
+                return next(new AuthError(t("auth.error.user_with_phone_already_exists", { phone }), HTTPStatuses.BadRequest, { field: "phone" }));
             }
 
             // "Соль"
@@ -110,7 +84,7 @@ export default class AuthController extends EventEmitter {
 
             crypto.pbkdf2(password, saltString, 4096, 256, "sha256", (error, hash) => {
                 if (error) {
-                    throw new AuthError(error.message);
+                    return next(new AuthError(error.message));
                 }
 
                 // Генерируем хеш пароля, приправленным "солью"
@@ -120,7 +94,7 @@ export default class AuthController extends EventEmitter {
                     .create({ id: uuid(), firstName, thirdName, email, phone, password: hashString, avatarUrl, salt: saltString }, { transaction })
                     .then(newUser => {
                         if (newUser) {
-                            const user = getSaveUserFields(newUser);
+                            const user = getSafeUserFields(newUser);
 
                             this._database.models.userDetails
                                 .create({ userId: user.id }, { transaction })
@@ -128,7 +102,7 @@ export default class AuthController extends EventEmitter {
                                     if (newUserDetail) {
                                         req.login(user, async function (error?: PassportError) {
                                             if (error) {
-                                                throw error;
+                                                return next(error);
                                             }
 
                                             await transaction.commit();
@@ -136,22 +110,23 @@ export default class AuthController extends EventEmitter {
                                             return res.json({ success: true, user });
                                         });
                                     } else {
-                                        throw new AuthError(ErrorTextsApi.ERROR_CREATING_USER_DETAILS);
+                                        return next(new AuthError(t("auth.error.creating_user_details")));
                                     }
                                 })
                                 .catch((error: Error) => {
-                                    throw new AuthError(error.message);
+                                    return next(new AuthError(error.message));
                                 });
                         } else {
-                            throw new AuthError(ErrorTextsApi.ERROR_CREATING_USER);
+                            return next(new AuthError(t("auth.error.creating_user")));
                         }
                     })
                     .catch((error: Error) => {
-                        throw new AuthError(error.message);
+                        return next(new AuthError(error.message));
                     });
             });
         } catch (error) {
-            await this._handleError(error, res, transaction);
+            await transaction.rollback();
+            next(error);
         }
     };
 
@@ -160,22 +135,29 @@ export default class AuthController extends EventEmitter {
         try {
             const { rememberMe }: { rememberMe: boolean } = req.body;
 
-            this._passport.authenticate("local", { session: true }, async (error: PassportError | null, user: ISaveUser, _?: IVerifyOptions) => {
+            this._passport.authenticate("local", { session: true }, async (error: PassportError | null, user: ISafeUser, _?: IVerifyOptions) => {
                 if (error) {
-                    throw new AuthError(error.message, error.status);
+                    // Далее обрабатывается глобальным мидлваром на ошибку, поэтому прокидываем просто error
+                    return next(error);
                 }
 
                 if (!req.sessionID) {
-                    throw new AuthError(ErrorTextsApi.SESSION_ID_NOT_EXISTS);
+                    return next(new AuthError(t("auth.error.session_id_not_exists")))
                 }
 
-                return req.logIn(user, async (error?: PassportError) => {
+                req.logIn(user, async (error?: PassportError) => {
                     if (error) {
-                        throw new AuthError(error.message);
+                        // Далее обрабатывается глобальным мидлваром на ошибку, поэтому прокидываем просто error
+                        return next(error);
                     }
 
                     // Записываем в Redis значение поля rememberMe
                     await this._redisWork.set(RedisKeys.REMEMBER_ME, user.id, JSON.stringify(rememberMe));
+
+                    // Обновляем время жизни записи только в том случае, если пользователь не нажал на "Запомнить меня"
+                    if (!rememberMe) {
+                        await this._redisWork.expire(RedisKeys.REMEMBER_ME, user.id);
+                    }
 
                     // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
                     await updateSessionMaxAge(req.session, Boolean(rememberMe));
@@ -184,29 +166,29 @@ export default class AuthController extends EventEmitter {
                 });
             })(req, res, next);
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 
     // Выход пользователя
-    private async _logout(req: Request, res: Response) {
+    private async _logout(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
 
             // Выход из passport.js
             req.logout((error?: Error) => {
                 if (error) {
-                    throw new AuthError(error.message);
+                    return next(new AuthError(error.message));
                 }
 
                 // Удаляем текущую сессию express.js пользователя
                 req.session.destroy(async (error?: Error) => {
                     if (error) {
-                        throw new AuthError(error.message);
+                        return next(new AuthError(error.message));
                     }
 
                     if (!req.sessionID) {
-                        throw new AuthError(`Отсутствует идентификатор сессии пользователя (session=${req.session})`);
+                        return next(new AuthError(t("auth.error.session_id_not_exists_on_deleted_session", { session: req.session.toString() })));
                     }
 
                     // Удаляем флаг rememberMe из Redis
@@ -220,7 +202,7 @@ export default class AuthController extends EventEmitter {
                 });
             });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 };

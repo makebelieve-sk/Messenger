@@ -4,10 +4,10 @@ import "dotenv/config";
 
 import MainServer from "./core/MainServer";
 import { BaseError } from "./errors";
-import { ErrorTextsApi } from "./types/enums";
 import ProcessWorks from "./service/Process";
+import { initI18n, t } from "./service/i18n";
 
-const PORT = parseInt(process.env.PORT as string);
+const PORT = process.env.PORT as string;
 const MODE = process.env.NODE_ENV as string;
 
 // Запуск сервера
@@ -17,9 +17,9 @@ function init() {
     const mainServer = new MainServer(app, server);
 
     try {
-        server.listen(PORT, () => console.log(`Экземпляр сервера запущен на порту: ${PORT} в режиме: ${MODE}`));
+        server.listen(PORT, () => console.log(t("server_started", { mode: MODE, port: PORT })));
     } catch (error) {
-        new BaseError(`${ErrorTextsApi.START_SERVER_ERROR}: ${error}`);
+        new BaseError(`${t("start_server_error")}: ${error}`);
 
         // Закрываем соединение с бд, сокетом и редисом
         mainServer.close();
@@ -30,5 +30,5 @@ function init() {
 
 // Добавляем глобальную обработку ошибок (синхронных/асинхронных). При этом, формируем отчеты с детальной информацией об ошибке 
 new ProcessWorks();
-
-init();
+// Инициализируем интернационализацию на сервере и после запустить его
+initI18n(init);

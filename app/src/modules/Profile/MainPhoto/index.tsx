@@ -1,19 +1,18 @@
-import React from "react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
-import { useAppSelector } from "../../../hooks/useGlobalState";
 import useProfile from "../../../hooks/useProfile";
-import { selectUserState } from "../../../state/user/slice";
-import ChangeAvatar from "../../../components/ChangeAvatar";
-import Photo from "../../../components/Common/Photo";
+import ChangeAvatarComponent from "../../../components/ui/ChangeAvatar";
+import PhotoComponent from "../../../components/ui/Photo";
 
 import "./main-photo.scss";
 
-export default React.memo(function MainPhoto() {
-    const [loading, setLoading] = React.useState(false);
+export default function MainPhoto() {
+    const [loading, setLoading] = useState(false);
 
-    const { user } = useAppSelector(selectUserState);
+    const { t } = useTranslation();
     const profile = useProfile();
     
     // Клик по своей аватарке
@@ -23,7 +22,7 @@ export default React.memo(function MainPhoto() {
 
     // Удаление аватара
     const deleteAvatar = () => {
-        profile.onDeleteAvatar();
+        profile.onDeleteAvatar(setLoading);
     };
 
     // Установка/обновление своего аватара
@@ -33,16 +32,16 @@ export default React.memo(function MainPhoto() {
 
     return <Grid item>
         <Paper className="main-photo paper-block">
-            <Photo
-                src={user.avatarUrl}
+            <PhotoComponent
+                src={profile.user.avatarUrl}
                 alt="user-avatar"
                 clickHandler={onClickMainPhoto}
                 deleteHandler={deleteAvatar}
             />
 
             <div className="main-photo__edit-button">
-                <ChangeAvatar
-                    labelText="Изменить"
+                <ChangeAvatarComponent
+                    labelText={t("profile-module.change")}
                     loading={loading}
                     mustAuth
                     onChange={onSetAvatar}
@@ -51,4 +50,4 @@ export default React.memo(function MainPhoto() {
             </div>
         </Paper>
     </Grid>
-});
+};

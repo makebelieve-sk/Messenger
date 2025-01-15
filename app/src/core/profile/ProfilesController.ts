@@ -2,6 +2,7 @@ import EventEmitter from "eventemitter3";
 
 import Profile from "./Profile";
 import Request from "../Request";
+import i18next from "../../service/i18n";
 import { AppDispatch } from "../../types/redux.types";
 import { MainClientEvents } from "../../types/events";
 import { MY_ID } from "../../utils/constants";
@@ -25,7 +26,7 @@ export default class ProfilesController extends EventEmitter {
         const profile = this._profiles.get(userId);
 
         if (!profile) {
-            if (showError) this.emit(MainClientEvents.ERROR, `Профиля с id: ${userId} не существует.`);
+            if (showError) this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
             return undefined;
         }
 
@@ -35,7 +36,7 @@ export default class ProfilesController extends EventEmitter {
     // Добавление нового профиля пользователя
     addProfile(userId: string = MY_ID) {
         if (this._profiles.has(userId)) {
-            this.emit(MainClientEvents.ERROR, `Профиль с id: ${userId} уже существует.`);
+            this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
             return undefined;
         }
 
@@ -50,10 +51,11 @@ export default class ProfilesController extends EventEmitter {
         const profile = this.getProfile(userId);
 
         if (!profile) {
-            this.emit(MainClientEvents.ERROR, `Профиля с id: ${userId} не существует.`);
+            this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
+            return;
         }
 
-        
+        this._profiles.delete(userId);
     }
 
     // Слушатель события класса Profile

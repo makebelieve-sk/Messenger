@@ -7,14 +7,6 @@ import { IEditMessage } from "../core/edit-message";
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
-interface ISocketUsers {
-    [userId: string]: {
-        socketID: string;
-        user: IUser;
-        call?: { id: string; chatInfo: any; usersInCall: any[]; };
-    };
-};
-
 interface ISocketData {
     type: string;
     payload: {

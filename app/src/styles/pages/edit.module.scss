@@ -1,5 +1,5 @@
 @use "sass:math";
-@import "styles/colors.scss";
+@use "styles/colors.scss" as *;
 
 .edit-container {
     display: flex;

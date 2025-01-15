@@ -3,15 +3,18 @@ import crypto from "crypto";
 import Passport, { PassportStatic } from "passport";
 import { IVerifyOptions, Strategy } from "passport-local";
 
+import { t } from "../service/i18n";
 import Database from "./Database";
-import { ISaveUser, UserInstance } from "../database/models/Users";
-import { getSaveUserFields } from "../utils/user";
+import { UserInstance } from "../database/models/Users";
+import { getSafeUserFields } from "../utils/user";
+import { validateEmail, validatePhoneNumber } from "../utils/auth";
 import { PassportError } from "../errors";
-import { IUser } from "../types/models.types";
 import { UsersType } from "../types";
-import { ErrorTextsApi, HTTPStatuses } from "../types/enums";
+import { HTTPStatuses } from "../types/enums";
+import { ISafeUser } from "../types/user.types";
+import { ISocketUser } from "../types/socket.types";
 
-type DoneType = (error: PassportError | null, user?: ISaveUser | false, options?: IVerifyOptions) => void;
+type DoneType = (error: PassportError | null, user?: ISafeUser | false, options?: IVerifyOptions) => void;
 
 // Класс, отвечает за стратегию аутентификации пользователя
 export default class PassportWorks {
@@ -32,23 +35,26 @@ export default class PassportWorks {
 
         this._passport.use(new Strategy({ usernameField: "login", passwordField: "password" }, this._verify.bind(this)));
 
-        // Достаем данные о пользователе из его сессии
+        // Достаем данные о пользователе из его сессии при входе
         this._passport.serializeUser<string>((user, done: (error: PassportError | null, userId: string) => void) => {
-            console.log("serializeUser: ", user);
+            // Так как метод serializeUser имеет четкую типизацию в самой библиотеке, то тут два варианта:
+            // 1) Изменить тип в библиотеке вручную (минус в том, что при каждом обновлении версии пакета необходимо проверять этот тип)
+            // 2) Создать новую переменную для указания типа
+            // В любом варианте не придется писать (user as ISafeUser), что упростит код
+            const me = user as ISafeUser;
+            console.log("serializeUser: ", me);
 
             process.nextTick(() => {
-                if (!this._users.has((user as IUser).id)) {
-                    this._users.set((user as IUser).id, user as IUser);
+                if (!this._users.has(me.id)) {
+                    this._users.set(me.id, me as ISocketUser);
                 }
                 
-                done(null, (user as IUser).id);
+                done(null, me.id);
             });
         });
 
-        // Сохраняем данные о пользователе в его сессию
+        // Сохраняем данные о пользователе в его сессию при каждом запросе
         this._passport.deserializeUser((userId: string, done: DoneType) => {
-            console.log("deserializeUser: ", userId);
-
             process.nextTick(() => {
                 const user = this._users.get(userId);
 
@@ -59,13 +65,20 @@ export default class PassportWorks {
                         .findByPk(userId)
                         .then(currectUser => {
                             if (currectUser) {
-                                const user = getSaveUserFields(currectUser);
+                                const user = getSafeUserFields(currectUser);
 
-                                this._users.set(user.id, user as IUser);
+                                // Напоминание
+                                // На сервере одна общая мапа пользователей (это список онлайн, то есть те юзеры, которые прошли авторизацию -> значит подключаются к сокету).
+                                // В запросах (express) мы не должны использовать идентификатор сокет соединения (он там попросту не нужен).
+                                // В обработчиках событий сокет соединения нам необходимо использовать идентификатор сокет соединения.
+                                // Поэтому здесь (сериализация устанавливает объект пользователя в объект запроса req.user) мы устанавливаем поле
+                                // socketID = null, потому что вскоре после этого действия произойдет установка сокет соединения на клиенте с сервером
+                                // и в этот момент произойдет установка socketID на нужный.
+                                this._users.set(user.id, { ...user, socketID: null as never });
 
                                 done(null, user);
                             } else {
-                                throw new PassportError(`Пользователь с id=${userId} не найден`);
+                                done(new PassportError(t("users.error.user_with_id_not_found", { id: userId })));
                             }
                         })
                         .catch((error: Error) => {
@@ -83,22 +96,33 @@ export default class PassportWorks {
     // Проверка подлинности пользователя
     private async _verify(login: string, password: string, done: DoneType) {
         try {
-            const candidateEmail = await this._database.models.users.findOne({ where: { email: login } });
+            if (!login || !password) {
+                return done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
+            }
+
+            const email = validateEmail(login);
+
+            if (email) {
+                const candidateEmail = await this._database.models.users.findOne({ where: { email } });
     
-            if (candidateEmail) {
-                this._comparePasswords(candidateEmail, password, done);
-            } else {
-                let phone = login.replace(/[^0-9]/g, "");
-                phone = phone[0] === "8" ? "+7" + phone.slice(1) : "+" + phone;
-    
+                if (candidateEmail) {
+                    return this._comparePasswords(candidateEmail, password, done);
+                }
+            }
+
+            const phone = validatePhoneNumber(login);
+
+            if (phone) {
                 const candidatePhone = await this._database.models.users.findOne({ where: { phone } });
 
                 if (candidatePhone) {
-                    this._comparePasswords(candidatePhone, password, done);
+                    return this._comparePasswords(candidatePhone, password, done);
                 } else {
-                    done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
+                    return done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
                 }
             }
+
+            done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
         } catch (error) {
             const nextError = error instanceof PassportError
                 ? error
@@ -110,18 +134,18 @@ export default class PassportWorks {
 
     // Сравнение паролей пользователя (текущего и сохраненного в БД)
     private _comparePasswords(candidate: UserInstance, password: string, done: DoneType) {
-        crypto.pbkdf2(password, candidate.salt, 4096, 256, "sha256", function (error, hash) {
-            if (error) {
-                throw new PassportError(error.message);
-            }
-    
+        try {
             // Генерируем хеш пароля, приправленным "солью"
+            const hash = crypto.pbkdf2Sync(password, candidate.salt, 4096, 256, "sha256");
+
             const hashString = hash.toString("hex");
-            const user = getSaveUserFields(candidate);
+            const user = getSafeUserFields(candidate);
     
-            hashString === candidate.password
+            return hashString === candidate.password
                 ? done(null, user)
-                : done(new PassportError(ErrorTextsApi.INCORRECT_LOGIN_OR_PASSWORD, HTTPStatuses.BadRequest));
-        });
+                : done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
+        } catch (error) {
+            return done(new PassportError((error as Error).message));
+        }
     }
 }

@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import { BaseError } from "../errors";
-import { ErrorTextsApi } from "../types/enums";
+import { t } from "./i18n";
 
 const REPORTS_DIR = process.env.REPORTS_PATH as string;
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -31,12 +31,12 @@ export default class ProcessWorks {
     private _init() {
         // Обрабатываем пробрасываемые исключения синхронного кода
         process.on("uncaughtException", (error: Error) => {
-            this._handleError(`${ErrorTextsApi.UNHANDLED_SYNC_ERROR}: ${error.message}`, "exception");
+            this._handleError(t("error.unhandled_sync", { errorMessage: error.message }), "exception");
         });
 
         // Обрабатываем пробрасываемые исключения асинхронного кода
         process.on("unhandledRejection", (reason: string, promise: Promise<unknown>) => {
-            this._handleError(`${ErrorTextsApi.UNHANDLED_ASYNC_ERROR}: ${reason} (${promise})`, "rejection");
+            this._handleError(t("error.unhandled_async", { reason, promise: promise.toString() }), "rejection");
         });
     }
 
