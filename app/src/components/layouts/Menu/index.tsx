@@ -1,4 +1,4 @@
-import { useContext, useEffect, memo } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Stack from "@mui/material/Stack";
@@ -9,18 +9,17 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 
-import { MainClientContext } from "../../main/Main";
-import { Pages } from "../../../types/enums";
+import useMainClient from "../../../hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useGlobalState";
 import { selectMainState, setMessageNotification } from "../../../store/main/slice";
 import { selectMessagesState } from "../../../store/messages/slice";
+import { Pages } from "../../../types/enums";
 
 import "./menu.scss";
 
 // Компонент главного меню. Отрисовывается на каждой странице
-export default memo(function MenuComponent() {
-    const mainClient = useContext(MainClientContext);
-
+export default function MenuComponent() {
+    const { mainApi } = useMainClient();
     const { t } = useTranslation();
     const { friendNotification, messageNotification } = useAppSelector(selectMainState);
     const { unRead } = useAppSelector(selectMessagesState);
@@ -29,14 +28,12 @@ export default memo(function MenuComponent() {
 
     // Получаем уведомления для отрисовки в Badge
     useEffect(() => {
-        if (mainClient) {
-            // Уведомления для друзей
-            mainClient.mainApi.getFriendsNotification();
+        // Уведомления для друзей
+        mainApi.getFriendsNotification();
 
-            // Уведомления для сообщений
-            mainClient.mainApi.getMessageNotification();
-        }
-    }, [mainClient]);
+        // Уведомления для сообщений
+        mainApi.getMessageNotification();
+    }, []);
 
     // При изменении непрочитанных сообщений в чатах изменяем количество чатов, содержащих непрочитанные сообщения
     useEffect(() => {
@@ -86,4 +83,4 @@ export default memo(function MenuComponent() {
             </div>
         </Stack>
     </div>
-});
+};

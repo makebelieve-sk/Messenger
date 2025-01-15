@@ -1,16 +1,17 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import MobileStepper from "@mui/material/MobileStepper";
 
-import Info, { ICarouselImage } from "../../../../modules/ImagesCarousel/Info/Info";
 import PhotoComponent from "../../../ui/Photo";
+import Info, { ICarouselImage } from "../../../../modules/ImagesCarousel/Info/Info";
 import CarouselButton from "../../../../modules/ImagesCarousel/CarouselButton";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/useGlobalState";
 import { selectMainState, setImagesInCarousel } from "../../../../store/main/slice";
 
 import "./modal-with-images-carousel.scss";
 
-export default memo(function ModalWithImagesCarousel() {
+// Модальное окно с фотографиями и необходимой информации о них в виде карусели
+export default function ModalWithImagesCarousel() {
     const [open, setOpen] = useState(false);
     const [activeKey, setActiveKey] = useState(0);
     const [images, setImages] = useState<null | ICarouselImage[]>(null);
@@ -77,4 +78,4 @@ export default memo(function ModalWithImagesCarousel() {
             </div>
         </Dialog>
     </>;
-});
+};

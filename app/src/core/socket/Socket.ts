@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 
 import SocketController from "./SocketController";
 import i18next from "../../service/i18n";
-import { SOCKET_IO_CLIENT } from "../../utils/constants";
+import { RECONECTION_ATTEMPTS, RECONNECTION_DELAY, SOCKET_IO_CLIENT } from "../../utils/constants";
 import { AppDispatch } from "../../types/redux.types";
 import { SocketType } from "../../types/socket.types";
 import { MainClientEvents, SocketEvents } from "../../types/events";
@@ -33,14 +33,14 @@ export default class Socket extends EventEmitter {
         this._me = myUser;
 
         this._socket = io(SOCKET_IO_CLIENT, { 
-            transports: ["websocket"],
-            autoConnect: true,
-            reconnectionAttempts: 5,
-            reconnectionDelay: 5000,
-            forceNew: false,
-            upgrade: true,
-            closeOnBeforeunload: true,
-            withCredentials: true,
+            transports: ["websocket"],                  // Виды транспортов (идут один за другим по приоритету, данный массив на сервере должен совпадать)
+            autoConnect: true,                          // Автоматически подключаться при создании экземпляра клиента (без вызова connect())
+            reconnectionAttempts: RECONECTION_ATTEMPTS, // Количество попытокпереподключения перед тем, как закрыть соединение
+            reconnectionDelay: RECONNECTION_DELAY,      // Задержка между попытками переподключения
+            forceNew: false,                            // Не создает новое соединение, если оно уже существует
+            upgrade: true,                              // Позволяет улучшать соединение с polling до websocket (в нашем случае улучшается с первого http-запроса (handshake) до websocket)
+            closeOnBeforeunload: true,                  // Позволяет сокет соединению автоматически закрываться при событии beforeunload (закрытие вкладки/браузера/обновление страницы)
+            withCredentials: true                       // Включает передачу куки при кросс-доменных запросах (работает только с аналогичным параметром на сервере)
         });
         this._socket.auth = { user: this._me };
 

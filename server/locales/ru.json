@@ -10,14 +10,16 @@
     "auth.error.user_with_phone_already_exists": "Пользователь с номером телефона {{phone}} уже существует.",
     "auth.error.session_id_not_exists_on_deleted_session": "Отсутствует идентификатор сессии пользователя (session={{session}}).",
 
+    "photos.error.user_not_found": "Пользователь не найден.",
     "photos.error.sharp_avatar_path_not_found": "Не передан путь к сжатому аватару.",
     "photos.error.sharp_photo_path_not_found":  "Не передан путь к сжатой фотографии.",
     "photos.error.sharp_photo_paths_not_found": "Сжатые фотографии не найдены.",
     "photos.error.delete_photo_path_not_found": "Не передан путь для удаления фотографии.",
     "photos.error.photo_not_found": "Изображение не найдено.",
     "photos.error.photos_not_found": "Изображения не найдены.",
-    "photos.error.sharped_photo_with_error": "Возникла ошибка при сжатии изображений.",
+    "photos.error.sharped_photo_with_error": "Возникла ошибка при сжатии изображений: {{errorMessage}}",
 
+    "files.error.message_id_not_found": "Не передан id сообщения.",
     "files.error.files_not_found": "Не переданы файлы.",
     "files.error.file_path_open_not_found": "Не передан путь для открытия файла.",
     "files.error.file_path_download_not_found": "Не передан путь для скачивания файла.",
@@ -65,6 +67,7 @@
     "socket.disconnecting": "В процессе отключения сокет соединения ({{reason}}).",
     "socket.socket_disconnected_with_reason": "Сокет с идентификатором соединения {{socketID}} отключился по причине: {{reason}}.",
 
+    "socket.error.user_with_id_not_exists": "Пользователя с идентификатором {{userId}} не существует.",
     "socket.error.user_id_not_found": "Не передан идентификатор пользователя.",
     "socket.error.not_correct_friends_action_type": "Некорректный тип действия при работе с друзьями.",
     "socket.error.cannot_find_call": "Невозможно завершить звонок, так как он не найден. Возможно, он уже завершен.",

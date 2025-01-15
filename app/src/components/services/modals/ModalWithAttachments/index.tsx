@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, memo } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "@mui/material/Modal";
 import Tabs from "@mui/material/Tabs";
@@ -7,14 +7,15 @@ import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-import { MainClientContext } from "../../../main/Main";
+import SpinnerComponent from "../../../ui/Spinner";
+import useMainClient from "../../../../hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/useGlobalState";
 import { selectMessagesState, setAttachments } from "../../../../store/messages/slice";
 import { setImagesInCarousel } from "../../../../store/main/slice";
 import { IFile } from "../../../../types/models.types";
+import { ValueOf } from "../../../../types";
 import { currentSize } from "../../../../utils/files";
 import { getHoursWithMinutes, transformDate } from "../../../../utils/time";
-import SpinnerComponent from "../../../ui/Spinner";
 import { ICarouselImage } from "../../../../modules/ImagesCarousel/Info/Info";
 
 import "./modal-with-attachments.scss";
@@ -25,22 +26,24 @@ const modalDescription = "modal-attachments-description";
 const TABS = {
     PHOTOS: 0,
     FILES: 1
-};
+} as const;
+
+type TabsType = ValueOf<typeof TABS>;
 
 export interface IAttachmentFile extends IFile {
     originalSrc: string;
     createDate: string;
 };
 
-export default memo(function ModalWithAttachments() {
+// Компонент модального окна с прикреплением файлов/фотографий для сообщения/редактируемого сообщения
+export default function ModalWithAttachments() {
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(TABS.PHOTOS);
+    const [value, setValue] = useState<TabsType>(TABS.PHOTOS);
     const [loading, setLoading] = useState(false);
     const [images, setImages] = useState<any[]>([]);
     const [files, setFiles] = useState<IAttachmentFile[]>([]);
 
-    const mainClient = useContext(MainClientContext);
-
+    const { mainApi } = useMainClient();
     const { t } = useTranslation();
     const { attachmentsModal } = useAppSelector(selectMessagesState);
     const dispatch = useAppDispatch();
@@ -51,7 +54,7 @@ export default memo(function ModalWithAttachments() {
             setOpen(attachmentsModal.isOpen);
 
             if (attachmentsModal) {
-                mainClient.mainApi.getAttachments(
+                mainApi.getAttachments(
                     { chatId: attachmentsModal.chatId }, 
                     setLoading,
                     (data: { images: ICarouselImage[]; files: IAttachmentFile[] }) => {
@@ -70,7 +73,7 @@ export default memo(function ModalWithAttachments() {
     };
 
     // Переключение вкладки
-    const onChange = (_: React.SyntheticEvent, newTab: number) => {
+    const onChange = (_: React.SyntheticEvent, newTab: TabsType) => {
         setValue(newTab);
     };
 
@@ -85,7 +88,7 @@ export default memo(function ModalWithAttachments() {
     const onOpenFile = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, filePath: string) => {
         event.stopPropagation();
 
-        mainClient.mainApi.openFile({ path: filePath });
+        mainApi.openFile({ path: filePath });
     };
 
     // Переход к сообщению в чате
@@ -164,4 +167,4 @@ export default memo(function ModalWithAttachments() {
             </Box>
         </Modal>
     </>
-});
+};

@@ -15,6 +15,7 @@
 
     "sign-up.error.step_unknowed": "Возникла ошибка при генерации контента для шага {{step}}",
 
+    "images-carousel-module.you": "Вы",
     "images-carousel-module.further": "Далее",
     "images-carousel-module.back": "Назад",
 
@@ -69,7 +70,11 @@
     "core.socket.error.connection": "Ошибка сокет-соединения [isSocketActive: {{isSocketActive}}]: {{message}}",
 
     "core.catch-errors.error": "Ошибка",
+    "core.catch-errors.error.network": "Ошибка при получении ответа от сервера. Скорее всего сервер недоступен в данный момент. Проверьте интернет соединение.",
     "core.catch-errors.error.timeout": "Возникли проблемы с базой данных или время ожидания ответа превысило 15 секунд.",
+    "core.catch-errors.error.bad_request": "Ошибка возникла при попытке дать запрос к серверу. Скорее всего сервер недоступен в данный момент. Проверьте интернет соединение.",
+    "core.catch-errors.error.canceled": "Запрос был отменен.",
+    "core.catch-errors.error.unknown": "Неизвестная ошибка.",
 
     "core.socket.connection_established": "Сокет-соединение с сервером установлено [socket.id={{socketId}}]",
     "core.socket.online_users": "Пользователи онлайн: ",

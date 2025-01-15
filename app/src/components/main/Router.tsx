@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 
 import Profile from "../../pages/Profile";
@@ -6,21 +6,30 @@ import SignIn from "../../pages/SignIn";
 import SignUp from "../../pages/SignUp";
 import { Pages } from "../../types/enums";
 import { MainClientEvents } from "../../types/events";
-import { MainClientContext } from "./Main";
 import { selectMainState } from "../../store/main/slice";
 import { useAppSelector } from "../../hooks/useGlobalState";
+import useMainClient from "../../hooks/useMainClient";
 
+// Основной компонент маршрутизации. Отвечает как за защищенные маршруты, так и за авторизационные.
 export default function Router() {
-    const { isAuth } = useAppSelector(selectMainState);
+    const mainClient = useMainClient();
     const navigate = useNavigate();
-
-    const mainClient = useContext(MainClientContext);
+    const { isAuth } = useAppSelector(selectMainState);
 
     useEffect(() => {
-        mainClient.on(MainClientEvents.REDIRECT, (path: string) => {
-            navigate(path);
-        });
+        // Перенаправляем пользователя в зависимости от полученного пути из бизнес-логики
+        mainClient.on(MainClientEvents.REDIRECT, onRedirect);
+
+        // Отписываемся от события при размонтировании компонента для избежания утечки памяти
+        return () => {
+            mainClient.off(MainClientEvents.REDIRECT, onRedirect);
+        }
     }, []);
+
+    // Обработчик события MainClientEvents.REDIRECT
+    const onRedirect = (path: string) => {
+        navigate(path);
+    }
     
     return isAuth
         ? <Routes>

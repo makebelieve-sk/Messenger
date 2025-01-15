@@ -2,13 +2,13 @@ import EventEmitter from "eventemitter3";
 
 import Request from "../Request";
 import User from "../models/User";
-import { setImagesInCarousel } from "../../store/main/slice";
-import { addPhotos, changeUserField, deletePhoto, setPhotos, setPhotosCount, setUserDetail } from "../../store/user/slice";
+import { setImagesInCarousel, setModalConfirm } from "../../store/main/slice";
+import { addPhotos, deletePhoto, setPhotos, setPhotosCount } from "../../store/user/slice";
 import { setFriendsCount, setSubscribersCount, setTopFriends } from "../../store/friends/slice";
 import { ApiRoutes } from "../../types/enums";
 import { IPhoto, IUser, IUserDetails } from "../../types/models.types";
 import { AppDispatch } from "../../types/redux.types";
-import { MainClientEvents } from "../../types/events";
+import { MainClientEvents, UserEvents } from "../../types/events";
 import { NO_PHOTO } from "../../utils/constants";
 import { currentDate } from "../../utils/datetime";
 import { AVATAR_URL } from "../../utils/files";
@@ -25,12 +25,13 @@ export default class Profile extends EventEmitter {
         this._bindUserListeners();
     }
 
-    get user() {
+    get user(): User {
         return this._user;
     }
 
     private _bindUserListeners() {
         this._user.on(MainClientEvents.GET_ME, () => this.emit(MainClientEvents.GET_ME));
+        this._user.on(UserEvents.CHANGE_FIELD, (...args: string[]) => this.emit(UserEvents.CHANGE_FIELD, ...args));
     }
 
     //-------------------------------------------------
@@ -51,11 +52,15 @@ export default class Profile extends EventEmitter {
     }
 
     // Удаление аватара
-    onDeleteAvatar() {
+    onDeleteAvatar(setLoading?: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.post({
-            route: ApiRoutes.deleteImage,
-            data: { fileUrl: this._user.avatarUrl },
-            successCb: () => this._dispatch(changeUserField({ field: AVATAR_URL, value: "" }))
+            route: ApiRoutes.deletePhoto,
+            data: { imageUrl: this._user.avatarUrl },
+            setLoading,
+            successCb: () => {
+                this._user.changeField(AVATAR_URL, "");
+                this._dispatch(setModalConfirm(null));
+            }
         });
     }
 
@@ -121,7 +126,7 @@ export default class Profile extends EventEmitter {
     // Удаление фотографии
     deletePhoto(data: Object, photos: IPhoto[], path: string) {
         this._request.post({
-            route: ApiRoutes.deleteImage,
+            route: ApiRoutes.deletePhoto,
             data,
             successCb: () => {
                 if (photos.length) {
@@ -133,6 +138,7 @@ export default class Profile extends EventEmitter {
                         this._dispatch(deletePhoto(indexOf));
                     }
                 }
+                this._dispatch(setModalConfirm(null));
             }
         });
     }
@@ -145,8 +151,8 @@ export default class Profile extends EventEmitter {
         this._request.get({
             route: ApiRoutes.getUserDetail, 
             setLoading,
-            successCb: (data: { success: boolean, userDetail: IUserDetails }) => {
-                this._dispatch(setUserDetail(data.userDetail))
+            successCb: (data: { success: boolean; userDetail: IUserDetails; }) => {
+                this._user.setUserDetails(data.userDetail);
             }
         });
     }

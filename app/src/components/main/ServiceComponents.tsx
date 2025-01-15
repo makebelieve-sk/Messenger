@@ -1,5 +1,3 @@
-import { memo } from "react";
-
 import ModalWithError from "../services/modals/ModalWithError";
 import ModalWithAttachments from "../services/modals/ModalWithAttachments";
 import ModalWithConfirm from "../services/modals/ModalWithConfirm";
@@ -8,7 +6,8 @@ import SnackBarWithSocketError from "../services/snackbars/SnackBarWithSocketErr
 import { useAppSelector } from "../../hooks/useGlobalState";
 import { selectMainState } from "../../store/main/slice";
 
-export default memo(function ServiceComponents() {
+// Компонент, содержащий дополнительные "сервисные" модули, такие как всплывающие/модальные окна и подсказки
+export default function ServiceComponents() {
     const { isAuth } = useAppSelector(selectMainState);
 
     return <>
@@ -26,4 +25,4 @@ export default memo(function ServiceComponents() {
             : null
         }
     </>
-});
+};

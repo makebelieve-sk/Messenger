@@ -1,10 +1,9 @@
 import { useState, useEffect, memo } from "react";
+import { useTranslation } from "react-i18next";
 
-import { transformDate } from "../../../utils/time";
-import { useAppSelector } from "../../../hooks/useGlobalState";
-import { selectUserState } from "../../../store/user/slice";
-import { getFullName } from "../../../utils";
+import useUser from "../../../hooks/useUser";
 import AvatarComponent from "../../../components/ui/Avatar";
+import { transformDate } from "../../../utils/time";
 
 import "./info.scss";
 
@@ -20,11 +19,12 @@ export default memo(function Info({ activeImage }: { activeImage: ICarouselImage
     const [name, setName] = useState("");
     const [createDate, setCreateDate] = useState("");
 
-    const { user } = useAppSelector(selectUserState);
+    const { t } = useTranslation();
+    const user = useUser();
 
     useEffect(() => {
-        setName(user && getFullName(user) === activeImage.authorName
-            ? "Вы"
+        setName(user.fullName === activeImage.authorName
+            ? t("images-carousel-module.you")
             : activeImage.authorName
         );
     }, [activeImage.authorName]);

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LoadingButton } from "@mui/lab";
@@ -19,7 +19,7 @@ import LinkComponent from "../components/ui/Link";
 import SignUpForm from "../modules/SignUp/Form";
 import ChooseAvatar from "../modules/SignUp/ChooseAvatar";
 import CopyrightComponent from "../components/ui/Copyright";
-import { MainClientContext } from "../components/main/Main";
+import useMainClient from "../hooks/useMainClient";
 import { Pages } from "../types/enums";
 import { IUser } from "../types/models.types";
 
@@ -68,15 +68,14 @@ export interface ISignUpState {
 		passwordConfirm: string;
 		avatarUrl: string;
 	};
-}
+};
 
 export default function SignUp() {
 	const [activeStep, setActiveStep] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [formValues, setFormValues] = useState(initialValues);
 
-	const mainClient = useContext(MainClientContext);
-
+	const mainClient = useMainClient();
 	const { t } = useTranslation();
 	const navigate = useNavigate();
 
@@ -84,12 +83,12 @@ export default function SignUp() {
 		if (activeStep + 1 === steps.length) {
 			handleSubmit();
 		} else {
-			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			setActiveStep(prevActiveStep => prevActiveStep + 1);
 		}
 	};
 
 	const handleBack = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
+		setActiveStep(prevActiveStep => prevActiveStep - 1);
 	};
 
 	const checkValidation = (step: number) => {
@@ -161,7 +160,7 @@ export default function SignUp() {
 			.replace("(", "")
 			.replace(")", "");
 
-		const user: Omit<IUser, "id" | "secondName" | "salt"> = {
+		const user: Omit<IUser, "id" | "secondName" | "salt"> & { password: string } = {
 			firstName: formValues.values.firstName,
 			thirdName: formValues.values.thirdName,
 			email: formValues.values.email,

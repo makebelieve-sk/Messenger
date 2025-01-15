@@ -1,15 +1,16 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect } from "react";
 import Alert from "@mui/material/Alert";
 
 import SnackBarComponent from "../../../ui/Snackbar";
 import { useAppSelector } from "../../../../hooks/useGlobalState";
 import { selectErrorState } from "../../../../store/error/slice";
 
-export default memo(function SnackBarWithSocketError() {
+// Всплывающая подсказка с ошибкой по сокет соединению
+export default function SnackBarWithSocketError() {
     const [openSnack, setOpenSnack] = useState(false);
 
     const { systemError } = useAppSelector(selectErrorState);
-    
+
     // Открытие уведомления с ошибкой, переданной по сокету
     useEffect(() => {
         setOpenSnack(Boolean(systemError));
@@ -25,4 +26,4 @@ export default memo(function SnackBarWithSocketError() {
             {systemError}
         </Alert>
     </SnackBarComponent>
-});
+};

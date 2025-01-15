@@ -1,8 +1,8 @@
-import { useContext, memo, ChangeEvent, Dispatch, SetStateAction } from "react";
+import { memo, ChangeEvent, Dispatch, SetStateAction } from "react";
 
 import InputImageComponent from "../../ui/InputImage";
 import { ApiRoutes } from "../../../types/enums";
-import { MainClientContext } from "../../main/Main";
+import useMainClient from "../../../hooks/useMainClient";
 
 interface ChangeAvatar {
     labelText: string;
@@ -12,9 +12,9 @@ interface ChangeAvatar {
     setLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-// Базовый компонент смены изображения (используется только для изменения главной фотографии пользователя)
-export default memo(function ChangeAvatarComponent({ labelText, loading, mustAuth = false, onChange, setLoading }: ChangeAvatar) {
-    const mainClient = useContext(MainClientContext);
+// Базовый компонент для смены аватара (используется для смены аватара на страницах регистрации/профиля)
+export default memo(function ChangeAvatar({ labelText, loading, mustAuth = false, onChange, setLoading }: ChangeAvatar) {
+    const { mainApi } = useMainClient();
 
     // Функция изменения аватарки
     const handleChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -38,15 +38,13 @@ export default memo(function ChangeAvatarComponent({ labelText, loading, mustAut
         const formData = new FormData();    // Создаем объект FormData
         formData.append("avatar", file);    // Добавляем файл аватара в объект formData
 
-        mainClient.mainApi.uploadAvatarAuth(
-            mustAuth ? ApiRoutes.uploadAvatarAuth : ApiRoutes.saveAvatar,
+        mainApi.uploadAvatarAuth(
+            mustAuth ? ApiRoutes.changeAvatar : ApiRoutes.uploadAvatar,
             formData,
             setLoading,
             (data: { success: boolean; id: string; newAvatarUrl: string; newPhotoUrl: string; }) => {
-                if (data.success) {
-                    // Обновляем поле avatarUrl в объекте пользователя
-                    onChange({ id: data.id, newAvatarUrl: data.newAvatarUrl, newPhotoUrl: data.newPhotoUrl });
-                }
+                // Обновляем поле avatarUrl в объекте пользователя
+                onChange(data);
             }
         );
     };

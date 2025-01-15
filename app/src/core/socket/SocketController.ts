@@ -37,11 +37,6 @@ export default class SocketController extends EventEmitter {
         this._init();
     }
 
-    private _reconnect() {
-        this._socket.auth = { user: this._myUser };
-        this._socket.connect();
-    }
-
     private _init() {
         this._socket.on("connect", () => {
             console.log(i18next.t("core.socket.connection_established", { socketId: this._socket.id }));

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
@@ -13,11 +13,11 @@ import Checkbox from "@mui/material/Checkbox";
 import { LoadingButton } from "@mui/lab";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
+import useMainClient from "../hooks/useMainClient";
 import CopyrightComponent from "../components/ui/Copyright";
 import LinkComponent from "../components/ui/Link";
 import { Pages } from "../types/enums";
 import { REQUIRED_FIELD } from "../utils/constants";
-import { MainClientContext } from "../components/main/Main";
 
 import styles from "../styles/pages/sign-in.module.scss";
 
@@ -40,7 +40,7 @@ export default function SignIn() {
 	const [errorFromServer, setErrorFromServer] = useState(false);
 	const [formValues, setFormValues] = useState(initialValues);
 
-	const mainClient = useContext(MainClientContext);
+	const { mainApi } = useMainClient();
 
 	const { t } = useTranslation();
 	const navigate = useNavigate();
@@ -77,7 +77,7 @@ export default function SignIn() {
 		event.preventDefault();
 
 		if (!saveDisabled) {
-			mainClient.mainApi.signIn(formValues.values, setLoading, (error) => {
+			mainApi.signIn(formValues.values, setLoading, (error) => {
 				if (error && typeof error === "object" && error.message) {
 					setErrorFromServer(true);
 					setFormValues({

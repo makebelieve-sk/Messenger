@@ -1,32 +1,49 @@
-import { memo, useState, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 
-import { CLIENT_URL } from "../../../utils/constants";
-import { getFullName } from "../../../utils";
-import {  Pages } from "../../../types/enums";
-import { MainClientContext } from "../../main/Main";
-import { selectUserState } from "../../../store/user/slice";
-import { useAppSelector } from "../../../hooks/useGlobalState";
 import AvatarComponent from "../../ui/Avatar";
 import Logo from "./Logo";
+import useMainClient from "../../../hooks/useMainClient";
+import useProfile from "../../../hooks/useProfile";
+import { CLIENT_URL } from "../../../utils/constants";
+import { AVATAR_URL } from "../../../utils/files";
+import {  Pages } from "../../../types/enums";
+import { UserEvents } from "../../../types/events";
 
 import "./header.scss";
 
 const anchorOrigin = { vertical: "top", horizontal: "left" } as const;
 
 // Компонент верхушки приложения. Отрисовывается на каждой странице
-export default memo(function HeaderComponent() {
-    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
-    const mainClient = useContext(MainClientContext);
-
-    const { t } = useTranslation();
-    const { user } = useAppSelector(selectUserState);
+export default function HeaderComponent() {
+    const mainClient = useMainClient();
+    const profile = useProfile();
     const navigate = useNavigate();
+    const { t } = useTranslation();
+
+    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+    const [avatarUrl, setAvatarUrl] = useState<string>(profile.user.avatarUrl);
+
+    useEffect(() => {
+        // После обновления поля пользователя необходимо добавить проверку на обновление аватара и обновлять его в состоянии
+        profile.on(UserEvents.CHANGE_FIELD, onChangeField);
+
+        // Отписываемся от данного события при размонтировании, чтобы избежать утечки памяти
+        return () => {
+            profile.off(UserEvents.CHANGE_FIELD, onChangeField);
+        }
+    }, []);
+
+    // Коллбек события UserEvents.CHANGE_FIELD
+    const onChangeField = (field: string) => {
+        if (field === AVATAR_URL) {
+            setAvatarUrl(profile.user.avatarUrl);
+        }
+    }
 
     // Переход на страницу
     const goTo = (link: Pages) => {
@@ -56,7 +73,7 @@ export default memo(function HeaderComponent() {
 
                 <div className="header-container__toolbar__avatar">
                     <div onClick={event => setAnchorElUser(event.currentTarget)}>
-                        <AvatarComponent src={user.avatarUrl} alt={getFullName(user)} />
+                        <AvatarComponent src={avatarUrl} alt={profile.user.fullName} />
                     </div>
 
                     <Menu
@@ -89,4 +106,4 @@ export default memo(function HeaderComponent() {
             </div>
         </div>
     </header>
-});
+};

@@ -5,6 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import useImage from "../../../hooks/useImage";
 import { useAppDispatch } from "../../../hooks/useGlobalState";
 import { setModalConfirm } from "../../../store/main/slice";
+import { NO_PHOTO } from "../../../utils/constants";
 
 import "./photo.scss";
 
@@ -31,7 +32,7 @@ export default memo(function PhotoComponent({ src, alt, showVisibleIcon = true, 
     
     // Обработка наведения на изображение
     const onMouseOver = () => {
-        if (showVisibleIcon && src) setVisibleCloseIcon(true);
+        if (showVisibleIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(true);
     };
 
     // Обработка ухода курсора с изображения

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Socket } from "socket.io-client";
 import Snackbar from "@mui/material/Snackbar";
 import Button from "@mui/material/Button";
@@ -8,19 +8,20 @@ import CallEndOutlinedIcon from "@mui/icons-material/CallEndOutlined";
 
 import AvatarComponent from "../../../ui/Avatar";
 import { selectMainState } from "../../../../store/main/slice";
-import { selectUserState } from "../../../../store/user/slice";
 import { useAppSelector } from "../../../../hooks/useGlobalState";
+import useUser from "../../../../hooks/useUser";
 import { SocketActions } from "../../../../types/enums";
 import { ClientToServerEvents, ServerToClientEvents } from "../../../../types/socket.types";
 
 import "./snackbar-with-call.scss";
 
-export default memo(function SnackBarWithCall() {
+export default function SnackBarWithCall() {
     const [openSnack, setOpenSnack] = useState(false);
 
-    const { globalCall } = useAppSelector(selectMainState);
-    const { user } = useAppSelector(selectUserState);
     const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents>>(undefined as never);
+
+    const user = useUser();
+    const { globalCall } = useAppSelector(selectMainState);
 
     // Открытие уведомления о текущем звонке
     useEffect(() => {
@@ -29,7 +30,7 @@ export default memo(function SnackBarWithCall() {
 
     // Закрытие окна с системной ошибкой
     const onCloseSnack = () => {
-        if (globalCall && user && socketRef.current) {
+        if (globalCall && socketRef.current) {
             // Отправляем событие о выходе из комнаты на сервер
             socketRef.current.emit(SocketActions.END_CALL, {
                 roomId: globalCall.roomId,
@@ -44,7 +45,7 @@ export default memo(function SnackBarWithCall() {
         onClose={onCloseSnack}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         message={<div className="snackbar__global-call">
-            {globalCall && user
+            {globalCall
                 ? <>
                     Информация о текущем звонке:
                     <div className="snackbar__global-call__info">
@@ -81,4 +82,4 @@ export default memo(function SnackBarWithCall() {
             <CallEndOutlinedIcon color="error" />
         </Button>}
     />;
-});
+};

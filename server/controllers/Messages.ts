@@ -1,22 +1,20 @@
-import EventEmitter from "events";
 import { v4 as uuid } from "uuid";
-import { Request, Response, Express } from "express";
-import { Op, Transaction } from "sequelize";
+import { Request, Response, Express, NextFunction } from "express";
+import { Op } from "sequelize";
 import { Literal, Where } from "sequelize/types/utils";
 
+import { t } from "../service/i18n";
 import { getSearchWhere } from "../utils/where";
 import { LIMIT, LOAD_MORE_LIMIT } from "../utils/limits";
 import { isImage } from "../utils/files";
 import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "../types/enums";
-import { ICall, IFile, IMessage, IUser } from "../types/models.types";
+import { ICall, IFile, IMessage } from "../types/models.types";
 import { IChatInfo, IDialog } from "../types/chat.types";
-import { UserPartial } from "../types/user.types";
-import { ApiServerEvents } from "../types/events";
+import { ISafeUser, UserPartial } from "../types/user.types";
 import { IImage } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { MessagesError } from "../errors/controllers";
-import { t } from "../service/i18n";
 
 const SRC = process.env.CLIENT_URL as string;
 
@@ -28,24 +26,9 @@ interface IAttachmentFile extends IFile {
     createDate: string;
 };
 
-interface IConstructor {
-    app: Express;
-    middleware: Middleware;
-    database: Database;
-};
-
-export default class MessagesController extends EventEmitter {
-    private readonly _app: Express;
-    private readonly _middleware: Middleware;
-    private readonly _database: Database;
-
-    constructor({ app, middleware, database }: IConstructor) {
-        super();
-
-        this._app = app;
-        this._middleware = middleware;
-        this._database = database;
-
+// Класс, отвечающий за API чатов и сообщений
+export default class MessagesController {
+    constructor(private readonly _app: Express, private readonly _middleware: Middleware, private readonly _database: Database) {
         this._init();
     }
 
@@ -68,17 +51,10 @@ export default class MessagesController extends EventEmitter {
         this._app.post(ApiRoutes.getAttachments, this._middleware.mustAuthenticated.bind(this._middleware), this._getAttachments.bind(this));
     }
 
-    // Обработка ошибки
-    private async _handleError(error: unknown, res: Response, transaction?: Transaction) {
-        if (transaction) await transaction.rollback();
-
-        this.emit(ApiServerEvents.ERROR, { error, res });
-    }
-
     // Получаем количество непрочитанных сообщений в диалогах
-    private async _getMessageNotification(req: Request, res: Response) {
+    private async _getMessageNotification(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
 
             // Невозможно сделать через include, так как идет LOIN Read_Messages.id (а мне нужно поле message_id)
             const unreadChatIds = await this._database.sequelize.query(`
@@ -89,19 +65,19 @@ export default class MessagesController extends EventEmitter {
                 GROUP BY ms.chat_id
             `) as [{ "unReadChatsCount": number }[], number];
 
-            return res.json({ success: true, unreadChatIds: unreadChatIds[0] && unreadChatIds[0][0] ? unreadChatIds[0][0].unReadChatsCount : 0 });
+            res.json({ success: true, unreadChatIds: unreadChatIds[0] && unreadChatIds[0][0] ? unreadChatIds[0][0].unReadChatsCount : 0 });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 
     // Получить список всех диалогов
-    private async _getDialogs(req: Request, res: Response) {
+    private async _getDialogs(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
             const { page, search, loadMore = false }: { page: number; search: string; loadMore: boolean; } = req.body;
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
 
             const dialogsLimit = loadMore ? LOAD_MORE_LIMIT : LIMIT;
 
@@ -167,7 +143,7 @@ export default class MessagesController extends EventEmitter {
                             ? unReadMessages[0].map(unReadMessageId => unReadMessageId.messageId)
                             : [];
                     } else {
-                        throw new MessagesError(t("messages.error.get_unread_messages"));
+                        return next(new MessagesError(t("messages.error.get_unread_messages")));
                     }
 
                     // Получаем список пользователей для чата
@@ -185,7 +161,7 @@ export default class MessagesController extends EventEmitter {
                     if (usersInChat && usersInChat.length) {
                         chatObject.usersInChat = usersInChat;
                     } else {
-                        throw new MessagesError(t("chats.error.users_in_chat_not_found", { chat: chat.name }));
+                        return next(new MessagesError(t("chats.error.users_in_chat_not_found", { chat: chat.name })));
                     }
 
                     // Получаем статус звукового уведомления чата
@@ -208,7 +184,7 @@ export default class MessagesController extends EventEmitter {
                         const user = await this._database.models.users.findByPk(messageId, {
                             attributes: ["id", "avatarUrl"],
                             transaction
-                        }) as IUser;
+                        }) as ISafeUser;
 
                         const filesInMessage = await this._database.models.filesInMessage.findAll({
                             where: { messageId },
@@ -259,26 +235,27 @@ export default class MessagesController extends EventEmitter {
 
             await transaction.commit();
 
-            return res.json({
+            res.json({
                 success: true,
                 dialogs,
                 isMore
             });
         } catch (error) {
-            await this._handleError(error, res, transaction);
+            await transaction.rollback();
+            next(error);
         }
     };
 
     // Получить список сообщений для одиночного/группового чата
-    private async _getMessages(req: Request, res: Response) {
+    private async _getMessages(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
             const { chatId, page, loadMore = false, search = "" }: { chatId: string; page: number; loadMore: boolean; search: string; } = req.body;
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
 
             if (!chatId) {
-                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const messagesLimit = loadMore ? LOAD_MORE_LIMIT : LIMIT;
@@ -371,30 +348,31 @@ export default class MessagesController extends EventEmitter {
 
             await transaction.commit();
 
-            return res.json({ success: true, messages: messagesWithMixins.reverse(), isMore });
+            res.json({ success: true, messages: messagesWithMixins.reverse(), isMore });
         } catch (error) {
-            await this._handleError(error, res, transaction);
+            await transaction.rollback();
+            next(error);
         }
     };
 
     // Сохранить сообщение для одиночного чата
-    private async _saveMessage(req: Request, res: Response) {
+    private async _saveMessage(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
             const { message, usersInChat, files }: { message: IMessage; usersInChat: UserPartial[]; files: string[]; } = req.body;
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
 
             if (!message.userId) {
-                throw new MessagesError(t("messages.error.user_id_in_message_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("messages.error.user_id_in_message_not_found"), HTTPStatuses.BadRequest));
             }
 
             if (!message.chatId) {
-                throw new MessagesError(t("messages.error.chat_id_in_message_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("messages.error.chat_id_in_message_not_found"), HTTPStatuses.BadRequest));
             }
 
             if (!usersInChat || !usersInChat.length) {
-                throw new MessagesError(t("chats.error.users_in_chat_not_found", { chat: message.chatId }), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.users_in_chat_not_found", { chat: message.chatId }), HTTPStatuses.BadRequest));
             }
 
             // Сохраняем сообщение в таблицу Messages
@@ -426,25 +404,26 @@ export default class MessagesController extends EventEmitter {
 
             await transaction.commit();
 
-            return res.json({ success: true });
+            res.json({ success: true });
         } catch (error) {
-            await this._handleError(error, res, transaction);
+            await transaction.rollback();
+            next(error);
         }
     };
 
     // Изменение/редактирование сообщения
-    private async _updateMessage(req: Request, res: Response) {
+    private async _updateMessage(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
             const { id, type, message, files }: { id: string; type: MessageTypes; message: IMessage; files: string[] | null; } = req.body;
 
             if (!id) {
-                throw new MessagesError(t("messages.error.message_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("messages.error.message_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             if (!message && (!files || !files.length)) {
-                throw new MessagesError(t("messages.error.empty_edit_message_without_files"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("messages.error.empty_edit_message_without_files"), HTTPStatuses.BadRequest));
             }
 
             if (files && files.length) {
@@ -471,19 +450,20 @@ export default class MessagesController extends EventEmitter {
 
             await transaction.commit();
 
-            return res.json({ success: true });
+            res.json({ success: true });
         } catch (error) {
-            await this._handleError(error, res, transaction);
+            await transaction.rollback();
+            next(error);
         }
     };
 
     // Читаем сообщение (сообщения)
-    private async _readMessage(req: Request, res: Response) {
+    private async _readMessage(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
             const { ids }: { ids: string[]; } = req.body;
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
 
             if (ids && ids.length) {
                 await this._database.models.messages.update(
@@ -499,22 +479,23 @@ export default class MessagesController extends EventEmitter {
 
             await transaction.commit();
 
-            return res.json({ success: true });
+            res.json({ success: true });
         } catch (error) {
-            await this._handleError(error, res, transaction);
+            await transaction.rollback();
+            next(error);
         }
     };
 
     // Получаем id чата
-    private async _getChatId(req: Request, res: Response) {
+    private async _getChatId(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
             const { friendId }: { friendId: string; } = req.body;
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
-                throw new MessagesError(t("chats.error.partner_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.partner_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             let chatId: string | null = null;
@@ -577,19 +558,20 @@ export default class MessagesController extends EventEmitter {
 
             await transaction.commit();
 
-            return res.json({ success: true, chatId });
+            res.json({ success: true, chatId });
         } catch (error) {
-            await this._handleError(error, res, transaction);
+            await transaction.rollback();
+            next(error);
         }
     };
 
     // Получаем информацию о чате
-    private async _getChatInfo(req: Request, res: Response) {
+    private async _getChatInfo(req: Request, res: Response, next: NextFunction) {
         try {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             // Ищем чат в БД
@@ -599,22 +581,22 @@ export default class MessagesController extends EventEmitter {
 
             // Если чата в БД нет, то возвращаем 404 статус
             if (!chatInfo) {
-                throw new MessagesError(t("chats.error.chat_not_found", { chatId }), HTTPStatuses.NotFound);
+                return next(new MessagesError(t("chats.error.chat_not_found", { chatId }), HTTPStatuses.NotFound));
             }
 
-            return res.json({ success: true, chatInfo });
+            res.json({ success: true, chatInfo });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 
     // Получаем пользователей чата
-    private async _getUsersInChat(req: Request, res: Response) {
+    private async _getUsersInChat(req: Request, res: Response, next: NextFunction) {
         try {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const usersInChat = await this._database.models.usersInChat.findAll({
@@ -627,22 +609,22 @@ export default class MessagesController extends EventEmitter {
             }) as unknown as { User: UserPartial }[];
 
             if (usersInChat && usersInChat.length) {
-                return res.json({ success: true, usersInChat: usersInChat.map(userInChat => userInChat.User) });
+                res.json({ success: true, usersInChat: usersInChat.map(userInChat => userInChat.User) });
             } else {
-                throw new MessagesError(t("chats.error.users_in_chat_not_found", { chat: chatId }), HTTPStatuses.NotFound);
+                return next(new MessagesError(t("chats.error.users_in_chat_not_found", { chat: chatId }), HTTPStatuses.NotFound));
             }
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 
     // Получаем последнее время онлайна собеседника чата
-    private async _getLastSeen(req: Request, res: Response) {
+    private async _getLastSeen(req: Request, res: Response, next: NextFunction) {
         try {
             const { chatPartnerId }: { chatPartnerId: string; } = req.body;
 
             if (!chatPartnerId) {
-                throw new MessagesError(t("chats.error.partner_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.partner_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const chatPartner = await this._database.models.userDetails.findOne({ 
@@ -651,23 +633,23 @@ export default class MessagesController extends EventEmitter {
             });
 
             if (!chatPartner) {
-                throw new MessagesError(t("chats.error.partner_not_found"), HTTPStatuses.NotFound);
+                return next(new MessagesError(t("chats.error.partner_not_found"), HTTPStatuses.NotFound));
             }
 
-            return res.json({ success: true, lastSeen: chatPartner.lastSeen });
+            res.json({ success: true, lastSeen: chatPartner.lastSeen });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 
     // Получаем статус звукового уведомления чата
-    private async _getChatSoundStatus(req: Request, res: Response) {
+    private async _getChatSoundStatus(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const chatSoundStatus = await this._database.models.chatSoundNotifications.findOne({ 
@@ -675,20 +657,20 @@ export default class MessagesController extends EventEmitter {
                 attributes: ["id"]
             });
 
-            return res.json({ success: true, chatSoundStatus: Boolean(chatSoundStatus) });
+            res.json({ success: true, chatSoundStatus: Boolean(chatSoundStatus) });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 
     // Устанавливаем статус звукового уведомления чата
-    private async _setChatSoundStatus(req: Request, res: Response) {
+    private async _setChatSoundStatus(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
             const { chatId, status }: { chatId: string; status: boolean; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             // Удаляем запись из БД, если статус "Выключен" 
@@ -705,22 +687,22 @@ export default class MessagesController extends EventEmitter {
                 });
             }
 
-            return res.json({ success: true });
+            res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 
     // Удалить сообщение из чата
-    private async _deleteMessage(req: Request, res: Response) {
+    private async _deleteMessage(req: Request, res: Response, next: NextFunction) {
         const transaction = await this._database.sequelize.transaction();
 
         try {
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
             const { messageId, privateDelete }: { messageId: string; privateDelete: boolean; } = req.body;
 
             if (!messageId) {
-                throw new MessagesError(t("messages.error.deleted_message_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("messages.error.deleted_message_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const findDeletedMessage = await this._database.models.deletedMessages.findOne({
@@ -729,7 +711,7 @@ export default class MessagesController extends EventEmitter {
             });
 
             if (findDeletedMessage) {
-                throw new MessagesError(t("messages.error.your_already_delete_this_message"));
+                return next(new MessagesError(t("messages.error.your_already_delete_this_message")));
             }
 
             if (privateDelete) {
@@ -752,20 +734,21 @@ export default class MessagesController extends EventEmitter {
 
             await transaction.commit();
 
-            return res.json({ success: true });
+            res.json({ success: true });
         } catch (error) {
-            await this._handleError(error, res, transaction);
+            await transaction.rollback();
+            next(error);
         }
     };
 
     // Удалить приватный чат (архивируем его в отдельную таблицу)
-    private async _deleteChat(req: Request, res: Response) {
+    private async _deleteChat(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chats.error.deleted_chat_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.deleted_chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             await this._database.models.deletedChats.create({
@@ -774,19 +757,19 @@ export default class MessagesController extends EventEmitter {
                 userId
             });
 
-            return res.json({ success: true });
+            res.json({ success: true });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 
     // Получить вложения для чата
-    private async _getAttachments(req: Request, res: Response) {
+    private async _getAttachments(req: Request, res: Response, next: NextFunction) {
         try {
             const { chatId }: { chatId: string; } = req.body;
 
             if (!chatId) {
-                throw new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest);
+                return next(new MessagesError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
             const attachments = await this._database.sequelize.query(`
@@ -828,9 +811,9 @@ export default class MessagesController extends EventEmitter {
                 }
             }
 
-            return res.json({ success: true, images, files });
+            res.json({ success: true, images, files });
         } catch (error) {
-            this._handleError(error, res);
+            next(error);
         }
     };
 };

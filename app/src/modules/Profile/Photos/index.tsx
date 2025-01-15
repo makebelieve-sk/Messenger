@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
@@ -13,18 +13,16 @@ import { useAppSelector } from "../../../hooks/useGlobalState";
 import useProfile from "../../../hooks/useProfile";
 import { selectUserState } from "../../../store/user/slice";
 import { Pages } from "../../../types/enums";
-import { getFullName } from "../../../utils";
 
 import "./photos.scss";
 
-export default memo(function Photos() {
+export default function Photos() {
 	const [loadingPhotos, setLoadingPhotos] = useState(false);
 	const [loadingBtn, setLoadingBtn] = useState(false);
 
 	const profile = useProfile();
-
 	const { t } = useTranslation();
-	const { user, photos } = useAppSelector(selectUserState);
+	const { photos } = useAppSelector(selectUserState);
 	const navigate = useNavigate();
 
 	// Получаем все фотографии пользователя
@@ -46,7 +44,7 @@ export default memo(function Photos() {
 	const addPhotosHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const fileList = e.target.files;
 
-		if (fileList && fileList.length && user) {
+		if (fileList && fileList.length) {
 			const formData = new FormData();
 			const files = Array.from(fileList);
 
@@ -61,7 +59,7 @@ export default memo(function Photos() {
 	// Удаление одной фотографии
 	const deleteOnePhoto = (photoPath: string) => {
 		profile.deletePhoto(
-			{ fileUrl: photoPath, isAvatar: false },
+			{ imageUrl: photoPath, isAvatar: false },
 			photos,
 			photoPath
 		);
@@ -95,11 +93,9 @@ export default memo(function Photos() {
 									return <PhotoComponent
 										key={photo.id}
 										src={photo.path}
-										alt={getFullName(user) + " " + index}
+										alt={profile.user.fullName + " " + index}
 										clickHandler={() => onClickPhoto(index)}
-										deleteHandler={() =>
-											deleteOnePhoto(photo.path)
-										}
+										deleteHandler={() => deleteOnePhoto(photo.path)}
 									/>
 								})}
 							</div>
@@ -116,4 +112,4 @@ export default memo(function Photos() {
 			</Paper>
 		</Grid>
 	);
-});
+};

@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -13,7 +13,8 @@ import "./modal-with-confirm.scss";
 const modalTitle = "modal-confirm-title";
 const modalDescription = "modal-confirm-description";
 
-export default memo(function ModalWithConfirm() {
+// Модальное окно с подтверждением операции (например, удаление фотографии/аватара)
+export default function ModalWithConfirm() {
     const [open, setOpen] = useState(false);
     
     const { t } = useTranslation();
@@ -28,14 +29,12 @@ export default memo(function ModalWithConfirm() {
     const onAction = () => {
         if (modalConfirm && modalConfirm.cb) {
             modalConfirm.cb();
-            dispatch(setModalConfirm(null));
         }
     };
 
     // Закрытие модального окна
     const onClose = () => {
         dispatch(setModalConfirm(null));
-        setOpen(false);
     };
 
     return <Modal open={open} onClose={onClose} aria-labelledby={modalTitle} aria-describedby={modalDescription}>
@@ -50,4 +49,4 @@ export default memo(function ModalWithConfirm() {
             </Typography>
         </Box>
     </Modal>
-});
+};

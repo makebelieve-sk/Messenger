@@ -31,7 +31,7 @@ export default memo(function ChooseAvatar({ username, avatarUrl, onChange }: ICh
 
     // Удаление аватара
     const deleteAvatar = () => {
-        onChange(AVATAR_URL, "")
+        onChange(AVATAR_URL, "");
     };
 
     // Изменение своей аватарки

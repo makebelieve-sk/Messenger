@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, memo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Alert from "@mui/material/Alert";
@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 import SnackBarComponent from "../../../ui/Snackbar";
-import { MainClientContext } from "../../../main/Main";
+import useMainClient from "../../../../hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/useGlobalState";
 import { selectErrorState, setError } from "../../../../store/error/slice";
 import { MAIL_FEEDBACK } from "../../../../utils/constants";
@@ -18,13 +18,14 @@ import "./modal-with-error.scss";
 
 const modalTitle = "modal-error-title";
 const modalDescription = "modal-error-description";
+const BACKDROP_CLICK = "backdropClick";
 
-export default memo(function ModalWithError() {
+// Модальное окно с текстом возникшей ошибки (обрабатывает любую ошибку, будь то в коде клиента, АПИ и тд.)
+export default function ModalWithError() {
     const [open, setOpen] = useState(false);
     const [visible, setVisible] = useState(false);
 
-    const mainClient = useContext(MainClientContext);
-
+    const mainClient = useMainClient();
     const { t } = useTranslation();
     const { error } = useAppSelector(selectErrorState);
     const dispatch = useAppDispatch();
@@ -37,10 +38,9 @@ export default memo(function ModalWithError() {
     // Копирование текста в буфер обмена
     const onCopy = () => {
         if (navigator.clipboard && error) {
-            navigator.clipboard.writeText(error)
-                .then(() => {
-                    setVisible(true);
-                })
+            navigator.clipboard
+                .writeText(error)
+                .then(() => setVisible(true))
                 .catch((error: Error) => {
                     mainClient.catchErrors(t("modals.error.copy") + error);
                 });
@@ -49,7 +49,7 @@ export default memo(function ModalWithError() {
 
     // Закрытие модального окна
     const onClose = (_: Object, reason: string) => {
-        if (reason !== "backdropClick") {
+        if (reason !== BACKDROP_CLICK) {
             setOpen(false);
             dispatch(setError(null));
         }
@@ -93,4 +93,4 @@ export default memo(function ModalWithError() {
             </Box>
         </Modal>
     </>
-});
+};

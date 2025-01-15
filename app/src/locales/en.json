@@ -15,6 +15,7 @@
 
     "sign-up.error.step_unknowed": "An error occurred when generating the content for the step {{step}}",
 
+    "images-carousel-module.you": "You",
     "images-carousel-module.further": "Further",
     "images-carousel-module.back": "Back",
 
@@ -69,7 +70,11 @@
     "core.socket.error.connection": "The socket connection error [isSocketActive: {{isSocketActive}}]: {{message}}",
 
     "core.catch-errors.error": "Error.",
+    "core.catch-errors.error.network": "Error when receiving a response from the server. The server is most likely unavailable at the moment. Check your internet connection.",
     "core.catch-errors.error.timeout": "There are problems with the database or the response time has exceeded 15 seconds.",
+    "core.catch-errors.error.bad_request": "The error occurred when trying to make a request to the server. The server is most likely unavailable at the moment. Check your internet connection.",
+    "core.catch-errors.error.canceled": "The request has been cancelled.",
+    "core.catch-errors.error.unknown": "Unknown error.",
 
     "core.socket.connection_established": "The socket connection to the server is established [socket.id={{socketId}}]",
     "core.socket.online_users": "Online users: ",

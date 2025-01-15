@@ -1,5 +1,3 @@
-import { memo } from "react";
-
 import Router from "../Router";
 import ServiceComponents from "../ServiceComponents";
 import HeaderComponent from "../../layouts/Header";
@@ -10,7 +8,8 @@ import { useAppSelector } from "../../../hooks/useGlobalState";
 
 import "./app.scss";
 
-export default memo(function App() {
+// Главный компонент, который отрисовывает основноую верстку проекта
+export default function App() {
   const { isAuth, loading } = useAppSelector(selectMainState);
 
   return <div className="root">
@@ -33,4 +32,4 @@ export default memo(function App() {
       </>
     }
   </div>
-});
+};

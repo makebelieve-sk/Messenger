@@ -86,10 +86,3 @@ export const getTime = (createDate: string, options: IGetTimeOptions = {}) => {
                     ? `${beforeMidnight ? i18next.t("utils.yesterday") : ""}` + getHoursOrMinutes(new Date(createDate).getHours()) + ":" + getHoursOrMinutes(new Date(createDate).getMinutes())
                     : null;
 };
-
-// Трансформация даты дня рождения
-export const transformBirthday = (date: string) => {
-    const dates = date.split("-");
-
-    return dates[2] + getMonthName(+dates[1] - 1) + ". " + dates[0];
-};

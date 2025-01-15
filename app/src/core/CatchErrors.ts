@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 
 import i18next from "../service/i18n";
 import { setError } from "../store/error/slice";
-import { HTTPStatuses, Pages } from "../types/enums";
+import { ErrorCodes, HTTPStatuses, Pages } from "../types/enums";
 import { AppDispatch } from "../types/redux.types";
 import { MainClientEvents } from "../types/events";
 
@@ -11,7 +11,11 @@ type BadRequestType = { success: boolean; message: string; field?: string; } | s
 export type CatchType = BadRequestType | string | null;
 
 const ERROR_MESSAGE = i18next.t("core.catch-errors.error");
-const ERROR_TIMEOUT = i18next.t("core.catch-errors.error.timeout");
+const ERROR_NETWORK = i18next.t("core.catch-errors.error.timeout");
+const ERROR_TIMEOUT = i18next.t("core.catch-errors.error.network");
+const ERROR_BAD_REQUEST = i18next.t("core.catch-errors.error.bad_request");
+const ERROR_CANCELED = i18next.t("core.catch-errors.error.canceled");
+const ERROR_UNKNOWN = i18next.t("core.catch-errors.error.unknown");
 
 // Класс, отвечающий за обработку ошибок. Обрабатывает как ошибки по HTTP API, так и прочие ошибки, возникающие на стороне клиента
 export default class CatchErrors extends EventEmitter {
@@ -35,6 +39,7 @@ export default class CatchErrors extends EventEmitter {
         console.error(this._axiosError);
 
         if (this._axiosError) {
+            // Сервер вернул ответ с ошибкой (в объекте ответа присутствует статус ошибки)
             if (this._axiosError.response) {
                 const { status } = this._axiosError.response;
 
@@ -50,13 +55,44 @@ export default class CatchErrors extends EventEmitter {
                 };
             }
             
-            if (this._axiosError.request) {
-                return this._timeoutError();
+            // Сервер не вернул объект ошибки (статуса ошибки нет)
+            if (this._axiosError.code) {
+                return this._errorHandler(this._axiosError);
             }
         }
 
         return this._serverError();
     };
+
+    private _errorHandler(error: AxiosError) {
+        const { code, message } = error;
+
+        let errorText: string;
+
+        switch (code) {
+            case ErrorCodes.ERR_NETWORK: {
+                errorText = ERROR_NETWORK;
+                break;
+            }
+            case ErrorCodes.ERR_TIMEOUT: {
+                errorText = ERROR_TIMEOUT;
+                break;
+            }
+            case ErrorCodes.ERR_BAD_REQUEST: {
+                errorText = ERROR_BAD_REQUEST;
+                break;
+            }
+            case ErrorCodes.ERR_CANCELED: {
+                errorText = ERROR_CANCELED;
+                break;
+            } 
+            default:
+                errorText = ERROR_UNKNOWN + message;
+        }
+
+        this._dispatch(setError(errorText));
+        return null;
+    }
 
     // Статус 308
     private _permanentRedirect(): null {
@@ -94,12 +130,6 @@ export default class CatchErrors extends EventEmitter {
     // Статус 500
     private _serverError(): null {
         this._dispatch(setError(this.error));
-        return null;
-    };
-
-    // Время ожидания ответа от сервера
-    private _timeoutError(): null {
-        this._dispatch(setError(ERROR_TIMEOUT));
         return null;
     };
 };

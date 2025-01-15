@@ -10,14 +10,16 @@
     "auth.error.user_with_phone_already_exists": "The user with the phone number {{phone}} already exists.",
     "auth.error.session_id_not_exists_on_deleted_session": "The user's session ID is missing (session={{session}}).",
 
+    "photos.error.user_not_found": "User not exists.",
     "photos.error.sharp_avatar_path_not_found": "The path to the compressed avatar was not transmitted.",
     "photos.error.sharp_photo_path_not_found":  "The path to the compressed photo was not transmitted.",
     "photos.error.sharp_photo_paths_not_found": "Compressed photos were not found.",
     "photos.error.delete_photo_path_not_found": "The path for deleting the photo was not passed.",
     "photos.error.photo_not_found": "The photo was not found.",
     "photos.error.photos_not_found": "Images were not transmitted for compression.",
-    "photos.error.sharped_photo_with_error": "An error occurred when cropping images.",
+    "photos.error.sharped_photo_with_error": "An error occurred when cropping images: {{errorMessage}}",
 
+    "files.error.message_id_not_found": "Не передан id сообщения.",
     "files.error.files_not_found": "Files have not been transferred.",
     "files.error.file_path_open_not_found": "The path for opening the file was not passed.",
     "files.error.file_path_download_not_found": "The file download path was not passed.",
@@ -65,6 +67,7 @@
     "socket.disconnecting": "In the process of disconnecting the socket connection ({{reason}}).",
     "socket.socket_disconnected_with_reason": "The socket with the connection ID {{socketId}} was disconnected due to: {{reason}}.",
 
+    "socket.error.user_with_id_not_exists": "User with id={{userId}} not exists.",
     "socket.error.user_id_not_found": "The user ID was not transmitted.",
     "socket.error.not_correct_friends_action_type": "Incorrect type of action when working with friends.",
     "socket.error.cannot_find_call": "It is impossible to end the call because it has not been found. It may have already been completed.",

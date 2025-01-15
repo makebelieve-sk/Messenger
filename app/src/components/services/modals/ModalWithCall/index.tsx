@@ -6,23 +6,18 @@ import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import Status from "./status";
 import Buttons from "./buttons";
 import SpinnerComponent from "../../../ui/Spinner";
-import { useAppDispatch, useAppSelector } from "../../../../hooks/useGlobalState";
+import { useAppSelector } from "../../../../hooks/useGlobalState";
 import useWebRTC from "../../../../hooks/useWebRTC";
-import { selectUserState } from "../../../../store/user/slice";
 import { selectCallsState } from "../../../../store/calls/slice";
-import { setError } from "../../../../store/error/slice";
 import { CallStatus } from "../../../../types/enums";
 import { NO_PHOTO } from "../../../../utils/constants";
 
 import "./modal-with-call.scss";
 
-export default memo(function ModalWithCall() {
+export default function ModalWithCall() {
     const [open, setOpen] = useState(false);
 
     const { visible, status, chatInfo } = useAppSelector(selectCallsState);
-    const { user } = useAppSelector(selectUserState);
-
-    const dispatch = useAppDispatch();
 
     const {
         LOCAL_VIDEO,
@@ -35,16 +30,6 @@ export default memo(function ModalWithCall() {
         provideMediaRef,
     } = useWebRTC();
 
-    // Ошибка, если нет текущего пользователя
-    useEffect(() => {
-        if (!user && open) {
-            dispatch(setError(`
-                Невозможно открыть меню вызовов, так как произошла ошибка в загрузке информации звонке. 
-                Пожалуйста, обновите страницу.
-            `));
-        }
-    }, [user, open]);
-
     // Открываем модальное окно только, если есть исходящий/входящий звонок 
     useEffect(() => {
         setOpen(Boolean(visible && status !== CallStatus.NOT_CALL));
@@ -52,7 +37,7 @@ export default memo(function ModalWithCall() {
 
     return <Dialog fullWidth maxWidth="xl" open={open}>
         <DialogContent className="call-container">
-            {chatInfo && user && status
+            {chatInfo && status
                 ? <div className="call-container__content-block">
                     {/* Статус звонка */}
                     <div className="call-container__content-block__text">
@@ -132,4 +117,4 @@ export default memo(function ModalWithCall() {
             }
         </DialogContent>
     </Dialog>
-});
+};
