@@ -1,5 +1,5 @@
 @use "sass:math";
-@import "../../../styles/abstract/colors.scss";
+@use "styles/abstract/colors.scss" as *;
 
 .info-container {
     font-weight: 400;

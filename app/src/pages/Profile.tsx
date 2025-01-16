@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 
@@ -10,7 +9,7 @@ import Photos from "../modules/Profile/Photos";
 
 import "../styles/pages/profile.scss";
 
-export default React.memo(function Profile() {
+export default function Profile() {
     const navigate = useNavigate();
 
     // Клик по названию блока
@@ -39,4 +38,4 @@ export default React.memo(function Profile() {
             <Photos />
         </Grid>
     </Grid>
-});
+};

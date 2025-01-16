@@ -1,2 +1,2 @@
-@import "./erp-emoji-picker.scss";
-@import "./mui.scss";
+@use "styles/vendors/erp-emoji-picker.scss" as *;
+@use "styles/vendors/mui.scss" as *;

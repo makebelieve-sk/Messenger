@@ -1,5 +1,5 @@
-@import "../abstract/variables.scss";
-@import "../abstract/colors.scss";
+@use "styles/abstract/variables.scss" as *;
+@use "styles/abstract/colors.scss" as *;
 
 .message-area-container {
     grid-column-start: 1;

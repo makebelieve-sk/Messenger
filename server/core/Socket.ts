@@ -3,22 +3,26 @@ import { Server } from "socket.io";
 import http from "http";
 import { v4 as uuid } from "uuid";
 
-import { ClientToServerEvents, ISocketData, ISocketUsers, InterServerEvents, ServerToClientEvents, SocketWithUser } from "../types/socket.types";
-import { IUser } from "../types/models.types";
-import { CallNames, CallTypes, ErrorTextsApi, MessageReadStatus, MessageTypes, SocketActions, SocketChannelErrorTypes } from "../types/enums";
-import { getFullName } from "../utils";
-import { getSaveUserFields } from "../utils/user";
+import { t } from "../service/i18n";
 import Database from "./Database";
-import { SocketError } from "../errors";
+import { ClientToServerEvents, ISocketData, InterServerEvents, ServerToClientEvents, SocketWithUser } from "../types/socket.types";
+import { CallNames, CallTypes, MessageReadStatus, MessageTypes, SocketActions, SocketChannelErrorTypes } from "../types/enums";
+import { ISafeUser } from "../types/user.types";
 import { UsersType } from "../types";
+import { getFullName } from "../utils";
+import { SocketError } from "../errors";
 
 const CLIENT_URL = process.env.CLIENT_URL as string;
+const SOCKET_METHOD = process.env.SOCKET_METHOD as string;
+const SOCKET_PING_INTARVAL = parseInt(process.env.SOCKET_PING_INTARVAL as string);
+const SOCKET_PING_TIMEOUT = parseInt(process.env.SOCKET_PING_TIMEOUT as string);
+const SOCKET_UPGRADE_TIMEOUT = parseInt(process.env.SOCKET_UPGRADE_TIMEOUT as string);
+const SOCKET_MAX_DISCONNECTION_DURATION = parseInt(process.env.SOCKET_MAX_DISCONNECTION_DURATION as string);
 
 // Класс, отвечает за установку сокет соединения с клиентом по транспорту websocket
 export default class SocketWorks {
     private _io!: Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, ISocketData>;
     private _socket!: SocketWithUser;
-    private readonly _socketUsers: ISocketUsers = new Map();
 
     constructor(
         private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>, 
@@ -38,14 +42,14 @@ export default class SocketWorks {
             transports: ["websocket"],      // Транспорт для соединений
             cors: {
                 origin: CLIENT_URL,         // Список разрешенных доменов
-                methods: ["GET"],           // Список разрешенных методов запроса (разрешен только самый первый запрос для установки соединения между сервером и клиентом)
+                methods: [SOCKET_METHOD],   // Список разрешенных методов запроса (разрешен только самый первый запрос для установки соединения между сервером и клиентом)
                 credentials: true           // Разрешает отправку cookie и других авторизационных данных
             },
-            pingInterval: 25000,            // Указываем с какой частотой идет heartbeat на клиент
-            pingTimeout: 5000,              // Указываем сколько может ожидать ответ от клиента сервер перед тем, как посчитает соединение закрытым (если клиент все равно не ответит)
-            upgradeTimeout: 10000,          // Время, которое будет ожидать сервер до обновления 1-ого запроса (handshake) до указанного транспорта websocket
+            pingInterval: SOCKET_PING_INTARVAL,      // Указываем с какой частотой идет heartbeat на клиент
+            pingTimeout: SOCKET_PING_TIMEOUT,        // Указываем сколько может ожидать ответ от клиента сервер перед тем, как посчитает соединение закрытым (если клиент все равно не ответит)
+            upgradeTimeout: SOCKET_UPGRADE_TIMEOUT,  // Время, которое будет ожидать сервер до обновления 1-ого запроса (handshake) до указанного транспорта websocket
             connectionStateRecovery: {
-                maxDisconnectionDuration: 5000, // Указывает время, в течении которого клиент может переподключиться 
+                maxDisconnectionDuration: SOCKET_MAX_DISCONNECTION_DURATION, // Указывает время, в течении которого клиент может переподключиться 
                 skipMiddlewares: false          // При разрыве соединении пропускаем мидлвары socket.io
             }                                   // Опция для восстановления соединения клиента из-за временного разрыва (например, спящий режим или потеря сети)
         });
@@ -61,10 +65,10 @@ export default class SocketWorks {
 
         // Милдвар сокета - проверка пользователя в сокете
         this.io.use((socket: SocketWithUser, next) => {
-            const user: IUser = socket.handshake.auth.user;
+            const user: ISafeUser = socket.handshake.auth.user;
     
             if (!user) {
-                next(new SocketError(ErrorTextsApi.USER_ID_NOT_GIVEN));
+                next(new SocketError(t("socket.error.user_id_not_found")));
             }
     
             socket.user = user;
@@ -72,31 +76,8 @@ export default class SocketWorks {
         });
     }
 
-    private async _getMe(userId: string) {
-        if (this._users.has(userId)) {
-            return this._users.get(userId)!;
-        } else {
-            try {
-                const currentUser = await this._database.models.users.findByPk(userId);
-
-                if (currentUser) {
-                    const user = getSaveUserFields(currentUser) as IUser;
-
-                    this._users.set(user.id, user as IUser);
-
-                    return user;
-                } else {
-                    throw new SocketError(`Пользователь с id=${userId} не найден.`);
-                }
-            } catch (error) {
-                // Пробрасываем ошибку выше, так как там присутствует обработчик SocketError
-                throw error;
-            }
-        }
-    }
-
     private _getUser(userId: string) {
-        return this._socketUsers.get(userId);
+        return this._users.get(userId);
     }
 
     private _useSocketBus() {
@@ -124,22 +105,25 @@ export default class SocketWorks {
                 this._socket = socket;
                 console.log("Пример сессии: ", (this._socket.request as express.Request).session);
 
-                const userId = (this._socket.user as IUser).id;
+                const userId = (this._socket.user as ISafeUser).id;
                 const socketID = this._socket.id;
-                const user = await this._getMe(userId);
+                const user = this._getUser(userId);
 
-                if (!this._socketUsers.has(userId)) {
-                    this._socketUsers.set(userId, {
-                        user,
-                        socketID
-                    });
+                if (!user) {
+                    throw new SocketError(t("socket.error.user_with_id_not_exists", { userId }));
                 }
+
+                // Обновляем объект подключившегося пользователя
+                this._users.set(userId, {
+                    ...user,
+                    socketID
+                });
             
                 // Уведомление по сокету конкретного пользователя
                 const notifyAnotherUser = (userTo: string, type: any, payload?: Object) => {
                     // Если получатель - это я, то выводим ошибку
                     if (userTo === userId) {
-                        throw new SocketError(`Не подходящий идентификатор пользователя id=${userTo} (необходимо использовать метод notifyMe)`);
+                        throw new SocketError(t("socket.error.not_correct_user_id_in_socket", { userTo }));
                     }
 
                     const findUser = this._getUser(userTo);
@@ -187,7 +171,7 @@ export default class SocketWorks {
                         // Покидаем комнату (звонок)
                         socket.leave(roomId);
                     } else {
-                        handleError(ErrorTextsApi.CANNOT_FIND_CALL, SocketChannelErrorTypes.CALLS);
+                        handleError(t("socket.error.cannot_find_call"), SocketChannelErrorTypes.CALLS);
                     }
                 };
 
@@ -198,19 +182,17 @@ export default class SocketWorks {
                 );
 
                 // Отправляем всем пользователям обновленный список активных пользователей
-                socket.emit(SocketActions.GET_ALL_USERS, Array.from(this._socketUsers.values()).map(socketUser => socketUser.user));
+                socket.emit(SocketActions.GET_ALL_USERS, Array.from(this._users.values()).map(user => user));
 
                 // Оповещаем все сокеты (кроме себя) о новом пользователе
                 socket.broadcast.emit(SocketActions.GET_NEW_USER, user);
 
-                const findUser = this._getUser(userId);
-
                 // Если мы открываем приложение со второй вкладки
-                if (findUser && findUser.call) {
-                    const { id, usersInCall, chatInfo } = findUser.call;
+                // if (user && user.call) {
+                //     const { id, usersInCall, chatInfo } = user.call;
 
-                    notifyMe(SocketActions.ALREADY_IN_CALL, { roomId: id, chatInfo, users: usersInCall });
-                }
+                //     notifyMe(SocketActions.ALREADY_IN_CALL, { roomId: id, chatInfo, users: usersInCall });
+                // }
 
                 // Уведомляем конкретного пользователя о действиях дружбы
                 socket.on(SocketActions.FRIENDS, (data) => {
@@ -222,7 +204,7 @@ export default class SocketWorks {
 
                         case SocketActions.ACCEPT_FRIEND: {
                             const { to, acceptedFriend } = data.payload;
-                            notifyAnotherUser(to, SocketActions.ACCEPT_FRIEND, { user: acceptedFriend as IUser });
+                            notifyAnotherUser(to, SocketActions.ACCEPT_FRIEND, { user: acceptedFriend as ISafeUser });
                             break;
                         }
 
@@ -237,7 +219,7 @@ export default class SocketWorks {
                         }
 
                         default:
-                            handleError(ErrorTextsApi.INCORRECT_TYPE_IN_FRIENDS);
+                            handleError(t("socket.error.not_correct_friends_action_type"));
                             break;
                     }
                 });
@@ -412,7 +394,7 @@ export default class SocketWorks {
                                     const findUser = this._getUser(key);
 
                                     if (findUser && findUser.socketID === clientId) {
-                                        clientUserId = findUser.user.id;
+                                        clientUserId = findUser.id;
                                     }
                                 }
 
@@ -589,7 +571,7 @@ export default class SocketWorks {
 
                 // Событие отключения (выполняется немного ранее, чем disconnect) - можно получить доступ к комнатам
                 socket.on("disconnecting", (reason) => {
-                    console.log("[SOCKET.disconnecting]: ", reason);
+                    console.log(t("socket.disconnecting", { reason }));
 
                     // const rooms = Array.from(socket.rooms);
 
@@ -604,10 +586,13 @@ export default class SocketWorks {
                 // Отключение сокета
                 socket.on("disconnect", async (reason) => {
                     try {
-                        console.log(`Сокет с id: ${socketID} отключился по причине: ${reason}`);
+                        console.log(t("socket.socket_disconnected_with_reason", { socketID, reason }));
 
-                        this._users.delete(userId);
-                        this._socketUsers.delete(userId);
+                        // Добавляем проверку на тот случай, если клиент разорвал соединение (например, закрыл вкладку/браузер)
+                        // Иначе через кнопку выхода пользователь уже удаляется из списка
+                        if (this._users.has(userId)) {
+                            this._users.delete(userId);
+                        }
 
                         // Оповещаем все сокеты (кроме себя) об отключении пользователя
                         socket.broadcast.emit(SocketActions.USER_DISCONNECT, userId);
@@ -618,11 +603,11 @@ export default class SocketWorks {
                             { where: { userId } }
                         );
                     } catch (error) {
-                        handleError(`Возникла ошибка при обновлении времени последнего захода пользователя: ${(error as Error).message}`);
+                        handleError(`${t("socket.error.update_last_seen")}: ${(error as Error).message}`);
                     }
                 });
             } catch (error) {
-                handleError(`Произошла ошибка при работе с сокетом: ${(error as Error).message}`);
+                handleError(`${t("socket.error.socket_work")}: ${(error as Error).message}`);
             }
         });
     }
@@ -631,7 +616,7 @@ export default class SocketWorks {
         // Не нормальное отключение io
         this._io.engine.on("connection_error", (error: { req: string; code: number; message: string; context: string; }) => {
             const { req, code, message, context } = error;
-            new SocketError(`Не нормальное отключение сокета с кодом ${code}.\nОбъект запроса: ${req}.\nТекст ошибки: ${message}.\nДополнительный контекст: ${context}.`);
+            new SocketError(t("socket.error.engine_socket", { req, code: code.toString(), message, context }));
         });
     }
 

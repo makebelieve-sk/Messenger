@@ -1,4 +1,4 @@
-@import "../abstract/colors.scss";
+@use "../abstract/colors.scss" as *;
 
 /* Прозрачный текст */
 .opacity-text {

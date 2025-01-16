@@ -3,23 +3,14 @@ import { Dialect, Sequelize } from "sequelize";
 import Relations from "../database/Relations";
 import Models from "../database/models/Models";
 import { DatabaseError } from "../errors";
-import { ErrorTextsApi } from "../types/enums";
+import { t } from "../service/i18n";
 
 const DATEBASE_NAME = process.env.DATEBASE_NAME as string;
 const DATEBASE_USERNAME = process.env.DATEBASE_USERNAME as string;
 const DATEBASE_PASSWORD = process.env.DATEBASE_PASSWORD as string;
 const DATEBASE_DIALECT = process.env.DATEBASE_DIALECT as Dialect;
 const DATEBASE_HOST = process.env.DATEBASE_HOST as string;
-
-const OPTIONS = {
-    dialect: DATEBASE_DIALECT,
-    host: DATEBASE_HOST,
-    define: {
-        freezeTableName: true,
-        timestamps: false
-    },
-    logging: false
-};
+const DATEBASE_PORT = parseInt(process.env.DATEBASE_PORT as string);
 
 // Класс, отвечает за работу с базой данных. Предоставляет доступ к таблицам и отношениям базы данных
 export default class Database {
@@ -41,23 +32,39 @@ export default class Database {
     // Закрытие базы данных
     close() {
         this._sequelize.close()
-            .then(() => console.log("Соединение с бд успешно закрыто"))
-            .catch((error: Error) => new DatabaseError(`${ErrorTextsApi.ERROR_IN_CLOSE_DB}: ${error.message}`));
+            .then(() => console.log(t("database.close")))
+            .catch((error: Error) => new DatabaseError(`${t("database.error.close")}: ${error.message}`));
     }
 
     // Соединение базы данных
     private _init() {
-        this._sequelize = new Sequelize(DATEBASE_NAME, DATEBASE_USERNAME, DATEBASE_PASSWORD, OPTIONS);
+        this._sequelize = new Sequelize(
+            DATEBASE_NAME,                  // Наименование базы данных
+            DATEBASE_USERNAME,              // Имя пользователя для подключения к базе данных
+            DATEBASE_PASSWORD,              // Пароль пользователя для подключения к базе данных
+            {
+                dialect: DATEBASE_DIALECT,  // Тип базы данных (mysql/sqlite/postgres/mssql)
+                host: DATEBASE_HOST,        // Адрес сервера базы данных
+                port: DATEBASE_PORT,        // Порт для подключения к базе данных
+                define: {
+                    freezeTableName: true,  // Отключение автоматических имен таблиц
+                    timestamps: false,      // Включает создание createdAt и updatedAt поля в таблицах
+                    paranoid: false         // Отключает мягкое удаление (записи удаляются из таблиц, поля deletedAt нет)
+                },                          // Глобальные настройки для всех моделей
+                logging: false,             // Логирование sql запросов (false/console.log)
+                benchmark: false            // Время выполнения запроса в логах
+            }
+        );
 
         this._sequelize.authenticate()
             .then(() => {
-                console.log("Соединение с базой данных успешно установлено");
+                console.log(t("database.start"));
                 // Инициализируем модели базы данных
                 this._useModels();
                 // Инициализируем ассоциации (отношения) между таблицами в базе данных
                 this._useRelations();
             })
-            .catch((error: Error) => new DatabaseError(`${ErrorTextsApi.ERROR_IN_CONNECT_DB}: ${error.message}`));
+            .catch((error: Error) => new DatabaseError(`${t("database.error.connect")}: ${error.message}`));
     }
 
     // Инициализация ассоциаций (отношений) между таблицами в базе данных

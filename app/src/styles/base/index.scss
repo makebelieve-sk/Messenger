@@ -1,4 +1,4 @@
-@import "./block.scss";
-@import "./reset.scss";
-@import "./scroll.scss";
-@import "./text.scss";
+@use "styles/base/block.scss" as *;
+@use "styles/base/reset.scss" as *;
+@use "styles/base/scroll.scss" as *;
+@use "styles/base/text.scss" as *;

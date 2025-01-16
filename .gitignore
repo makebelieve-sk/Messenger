@@ -1,38 +1,27 @@
-# dependencies
+# Зависимости
 app/node_modules
 server/node_modules
-app/.pnp
-app/.pnp.js
 
-# testing
-app/coverage
+# Сборка production
+app/dist
+server/dist
 
-# production
-app/build
-server/build
-
-# misc
-.DS_Store
-
-# misc app
-app/.DS_Store
+# .env файлы клиента
 app/.env
-app/.env.local
-app/.env.development.local
-app/.env.test.local
-app/.env.production.local
+app/.env.development
+app/.env.production
 
-# misc server
-server/.DS_Store
+# .env файлы сервера
 server/.env
-server/.env.local
-server/.env.development.local
-server/.env.test.local
-server/.env.production.local
+server/.env.development
+server/.env.production
 
-# npm
+# Файлы npm логов
 app/npm-debug.log*
 server/npm-debug.log*
 
-# user files
+# Пользовательские файлы/изображения
 server/assets
+
+# Файлы отчетов сервера
+server/reports

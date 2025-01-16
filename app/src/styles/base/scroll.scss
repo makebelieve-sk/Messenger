@@ -1,4 +1,4 @@
-@import "../abstract/colors.scss";
+@use "../abstract/colors.scss" as *;
 
 ::-webkit-scrollbar {
     width: 14px;
