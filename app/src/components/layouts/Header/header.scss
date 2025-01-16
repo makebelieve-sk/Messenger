@@ -1,5 +1,6 @@
-@use "../../../styles/variables.scss" as *;
-@use "../../../styles/colors.scss" as *;
+@use "sass:math";
+@use "styles/abstract/variables.scss" as *;
+@use "styles/abstract/colors.scss" as *;
 
 .header {
     background: $white;

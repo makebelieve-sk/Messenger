@@ -1,5 +1,5 @@
-@use "styles/variables" as *;
-@use "styles/colors" as *;
+@use "styles/abstract/variables.scss" as *;
+@use "styles/abstract/colors.scss" as *;
 
 .message-area-container {
     grid-column-start: 1;
@@ -13,11 +13,13 @@
     background: $white;
     border-radius: 5px;
     position: relative;
+
     &__messages {
         width: 100%;
         flex: 1 1 auto;
         position: relative;
         margin-bottom: 25px;
+
         &__scrollable {
             overflow-y: overlay;
             display: block;
@@ -28,9 +30,11 @@
             left: 0;
             right: 0;
             top: 0;
+
             &__spinner {
                 margin: auto;
             }
+
             &__messages-wrapper {
                 padding-top: 10px;
                 padding-left: 10px;
@@ -40,10 +44,12 @@
                 flex-direction: column;
                 justify-content: flex-end;
                 min-height: 100%;
+
                 &__is-more {
                     margin: auto;
                 }
             }
+
             &__no-history {
                 font-size: 14px;
                 opacity: 0.7;

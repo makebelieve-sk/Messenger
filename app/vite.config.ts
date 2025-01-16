@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import browserslistToEsbuild from "browserslist-to-esbuild";
+import path from "path";
 
 // Vite автоматически поддерживает Typescript, поэтому дополнительных полей указывать не нужно.
 // Vite также автоматически загружает env переменные в зависимости от NODE_ENV переменной, которая устанавливается при запуске команды npm run dev/build и тд.
@@ -12,8 +13,8 @@ export default defineConfig({
             jsxImportSource: "@emotion/react",
             babel: {
                 plugins: ["@emotion/babel-plugin"],
-            },
-        })
+            }
+        })                   // Определение плагина для React.js
     ],
     build: {
         outDir: "dist",      // Директория для сборки продакшен бандла
@@ -23,5 +24,10 @@ export default defineConfig({
     server: {
         open: true,         // Автоматически открывает браузер при запуске проекта
         port: 3000          // Порт локального сервера для разработки клиента
+    },
+    resolve: {
+        alias: {
+          styles: path.resolve(__dirname, "src/styles"),    // Алиас для папки styles
+        }                   // Добавление коротких путей
     }
 });

@@ -12,6 +12,8 @@
     "sign-up.back": "Назад",
     "sign-up.further": "Далее",
     "sign-up.register": "Зарегистрироваться",
+    "sign-up.main_step": "Основные данные",
+    "sign-up.choose_avatar_step": "Выбор аватара",
 
     "sign-up.error.step_unknowed": "Возникла ошибка при генерации контента для шага {{step}}",
 

@@ -1,6 +1,6 @@
 @use "sass:math";
-@use "../../../styles/colors.scss" as *;
-@use "../../../styles/variables.scss" as *;
+@use "styles/abstract/colors.scss" as *;
+@use "styles/abstract/variables.scss" as *;
 
 .menu {
     margin-top: $marginTop;
@@ -13,7 +13,7 @@
     }
 
     #list {
-        background: $mainBackground;
+        background: $main-background;
         padding-top: 0;
 
         li {
@@ -37,7 +37,7 @@
                 right: -20px;
 
                 span {
-                    background: $noticeGrey;
+                    background: $notice-grey;
                     color: $white;
                 }
             }

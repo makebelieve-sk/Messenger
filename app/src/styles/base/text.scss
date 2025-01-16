@@ -1,0 +1,9 @@
+@use "../abstract/colors.scss" as *;
+
+/* Прозрачный текст */
+.opacity-text {
+    color:  $light-grey;
+    padding: 20px 0;
+    font-weight: 400;
+    font-size: 14px;
+}

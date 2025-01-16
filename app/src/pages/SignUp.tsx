@@ -15,6 +15,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 
+import i18next from "../service/i18n";
 import LinkComponent from "../components/ui/Link";
 import SignUpForm from "../modules/SignUp/Form";
 import ChooseAvatar from "../modules/SignUp/ChooseAvatar";
@@ -26,7 +27,7 @@ import { IUser } from "../types/models.types";
 import styles from "../styles/pages/sign-up.module.scss";
 
 const THEME = createTheme();
-const steps = ["Основные данные", "Выбор аватара"];
+const steps = [i18next.t("sign-up.main_step"), i18next.t("sign-up.choose_avatar_step")];
 
 const initialValues = {
 	values: {

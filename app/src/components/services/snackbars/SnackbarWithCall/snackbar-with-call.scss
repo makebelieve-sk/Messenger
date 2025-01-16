@@ -1,5 +1,5 @@
 @use "sass:math";
-@use "../../../../styles/colors.scss" as *;
+@use "styles/abstract/colors.scss" as *;
 
 .snackbar__global-call {
     display: flex;

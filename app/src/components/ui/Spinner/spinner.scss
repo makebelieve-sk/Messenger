@@ -1,4 +1,4 @@
-@use "../../../styles/colors.scss" as *;
+@use "styles/abstract/colors.scss" as *;
 
 .spinner {
     width: 100%;
@@ -9,5 +9,5 @@
     position: absolute;
     left: 0;
     top: 0;
-    background-color: $spinnerBackground;
+    background-color: $spinner-background;
 }

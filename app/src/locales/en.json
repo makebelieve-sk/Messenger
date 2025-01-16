@@ -12,6 +12,8 @@
     "sign-up.back": "Back",
     "sign-up.further": "Further",
     "sign-up.register": "Register",
+    "sign-up.main_step": "Main data",
+    "sign-up.choose_avatar_step": "Choose avatar",
 
     "sign-up.error.step_unknowed": "An error occurred when generating the content for the step {{step}}",
 
