@@ -4,6 +4,7 @@ import "dotenv/config";
 
 import MainServer from "./core/MainServer";
 import { BaseError } from "./errors";
+import ProcessWorks from "./service/Process";
 import { initI18n, t } from "./service/i18n";
 
 const PORT = process.env.PORT as string;
@@ -27,21 +28,7 @@ function init() {
     }
 }
 
-// Обработываем пробрасываемые исключения синхронного кода
-process.on("uncaughtException", (error: Error) => {
-    new BaseError(`${t("error.unhandled_sync")}: ${error.message}`);
-    console.error(error.stack);
-
-    // Завершаем выполнение процесса NodeJS
-    process.exit(1);
-});
-
-// Обработываем пробрасываемые исключения асинхронного кода
-process.on("unhandledRejection", (reason: string, promise: Promise<unknown>) => {
-    new BaseError(`${t("error.unhandled_async")}: ${reason} (${promise})`);
-
-    // Завершаем выполнение процесса NodeJS
-    process.exit(1);
-});
-
+// Добавляем глобальную обработку ошибок (синхронных/асинхронных). При этом, формируем отчеты с детальной информацией об ошибке 
+new ProcessWorks();
+// Инициализируем интернационализацию на сервере и после запустить его
 initI18n(init);

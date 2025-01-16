@@ -9,7 +9,7 @@ app/coverage
 
 # production
 app/build
-server/build
+server/dist
 
 # misc
 .DS_Store
@@ -36,3 +36,6 @@ server/npm-debug.log*
 
 # user files
 server/assets
+
+# report files
+server/reports

@@ -97,7 +97,7 @@
     "server_started": "The server instance is running on port: {{port}} in mode: {{mode}}.",
     "start_server_error": "An error occurred when starting the server instance",
 
-    "error.unhandled_sync": "An unhandled error in synchronous code",
-    "error.unhandled_async": "An unhandled error in asynchronous code",
+    "error.unhandled_sync": "An unhandled error in synchronous code: {{errorMessage}}",
+    "error.unhandled_async": "An unhandled error in asynchronous code: {{reason}} ({{promise}})",
     "error.initialize_i18n": "An error occurred while initializing the i18n package."
 }

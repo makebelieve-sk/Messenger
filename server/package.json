@@ -6,7 +6,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon index.ts",
-    "start:production": "cross-env NODE_ENV=production node index.ts",
+    "start:production": "cross-env NODE_ENV=production node dist/index.js",
     "test": "npm run test"
   },
   "keywords": [
