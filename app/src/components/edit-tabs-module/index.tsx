@@ -1,8 +1,8 @@
 import React from "react";
+import { Dayjs } from "dayjs";
 import { IFormErrors, IFormValues } from "../../pages/edit";
 import Contacts from "./contacts";
 import Main from "./main";
-import { Dayjs } from "dayjs";
 
 interface IEditTabsModule extends ITabModule {
     tab: number;
@@ -19,25 +19,18 @@ enum TAB_NUMBER {
     CONTACTS = 1
 };
 
+const Tabcomponents = {
+    [TAB_NUMBER.MAIN]: Main,
+    [TAB_NUMBER.CONTACTS]: Contacts
+   }
+
 export default React.memo(function EditTabsModule({ tab, formValues, formErrors, onChange }: IEditTabsModule) {
-    switch (tab) {
-        case TAB_NUMBER.MAIN:
-            return <div 
+    const Tabcomponent = Tabcomponents[tab]
+    return <div 
                 role="tabpanel" 
-                id={`vertical-tabpanel-${TAB_NUMBER.MAIN}`} 
-                aria-labelledby={`vertical-tab-${TAB_NUMBER.MAIN}`}
+                id={`vertical-tabpanel-${tab}`} 
+                aria-labelledby={`vertical-tab-${tab}`}
             >
-                <Main formValues={formValues} formErrors={formErrors} onChange={onChange} />
+                <Tabcomponent formValues={formValues} formErrors={formErrors} onChange={onChange} />
             </div>;
-        case TAB_NUMBER.CONTACTS:
-            return <div 
-                role="tabpanel" 
-                id={`vertical-tabpanel-${TAB_NUMBER.CONTACTS}`} 
-                aria-labelledby={`vertical-tab-${TAB_NUMBER.CONTACTS}`}
-            >
-                <Contacts formValues={formValues} formErrors={formErrors} onChange={onChange} />
-            </div>;
-        default:
-            return null;
-    }
 });
