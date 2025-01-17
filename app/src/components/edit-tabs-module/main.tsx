@@ -1,21 +1,19 @@
 import React from "react";
-import "dayjs/locale/ru";
+import { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
+import DatePickerComponent from "./date-picker";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ITabModule } from ".";
-
 import  "../../styles/pages/edit-tab.scss";
-import dayjs, { Dayjs } from "dayjs";
 
 export default React.memo(function Main({ formValues, formErrors, onChange }: ITabModule) {
     const onChangeField = (field: string, value: string | boolean | Date | null | Dayjs) => {
         onChange(field, value);
     };
+    console.log("Main", formValues);
     
     return <>
         <TextField
@@ -62,32 +60,14 @@ export default React.memo(function Main({ formValues, formErrors, onChange }: IT
                 label="Пол"
                 onChange={e => onChangeField("sex", e.target.value)}
             >
+                <MenuItem value="">не указано</MenuItem>
                 <MenuItem value="мужской">мужской</MenuItem>
                 <MenuItem value="женский">женский</MenuItem>
             </Select>
         </FormControl>
 
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
-            <DatePicker
-                disableFuture
-                label="День рождения"
-                // inputFormat="YYYY-MM-DD"
-                value={dayjs(formValues.birthday)}
-                onChange={(newValue: Dayjs | null) =>{
-                    const formattedValue = newValue ? newValue.format('YYYY-MM-DD') : null;
-                    onChangeField("birthday", formattedValue);
-                }}
-                slotProps={{
-                    textField: {
-                        fullWidth: true,
-                        inputProps: {
-                            placeholder: "Укажите дату",
-                        },
-                    },
-                }}
-            />
-        </LocalizationProvider>
-
+        <DatePickerComponent formValues={formValues} onChangeField={onChangeField}/>
+    
         <TextField
             id="work"
             name="work"
