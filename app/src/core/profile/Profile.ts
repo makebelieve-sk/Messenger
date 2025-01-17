@@ -1,5 +1,5 @@
 import EventEmitter from "eventemitter3";
-
+import dayjs from "dayjs";
 import Request from "../Request";
 import User from "../models/User";
 import { setImagesInCarousel } from "../../state/main/slice";
@@ -13,8 +13,15 @@ import { NO_PHOTO } from "../../utils/constants";
 import { currentDate } from "../../utils/datetime";
 import { AVATAR_URL } from "../../utils/files";
 import { getFullName } from "../../utils";
-import CatchErrors from "../CatchErrors";
-import dayjs from "dayjs";
+
+interface IEditInfoProps {
+    result: {
+        userId: string
+        birthday: dayjs.Dayjs | string
+    };
+    setLoading: (value: React.SetStateAction<boolean>) => void;
+    setShowAlert: (value: React.SetStateAction<boolean>) => void
+}
 
 // Класс, отвечающий за полный объект пользователя
 export default class Profile extends EventEmitter {
@@ -26,7 +33,6 @@ export default class Profile extends EventEmitter {
         this._user = User.create(this._userId, { request: this._request, dispatch: this._dispatch });
         this._bindUserListeners();
     }
-
 
     get user() {
         return this._user;
@@ -145,15 +151,7 @@ export default class Profile extends EventEmitter {
     //-------------------------------------------------
     // Методы блока с основной информацией
     //-------------------------------------------------
-    public getUserDetail(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
-        this._request.get({
-            route: ApiRoutes.getUserDetail,
-            setLoading,
-            successCb: (data: { success: boolean, userDetail: IUserDetails }) => {
-                this._dispatch(setUserDetail(data.userDetail))
-            }
-        });
-    }
+
 
     //-------------------------------------------------
     // Методы блока с друзьями
@@ -170,8 +168,7 @@ export default class Profile extends EventEmitter {
         });
     }
 
-    catchErrors = new CatchErrors(this._dispatch);
-    public editInfo(result: { userId: string, birthday: dayjs.Dayjs | string }, setLoading: (value: React.SetStateAction<boolean>) => void, setShowAlert: (value: React.SetStateAction<boolean>) => void) {
+    public editInfo({ result, setLoading, setShowAlert }: IEditInfoProps) {
         this._request.post({
             route: ApiRoutes.editInfo,
             data: result,
@@ -184,7 +181,6 @@ export default class Profile extends EventEmitter {
                         setShowAlert(true);
                     }
                 },
-            failedCb: (error: any) => this.catchErrors.catch(error)
         });
 
     }
