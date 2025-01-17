@@ -3,14 +3,15 @@ import reducers from "./reducers";
 import { InitialStateType, RootState } from "../../types/redux.types";
 
 export type MainType = Pick<
-  InitialStateType, 
-  "isAuth" | "loading" | "modalConfirm" | "friendNotification" | "globalCall" | "imagesInCarousel" | "messageNotification" | "onlineUsers"
+  InitialStateType,
+  "isAuth" | 'loadingUserDetails' | "loading" | "modalConfirm" | "friendNotification" | "globalCall" | "imagesInCarousel" | "messageNotification" | "onlineUsers"
 >;
 
 // Начальное состояние
 export const initialState: MainType = {
   isAuth: false,
   loading: false,
+  loadingUserDetails: false,
   friendNotification: 0,
   modalConfirm: null,
   globalCall: null,
@@ -30,10 +31,11 @@ export const selectMainState = (state: RootState) => state.main;
 
 // Экшены
 export const {
-  setAuth, 
+  setAuth,
+  setLoadingUserDetails,
   setLoading,
   setFriendNotification,
-  setGlobalInCall, 
+  setGlobalInCall,
   setImagesInCarousel,
   setMessageNotification,
   setOnlineUsers,

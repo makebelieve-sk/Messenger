@@ -13,6 +13,9 @@ export default {
     setLoading: (state: MainType, action: PayloadAction<boolean>) => {
         state.loading = action.payload;
     },
+    setLoadingUserDetails: (state: MainType, action: PayloadAction<boolean>) => {
+        state.loadingUserDetails = action.payload;
+    },
     setFriendNotification: (state: MainType, action: PayloadAction<FriendsNoticeTypes | number>) => {
         const data = action.payload;
 

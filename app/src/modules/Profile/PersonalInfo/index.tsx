@@ -9,6 +9,7 @@ import { useAppSelector } from "../../../hooks/useGlobalState";
 import useProfile from "../../../hooks/useProfile";
 import { selectFriendState } from "../../../state/friends/slice";
 import { selectUserState } from "../../../state/user/slice";
+import { selectMainState } from "../../../state/main/slice";
 import { FriendsTab, MainFriendTabs, Pages } from "../../../types/enums";
 import { onClickBlockType } from "../Friends";
 import Spinner from "../../../components/Common/Spinner";
@@ -22,18 +23,18 @@ interface IPersonalInfo {
 const NOT_COMPLITE = "Не указано";
 
 export default React.memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
-    const [loading, setLoading] = React.useState(false);
-
+    const {loadingUserDetails} = useAppSelector( selectMainState );
     const { user, userDetail, photosCount } = useAppSelector(selectUserState);
     const { friendsCount, subscribersCount } = useAppSelector(selectFriendState);
 
-    const profile = useProfile();
+    // const profile = useProfile();
+    // profile.user.userDetail.беру геттеры и вставоляю в этот компонент  
     const navigate = useNavigate();
 
     // Получаем детальную информацию о пользователе
-    React.useEffect(() => {
-        profile.getUserDetail(setLoading);
-    }, []);
+    // React.useEffect(() => {
+    //     profile.getUserDetail(setLoading);
+    // }, []);
 
     return <Grid item>
         <Paper className="info-container paper-block">
@@ -46,7 +47,7 @@ export default React.memo(function PersonalInfo({ onClickBlock }: IPersonalInfo)
                     Редактировать
                 </div>
 
-                {loading
+                {loadingUserDetails
                     ? <Spinner />
                     : <>
                         <div className="info-container__short-info-block__row">

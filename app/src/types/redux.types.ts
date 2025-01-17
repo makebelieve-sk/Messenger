@@ -11,6 +11,7 @@ import { ICarouselImage } from "../modules/ImagesCarousel/Info";
 export type InitialStateType = {
     isAuth: boolean;
     loading: boolean;
+    loadingUserDetails: boolean;
     user: IUser;
     userDetail: IUserDetails | null;
     error: null | string;
@@ -42,12 +43,12 @@ export type InitialStateType = {
     searchValue: string;
     photosCount: number;
     photos: IPhoto[];
-    modalConfirm: { text: string; btnActionTitle: string; cb: Function;} | null;
+    modalConfirm: { text: string; btnActionTitle: string; cb: Function; } | null;
     attachmentsModal: { chatId: string; isOpen: boolean; } | null;
 };
 
 export interface ICallSettings {
-    audio: boolean; 
+    audio: boolean;
     video: { width: number; height: number; } | boolean;
 };
 
