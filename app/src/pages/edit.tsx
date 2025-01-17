@@ -1,22 +1,20 @@
-import { useEffect, useState } from "react";
-// import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import { LoadingButton } from "@mui/lab";
 import dayjs, { Dayjs } from "dayjs";
+
 import EditTabsModule from "../components/edit-tabs-module";
 import AlertComponent from "../components/Common/Alert";
-import { ApiRoutes } from "../types/enums";
-import { IUser, IUserDetails } from "../types/models.types";
-import Request from "../core/Request";
-import Profile from "../core/profile/Profile";
-import { selectUserState, setUser, setUserDetail } from "../state/user/slice";
-import { useAppDispatch, useAppSelector } from "../hooks/useGlobalState";
-import CatchErrors from "../core/CatchErrors";
+import { useAppSelector } from "../hooks/useGlobalState";
 import { REQUIRED_FIELD } from "../utils/constants";
+import { MainClientContext } from "../service/AppService";
+import { UserDetailsEvents } from "../types/events";
+import { selectMainState } from "../state/main/slice";
+import useProfile from "../hooks/useProfile";
+import Spinner from "../components/Common/Spinner";
 import "../styles/pages/edit.scss";
 
 export interface IFormValues {
@@ -41,47 +39,45 @@ export default function Edit() {
     const [tab, setTab] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
-    const [formValues, setFormValues] = useState<IFormValues | null>(null);
+    const [formValues, setFormValues] = useState<IFormValues >({
+        name: "",
+        surName: "",
+        sex: "",
+        birthday: "",
+        work: "",
+        city: "",
+        phone: "",
+        email: "",
+    } );
     const [formErrors, setFormErrors] = useState<IFormErrors | null>({});
     const [saveDisabled, setSaveDisabled] = useState(false);
 
-    const { user, userDetail } = useAppSelector(selectUserState);
+    const {loadingUserDetails } = useAppSelector(selectMainState);
 
-    const dispatch = useAppDispatch();
-    const catchErrors = new CatchErrors(dispatch);
-    const request = new Request(catchErrors);
-    const profile = new Profile( user.id, request, dispatch)
+
+    const mainClient = useContext(MainClientContext);
+    const profile =  useProfile();
+
+    useEffect(() => {
+        profile.user.userDetails.on(UserDetailsEvents.UPDATE, () => {
+             setFormValues({
+
+                name: profile.user.firstName,
+                surName: profile.user.thirdName,
+                sex: profile.user.userDetails.sex,
+                birthday: profile.user.userDetails.birthday ,
+                work: profile.user.userDetails.work,
+                city: profile.user.userDetails.city,
+                phone: profile.user.phone,
+                email: profile.user.email,
+            });
+        })
+    }, [])
 
     // Установка disabled кнопке "Сохранить"
    useEffect(() => {
         setSaveDisabled(loading || Boolean(formErrors && Object.values(formErrors).some(Boolean)));
     }, [loading, formValues]);
-
-    // Получаем детальную информацию о пользователе
-    useEffect(() => {
-        if (!userDetail && user) {
-            request.post({ route: ApiRoutes.getUserDetail,
-                data: { userId: user.id },
-                successCb:(data: { success: boolean, userDetail: IUserDetails }) => dispatch(setUserDetail(data.userDetail ? data.userDetail : null)),
-                failedCb: (error: any) => catchErrors.catch(error)
-        });
-        }
-    }, [user]);
-
-    useEffect(() => {
-        if (user && userDetail) {
-            setFormValues({
-                name: user.firstName,
-                surName: user.thirdName,
-                sex: userDetail.sex,
-                birthday: userDetail.birthday ? userDetail.birthday : "2000-01-01",
-                work: userDetail.work,
-                city: userDetail.city,
-                phone: user.phone,
-                email: user.email,
-            });
-        }
-    }, [user, userDetail]);
 
     const onChangeTab = (_: React.SyntheticEvent, newValue: number) => {
         setTab(newValue);
@@ -107,24 +103,24 @@ export default function Edit() {
         try {
             event.preventDefault();
 
-            if (user && formValues && !saveDisabled) {
+            if ( formValues && !saveDisabled) {
                 const result = {
                     ...formValues,
-                    userId: user.id
+                    userId: profile.user.id
                 };
 
                 if (result["birthday"] && typeof result["birthday"] !== "string") {
                     result["birthday"] = (result["birthday"] as dayjs.Dayjs).format("YYYY-MM-DD");
                 }
 
-            profile.editInfo(result, setLoading, setShowAlert)
+               profile.editInfo({result, setLoading, setShowAlert})
 
             } else {
                 throw new Error("Нет пользователя");
             }
         } catch (error) {
             setLoading(false);
-            catchErrors.catch("Произошла ошибка при изменении информации о пользователе: " + error);
+            mainClient.catchErrors("Произошла ошибка при изменении информации о пользователе: " + error);
         }
     };
 
@@ -141,10 +137,11 @@ export default function Edit() {
         </Tabs>
 
         <div className={"edit-container__module"}>
-            {user && userDetail && formValues
-                ? <Box component="form" noValidate onSubmit={onSubmit}>
+                 <Box component="form" noValidate onSubmit={onSubmit}>
+                    
+                    {loadingUserDetails ? <Spinner/> :
                     <EditTabsModule tab={tab} formValues={formValues} formErrors={formErrors} onChange={onChange} />
-
+                    }
                     <LoadingButton
                         fullWidth
                         type="submit"
@@ -163,8 +160,6 @@ export default function Edit() {
                         : null
                     }
                 </Box>
-                : <div className={"edit-container__module__spinner"}><CircularProgress /></div>
-            }
         </div>
     </Paper>
 };

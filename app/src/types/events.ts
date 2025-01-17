@@ -4,6 +4,11 @@ enum MainClientEvents {
     ERROR = "error",
 };
 
+enum UserDetailsEvents {
+    UPDATE = 'update'
+}
+
 export {
-    MainClientEvents
+    MainClientEvents,
+    UserDetailsEvents
 };

@@ -2,12 +2,13 @@ import EventEmitter from "eventemitter3";
 
 import Request from "../Request";
 import { MY_ID, NO_PHOTO } from "../../utils/constants";
-import { IUser } from "../../types/models.types";
+import { IUser, IUserDetails } from "../../types/models.types";
 import { AppDispatch } from "../../types/redux.types";
 import { ApiRoutes } from "../../types/enums";
 import { setLoading } from "../../state/main/slice";
 import { changeUserField, setUser } from "../../state/user/slice";
 import { MainClientEvents } from "../../types/events";
+import UserDetails from "./UserDetails";
 
 interface IOptions {
     request: Request;
@@ -16,13 +17,15 @@ interface IOptions {
 
 export default class User extends EventEmitter {
     private _user!: IUser;
-
-    constructor(private readonly _id: string, private readonly _options: IOptions) {
+    private _userDetails: UserDetails;
+    constructor(private readonly _id: string, private readonly _options: IOptions,) {
         super();
 
         this._id === MY_ID
             ? this._getMe()
             : this._getUser();
+
+        this._userDetails = new UserDetails(this._options.request, this._options.dispatch)
     }
 
     get id(): string {
@@ -33,8 +36,28 @@ export default class User extends EventEmitter {
         return this._user;
     }
 
+    get firstName(): string {
+        return this._user.firstName;
+    }
+
+    get thirdName(): string {
+        return this._user.thirdName;
+    }
+
+    get phone(): string {
+        return this._user.phone;
+    }
+
+    get email(): string {
+        return this._user.email;
+    }
+
     get fullName(): string {
-        return this._user.firstName + " " + this._user.thirdName;
+        return this.firstName + " " + this.thirdName;
+    }
+
+    get userDetails(): UserDetails {
+        return this._userDetails
     }
 
     get avatarUrl(): string {
@@ -83,4 +106,8 @@ export default class User extends EventEmitter {
     static create(userId: string = MY_ID, options: IOptions) {
         return new User(userId, options);
     }
-}
+
+    createDetails(details: IUserDetails) {
+        this._userDetails.updateDetails(details)
+    }
+} 
