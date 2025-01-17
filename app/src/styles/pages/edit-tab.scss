@@ -1,9 +1,12 @@
-.edit-container__sex-select {
-    margin: 16px 0 24px 0 !important;
+.MuiFormControl-root{
+    &.edit-container__sex-select {
+        margin: 16px 0 24px 0;
+    }
+    &.edit-container__work {
+        margin:  24px 0 16px 0 ;
+    }
 }
-.edit-container__work {
-    margin:  24px 0 16px 0  !important;
-}
+
 .edit-container__form {
     * {
         font-size: 16px;
