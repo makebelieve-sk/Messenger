@@ -1,16 +1,16 @@
 import EventEmitter from "eventemitter3";
 
-import CatchErrors from "./CatchErrors";
-import Request from "./Request";
-import Socket from "./socket/Socket";
-import ProfilesController from "./profile/ProfilesController";
-import Profile from "./profile/Profile";
-import MainApi from "./MainApi";
-import { setAuth } from "../store/main/slice";
-import { Pages } from "../types/enums";
-import { AppDispatch } from "../types/redux.types";
-import { MainClientEvents } from "../types/events";
-import { MY_ID } from "../utils/constants";
+import CatchErrors from "@core/CatchErrors";
+import Request from "@core/Request";
+import Socket from "@core/socket/Socket";
+import ProfilesController from "@core/controllers/ProfilesController";
+import { Profile } from "@core/models/Profile";
+import MainApi from "@core/MainApi";
+import { setAuth } from "@store/main/slice";
+import { Pages } from "@custom-types/enums";
+import { AppDispatch } from "@custom-types/redux.types";
+import { MainClientEvents } from "@custom-types/events";
+import { MY_ID } from "@utils/constants";
 
 // Класс, считающийся ядром бизнес логики на стороне клиента. Именно здесь происходит инициализация всех основных классов и вспомогательных сущностей
 export default class MainClient extends EventEmitter {
@@ -39,11 +39,6 @@ export default class MainClient extends EventEmitter {
 
     get mainApi() {
         return this._mainApi;
-    }
-
-    // TODO Удалить после рефакторинга звонков (useWebRTC)
-    get socket() {
-        return this._socket.socket;
     }
 
     catchErrors(error: string) {

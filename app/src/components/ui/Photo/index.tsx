@@ -2,14 +2,14 @@ import { useState, memo } from "react";
 import { useTranslation } from "react-i18next";
 import CloseIcon from "@mui/icons-material/Close";
 
-import useImage from "../../../hooks/useImage";
-import { useAppDispatch } from "../../../hooks/useGlobalState";
-import { setModalConfirm } from "../../../store/main/slice";
-import { NO_PHOTO } from "../../../utils/constants";
+import useImage from "@hooks/useImage";
+import { useAppDispatch } from "@hooks/useGlobalState";
+import { setModalConfirm } from "@store/main/slice";
+import { NO_PHOTO } from "@utils/constants";
 
 import "./photo.scss";
 
-interface IPhoto {
+interface IPhotoComponent {
     src: string;
     alt: string;
     showVisibleIcon?: boolean;
@@ -18,7 +18,7 @@ interface IPhoto {
 };
 
 // Базовый компонент фотографии
-export default memo(function PhotoComponent({ src, alt, showVisibleIcon = true, clickHandler, deleteHandler }: IPhoto) {
+export default memo(function PhotoComponent({ src, alt, showVisibleIcon = true, clickHandler, deleteHandler }: IPhotoComponent) {
     const [visibleCloseIcon, setVisibleCloseIcon] = useState(false);
 
     const { t } = useTranslation();

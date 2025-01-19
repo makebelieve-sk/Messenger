@@ -1,14 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import reducers from "./reducers";
-import { InitialStateType, RootState } from "../../types/redux.types";
 
-export type MessageType = Pick<
-  InitialStateType, 
-  "dialogs" | "unRead" | "messages" | "visibleUnReadMessages" | "isWrite" | "scrollDownAfterNewMsg" | "usersInChat" | "editMessage" | "attachmentsModal"
->;
+import reducers from "@store/message/reducers";
+import { MessageStateType, RootState } from "@custom-types/redux.types";
 
 // Начальное состояние
-export const initialState: MessageType = {
+export const initialState: MessageStateType = {
   dialogs: [],
   unRead: {},
   messages: [],
@@ -20,6 +16,7 @@ export const initialState: MessageType = {
   attachmentsModal: null,
 };
 
+// Создание состояния сообщений
 export const messagesSlice = createSlice({
   name: "messages",
   initialState,

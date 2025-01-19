@@ -1,24 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import reducers from "./reducers";
-import { InitialStateType, RootState } from "../../types/redux.types";
 
-export type MainType = Pick<
-  InitialStateType, 
-  "isAuth" | "loading" | "modalConfirm" | "friendNotification" | "globalCall" | "imagesInCarousel" | "messageNotification" | "onlineUsers"
->;
+import reducers from "@store/main/reducers";
+import { MainStateType, RootState } from "@custom-types/redux.types";
 
 // Начальное состояние
-export const initialState: MainType = {
+export const initialState: MainStateType = {
   isAuth: false,
   loading: false,
   friendNotification: 0,
   modalConfirm: null,
-  globalCall: null,
   imagesInCarousel: null,
   messageNotification: 0,
   onlineUsers: [],
 };
 
+// Создание состояния друзей
 export const mainSlice = createSlice({
   name: "main",
   initialState,
@@ -33,7 +29,6 @@ export const {
   setAuth, 
   setLoading,
   setFriendNotification,
-  setGlobalInCall, 
   setImagesInCarousel,
   setMessageNotification,
   setOnlineUsers,

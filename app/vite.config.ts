@@ -27,7 +27,17 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-          styles: path.resolve(__dirname, "src/styles"),    // Алиас для папки styles
+            "@components": path.resolve(__dirname, "src/components"),  // Короткий путь для папки component
+            "@core": path.resolve(__dirname, "src/core"),              // Короткий путь для папки core
+            "@hooks": path.resolve(__dirname, "src/hooks"),            // Короткий путь для папки hooks
+            "@locales": path.resolve(__dirname, "src/locales"),        // Короткий путь для папки locales
+            "@modules": path.resolve(__dirname, "src/modules"),        // Короткий путь для папки modules
+            "@pages": path.resolve(__dirname, "src/pages"),            // Короткий путь для папки pages
+            "@service": path.resolve(__dirname, "src/service"),        // Короткий путь для папки service
+            "@store": path.resolve(__dirname, "src/store"),            // Короткий путь для папки store
+            "@custom-types": path.resolve(__dirname, "src/types"),            // Короткий путь для папки types
+            "@styles": path.resolve(__dirname, "src/styles"),          // Короткий путь для папки styles
+            "@utils": path.resolve(__dirname, "src/utils")             // Короткий путь для папки utils
         }                   // Добавление коротких путей
     }
 });

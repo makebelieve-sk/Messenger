@@ -4,15 +4,15 @@ import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
-import useProfile from "../../../hooks/useProfile";
-import useUser from "../../../hooks/useUser";
-import useUserDetails from "../../../hooks/useUserDetails";
-import { useAppSelector } from "../../../hooks/useGlobalState";
-import { selectFriendState } from "../../../store/friends/slice";
-import { selectUserState } from "../../../store/user/slice";
-import { FriendsTab, MainFriendTabs, Pages } from "../../../types/enums";
-import { onClickBlockType } from "../Friends";
-import SpinnerComponent from "../../../components/ui/Spinner";
+import useProfile from "@hooks/useProfile";
+import useUser from "@hooks/useUser";
+import useUserDetails from "@hooks/useUserDetails";
+import { useAppSelector } from "@hooks/useGlobalState";
+import { selectFriendState } from "@store/friend/slice";
+import { selectUserState } from "@store/user/slice";
+import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
+import { onClickBlockType } from "@modules/Profile/Friends";
+import SpinnerComponent from "@components/ui/Spinner";
 
 import "./personal-info.scss";
 

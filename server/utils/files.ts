@@ -3,10 +3,12 @@ import { v4 as uuid } from "uuid";
 import fs from "fs";
 import path from "path";
 
+const JPEG_FORMAT = "jpeg";
 const SHARP_QUALITY = parseInt(process.env.SHARP_QUALITY as string);
 
-// 1 МБ
 export const MB_1 = 1024 * 1024;
+export const ASSETS_PATH = "../assets";
+export const PUBLIC_PATH = "../../app/public";
 
 // Проверка, является ли файл изображением
 export const isImage = (filename: string) => {
@@ -15,11 +17,6 @@ export const isImage = (filename: string) => {
 
     return fileExt ? imgExts.includes(fileExt) : false;
 };
-
-export const ASSETS_PATH = "../assets";
-export const PUBLIC_PATH = "../../app/public";
-
-const JPEG_FORMAT = "jpeg";
 
 // Обрезаем качество изображению до 80% и сохраняем его на диск сервера
 export async function createSharpedImage(file: Express.Multer.File) {

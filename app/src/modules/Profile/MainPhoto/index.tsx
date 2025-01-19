@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
-import useProfile from "../../../hooks/useProfile";
-import ChangeAvatarComponent from "../../../components/ui/ChangeAvatar";
-import PhotoComponent from "../../../components/ui/Photo";
+import useProfile from "@hooks/useProfile";
+import ChangeAvatarComponent from "@components/ui/ChangeAvatar";
+import PhotoComponent from "@components/ui/Photo";
 
 import "./main-photo.scss";
 
@@ -16,18 +16,18 @@ export default function MainPhoto() {
     const profile = useProfile();
     
     // Клик по своей аватарке
-    const onClickMainPhoto = () => {
+    const clickHandler = () => {
         profile.onClickAvatar();
     };
 
-    // Удаление аватара
-    const deleteAvatar = () => {
-        profile.onDeleteAvatar(setLoading);
+    // Установка/обновление своего аватара
+    const changeHandler = (updateOptions: { id: string; newAvatarUrl: string; newPhotoUrl: string; }) => {
+        profile.onSetAvatar(updateOptions);
     };
 
-    // Установка/обновление своего аватара
-    const onSetAvatar = (updateOptions: { id: string; newAvatarUrl: string; newPhotoUrl: string; }) => {
-        profile.onSetAvatar(updateOptions);
+    // Удаление аватара
+    const deleteHandler = () => {
+        profile.onDeleteAvatar(setLoading);
     };
 
     return <Grid item>
@@ -35,8 +35,8 @@ export default function MainPhoto() {
             <PhotoComponent
                 src={profile.user.avatarUrl}
                 alt="user-avatar"
-                clickHandler={onClickMainPhoto}
-                deleteHandler={deleteAvatar}
+                clickHandler={clickHandler}
+                deleteHandler={deleteHandler}
             />
 
             <div className="main-photo__edit-button">
@@ -44,7 +44,7 @@ export default function MainPhoto() {
                     labelText={t("profile-module.change")}
                     loading={loading}
                     mustAuth
-                    onChange={onSetAvatar}
+                    onChange={changeHandler}
                     setLoading={setLoading}
                 />
             </div>

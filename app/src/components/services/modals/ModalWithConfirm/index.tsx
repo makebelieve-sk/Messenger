@@ -5,8 +5,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-import { useAppDispatch, useAppSelector } from "../../../../hooks/useGlobalState";
-import { selectMainState, setModalConfirm } from "../../../../store/main/slice";
+import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
+import { selectMainState, setModalConfirm } from "@store/main/slice";
 
 import "./modal-with-confirm.scss";
 

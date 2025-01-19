@@ -1,10 +1,10 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-// import { IDialog, UserPartial } from "../../pages/messages";
-import { IFile, IMessage } from "../../types/models.types";
-import { MessageType } from "./slice";
-import { UnReadTypes } from "../../types/enums";
-import { IEditMessage } from "../../core/edit-message";
-import i18next from "../../service/i18n";
+
+import i18next from "@service/i18n";
+import { IEditMessage } from "@core/edit-message";
+import { IFile, IMessage } from "@custom-types/models.types";
+import { UnReadTypes } from "@custom-types/enums";
+import { MessageStateType } from "@custom-types/redux.types";
 
 interface IUnRead {
     chatId: string; 
@@ -23,7 +23,7 @@ type PayloadUnReadType = IUnReadPayloadTypeAddChat | IUnReadPayloadTypeAddMessag
 
 export default {
     // Устанавливаем диалоги
-    setDialogs: (state: MessageType, action: PayloadAction<any[]>) => {
+    setDialogs: (state: MessageStateType, action: PayloadAction<any[]>) => {
         const dialogs = action.payload;
 
         state.dialogs = !dialogs || !dialogs.length
@@ -31,7 +31,7 @@ export default {
             : [...state.dialogs, ...dialogs];
     },
     // Удаление чата
-    deleteDialog: (state: MessageType, action: PayloadAction<string>) => {
+    deleteDialog: (state: MessageStateType, action: PayloadAction<string>) => {
         const findChat = state.dialogs.find(dialog => dialog.id === action.payload);
 
         if (findChat) {
@@ -43,7 +43,7 @@ export default {
         }
     },
     // Устанавливаем значение полю messageObject в диалоге
-    setMessageObjectFieldInDialog: (state: MessageType, action: PayloadAction<{ chatId: string; field: string; value: boolean | string; }>) => {
+    setMessageObjectFieldInDialog: (state: MessageStateType, action: PayloadAction<{ chatId: string; field: string; value: boolean | string; }>) => {
         const { chatId, field, value } = action.payload;
 
         const findDialog = state.dialogs.find(dialog => dialog.id === chatId);
@@ -53,7 +53,7 @@ export default {
         }
     },
     // Установка непрочитанных сообщений
-    setUnRead: (state: MessageType, action: PayloadAction<{ type: UnReadTypes; payload?: PayloadUnReadType }>) => {
+    setUnRead: (state: MessageStateType, action: PayloadAction<{ type: UnReadTypes; payload?: PayloadUnReadType }>) => {
         const { type, payload } = action.payload;
 
         switch (type) {
@@ -131,7 +131,7 @@ export default {
         };
     },
     // Установка сообщения и установка плашки "Непрочитанные сообщения"
-    setMessage: (state: MessageType, action: PayloadAction<{ message: IMessage, showUnreadDie?: boolean, userId?: string }>) => {
+    setMessage: (state: MessageStateType, action: PayloadAction<{ message: IMessage, showUnreadDie?: boolean, userId?: string }>) => {
         const { message, showUnreadDie, userId } = action.payload;
         const messageId = message.id;
 
@@ -154,7 +154,7 @@ export default {
         }
     },
     // Обновляем конкретное значение сообщения 
-    updateMessage: (state: MessageType, action: PayloadAction<{ messageId: string; field: string; value: number }>) => {
+    updateMessage: (state: MessageStateType, action: PayloadAction<{ messageId: string; field: string; value: number }>) => {
         const { messageId, field, value } = action.payload;
 
         const findMessage = state.messages.find(message => message.id.toLowerCase() === messageId.toLowerCase());
@@ -164,7 +164,7 @@ export default {
         }
     },
     // Установка сообщений чата
-    setMessages: (state: MessageType, action: PayloadAction<{ messages: IMessage[], userId?: string }>) => {
+    setMessages: (state: MessageStateType, action: PayloadAction<{ messages: IMessage[], userId?: string }>) => {
         const { messages, userId } = action.payload;
 
         state.messages = !messages || !messages.length
@@ -184,11 +184,11 @@ export default {
         }
     },
     // Установка значения плашки "Непрочитанные сообщения"
-    setVisibleUnReadMessages: (state: MessageType, action: PayloadAction<string | null>) => {
+    setVisibleUnReadMessages: (state: MessageStateType, action: PayloadAction<string | null>) => {
         state.visibleUnReadMessages = action.payload;
     },
     // Сохраняем, какой пользователь в каком чате набирает сообщение
-    setWriteMessage: (state: MessageType, action: PayloadAction<{ isWrite: boolean; chatId: string; userName: string; }>) => {
+    setWriteMessage: (state: MessageStateType, action: PayloadAction<{ isWrite: boolean; chatId: string; userName: string; }>) => {
         const { isWrite, chatId, userName } = action.payload;
 
         if (isWrite) {
@@ -209,11 +209,11 @@ export default {
         }
     },
     // Скроллим вниз после нового сообщения
-    setScrollDownAfterNewMsg: (state: MessageType, action: PayloadAction<boolean>) => {
+    setScrollDownAfterNewMsg: (state: MessageStateType, action: PayloadAction<boolean>) => {
         state.scrollDownAfterNewMsg = action.payload;
     },
     // Установка последнего сообщения в диалогах
-    changeLastMessageInDialog: (state: MessageType, action: PayloadAction<IMessage>) => {
+    changeLastMessageInDialog: (state: MessageStateType, action: PayloadAction<IMessage>) => {
         const { id, chatId, message, createDate, type, Call, files, authorAvatar } = action.payload;
 
         if (chatId) {
@@ -240,11 +240,11 @@ export default {
         }
     },
     // Установка пользователей в открытый чат
-    setUsersInChat: (state: MessageType, action: PayloadAction<any[]>) => {
+    setUsersInChat: (state: MessageStateType, action: PayloadAction<any[]>) => {
         state.usersInChat = action.payload;
     },
     // Удаление сообщения из списка сообщений в конкретном чате
-    deleteMessage: (state: MessageType, action: PayloadAction<string>) => {
+    deleteMessage: (state: MessageStateType, action: PayloadAction<string>) => {
         const findMessage = state.messages.find(message => message.id === action.payload);
 
         if (findMessage) {
@@ -256,7 +256,7 @@ export default {
         }
     },
     // Редактирование сообщения в списке сообщений
-    editMessage: (state: MessageType, action: PayloadAction<IEditMessage>) => {
+    editMessage: (state: MessageStateType, action: PayloadAction<IEditMessage>) => {
         const { id, files, message } = action.payload;
 
         const findMessage = state.messages.find(message => message.id === id);
@@ -273,15 +273,15 @@ export default {
         }
     },
     // Установка редактируемого сообщения
-    setEditMessage: (state: MessageType, action: PayloadAction<IMessage>) => {
+    setEditMessage: (state: MessageStateType, action: PayloadAction<IMessage>) => {
         state.editMessage = action.payload;
     },
     // Обнуление редактируемого сообщения
-    resetEditMessage: (state: MessageType) => {
+    resetEditMessage: (state: MessageStateType) => {
         state.editMessage = null;
     },
     // Показ модального окна с вложениями чата
-    setAttachments: (state: MessageType, action: PayloadAction<{ chatId: string; isOpen: boolean; } | null>) => {
+    setAttachments: (state: MessageStateType, action: PayloadAction<{ chatId: string; isOpen: boolean; } | null>) => {
         state.attachmentsModal = action.payload;
-    },
+    }
 };

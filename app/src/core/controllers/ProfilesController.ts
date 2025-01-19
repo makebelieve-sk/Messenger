@@ -1,15 +1,15 @@
 import EventEmitter from "eventemitter3";
 
-import Profile from "./Profile";
-import Request from "../Request";
-import i18next from "../../service/i18n";
-import { AppDispatch } from "../../types/redux.types";
-import { MainClientEvents } from "../../types/events";
-import { MY_ID } from "../../utils/constants";
+import ProfileService from "@core/services/ProfileServices";
+import Request from "@core/Request";
+import i18next from "@service/i18n";
+import { AppDispatch } from "@custom-types/redux.types";
+import { MainClientEvents } from "@custom-types/events";
+import { MY_ID } from "@utils/constants";
 
 // Класс, отвечающий за работу с коллекцией профилей пользователей
 export default class ProfilesController extends EventEmitter {
-    private _profiles: Map<string, Profile> = new Map();
+    private _profiles: Map<string, ProfileService> = new Map();
 
     constructor(private readonly _request: Request, private readonly _dispatch: AppDispatch) {
         super();
@@ -40,7 +40,7 @@ export default class ProfilesController extends EventEmitter {
             return undefined;
         }
 
-        const newProfile = new Profile(userId, this._request, this._dispatch);
+        const newProfile = new ProfileService(userId, this._request, this._dispatch);
 
         this._profiles.set(userId, newProfile);
         this._bindListeners(newProfile);
@@ -58,8 +58,8 @@ export default class ProfilesController extends EventEmitter {
         this._profiles.delete(userId);
     }
 
-    // Слушатель события класса Profile
-    private _bindListeners(profile: Profile) {
+    // Слушатель события класса ProfileService
+    private _bindListeners(profile: ProfileService) {
         profile.on(MainClientEvents.GET_ME, () => this.emit(MainClientEvents.GET_ME));
     }
 }

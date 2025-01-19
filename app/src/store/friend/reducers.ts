@@ -1,17 +1,18 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { IUser } from "../../types/models.types";
-import { FreindsType } from "./slice";
+
+import { IUser } from "@custom-types/models.types";
+import { FriendStateType } from "@custom-types/redux.types";
 
 export default {
-    addFriend: (state: FreindsType, action: PayloadAction<IUser>) => {
+    addFriend: (state: FriendStateType, action: PayloadAction<IUser>) => {
         state.friends = state.friends 
             ? [...state.friends, action.payload]
             : [action.payload];
     },
-    setFriends: (state: FreindsType, action: PayloadAction<IUser[] | null>) => {
+    setFriends: (state: FriendStateType, action: PayloadAction<IUser[] | null>) => {
         state.friends = action.payload;
     },
-    deleteFriend: (state: FreindsType, action: PayloadAction<string>) => {
+    deleteFriend: (state: FriendStateType, action: PayloadAction<string>) => {
         if (state.friends) {
             const friend = state.friends.find(friend => friend.id === action.payload);
 
@@ -24,19 +25,19 @@ export default {
             }
         }
     },
-    setFriendsCount: (state: FreindsType, action: PayloadAction<number>) => {
+    setFriendsCount: (state: FriendStateType, action: PayloadAction<number>) => {
         state.friendsCount = action.payload;
     },
-    setTopFriends: (state: FreindsType, action: PayloadAction<IUser[] | null>) => {
+    setTopFriends: (state: FriendStateType, action: PayloadAction<IUser[] | null>) => {
         state.topFriends = action.payload;
     },
-    setSubscribersCount: (state: FreindsType, action: PayloadAction<number>) => {
+    setSubscribersCount: (state: FriendStateType, action: PayloadAction<number>) => {
         state.subscribersCount = action.payload;
     },
-    setPossibleUsers: (state: FreindsType, action: PayloadAction<IUser[] | null>) => {
+    setPossibleUsers: (state: FriendStateType, action: PayloadAction<IUser[] | null>) => {
         state.possibleUsers = action.payload;
     },
-    setSearchValue: (state: FreindsType, action: PayloadAction<string>) => {
+    setSearchValue: (state: FriendStateType, action: PayloadAction<string>) => {
         state.searchValue = action.payload;
     },
 };

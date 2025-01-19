@@ -1,4 +1,4 @@
-import { CallTypes, FileVarieties, MessageTypes } from "./enums";
+import { FileVarieties, MessageTypes } from "./enums";
 
 // Интерфейс атрибутов модели Users
 export interface IUser {
@@ -60,7 +60,7 @@ export interface IMessage {
         thirdName: string;
         avatarUrl: string;
     };
-    Call?: ICall;
+    Call?: any;
     authorAvatar?: string;
 };
 
@@ -69,18 +69,6 @@ export interface IChat {
     id: string;
     name: string | null;
     avatarUrl: string | null;
-};
-
-// Интерфейс атрибутов модели Calls
-export interface ICall {
-    id: string;
-    name: string;
-    type: CallTypes;
-    initiatorId?: string;
-    chatId?: string;
-    startTime?: string;
-    endTime?: string;
-    UsersInCall?: IUsersInCall[]
 };
 
 // Интерфейс атрибутов модели Files
@@ -113,13 +101,6 @@ export interface IUsersInChat {
     id: string;
     userId: string;
     chatId: string;
-};
-
-// Интерфейс атрибутов модели UsersInCall
-export interface IUsersInCall {
-    id: string;
-    userId: string;
-    callId: string;
 };
 
 // Интерфейс атрибутов модели BlockUsers

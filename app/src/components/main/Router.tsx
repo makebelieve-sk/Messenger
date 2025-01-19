@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 
-import Profile from "../../pages/Profile";
-import SignIn from "../../pages/SignIn";
-import SignUp from "../../pages/SignUp";
-import { Pages } from "../../types/enums";
-import { MainClientEvents } from "../../types/events";
-import { selectMainState } from "../../store/main/slice";
-import { useAppSelector } from "../../hooks/useGlobalState";
-import useMainClient from "../../hooks/useMainClient";
+import Profile from "@pages/Profile";
+import SignIn from "@pages/SignIn";
+import SignUp from "@pages/SignUp";
+import { selectMainState } from "@store/main/slice";
+import { useAppSelector } from "@hooks/useGlobalState";
+import useMainClient from "@hooks/useMainClient";
+import { Pages } from "@custom-types/enums";
+import { MainClientEvents } from "@custom-types/events";
 
 // Основной компонент маршрутизации. Отвечает как за защищенные маршруты, так и за авторизационные.
 export default function Router() {

@@ -7,16 +7,17 @@ import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-import SpinnerComponent from "../../../ui/Spinner";
-import useMainClient from "../../../../hooks/useMainClient";
-import { useAppDispatch, useAppSelector } from "../../../../hooks/useGlobalState";
-import { selectMessagesState, setAttachments } from "../../../../store/messages/slice";
-import { setImagesInCarousel } from "../../../../store/main/slice";
-import { IFile } from "../../../../types/models.types";
-import { ValueOf } from "../../../../types";
-import { currentSize } from "../../../../utils/files";
-import { getHoursWithMinutes, transformDate } from "../../../../utils/time";
-import { ICarouselImage } from "../../../../modules/ImagesCarousel/Info/Info";
+import SpinnerComponent from "@components/ui/Spinner";
+import useMainClient from "@hooks/useMainClient";
+import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
+import { selectMessagesState, setAttachments } from "@store/message/slice";
+import { setImagesInCarousel } from "@store/main/slice";
+import { IFile } from "@custom-types/models.types";
+import { ValueOf } from "@custom-types/index";
+import { currentSize } from "@utils/files";
+import { transformDate } from "@utils/date";
+import { getHoursWithMinutes } from "@utils/time";
+import { ICarouselImage } from "@modules/ImagesCarousel/Info";
 
 import "./modal-with-attachments.scss";
 

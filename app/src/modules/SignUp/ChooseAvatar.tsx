@@ -5,9 +5,9 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
 
-import ChangeAvatarComponent from "../../components/ui/ChangeAvatar";
-import PhotoComponent from "../../components/ui/Photo";
-import { AVATAR_URL } from "../../utils/files";
+import ChangeAvatarComponent from "@components/ui/ChangeAvatar";
+import PhotoComponent from "@components/ui/Photo";
+import { AVATAR_URL } from "@utils/files";
 
 import "./sign-up.scss";
 

@@ -5,14 +5,14 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 
-import AvatarComponent from "../../ui/Avatar";
-import Logo from "./Logo";
-import useMainClient from "../../../hooks/useMainClient";
-import useProfile from "../../../hooks/useProfile";
-import { CLIENT_URL } from "../../../utils/constants";
-import { AVATAR_URL } from "../../../utils/files";
-import {  Pages } from "../../../types/enums";
-import { UserEvents } from "../../../types/events";
+import AvatarComponent from "@components/ui/Avatar";
+import Logo from "@components/layouts/Header/Logo";
+import useMainClient from "@hooks/useMainClient";
+import useProfile from "@hooks/useProfile";
+import { CLIENT_URL } from "@utils/constants";
+import { AVATAR_URL } from "@utils/files";
+import {  Pages } from "@custom-types/enums";
+import { UserEvents } from "@custom-types/events";
 
 import "./header.scss";
 
@@ -51,7 +51,7 @@ export default function HeaderComponent() {
         navigate(link);
     };
 
-    // Клик по лого
+    // Клик по лого колесиком мыши
     const onMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (event.button === 1) {
             window.open(CLIENT_URL);

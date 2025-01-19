@@ -1,8 +1,8 @@
 import { v4 as uuid } from "uuid";
-import { FileVarieties, MessageTypes } from "../types/enums";
-import { IFile, IMessage } from "../types/models.types";
-// import { UserPartial } from "../pages/messages";
-import { isImage } from "./files";
+
+import { FileVarieties, MessageTypes } from "@custom-types/enums";
+import { IFile, IMessage } from "@custom-types/models.types";
+import { isImage } from "@utils/files";
 
 // Обработка сообщений с файлами (разделение на отдельные сообщения)
 export const handlingMessagesWithFiles = (messages: IMessage[]) => {

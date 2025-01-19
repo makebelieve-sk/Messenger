@@ -1,6 +1,11 @@
-import { CallTypes, FileVarieties, MessageTypes } from "./enums";
+import { FileVarieties, MessageTypes } from "@custom-types/enums";
 
-// Интерфейс атрибутов модели Users (объект пользователя с безопасными полями)
+// В данном файле хранятся описания самих структур моделей.
+// Большая часть их них генерируется на сервере либо их базы данных и возвращается на клиент.
+// Некоторые формируются прямиков на клиенте и отправляются на сервер (сообщения, как пример).
+// В любом случае, данные интерфейсы используются на всех уровне клиента и они неизменны.
+
+// Интерфейс структуры данных "Пользователь"
 export interface IUser {
     id: string;
     firstName: string;
@@ -11,7 +16,7 @@ export interface IUser {
     avatarUrl: string;
 };
 
-// Интерфейс атрибутов модели User_details
+// Интерфейс структуры данных "Дополнительная информация пользователя"
 export interface IUserDetails {
     id: number;
     userId: string;
@@ -22,14 +27,14 @@ export interface IUserDetails {
     lastSeen?: string;
 };
 
-// Интерфейс атрибутов модели Friends
+// Интерфейс структуры данных "Друг"
 export interface IFriend {
     id: number;
     userId: string;
     friendId: string;
 };
 
-// Интерфейс атрибутов модели Subscribers
+// Интерфейс структуры данных "Подписчик"
 export interface ISubscriber {
     id: number;
     userId: string;
@@ -37,7 +42,7 @@ export interface ISubscriber {
     leftInSubs: number;
 };
 
-// Интерфейс атрибутов модели Messages
+// Интерфейс структуры данных "Сообщение"
 export interface IMessage {
     id: string;
     userId: string;
@@ -58,30 +63,18 @@ export interface IMessage {
         thirdName: string;
         avatarUrl: string;
     };
-    Call?: ICall;
+    Call?: any;
     authorAvatar?: string;
 };
 
-// Интерфейс атрибутов модели Chats
+// Интерфейс структуры данных "Диалог"
 export interface IChat {
     id: string;
     name: string | null;
     avatarUrl: string | null;
 };
 
-// Интерфейс атрибутов модели Calls
-export interface ICall {
-    id: string;
-    name: string;
-    type: CallTypes;
-    initiatorId?: string;
-    chatId?: string;
-    startTime?: string;
-    endTime?: string;
-    UsersInCall?: IUsersInCall[]
-};
-
-// Интерфейс атрибутов модели Files
+// Интерфейс структуры данных "Файл"
 export interface IFile {
     id: string;
     name: string;
@@ -90,7 +83,7 @@ export interface IFile {
     extension: string;
 };
 
-// Интерфейс атрибутов модели ReadMessages
+// Интерфейс структуры данных "Прочтенное сообщение"
 export interface IReadMessages {
     id: string;
     userId: string;
@@ -98,7 +91,7 @@ export interface IReadMessages {
     isRead: number;
 };
 
-// Интерфейс атрибутов модели Photos
+// Интерфейс структуры данных "Фотография"
 export interface IPhoto {
     id: string;
     userId: string;
@@ -107,49 +100,42 @@ export interface IPhoto {
     User?: Pick<IUser, "id" | "firstName" | "thirdName" | "avatarUrl">;
 };
 
-// Интерфейс атрибутов модели UsersInChat
+// Интерфейс структуры данных "Пользователи в диалоге"
 export interface IUsersInChat {
     id: string;
     userId: string;
     chatId: string;
 };
 
-// Интерфейс атрибутов модели UsersInCall
-export interface IUsersInCall {
-    id: string;
-    userId: string;
-    callId: string;
-};
-
-// Интерфейс атрибутов модели BlockUsers
+// Интерфейс структуры данных "Заблокированный пользователь"
 export interface IBlockUsers {
     id: string;
     userId: string;
     userBlocked: string;
 };
 
-// Интерфейс атрибутов модели ChatSoundNotifications
+// Интерфейс структуры данных "Звуковое уведомление диалога"
 export interface IChatSoundNotifications {
     id: string;
     chatId: string;
     userId: string;
 };
 
-// Интерфейс атрибутов модели DeletedMessages
+// Интерфейс структуры данных "Удаленное сообщение"
 export interface IDeletedMessages {
     id: string;
     messageId: string;
     userId: string;
 };
 
-// Интерфейс атрибутов модели DeletedChats
+// Интерфейс структуры данных "Удаленный диалог"
 export interface IDeletedChats {
     id: string;
     chatId: string;
     userId: string;
 };
 
-// Интерфейс атрибутов модели FilesInMessage
+// Интерфейс структуры данных "Файл в сообщении"
 export interface IFilesInMessage {
     id: string;
     messageId: string;

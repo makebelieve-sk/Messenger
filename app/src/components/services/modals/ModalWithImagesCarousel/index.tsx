@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import MobileStepper from "@mui/material/MobileStepper";
 
-import PhotoComponent from "../../../ui/Photo";
-import Info, { ICarouselImage } from "../../../../modules/ImagesCarousel/Info/Info";
-import CarouselButton from "../../../../modules/ImagesCarousel/CarouselButton";
-import { useAppDispatch, useAppSelector } from "../../../../hooks/useGlobalState";
-import { selectMainState, setImagesInCarousel } from "../../../../store/main/slice";
+import PhotoComponent from "@components/ui/Photo";
+import Info, { ICarouselImage } from "@modules/ImagesCarousel/Info";
+import CarouselButton from "@modules/ImagesCarousel/CarouselButton";
+import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
+import { selectMainState, setImagesInCarousel } from "@store/main/slice";
 
 import "./modal-with-images-carousel.scss";
 

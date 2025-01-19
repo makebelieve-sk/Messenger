@@ -1,8 +1,8 @@
 import { createContext } from "react";
 
-import App from "./App";
-import MainClient from "../../core/MainClient";
-import { useAppDispatch } from "../../hooks/useGlobalState";
+import App from "@components/main/App";
+import MainClient from "@core/MainClient";
+import { useAppDispatch } from "@hooks/useGlobalState";
 
 export const MainClientContext = createContext<MainClient>(undefined as never);
 

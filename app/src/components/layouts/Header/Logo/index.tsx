@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Logo() {
     return <svg width="136" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#new_logo_vk_with_text__a)">

@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import reducers from "./reducers";
-import { InitialStateType, RootState } from "../../types/redux.types";
 
-export type ErrorType = Pick<InitialStateType, "error" | "systemError">;
+import { ErrorStateType, RootState } from "@custom-types/redux.types";
+import reducers from "@store/error/reducers";
 
 // Начальное состояние
-export const initialState: ErrorType = {
+export const initialState: ErrorStateType = {
   error: null,
   systemError: null,
 };
 
+// Создание состояния ошибки
 export const errorSlice = createSlice({
   name: "error",
   initialState,

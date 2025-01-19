@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Alert from "@mui/material/Alert";
 
-import SnackBarComponent from "../../../ui/Snackbar";
-import { useAppSelector } from "../../../../hooks/useGlobalState";
-import { selectErrorState } from "../../../../store/error/slice";
+import SnackBarComponent from "@components/ui/Snackbar";
+import { useAppSelector } from "@hooks/useGlobalState";
+import { selectErrorState } from "@store/error/slice";
 
 // Всплывающая подсказка с ошибкой по сокет соединению
 export default function SnackBarWithSocketError() {

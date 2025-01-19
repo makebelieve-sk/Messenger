@@ -6,7 +6,7 @@ import { AppDispatch } from "../types/redux.types";
 import { ClientToServerEvents, ServerToClientEvents } from "../types/socket.types";
 import { ApiRoutes, MessageTypes, SocketActions } from "../types/enums";
 // import { UserPartial } from "../pages/messages";
-import { editMessage } from "../store/messages/slice";
+import { editMessage } from "../store/message/slice";
 // import { NextRouter } from "next/router";
 
 export interface IEditMessage {

@@ -1,10 +1,10 @@
 import { memo, ChangeEvent, Dispatch, SetStateAction } from "react";
 
-import InputImageComponent from "../../ui/InputImage";
-import { ApiRoutes } from "../../../types/enums";
-import useMainClient from "../../../hooks/useMainClient";
+import InputImageComponent from "@components/ui/InputImage";
+import { ApiRoutes } from "@custom-types/enums";
+import useMainClient from "@hooks/useMainClient";
 
-interface ChangeAvatar {
+interface IChangeAvatarComponent {
     labelText: string;
     loading: boolean;
     mustAuth?: boolean;
@@ -13,7 +13,7 @@ interface ChangeAvatar {
 };
 
 // Базовый компонент для смены аватара (используется для смены аватара на страницах регистрации/профиля)
-export default memo(function ChangeAvatar({ labelText, loading, mustAuth = false, onChange, setLoading }: ChangeAvatar) {
+export default memo(function ChangeAvatarComponent({ labelText, loading, mustAuth = false, onChange, setLoading }: IChangeAvatarComponent) {
     const { mainApi } = useMainClient();
 
     // Функция изменения аватарки

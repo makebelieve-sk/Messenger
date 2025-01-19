@@ -4,7 +4,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import "./input-image.scss";
 
-interface IInputImage {
+interface IInputImageComponent {
     id: string;
     text: string;
     loading: boolean;
@@ -13,7 +13,7 @@ interface IInputImage {
 };
 
 // Базовый компонент прикрепления изображения
-export default memo(function InputImageComponent({ id, text, loading, multiple = false, onChange }: IInputImage) {
+export default memo(function InputImageComponent({ id, text, loading, multiple = false, onChange }: IInputImageComponent) {
     return <LoadingButton variant="outlined" size="small" className="input-image" loading={loading} disabled={loading}>
         <label htmlFor={id} className="input-image__label">
             <Typography variant="caption" className="input-image__label__text">{text}</Typography>

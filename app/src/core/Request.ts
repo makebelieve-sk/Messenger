@@ -1,8 +1,8 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 
-import { ApiRoutes } from "../types/enums";
-import CatchErrors, { CatchType } from "./CatchErrors";
-import { AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT, SERVER_URL } from "../utils/constants";
+import { ApiRoutes } from "@custom-types/enums";
+import CatchErrors, { CatchType } from "@core/CatchErrors";
+import { AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT, SERVER_URL } from "@utils/constants";
 
 interface IGetRequest {
     route: ApiRoutes | string;

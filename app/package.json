@@ -4,11 +4,12 @@
   "private": true,
   "description": "messenger front",
   "author": "Aleksey Skriabin",
+  "license": "ISC",
   "type": "module",
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
-    "build": "tsc -b && vite build"
+    "build": "tsc && vite build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

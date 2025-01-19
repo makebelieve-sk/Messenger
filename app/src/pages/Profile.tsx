@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 
-import { FriendsTab, MainFriendTabs, Pages } from "../types/enums";
-import MainPhoto from "../modules/Profile/MainPhoto";
-import Friends from "../modules/Profile/Friends";
-import PersonalInfo from "../modules/Profile/PersonalInfo";
-import Photos from "../modules/Profile/Photos";
+import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
+import MainPhoto from "@modules/Profile/MainPhoto";
+import Friends from "@modules/Profile/Friends";
+import PersonalInfo from "@modules/Profile/PersonalInfo";
+import Photos from "@modules/Profile/Photos";
 
-import "../styles/pages/profile.scss";
+import "@styles/pages/profile.scss";
 
 export default function Profile() {
     const navigate = useNavigate();

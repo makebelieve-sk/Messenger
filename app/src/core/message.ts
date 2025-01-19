@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import { v4 as uuid } from "uuid";
 // import { NextRouter } from "next/router";
 // import { IChatInfo } from "../pages/messages/[id]";
-import { changeLastMessageInDialog, setMessage } from "../store/messages/slice";
+import { changeLastMessageInDialog, setMessage } from "../store/message/slice";
 import { ApiRoutes, SocketActions } from "../types/enums";
 import { IFile, IMessage } from "../types/models.types";
 import { AppDispatch } from "../types/redux.types";

@@ -1,9 +1,8 @@
 import { Socket } from "socket.io-client";
-import { SocketActions, CallStatus, SocketChannelErrorTypes, SettingType, MessageTypes, MessageReadStatus } from "./enums";
-// import { IFullChatInfo } from "../pages/messages/[id]";
-import { IMessage, IUser } from "./models.types";
-// import { UserPartial } from "../pages/messages";
-import { IEditMessage } from "../core/edit-message";
+
+import { SocketActions, MessageReadStatus } from "@custom-types/enums";
+import { IMessage, IUser } from "@custom-types/models.types";
+import { IEditMessage } from "@core/edit-message";
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -15,74 +14,41 @@ interface ISocketData {
     };
 };
 
-interface ICallData {
-    roomId: string; 
-    chatInfo: any; 
-    users: any[];
-};
-
-// Принимаем события с фронта на сервер
+// Отправляем события с клиента на сервер
 interface ClientToServerEvents {
+    [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, usersInChat }: { isWrite: boolean; chatId: string; usersInChat: any[]; }) => void;
     [SocketActions.FRIENDS]: (data: ISocketData) => void;
     [SocketActions.MESSAGE]: ({ data, usersInChat }: { data: IMessage; usersInChat: any[]; }) => void;
-    [SocketActions.DELETE_MESSAGE]: ({ companionId, messageId }: { companionId: string; messageId: string; }) => void;
     [SocketActions.EDIT_MESSAGE]: ({ data }: { data: IEditMessage; usersInChat: any[]; }) => void;
+    [SocketActions.DELETE_MESSAGE]: ({ companionId, messageId }: { companionId: string; messageId: string; }) => void;
     [SocketActions.DELETE_CHAT]: ({ companionId, chatId }: { companionId: string; chatId: string; }) => void;
     [SocketActions.CHANGE_READ_STATUS]: ({ isRead, messages }: { isRead: MessageReadStatus; messages: IMessage[]; }) => void;
-    [SocketActions.CALL]: ({ roomId, users, chatInfo }: { 
-        roomId: string;
-        users: any[];
-        chatInfo: any;
-    }) => void;
-    [SocketActions.ACCEPT_CALL]: ({ roomId, chatInfo, usersInCall }: { 
-        roomId: string; 
-        chatInfo: any; 
-        usersInCall: any[]; 
-    }) => void;
-    [SocketActions.TRANSFER_CANDIDATE]: ({ peerId, iceCandidate }: { peerId: string; iceCandidate: any; }) => void;
-    [SocketActions.TRANSFER_OFFER]: ({ peerId, sessionDescription }: { peerId: string; sessionDescription: any; }) => void;
-    [SocketActions.CHANGE_CALL_STATUS]: ({ status, userTo }: { status: CallStatus; userTo: string; }) => void;
-    [SocketActions.END_CALL]: ({ roomId, usersInCall }: { roomId: string; usersInCall?: any[]; }) => void;
-    [SocketActions.CHANGE_STREAM]: ({ type, value, roomId }: { type: SettingType; value: boolean; roomId: string; }) => void;
-    [SocketActions.GET_NEW_MESSAGE_ON_SERVER]: ({ id, type }: { id: string; type: MessageTypes; }) => void;
-    [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, usersInChat }: { isWrite: boolean; chatId: string; usersInChat: any[]; }) => void;
-    [SocketActions.IS_TALKING]: ({ roomId, isTalking }: { roomId: string; isTalking: boolean; }) => void;
 };
 
-// Отправляем события с сервера на фронт
+// Отправляем события с сервера на клиент
 interface ServerToClientEvents {
     [SocketActions.GET_ALL_USERS]: (users: IUser[]) => void;
     [SocketActions.GET_NEW_USER]: (user: IUser) => void;
     [SocketActions.USER_DISCONNECT]: (userId: string) => void;
+
     [SocketActions.ADD_TO_FRIENDS]: () => void;
     [SocketActions.UNSUBSCRIBE]: () => void;
-    [SocketActions.SEND_MESSAGE]: (message: IMessage) => void;
-    [SocketActions.EDIT_MESSAGE]: ({ data }: { data: IEditMessage; }) => void;
-    [SocketActions.ACCEPT_CHANGE_READ_STATUS]: ({ message }: { message: IMessage; }) => void;
-    [SocketActions.NOTIFY_CALL]: ({ roomId, chatInfo, users }: ICallData) => void;
-    [SocketActions.ADD_PEER]: ({ peerId, createOffer, userId }: { peerId: string; createOffer: boolean; userId: string }) => void;
-    [SocketActions.GET_CANDIDATE]: ({ peerId, iceCandidate }: { peerId: string; iceCandidate: any; }) => void;
-    [SocketActions.SESSION_DESCRIPTION]: ({ peerId, sessionDescription }: { peerId: string; sessionDescription: any; }) => void;
-    [SocketActions.SET_CALL_STATUS]: ({ status }: { status: CallStatus; }) => void;
-    [SocketActions.REMOVE_PEER]: ({ peerId, userId }: { peerId: string; userId: string; }) => void;
-    [SocketActions.SOCKET_CHANNEL_ERROR]: ({ message, type }: { message: string; type?: SocketChannelErrorTypes; }) => void;
-    [SocketActions.CHANGE_STREAM]: ({ type, value, peerId }: { type: SettingType; value: boolean; peerId: string; }) => void;
-    [SocketActions.ADD_NEW_MESSAGE]: ({ newMessage }: { newMessage: IMessage; }) => void;
-    [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, userName }: { isWrite: boolean; chatId: string; userName: string; }) => void;
-    [SocketActions.CANCEL_CALL]: () => void;
-    [SocketActions.ALREADY_IN_CALL]: ({ roomId, chatInfo, users }: ICallData) => void;
-    [SocketActions.NOT_ALREADY_IN_CALL]: () => void;
-    [SocketActions.IS_TALKING]: ({ peerId, isTalking }: { peerId: string; isTalking: boolean; }) => void;
     [SocketActions.ACCEPT_FRIEND]: ({ user }: { user: IUser; }) => void;
     [SocketActions.BLOCK_FRIEND]: ({ userId }: { userId: string; }) => void;
+
+    [SocketActions.SOCKET_CHANNEL_ERROR]: (message: string) => void;
+
+    [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, userName }: { isWrite: boolean; chatId: string; userName: string; }) => void;
+    [SocketActions.SEND_MESSAGE]: (message: IMessage) => void;
+    [SocketActions.EDIT_MESSAGE]: ({ data }: { data: IEditMessage; }) => void;
     [SocketActions.DELETE_MESSAGE]: ({ messageId }: { messageId: string; }) => void;
     [SocketActions.DELETE_CHAT]: ({ chatId }: { chatId: string; }) => void;
+    [SocketActions.ACCEPT_CHANGE_READ_STATUS]: ({ message }: { message: IMessage; }) => void;
 };
 
 export type {
     SocketType,
     ClientToServerEvents, 
     ServerToClientEvents, 
-    ISocketData,
-    ICallData,
+    ISocketData
 };

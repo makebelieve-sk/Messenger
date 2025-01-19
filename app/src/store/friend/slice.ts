@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import reducers from "./reducers";
-import { InitialStateType, RootState } from "../../types/redux.types";
 
-export type FreindsType = Pick<InitialStateType, "possibleUsers" | "friends" | "friendsCount" | "topFriends" | "subscribersCount" | "searchValue">;
+import reducers from "@store/friend/reducers";
+import { FriendStateType, RootState } from "@custom-types/redux.types";
 
 // Начальное состояние
-export const initialState: FreindsType = {
+export const initialState: FriendStateType = {
   friends: null,
   friendsCount: 0,
   subscribersCount: 0,
@@ -14,6 +13,7 @@ export const initialState: FreindsType = {
   searchValue: ""
 };
 
+// Создание состояния друзей
 export const friendsSlice = createSlice({
   name: "friends",
   initialState,

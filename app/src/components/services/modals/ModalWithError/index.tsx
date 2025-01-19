@@ -8,11 +8,11 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
-import SnackBarComponent from "../../../ui/Snackbar";
-import useMainClient from "../../../../hooks/useMainClient";
-import { useAppDispatch, useAppSelector } from "../../../../hooks/useGlobalState";
-import { selectErrorState, setError } from "../../../../store/error/slice";
-import { MAIL_FEEDBACK } from "../../../../utils/constants";
+import SnackBarComponent from "@components/ui/Snackbar";
+import useMainClient from "@hooks/useMainClient";
+import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
+import { selectErrorState, setError } from "@store/error/slice";
+import { MAIL_FEEDBACK } from "@utils/constants";
 
 import "./modal-with-error.scss";
 

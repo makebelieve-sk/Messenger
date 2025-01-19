@@ -1,27 +1,16 @@
 {
   "name": "messenger-server",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "messenger server",
+  "author": "Aleksey Skriabin",
+  "license": "ISC",
   "main": "index.ts",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon index.ts",
-    "start:production": "cross-env NODE_ENV=production node dist/index.js",
+    "build": "tsc && cross-env NODE_ENV=production node dist/index.js",
     "test": "npm run test"
   },
-  "keywords": [
-    "nodejs",
-    "express",
-    "socket.io",
-    "messenger",
-    "mssql",
-    "redis",
-    "passport",
-    "webrtc",
-    "mediasoup"
-  ],
-  "author": "Aleksey Skriabin",
-  "license": "ISC",
   "dependencies": {
     "connect-redis": "^8.0.1",
     "cookie-parser": "^1.4.6",

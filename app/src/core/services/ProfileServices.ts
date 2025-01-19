@@ -1,27 +1,29 @@
 import EventEmitter from "eventemitter3";
 
-import Request from "../Request";
-import User from "../models/User";
-import { setImagesInCarousel, setModalConfirm } from "../../store/main/slice";
-import { addPhotos, deletePhoto, setPhotos, setPhotosCount } from "../../store/user/slice";
-import { setFriendsCount, setSubscribersCount, setTopFriends } from "../../store/friends/slice";
-import { ApiRoutes } from "../../types/enums";
-import { IPhoto, IUser, IUserDetails } from "../../types/models.types";
-import { AppDispatch } from "../../types/redux.types";
-import { MainClientEvents, UserEvents } from "../../types/events";
-import { NO_PHOTO } from "../../utils/constants";
-import { currentDate } from "../../utils/datetime";
-import { AVATAR_URL } from "../../utils/files";
-import { getFullName } from "../../utils";
+import Request from "@core/Request";
+import UserService from "@core/services/UserService";
+import { Profile } from "@core/models/Profile";
+import { User } from "@core/models/User";
+import { setImagesInCarousel, setModalConfirm } from "@store/main/slice";
+import { addPhotos, deletePhoto, setPhotos, setPhotosCount } from "@store/user/slice";
+import { setFriendsCount, setSubscribersCount, setTopFriends } from "@store/friend/slice";
+import { ApiRoutes } from "@custom-types/enums";
+import { IPhoto, IUser, IUserDetails } from "@custom-types/models.types";
+import { AppDispatch } from "@custom-types/redux.types";
+import { MainClientEvents, UserEvents } from "@custom-types/events";
+import { NO_PHOTO } from "@utils/constants";
+import { currentDate } from "@utils/time";
+import { AVATAR_URL } from "@utils/files";
+import { getFullName } from "@utils/index";
 
-// Класс, являющийся полной сущностью пользователя на стороне клиента. Содержит все данные, относящиеся к пользователю
-export default class Profile extends EventEmitter {
+// Класс, являющийся полной сущностью пользователя на стороне клиента. Содержит все данные, относящиеся к пользователю согласно контракту "Профиль пользователя"
+export default class ProfileService extends EventEmitter implements Profile {
     private readonly _user: User;
 
     constructor(private readonly _userId: string, private readonly _request: Request, private readonly _dispatch: AppDispatch) {
         super();
 
-        this._user = User.create(this._userId, this._dispatch, this._request);
+        this._user = UserService.create(this._userId, this._dispatch, this._request);
         this._bindUserListeners();
     }
 

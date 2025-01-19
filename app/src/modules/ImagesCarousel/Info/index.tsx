@@ -1,9 +1,9 @@
 import { useState, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
 
-import useUser from "../../../hooks/useUser";
-import AvatarComponent from "../../../components/ui/Avatar";
-import { transformDate } from "../../../utils/time";
+import useUser from "@hooks/useUser";
+import AvatarComponent from "@components/ui/Avatar";
+import { transformDate } from "@utils/date";
 
 import "./info.scss";
 

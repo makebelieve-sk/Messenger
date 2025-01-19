@@ -1,4 +1,4 @@
-import i18next from "../service/i18n";
+import i18next from "@service/i18n";
 
 // Максимальный размер файла в байтах (10 МБ)
 export const MAX_FILE_SIZE = 10000000;
