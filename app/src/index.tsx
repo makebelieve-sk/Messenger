@@ -8,7 +8,6 @@ import store from "@store/index";
 import "@service/i18n";
 
 import "./styles/index.scss";
-const unusedVar = 42;
 
 createRoot(document.getElementById("root") as HTMLElement)
   .render(
