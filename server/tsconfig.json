@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2016",                       // Выбор стандарта ES2016
-    "module": "commonjs",                     // Тип модулей для Node.js
+    "target": "ES2021",                       // Выбор стандарта ES2016
+    "module": "NodeNext",                     // Тип модулей для Node.js
     "esModuleInterop": true,                  // Устанавливается для совместимости с импортом ES6 модулей
     "forceConsistentCasingInFileNames": true, // Предотвращает ошибки из-за регистра
     "strict": true,                           // Включает все строгие проверки
@@ -15,10 +15,10 @@
     "noUnusedParameters": true,               // Сообщает о неиспользуемых параметрах функции
     "noImplicitReturns": true,                // Предупреждение, если путь в функции не возвращает значение
     "noFallthroughCasesInSwitch": true,       // Предупреждает о случаях fallthrough в switch
-    "moduleResolution": "node",               // Использует резолвер модулей Node.js
+    "moduleResolution": "nodenext",               // Использует резолвер модулей Node.js
     "typeRoots": ["./node_modules/@types"],   // Указывает пути для типов
     "incremental": true                       // Включает инкрементальную сборку
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "assets"]
 }

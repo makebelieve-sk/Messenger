@@ -1,8 +1,8 @@
 import Router from "@components/main/Router";
 import ServiceComponents from "@components/main/ServiceComponents";
-import HeaderComponent from "@components/layouts/Header";
-import MenuComponent from "@components/layouts/Menu";
-import SpinnerComponent from "@components/ui/Spinner";
+import HeaderComponent from "@components/layouts/header";
+import MenuComponent from "@components/layouts/menu";
+import SpinnerComponent from "@components/ui/spinner";
 import { selectMainState } from "@store/main/slice";
 import { useAppSelector } from "@hooks/useGlobalState";
 

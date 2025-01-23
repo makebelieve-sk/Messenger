@@ -4,8 +4,8 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
 import useProfile from "@hooks/useProfile";
-import ChangeAvatarComponent from "@components/ui/ChangeAvatar";
-import PhotoComponent from "@components/ui/Photo";
+import ChangeAvatarComponent from "@components/ui/change-avatar";
+import PhotoComponent from "@components/ui/photo";
 
 import "./main-photo.scss";
 

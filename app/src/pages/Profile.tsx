@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 
-import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
-import MainPhoto from "@modules/Profile/MainPhoto";
-import Friends from "@modules/Profile/Friends";
-import PersonalInfo from "@modules/Profile/PersonalInfo";
-import Photos from "@modules/Profile/Photos";
+import { Pages } from "@custom-types/enums";
+import MainPhoto from "@modules/profile/main-photo";
+import Friends from "@modules/profile/friends";
+import PersonalInfo from "@modules/profile/personal-info";
+import Photos from "@modules/profile/photos";
 
 import "@styles/pages/profile.scss";
 
@@ -13,7 +13,8 @@ export default function Profile() {
     const navigate = useNavigate();
 
     // Клик по названию блока
-    const onClickBlock = (pathname: Pages, query: { mainTab: MainFriendTabs, tab?: FriendsTab }) => {
+    const onClickBlock = (pathname: Pages) => {
+        // второй параметр query: { mainTab: MainFriendTabs, tab?: FriendsTab }
         // navigate({ pathname, query });
         navigate(pathname);
     };

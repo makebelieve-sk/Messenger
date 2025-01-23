@@ -4,17 +4,16 @@ import Request from "@core/Request";
 import UserService from "@core/services/UserService";
 import { Profile } from "@core/models/Profile";
 import { User } from "@core/models/User";
-import { setImagesInCarousel, setModalConfirm } from "@store/main/slice";
 import { addPhotos, deletePhoto, setPhotos, setPhotosCount } from "@store/user/slice";
 import { setFriendsCount, setSubscribersCount, setTopFriends } from "@store/friend/slice";
 import { ApiRoutes } from "@custom-types/enums";
 import { IPhoto, IUser, IUserDetails } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
-import { MainClientEvents, UserEvents } from "@custom-types/events";
-import { NO_PHOTO } from "@utils/constants";
+import { GlobalEvents, MainClientEvents, UserEvents } from "@custom-types/events";
 import { currentDate } from "@utils/time";
 import { AVATAR_URL } from "@utils/files";
 import { getFullName } from "@utils/index";
+import eventBus from "@utils/event-bus";
 
 // Класс, являющийся полной сущностью пользователя на стороне клиента. Содержит все данные, относящиеся к пользователю согласно контракту "Профиль пользователя"
 export default class ProfileService extends EventEmitter implements Profile {
@@ -41,16 +40,18 @@ export default class ProfileService extends EventEmitter implements Profile {
     //-------------------------------------------------
     // Клик по аватару
     onClickAvatar() {
-        this._dispatch(setImagesInCarousel({
-            images: [{
-                src: this._user.avatarUrl,
-                alt: this._user.fullName,
-                authorName: this._user.fullName,
-                dateTime: "",   // TODO https://tracker.yandex.ru/MESSANGER-22
-                authorAvatarUrl: this._user.avatarUrl
-            }],
-            index: 0
-        }));
+        if (this._user.avatarUrl) {
+            eventBus.emit(GlobalEvents.SET_IMAGES_CAROUSEL, {
+                images: [{
+                    src: this._user.avatarUrl,
+                    alt: this._user.fullName,
+                    authorName: this._user.fullName,
+                    dateTime: "",   // TODO https://tracker.yandex.ru/MESSANGER-22
+                    authorAvatarUrl: this._user.avatarUrl
+                }],
+                index: 0
+            });
+        }
     }
 
     // Удаление аватара
@@ -61,7 +62,6 @@ export default class ProfileService extends EventEmitter implements Profile {
             setLoading,
             successCb: () => {
                 this._user.changeField(AVATAR_URL, "");
-                this._dispatch(setModalConfirm(null));
             }
         });
     }
@@ -99,16 +99,16 @@ export default class ProfileService extends EventEmitter implements Profile {
     // Клик по фотографии
     onClickPhoto(photos: IPhoto[], index: number) {
         if (photos && photos.length) {
-            this._dispatch(setImagesInCarousel({
+            eventBus.emit(GlobalEvents.SET_IMAGES_CAROUSEL, {
                 images: photos.map(photo => ({ 
                     src: photo.path, 
                     alt: photo.id, 
                     authorName: getFullName(photo.User),
                     dateTime: photo.createDate,
-                    authorAvatarUrl: photo.User?.avatarUrl || NO_PHOTO
+                    authorAvatarUrl: photo.User?.avatarUrl || ""
                 })),
                 index
-            }));
+            });
         }
     }
 
@@ -140,7 +140,6 @@ export default class ProfileService extends EventEmitter implements Profile {
                         this._dispatch(deletePhoto(indexOf));
                     }
                 }
-                this._dispatch(setModalConfirm(null));
             }
         });
     }

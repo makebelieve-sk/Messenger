@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 
-import AvatarComponent from "@components/ui/Avatar";
-import Logo from "@components/layouts/Header/Logo";
+import AvatarComponent from "@components/ui/avatar";
+import Logo from "@components/layouts/header/logo";
 import useMainClient from "@hooks/useMainClient";
 import useProfile from "@hooks/useProfile";
 import { CLIENT_URL } from "@utils/constants";
@@ -52,7 +52,7 @@ export default function HeaderComponent() {
     };
 
     // Клик по лого колесиком мыши
-    const onMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
         if (event.button === 1) {
             window.open(CLIENT_URL);
         }

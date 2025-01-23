@@ -1,0 +1,20 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Запуск линтера для клиента и сервера..."
+
+# Линтер клиента
+npm run lint
+CLIENT_STATUS=$?
+
+# Линтер сервера
+(cd ../server && npm run lint)
+SERVER_STATUS=$?
+
+# Проверяем результаты
+if [ $CLIENT_STATUS -ne 0 ] || [ $SERVER_STATUS -ne 0 ]; then
+  echo "Проверка линтера провалена. Исправьте ошибки перед коммитом."
+  exit 1
+fi
+
+echo "Проверка линтера успешна. Proceeding with commit."

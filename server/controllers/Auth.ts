@@ -2,7 +2,6 @@ import crypto from "crypto";
 import { Request, Response, NextFunction, Express } from "express";
 import { v4 as uuid } from "uuid";
 import { PassportStatic } from "passport";
-import { IVerifyOptions } from "passport-local";
 
 import { t } from "../service/i18n";
 import { updateSessionMaxAge } from "../utils/session";
@@ -135,7 +134,7 @@ export default class AuthController {
         try {
             const { rememberMe }: { rememberMe: boolean } = req.body;
 
-            this._passport.authenticate("local", { session: true }, async (error: PassportError | null, user: ISafeUser, _?: IVerifyOptions) => {
+            this._passport.authenticate("local", { session: true }, async (error: PassportError | null, user: ISafeUser) => {
                 if (error) {
                     // Далее обрабатывается глобальным мидлваром на ошибку, поэтому прокидываем просто error
                     return next(error);

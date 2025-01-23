@@ -8,13 +8,13 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
-import SnackBarComponent from "@components/ui/Snackbar";
+import SnackBarComponent from "@components/ui/snackbar";
 import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
 import { selectErrorState, setError } from "@store/error/slice";
 import { MAIL_FEEDBACK } from "@utils/constants";
 
-import "./modal-with-error.scss";
+import "./error.scss";
 
 const modalTitle = "modal-error-title";
 const modalDescription = "modal-error-description";
@@ -37,7 +37,7 @@ export default function ModalWithError() {
 
     // Копирование текста в буфер обмена
     const onCopy = () => {
-        if (navigator.clipboard && error) {
+        if (error) {
             navigator.clipboard
                 .writeText(error)
                 .then(() => setVisible(true))

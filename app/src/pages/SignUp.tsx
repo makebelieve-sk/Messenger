@@ -16,10 +16,10 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 
 import i18next from "@service/i18n";
-import LinkComponent from "@components/ui/Link";
-import SignUpForm from "@modules/SignUp/Form";
-import ChooseAvatar from "@modules/SignUp/ChooseAvatar";
-import CopyrightComponent from "@components/ui/Copyright";
+import LinkComponent from "@components/ui/link";
+import SignUpForm from "@modules/sign-up/Form";
+import ChooseAvatar from "@modules/sign-up/ChooseAvatar";
+import CopyrightComponent from "@components/ui/copyright";
 import useMainClient from "@hooks/useMainClient";
 import { Pages } from "@custom-types/enums";
 import { IUser } from "@custom-types/models.types";

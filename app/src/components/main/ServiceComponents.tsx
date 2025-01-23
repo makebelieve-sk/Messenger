@@ -1,7 +1,7 @@
-import ModalWithError from "@components/services/modals/ModalWithError";
+import ModalWithError from "@components/services/modals/error";
 import ModalWithAttachments from "@components/services/modals/ModalWithAttachments";
-import ModalWithConfirm from "@components/services/modals/ModalWithConfirm";
-import ModalWithImagesCarousel from "@components/services/modals/ModalWithImagesCarousel";
+import ModalWithConfirm from "@components/services/modals/confirm";
+import ModalWithImagesCarousel from "@components/services/modals/carousel";
 import SnackBarWithSocketError from "@components/services/snackbars/SnackBarWithSocketError";
 import { useAppSelector } from "@hooks/useGlobalState";
 import { selectMainState } from "@store/main/slice";
@@ -17,8 +17,6 @@ export default function ServiceComponents() {
         {isAuth
             ? <>
                 <SnackBarWithSocketError />
-                {/* <SnackBarWithCall /> */}
-                {/* <ModalWithCall /> */}
                 <ModalWithImagesCarousel />
                 <ModalWithAttachments />
             </>

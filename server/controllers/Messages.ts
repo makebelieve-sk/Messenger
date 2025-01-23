@@ -255,7 +255,7 @@ export default class MessagesController {
             const messagesLimit = loadMore ? LOAD_MORE_LIMIT : LIMIT;
 
             const where: (Where | Literal)[] = [
-                this._database.sequelize.literal(`not exists (select 1 from [Deleted_messages] as [DeletedMessages] where [DeletedMessages].[message_id] = [Messages].id)`)
+                this._database.sequelize.literal("not exists (select 1 from [Deleted_messages] as [DeletedMessages] where [DeletedMessages].[message_id] = [Messages].id)")
             ];
 
             // Получение обработанной строки поиска

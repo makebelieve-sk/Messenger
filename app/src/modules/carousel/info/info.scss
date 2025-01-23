@@ -1,13 +1,11 @@
 .info {
-    position: absolute;
-    top: 20px;
-    left: 0px;
-    width: auto;
-    height: auto;
+    width: max-content;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
+    
 
     &__container {
         min-width: max-content;

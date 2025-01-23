@@ -1,6 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { ICarouselImage } from "@modules/ImagesCarousel/Info";
 import { FriendsNoticeTypes } from "@custom-types/enums";
 import { IUser } from "@custom-types/models.types";
 import { MainStateType } from "@custom-types/redux.types";
@@ -26,12 +25,6 @@ export default {
                 state.friendNotification = typeof data === "number" ? data : 0;
                 break;
         }
-    },
-    setModalConfirm: (state: MainStateType, action: PayloadAction<{ text: string; btnActionTitle: string; cb: Function; } | null>) => {
-        state.modalConfirm = action.payload;
-    },
-    setImagesInCarousel: (state: MainStateType, action: PayloadAction<{ images: ICarouselImage[], index: number } | null>) => {
-        state.imagesInCarousel = action.payload;
     },
     setMessageNotification: (state: MainStateType, action: PayloadAction<number>) => {
         state.messageNotification = action.payload;

@@ -14,8 +14,8 @@ import { LoadingButton } from "@mui/lab";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 import useMainClient from "@hooks/useMainClient";
-import CopyrightComponent from "@components/ui/Copyright";
-import LinkComponent from "@components/ui/Link";
+import CopyrightComponent from "@components/ui/copyright";
+import LinkComponent from "@components/ui/link";
 import { Pages } from "@custom-types/enums";
 import { REQUIRED_FIELD } from "@utils/constants";
 

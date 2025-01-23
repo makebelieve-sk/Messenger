@@ -1,6 +1,6 @@
 import { memo, ChangeEvent, Dispatch, SetStateAction } from "react";
 
-import InputImageComponent from "@components/ui/InputImage";
+import InputImageComponent from "@components/ui/input-image";
 import { ApiRoutes } from "@custom-types/enums";
 import useMainClient from "@hooks/useMainClient";
 

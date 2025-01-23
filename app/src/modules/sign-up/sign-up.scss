@@ -50,6 +50,12 @@ div.choose-avatar {
 .sign-up-form {
     margin-top: 15px;
 
+    .phone-input__loading {
+        position: relative;
+        height: 60px;
+        background-color: $spinner-background;
+    }
+
     div.phone-input {
         input {
             width: 100%;

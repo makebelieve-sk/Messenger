@@ -8,8 +8,6 @@ export const initialState: MainStateType = {
   isAuth: false,
   loading: false,
   friendNotification: 0,
-  modalConfirm: null,
-  imagesInCarousel: null,
   messageNotification: 0,
   onlineUsers: [],
 };
@@ -29,11 +27,9 @@ export const {
   setAuth, 
   setLoading,
   setFriendNotification,
-  setImagesInCarousel,
   setMessageNotification,
   setOnlineUsers,
-  deleteOnlineUser,
-  setModalConfirm
+  deleteOnlineUser
 } = mainSlice.actions;
 
 // Редьюсер

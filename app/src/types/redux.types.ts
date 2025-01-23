@@ -1,5 +1,4 @@
 import store from "@store/index";
-import { ICarouselImage } from "@modules/ImagesCarousel/Info";
 import { IMessage, IPhoto, IUser } from "@custom-types/models.types";
 
 export type AppDispatch = typeof store.dispatch;
@@ -25,9 +24,7 @@ export interface FriendStateType {
 export interface MainStateType {
     isAuth: boolean;
     loading: boolean;
-    modalConfirm: null | { text: string; btnActionTitle: string; cb: Function;};
     friendNotification: number;
-    imagesInCarousel: null | { images: ICarouselImage[]; index: number; };
     messageNotification: number;
     onlineUsers: IUser[];
 };

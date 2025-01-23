@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Alert from "@mui/material/Alert";
 
-import SnackBarComponent from "@components/ui/Snackbar";
+import SnackBarComponent from "@components/ui/snackbar";
 import { useAppSelector } from "@hooks/useGlobalState";
 import { selectErrorState } from "@store/error/slice";
 

@@ -1,16 +1,23 @@
-import { memo } from "react";
+import { memo, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
+import type { CountryData } from "react-phone-input-2";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import PhoneInput, { CountryData } from "react-phone-input-2";
 
+import SpinnerComponent from "@components/ui/spinner";
 import { emailCheck } from "@utils/email-check";
 import { REQUIRED_FIELD } from "@utils/constants";
 import { ISignUpState } from "@pages/SignUp";
 
 import "./sign-up.scss";
-import "react-phone-input-2/lib/material.css";
+
+// Лениво подгружаем компонент и его стили (так как пакет имеет большой вес)
+// Выше импортировали import type - это означает, что типизация не входит в билд клиента, значит, импортируем тип только для разработки
+const PhoneInput = lazy(() => {
+	import("react-phone-input-2/lib/material.css");
+	return import("react-phone-input-2");
+});
 
 interface ISignUpForm {
 	formValues: ISignUpState;
@@ -52,7 +59,7 @@ export default memo(function SignUpForm({
 						: e.target.value !== formValues.values.password
 						? t("sign-up-module.password_incorrect")
 						: REQUIRED_FIELD,
-			},
+			}
 		});
 	};
 
@@ -168,24 +175,26 @@ export default memo(function SignUpForm({
 				</Grid>
 
 				<Grid item xs={12}>
-					<PhoneInput
-						country="ru"
-						inputProps={{
-							id: "phone",
-							name: t("sign-up-module.phone"),
-							type: "tel",
-							required: true,
-						}}
-						placeholder={t("sign-up-module.phone")}
-						searchPlaceholder={t("sign-up-module.search")}
-						searchNotFound={t("sign-up-module.no_coincidences")}
-						containerClass={`phone-input ${formValues.errors.phone ? "phone-input__error" : ""}`}
-						specialLabel={t("sign-up-module.phone_number")}
-						value={formValues.values.phone}
-						onChange={(value, country) => onChange("phone", value, () =>
-							validatePhone(value, country as CountryData)
-						)}
-					/>
+					<Suspense fallback={<div className="phone-input__loading"><SpinnerComponent /></div>}>
+						<PhoneInput
+							country="ru"
+							inputProps={{
+								id: "phone",
+								name: t("sign-up-module.phone"),
+								type: "tel",
+								required: true,
+							}}
+							placeholder={t("sign-up-module.phone")}
+							searchPlaceholder={t("sign-up-module.search")}
+							searchNotFound={t("sign-up-module.no_coincidences")}
+							containerClass={`phone-input ${formValues.errors.phone ? "phone-input__error" : ""}`}
+							specialLabel={t("sign-up-module.phone_number")}
+							value={formValues.values.phone}
+							onChange={(value, country) => onChange("phone", value, () =>
+								validatePhone(value, country as CountryData)
+							)}
+						/>
+					</Suspense>
 					<div className="phone-text__error">
 						{formValues.errors.phone
 							? formValues.errors.phone

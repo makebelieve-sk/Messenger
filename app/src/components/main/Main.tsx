@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import App from "@components/main/App";
+import App from "@components/main/app";
 import MainClient from "@core/MainClient";
 import { useAppDispatch } from "@hooks/useGlobalState";
 
