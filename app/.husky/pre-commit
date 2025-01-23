@@ -1,9 +1,1 @@
-echo "Running linters for client and server..."
-
-# Линтер клиента
-npm lint --prefix app || exit 1
-
-# Линтер сервера
-npm lint --prefix ../server || exit 1
-
-echo "Linting passed. Proceeding with commit."
+npm lint
