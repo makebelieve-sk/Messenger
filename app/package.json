@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "build": "tsc && vite build",
     "prepare": "husky",
-    "lint": "eslint \"**/*.{ts,tsx}\""
+    "lint": "eslint \"**/*.{ts,tsx}\" --max-warnings=0"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
