@@ -10,7 +10,7 @@
     "start": "vite",
     "preview": "vite preview",
     "build": "tsc && vite build",
-    "prepare": "husky",
+    "prepare": "cd .. && husky",
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
