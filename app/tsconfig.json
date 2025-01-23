@@ -9,8 +9,8 @@
     "outDir": "./dist",                                 // Директория для скомпилированных файлов
     "forceConsistentCasingInFileNames": true,           // Используется для поддержания консинстентности в названиях файлов (для разных операционных систем)
     "esModuleInterop": true,                            // Позволяет импортировать CommonJS модули корректно для React и Vite
-    "module": "NodeNext",                               // Vite использует ES модули по умолчанию
-    "moduleResolution": "NodeNext",                     // TS будет разрешать модули также, как Node.js
+    "module": "ESNext",                                 // Vite использует ES модули по умолчанию
+    "moduleResolution": "bundler",                      // TS будет разрешать модули также, как Node.js
     "resolveJsonModule": true,                          // Необходимо, если нужно импортировать .json файлы в файлы .ts/.tsx 
     "jsx": "preserve",                                  // Указываем, чтобы JSX не компилировался в обычный JS, а оставался JSX
     "incremental": true,                                // Необходимо для ускорения компиляции (TS сохраняет промежуточные данные для последующих компиляций)
