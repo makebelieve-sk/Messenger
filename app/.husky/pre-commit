@@ -4,4 +4,4 @@
 
 echo "Husky pre-commit hook triggered!"
 
-npm run lint
+npm run lint --prefix app || exit 1
