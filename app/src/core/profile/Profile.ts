@@ -176,6 +176,8 @@ export default class Profile extends EventEmitter {
             successCb:
                 (data: { success: boolean, user: IUser, userDetails: IUserDetails }) => {
                     if (data.success) {
+                        console.log("Изменили инфу о пользователе: ", data.user);
+
                         this._user.updateInfo(data);
                         setShowAlert(true);
                     }

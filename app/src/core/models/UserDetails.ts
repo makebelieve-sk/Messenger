@@ -11,7 +11,7 @@ const NOT_COMPLITE = i18next.t("profile-module.not_complete");
 
 // Класс, описывающий сущность "Дополнительная информация о пользователе"
 export default class UserDetails extends EventEmitter {
-    private _details: IUserDetails | null = null;
+    private _details!: IUserDetails;
 
     constructor(private readonly _request: Request) {
         super();
@@ -119,6 +119,7 @@ export default class UserDetails extends EventEmitter {
             },
             successCb: (data: { success: boolean, userDetail: IUserDetails }) => {
                 this._details = data.userDetail
+                console.log(`Emitting UPDATE event. Details:`, this._details);
                 this.emit(UserDetailsEvents.UPDATE)
             }
         });
