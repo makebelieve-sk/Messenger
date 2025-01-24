@@ -1,3 +1,5 @@
+import i18next from "../service/i18n";
+
 // Максимальный размер файла в байтах (10 МБ)
 export const MAX_FILE_SIZE = 10000000;
 // Наименование поля аватара пользователя
@@ -14,7 +16,7 @@ export const currentSize = (size: number) => {
 
     const approx = size / 1024 ** exponent;
     const output = exponent === 0
-        ? `${size} байт`
+        ? `${size} ${i18next.t("utils.byte")}`
         : `${approx.toFixed(1)} ${units[exponent]}`;
 
     return output;

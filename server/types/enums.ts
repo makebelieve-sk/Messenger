@@ -9,16 +9,17 @@ enum ApiRoutes {
     getUser = "/get-user",
     editInfo = "/edit-info",
     getUserDetail = "/get-user-detail",
-    getPhotos = "/get-photos",
-    //----file-----------
-    saveAvatar = "/save-avatar",
+    //----images---------
     uploadAvatar = "/upload-avatar",
-    uploadAvatarAuth = "/upload-avatar-auth",
+    saveAvatar = "/save-avatar",
+    changeAvatar = "/change-avatar",
+    getPhotos = "/get-photos",
+    savePhotos = "/save-photos",
+    deletePhoto = "/delete-photo",
+    //----file-----------
     saveFiles = "/save-files",
     openFile = "/open-file",
     downloadFile = "/download-file",
-    savePhotos = "/save-photos",
-    deleteImage = "/delete-image",
     deleteFiles = "/delete-files",
     //----friends--------
     friends = "/friends",
@@ -141,11 +142,6 @@ enum RedisChannel {
     TEMP_CHAT_ID = "TEMP_CHAT_ID",
 };
 
-// Общие сообщения с ошибкой
-enum ErrorTexts {
-    NOT_TEMP_CHAT_ID = "id собеседника не найдено, возможно, это временный чат",
-};
-
 // Статусы звонков
 enum CallStatus {
     NOT_CALL = "NOT_CALL",
@@ -189,21 +185,8 @@ enum FileVarieties {
     FILES = "FILES"
 };
 
-// Типы сообщений об ошибке, отправляемые с сервера на фронт по АПИ
-enum ErrorTextsApi {
-    NOT_AUTH_OR_TOKEN_EXPIRED = "Вы не авторизованы или время жизни токена сессии подошло к концу",
-    CANNOT_FIND_CALL = "Невозможно завершить звонок, так как он не найден. Возможно, он уже завершен.",
-    YOU_ALREADY_AUTH = "Вы уже авторизированы",
-    USER_NOT_FOUND = "Пользователь не найден",
-    IMAGE_NOT_FOUND = "Изображение не найдено",
-    FILE_NOT_FOUND = "Файл не найден",
-    USER_NOT_FOUND_IN_DATABASE = "Запись пользователя в таблице не найдена",
-    IMAGE_NOT_GIVEN = "В req.file не передано изображение",
-};
-
 // Список ключей редиса
 enum RedisKeys {
-    SESSION = "sess",
     REMEMBER_ME = "rememberMe"
 };
 
@@ -215,13 +198,11 @@ export {
     MessageTypes,
     MessageReadStatus,
     RedisChannel,
-    ErrorTexts,
     CallStatus,
     SettingType,
     SocketChannelErrorTypes,
     CallTypes,
     CallNames,
     FileVarieties,
-    ErrorTextsApi,
     RedisKeys,
 };

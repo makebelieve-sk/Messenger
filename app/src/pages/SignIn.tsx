@@ -1,6 +1,6 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "../styles/pages/sign-in.module.scss";
+import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -13,11 +13,13 @@ import Checkbox from "@mui/material/Checkbox";
 import { LoadingButton } from "@mui/lab";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-import Copyright from "../components/Copyright";
+import useMainClient from "../hooks/useMainClient";
+import CopyrightComponent from "../components/ui/Copyright";
+import LinkComponent from "../components/ui/Link";
 import { Pages } from "../types/enums";
 import { REQUIRED_FIELD } from "../utils/constants";
-import { MainClientContext } from "../service/AppService";
-import LinkComponent from "../components/Common/Link";
+
+import styles from "../styles/pages/sign-in.module.scss";
 
 const initialValues = {
 	values: {
@@ -33,14 +35,20 @@ const initialValues = {
 };
 
 export default function SignIn() {
-	const [saveDisabled, setSaveDisabled] = React.useState(true);
-	const [loading, setLoading] = React.useState(false);
-	const [errorFromServer, setErrorFromServer] = React.useState(false);
-	const [formValues, setFormValues] = React.useState(initialValues);
+	const [saveDisabled, setSaveDisabled] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const [errorFromServer, setErrorFromServer] = useState(false);
+	const [formValues, setFormValues] = useState(initialValues);
 
-	const mainClient = React.useContext(MainClientContext);
+	const { mainApi } = useMainClient();
 
+	const { t } = useTranslation();
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		setSaveDisabled(disableSave());
+	}, [loading, formValues]);
+
 	const disableSave = () => {
 		return (
 			loading ||
@@ -49,9 +57,6 @@ export default function SignIn() {
 			Object.values(formValues.errors).some(Boolean)
 		);
 	};
-	React.useEffect(() => {
-		setSaveDisabled(disableSave());
-	}, [loading, formValues]);
 
 	// Изменение поля
 	const onChange = (field: string, value: string | boolean) => {
@@ -60,9 +65,9 @@ export default function SignIn() {
 			errors: errorFromServer
 				? { ...initialValues.errors }
 				: {
-						...formValues.errors,
-						[field]: value ? "" : REQUIRED_FIELD,
-				  },
+					...formValues.errors,
+					[field]: value ? "" : REQUIRED_FIELD,
+				},
 		});
 		setErrorFromServer(false);
 	};
@@ -72,7 +77,7 @@ export default function SignIn() {
 		event.preventDefault();
 
 		if (!saveDisabled) {
-			mainClient.mainApi.signIn(formValues.values, setLoading, (error) => {
+			mainApi.signIn(formValues.values, setLoading, (error) => {
 				if (error && typeof error === "object" && error.message) {
 					setErrorFromServer(true);
 					setFormValues({
@@ -108,12 +113,12 @@ export default function SignIn() {
 					</Avatar>
 
 					<Typography component="h1" variant="h5">
-						Вход
+						{ t("sign-in.sign_in") }
 					</Typography>
 
 					<Box
-						component="form"
 						noValidate
+						component="form"
 						onSubmit={handleSubmit}
 						className={styles.layoutInput}
 					>
@@ -122,18 +127,17 @@ export default function SignIn() {
 							name="login"
 							margin="normal"
 							variant="outlined"
-							label="Почта или телефон"
-							autoComplete="Почта или телефон"
+							label={t("sign-in.login")}
+							autoComplete={t("sign-in.login")}
 							required
 							fullWidth
 							autoFocus
 							error={Boolean(formValues.errors.login)}
-							helperText={
-								formValues.errors.login
-									? formValues.errors.login
-									: null
+							helperText={formValues.errors.login
+								? formValues.errors.login
+								: null
 							}
-							onChange={(e) => onChange("login", e.target.value)}
+							onChange={e => onChange("login", e.target.value)}
 						/>
 
 						<TextField
@@ -142,30 +146,25 @@ export default function SignIn() {
 							type="password"
 							margin="normal"
 							variant="outlined"
-							label="Пароль"
-							autoComplete="Пароль"
+							label={t("sign-in.password")}
+							autoComplete={t("sign-in.password")}
 							required
 							fullWidth
 							error={Boolean(formValues.errors.password)}
-							helperText={
-								formValues.errors.password
-									? formValues.errors.password
-									: null
+							helperText={formValues.errors.password
+								? formValues.errors.password
+								: null
 							}
-							onChange={(e) =>
-								onChange("password", e.target.value)
-							}
+							onChange={e => onChange("password", e.target.value)}
 						/>
 
 						<FormControlLabel
-							label="Запомнить меня"
+							label={t("sign-in.remember_me")}
 							control={
 								<Checkbox
 									value={false}
 									color="primary"
-									onChange={(e) =>
-										onChange("rememberMe", e.target.checked)
-									}
+									onChange={e => onChange("rememberMe", e.target.checked)}
 								/>
 							}
 						/>
@@ -178,37 +177,35 @@ export default function SignIn() {
 							loading={loading}
 							disabled={saveDisabled}
 						>
-							Войти
+							{ t("sign-in.enter") }
 						</LoadingButton>
 
 						<Grid container>
 							<Grid item xs>
 								<LinkComponent
+									component="p"
 									variant="body2"
 									className={styles.secondaryButton}
-									onClick={() =>
-										navigate(Pages.resetPassword)
-									}
-									component="p"
+									onClick={() => navigate(Pages.resetPassword)}
 								>
-									Забыли пароль?
+									{ t("sign-in.forgot_password") }
 								</LinkComponent>
 							</Grid>
 
 							<Grid item>
 								<LinkComponent
+									component="p"
 									variant="body2"
 									className={styles.secondaryButton}
 									onClick={() => navigate(Pages.signUp)}
-									component="p"
 								>
-									Нет аккаунта? Зарегистрируйтесь!
+									{ t("sign-in.register") }
 								</LinkComponent>
 							</Grid>
 						</Grid>
 					</Box>
 
-					<Copyright />
+					<CopyrightComponent />
 				</Box>
 			</Grid>
 		</Grid>

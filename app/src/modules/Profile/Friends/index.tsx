@@ -1,20 +1,21 @@
-import React from "react";
+import { useState, useEffect, memo } from "react";
+import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Paper from "@mui/material/Paper";
 
+import AvatarComponent from "../../../components/ui/Avatar";
+import NoDataComponent from "../../../components/ui/NoData";
+import SpinnerComponent from "../../../components/ui/Spinner";
 import { FriendsTab, MainFriendTabs, Pages } from "../../../types/enums";
 import { IUser } from "../../../types/models.types";
 import { useAppSelector } from "../../../hooks/useGlobalState";
 import useProfile from "../../../hooks/useProfile";
-import { selectMainState } from "../../../state/main/slice";
-import { selectFriendState } from "../../../state/friends/slice";
+import { selectMainState } from "../../../store/main/slice";
+import { selectFriendState } from "../../../store/friends/slice";
 import { getFullName } from "../../../utils";
-import Avatar from "../../../components/Common/Avatar";
-import NoItems from "../../../components/Common/NoItems";
-import Spinner from "../../../components/Common/Spinner";
 
 import "./friends.scss";
 
@@ -37,10 +38,12 @@ interface IFriendsState {
     users: IUser[] | null;
 };
 
-export default React.memo(function Friends({ onlineFriends = false, onClickBlock }: IFriends) {
-    const [loading, setLoading] = React.useState(false);
-    const [friendsState, setFriendsState] = React.useState<IFriendsState>({
-        title: "Друзья",
+export default memo(function Friends({ onlineFriends = false, onClickBlock }: IFriends) {
+    const { t } = useTranslation();
+
+    const [loading, setLoading] = useState(false);
+    const [friendsState, setFriendsState] = useState<IFriendsState>({
+        title: t("profile-module.friends"),
         count: "-",
         users: null
     });
@@ -51,9 +54,9 @@ export default React.memo(function Friends({ onlineFriends = false, onClickBlock
     const profile = useProfile();
 
     // Формируем объект данных компонента
-    React.useEffect(() => {
+    useEffect(() => {
         const state = {
-            title: onlineFriends ? "Друзья онлайн" : "Друзья",
+            title: onlineFriends ? t("profile-module.friends_online") : t("profile-module.friends"),
             count: onlineFriends ? onlineUsers.length : friendsCount,
             users: onlineFriends ? onlineUsers.slice(0, 6) : topFriends
         };
@@ -62,7 +65,7 @@ export default React.memo(function Friends({ onlineFriends = false, onClickBlock
     }, [onlineFriends, onlineUsers, topFriends, friendsCount]);
 
     // Получаем количество друзей, подписчиков и подгружаем первые 6 из них
-    React.useEffect(() => {
+    useEffect(() => {
         if (!onlineFriends) {
             profile.getFriends(setLoading);
         }
@@ -88,7 +91,7 @@ export default React.memo(function Friends({ onlineFriends = false, onClickBlock
             </div>
 
             {loading
-                ? <Spinner />
+                ? <SpinnerComponent />
                 : users && users.length
                     ? <List className="friends-container__top-friends__list">
                         {users.map(user => {
@@ -96,7 +99,7 @@ export default React.memo(function Friends({ onlineFriends = false, onClickBlock
 
                             return <ListItem className="friends-container__top-friends__item" key={user.id}>
                                 <ListItemAvatar className="friends-container__top-friends__item__avatar-block">
-                                    <Avatar
+                                    <AvatarComponent
                                         src={user.avatarUrl}
                                         alt={userName}
                                         isOnline={Boolean(onlineUsers.find(onlineUser => onlineUser.id === user.id))}
@@ -108,7 +111,7 @@ export default React.memo(function Friends({ onlineFriends = false, onClickBlock
                             </ListItem>
                         })}
                     </List>
-                    : <NoItems text={`На данный момент список друзей${onlineFriends ? " онлайн" : ""} пуст`} />
+                    : <NoDataComponent text={t("profile-module.no_data", { isOnline: onlineFriends ? t("profile-module.online") : "" })} />
             }
         </Paper>
     </Grid>

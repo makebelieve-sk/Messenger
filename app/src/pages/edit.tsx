@@ -8,13 +8,12 @@ import dayjs, { Dayjs } from "dayjs";
 
 import EditTabsModule from "../components/edit-tabs-module";
 import AlertComponent from "../components/Common/Alert";
-import { useAppSelector } from "../hooks/useGlobalState";
 import { REQUIRED_FIELD } from "../utils/constants";
-import { MainClientContext } from "../service/AppService";
 import { UserDetailsEvents } from "../types/events";
-import { selectMainState } from "../state/main/slice";
 import useProfile from "../hooks/useProfile";
-import Spinner from "../components/Common/Spinner";
+import useMainClient from "../hooks/useMainClient";
+import SpinnerComponent from "../components/ui/Spinner";
+import useUserDetails from "../hooks/useUserDetails";
 import "../styles/pages/edit.scss";
 
 export interface IFormValues {
@@ -37,7 +36,7 @@ export interface IFormErrors {
 
 export default function Edit() {
     const [tab, setTab] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const [loadingSaveBtn, setLoadingSaveBtn] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [formValues, setFormValues] = useState<IFormValues >({
         name: "",
@@ -51,12 +50,11 @@ export default function Edit() {
     } );
     const [formErrors, setFormErrors] = useState<IFormErrors | null>({});
     const [saveDisabled, setSaveDisabled] = useState(false);
-
-    const {loadingUserDetails } = useAppSelector(selectMainState);
-
-
-    const mainClient = useContext(MainClientContext);
+    const [loading, setLoading] = useState(false)
+ 
+    const mainClient =  useMainClient();
     const profile =  useProfile();
+    const userDetails = useUserDetails();
 
     useEffect(() => {
         profile.user.userDetails.on(UserDetailsEvents.UPDATE, () => {
@@ -76,8 +74,8 @@ export default function Edit() {
 
     // Установка disabled кнопке "Сохранить"
    useEffect(() => {
-        setSaveDisabled(loading || Boolean(formErrors && Object.values(formErrors).some(Boolean)));
-    }, [loading, formValues]);
+        setSaveDisabled(loadingSaveBtn || Boolean(formErrors && Object.values(formErrors).some(Boolean)));
+    }, [loadingSaveBtn, formValues]);
 
     const onChangeTab = (_: React.SyntheticEvent, newValue: number) => {
         setTab(newValue);
@@ -113,17 +111,28 @@ export default function Edit() {
                     result["birthday"] = (result["birthday"] as dayjs.Dayjs).format("YYYY-MM-DD");
                 }
 
-               profile.editInfo({result, setLoading, setShowAlert})
+               profile.editInfo({result, setLoading: setLoadingSaveBtn, setShowAlert})
 
             } else {
                 throw new Error("Нет пользователя");
             }
         } catch (error) {
-            setLoading(false);
+            setLoadingSaveBtn(false);
             mainClient.catchErrors("Произошла ошибка при изменении информации о пользователе: " + error);
         }
     };
 
+        const handleOnLoading = (isLoading: boolean) => setLoading(isLoading)
+        
+        //подписка на событие лоадинг
+        useEffect(() => {
+           userDetails.on(UserDetailsEvents.SET_LOADING, handleOnLoading)
+
+            return  ()=>{
+                userDetails.off(UserDetailsEvents.SET_LOADING, handleOnLoading)
+            }
+        }, [])
+        
     return <Paper className={"edit-container"}>
         <Tabs
             orientation="vertical"
@@ -132,14 +141,14 @@ export default function Edit() {
             aria-label="Edit tabs"
             className={"edit-container__tabs"}
         >
-            <Tab label="Основное" id="main" aria-controls="main" disabled={loading} className={"edit-container__tab-name"} />
-            <Tab label="Контакты" id="contacts" aria-controls="contacts" disabled={loading} className={"edit-container__tab-name"} />
+            <Tab label="Основное" id="main" aria-controls="main" disabled={loadingSaveBtn} className={"edit-container__tab-name"} />
+            <Tab label="Контакты" id="contacts" aria-controls="contacts" disabled={loadingSaveBtn} className={"edit-container__tab-name"} />
         </Tabs>
 
         <div className={"edit-container__module"}>
                  <Box component="form" noValidate onSubmit={onSubmit}>
                     
-                    {loadingUserDetails ? <Spinner/> :
+                    {loading ? <SpinnerComponent/> :
                     <EditTabsModule tab={tab} formValues={formValues} formErrors={formErrors} onChange={onChange} />
                     }
                     <LoadingButton
@@ -147,7 +156,7 @@ export default function Edit() {
                         type="submit"
                         variant="contained"
                         className={"edit-container__module__loading-button"}
-                        loading={loading}
+                        loading={loadingSaveBtn}
                         disabled={saveDisabled}
                     >
                         Сохранить

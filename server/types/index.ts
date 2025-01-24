@@ -1,3 +1,7 @@
+import { ISocketUser } from "./socket.types";
+
+export type UsersType = Map<string, ISocketUser>;
+
 export interface IImage {
     id: string;
     src: string;

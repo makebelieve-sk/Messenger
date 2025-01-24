@@ -1,16 +1,16 @@
-import React from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 export default function useStateWithCallback<S, C> (initialState: S): [S, (newState: (prev: S) => S, cb?: C) => void] {
-    const [state, setState] = React.useState<S>(initialState);
-    const cbRef = React.useRef<any | null>(null);
+    const [state, setState] = useState<S>(initialState);
+    const cbRef = useRef<any | null>(null);
 
-    const updateState = React.useCallback((newState: (prev: S) => S, cb?: C) => {
+    const updateState = useCallback((newState: (prev: S) => S, cb?: C) => {
         cbRef.current = cb;
 
         setState(prev => typeof newState === "function" ? newState(prev) : newState);
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (cbRef.current) {
             // Вызываем ранее сохраненный коллбек
             cbRef.current(state);

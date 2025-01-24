@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 
 import { ApiRoutes } from "../types/enums";
 import CatchErrors, { CatchType } from "./CatchErrors";
-import { SERVER_URL } from "../utils/constants";
+import { AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT, SERVER_URL } from "../utils/constants";
 
 interface IGetRequest {
     route: ApiRoutes | string;
@@ -30,23 +30,22 @@ interface IDownloadFileRequest {
     failedText: string;
 };
 
-const OPTIONS = {
-    baseURL: SERVER_URL,
-    withCredentials: true,
-    timeout: 15000,
-    headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": SERVER_URL ?? false,
-        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE"
-    }
-};
-
-// Класс, отвечающий за запросы к серверу
+// Класс, являющийся оберткой над axios, позволяющий давать запросы на сервер по HTTP API
 export default class Request {
     private readonly _instance: AxiosInstance;
 
     constructor(private readonly _catchErrors: CatchErrors) {
-        this._instance = axios.create(OPTIONS);
+        this._instance = axios.create({
+            baseURL: SERVER_URL,                                            // Основное URL-адрес для всех запросов
+            withCredentials: true,                                          // Разрешает отправлять cookie и авторизационные заголовкис запросами к другому домену
+            timeout: AXIOS_TIMEOUT,                                         // Время ожидания ответа от сервера (иначе будет выброшена ошибка)
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": SERVER_URL,
+                "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE"
+            },                                                              // Объект заголовков HTTP-запросов
+            responseEncoding: AXIOS_RESPONSE_ENCODING                       // Кодировка, используемая для декодирования ответа от сервера
+        });
     };
 
     private _errorHandler(error: AxiosError, failedText?: string): CatchType {
@@ -54,7 +53,7 @@ export default class Request {
     }
 
     // GET запрос на сервер
-    public get({ route, setLoading, successCb, failedText }: IGetRequest): void {
+    get({ route, setLoading, successCb, failedText }: IGetRequest): void {
         setLoading ? setLoading(true) : undefined;
 
         this._instance
@@ -73,7 +72,7 @@ export default class Request {
     };
 
     // POST запрос на сервер
-    public post({ route, data, setLoading, successCb, failedText, finallyCb, config, failedCb }: IPostRequest): void {
+    post({ route, data, setLoading, successCb, failedText, finallyCb, config, failedCb }: IPostRequest): void {
         setLoading ? setLoading(true) : undefined;
 
         this._instance
@@ -97,7 +96,7 @@ export default class Request {
     };
 
     // GET запрос на скачивание файла с сервера
-    public downloadFile({ window, document, params, extra, failedText }: IDownloadFileRequest) {
+    downloadFile({ window, document, params, extra, failedText }: IDownloadFileRequest) {
         this._instance
             .get(`${ApiRoutes.downloadFile}?${params}`, { responseType: "blob" })
             .then(response => {

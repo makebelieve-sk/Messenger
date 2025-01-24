@@ -2,7 +2,7 @@ import EventEmitter from "eventemitter3";
 
 import Profile from "./Profile";
 import Request from "../Request";
-import EmptyProfile from "./EmptyProfile";
+import i18next from "../../service/i18n";
 import { AppDispatch } from "../../types/redux.types";
 import { MainClientEvents } from "../../types/events";
 import { MY_ID } from "../../utils/constants";
@@ -22,17 +22,24 @@ export default class ProfilesController extends EventEmitter {
     }
 
     // Получение объекта пользователя
-    public getProfile(userId: string = MY_ID): Profile {
-        if (this._profiles.has(userId)) {
-            return this._profiles.get(userId)!;
+    getProfile(userId: string = MY_ID, showError: boolean = true) {
+        const profile = this._profiles.get(userId);
+
+        if (!profile) {
+            if (showError) this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
+            return undefined;
         }
 
-        this.emit(MainClientEvents.ERROR, `Профиля с id: ${userId} не существует.`);
-        return new EmptyProfile("", this._request, this._dispatch);
+        return profile;
     }
 
     // Добавление нового профиля пользователя
-    public addProfile(userId: string = MY_ID) {
+    addProfile(userId: string = MY_ID) {
+        if (this._profiles.has(userId)) {
+            this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
+            return undefined;
+        }
+
         const newProfile = new Profile(userId, this._request, this._dispatch);
 
         this._profiles.set(userId, newProfile);
@@ -40,10 +47,15 @@ export default class ProfilesController extends EventEmitter {
     }
 
     // Удаление профиля пользователя
-    public removeProfile(userId: string = MY_ID) {
-        this._profiles.has(userId)
-            ? this._profiles.delete(userId)
-            : this.emit(MainClientEvents.ERROR, `Профиля с id: ${userId} не существует.`);
+    removeProfile(userId: string = MY_ID) {
+        const profile = this.getProfile(userId);
+
+        if (!profile) {
+            this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
+            return;
+        }
+
+        this._profiles.delete(userId);
     }
 
     // Слушатель события класса Profile

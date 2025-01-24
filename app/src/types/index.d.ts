@@ -1,2 +1,1 @@
-declare module "react-nice-input-password";
-declare module "freeice";
+export type ValueOf<T> = T[keyof T];

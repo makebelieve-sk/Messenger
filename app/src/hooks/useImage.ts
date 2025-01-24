@@ -1,10 +1,11 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { NO_PHOTO, SERVER_URL } from "../utils/constants";
 
+// Возврат корректного адреса картинки
 export default function useImage(src?: string) {
-    const [srcImage, setSrcImage] = React.useState(src);
+    const [srcImage, setSrcImage] = useState(src);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setSrcImage(src
             ? `${SERVER_URL}${src}`
             : NO_PHOTO

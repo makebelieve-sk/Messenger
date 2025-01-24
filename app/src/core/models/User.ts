@@ -1,31 +1,25 @@
 import EventEmitter from "eventemitter3";
 
 import Request from "../Request";
+import UserDetails from "./UserDetails";
 import { MY_ID, NO_PHOTO } from "../../utils/constants";
 import { IUser, IUserDetails } from "../../types/models.types";
-import { AppDispatch } from "../../types/redux.types";
 import { ApiRoutes } from "../../types/enums";
-import { setLoading } from "../../state/main/slice";
-import { changeUserField, setUser } from "../../state/user/slice";
-import { MainClientEvents } from "../../types/events";
-import UserDetails from "./UserDetails";
+import { MainClientEvents, UserEvents } from "../../types/events";
 
-interface IOptions {
-    request: Request;
-    dispatch: AppDispatch;
-};
-
+// Класс, описывающий сущность "Пользователь"
 export default class User extends EventEmitter {
+    private readonly _userDetails: UserDetails;
     private _user!: IUser;
-    private _userDetails: UserDetails;
-    constructor(private readonly _id: string, private readonly _options: IOptions,) {
+    // private _userDetails: UserDetails;
+    constructor(private readonly _id: string, private readonly request: Request,) {
         super();
 
         this._id === MY_ID
             ? this._getMe()
             : this._getUser();
 
-        this._userDetails = new UserDetails(this._options.request, this._options.dispatch)
+        this._userDetails = new UserDetails(this.request)
     }
 
     get id(): string {
@@ -66,12 +60,13 @@ export default class User extends EventEmitter {
 
     // Получение данных о себе
     private _getMe() {
-        this._options.request.get({
+        this.request.get({
             route: ApiRoutes.getMe,
-            setLoading: (loading: boolean) => this._options.dispatch(setLoading(loading)),
+            setLoading: (isLoading: boolean) => {
+                this.emit(UserEvents.SET_LOADING, isLoading);
+            },
             successCb: (data: { user: IUser }) => {
                 this._user = data.user;
-                this._options.dispatch(setUser(this._user));
                 console.log("Подгрузили инфу о себе: ", this._user);
                 this.emit(MainClientEvents.GET_ME);
             }
@@ -80,7 +75,7 @@ export default class User extends EventEmitter {
 
     // Получение данных другого пользователя
     private _getUser() {
-        this._options.request.post({
+        this.request.post({
             route: ApiRoutes.getUser,
             data: { id: this._id },
             successCb: (data: { user: IUser }) => {
@@ -90,21 +85,33 @@ export default class User extends EventEmitter {
         });
     }
 
+    // Обновление данных о себе (так как после входа уже существует в мапе мой профиль и сущность Пользователь)
+    updateMe() {
+        this._getMe();
+    }
+
     // Замена поля пользователя и обновление в глобальном состоянии
     changeField(field: string, value: string) {
-        this._user = {
-            ...this._user,
-            [field]: value
-        };
-        this._options.dispatch(changeUserField({ field, value }));
+        this._user[field] = value;
+        this.emit(UserEvents.CHANGE_FIELD, field, value);
+    }
+
+    // Обновление дополнительной информации о пользователе
+    setUserDetails(userDetails: IUserDetails) {
+        this._userDetails.updateDetails(userDetails);
+    }
+
+    updateInfo({ user, userDetails }: { user: IUser, userDetails: IUserDetails }) {
+        this._user = user;
+        this._userDetails.updateDetails(userDetails);
     }
 
     /**
      * Статичный метод фабрика
      * Возвращает сущность "Пользователь"
      */
-    static create(userId: string = MY_ID, options: IOptions) {
-        return new User(userId, options);
+    static create(...args: [string, Request]) {
+        return new User(...args);
     }
 
     createDetails(details: IUserDetails) {
