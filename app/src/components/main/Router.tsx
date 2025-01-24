@@ -35,6 +35,7 @@ export default function Router() {
         ? <Routes>
             <Route path={Pages.profile} element={<Profile />} />
             <Route path={Pages.messages} element={<div>228</div>} />
+            <Route path={Pages.edit} element={<div>edit</div>} />
             <Route path={Pages.notExists} element={<Navigate to={Pages.profile} />} />
         </Routes>
         : <Routes>

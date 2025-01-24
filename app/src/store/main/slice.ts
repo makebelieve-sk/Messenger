@@ -6,7 +6,7 @@ import { MainStateType, RootState } from "@custom-types/redux.types";
 // Начальное состояние
 export const initialState: MainStateType = {
   isAuth: false,
-  loading: false,
+  loading: true,
   friendNotification: 0,
   messageNotification: 0,
   onlineUsers: [],
