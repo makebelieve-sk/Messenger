@@ -25,3 +25,6 @@ server/assets
 
 # Файлы отчетов сервера
 server/reports
+
+# Файлы с логами
+server/logs

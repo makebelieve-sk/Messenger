@@ -85,11 +85,13 @@
     "redis.start_to_work": "Клиент Redis готов к работе.",
     "redis.stopped": "Клиент Redis остановлен.",
     "redis.reconnection": "Клиент Redis переподключается...",
+    "redis.ttl_update": "Время жизни в размере {{ttl}} для ключа {{key}} успешно обновлено в Redis.",
     "redis.new_pair_is_set": "Новая пара [{{key}}:{{value}}] успешно записана в Redis.",
     "redis.key_successfull_deleted": "Ключ [{{key}}] успешно удален из Redis.",
 
     "redis.error.client_connect": "Соединение с базой данных Redis завершилось не удачно: ",
     "redis.error.client_work": "Ошибка в работе клиента Redis: ",
+    "redis.error.ttl_update": "Произошла ошибка при обновлении времени жизни записи с ключом [{{key}}] из Redis: {{message}}.",
     "redis.error.get_value": "Произошла ошибка при получении значения по ключу [{{key}}] из Redis.",
     "redis.error.setting_new_pair": "Произошла ошибка при записи новой пары [{{key}}:{{value}}] в Redis.",
     "redis.error.deleted_key": "Произошла ошибка при удалении ключа [{{key}}] из Redis.",

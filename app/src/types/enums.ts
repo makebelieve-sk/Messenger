@@ -264,6 +264,13 @@ enum ErrorTextsApi {
     ERROR_UNKNOWN = "Неизвестная ошибка.",
 };
 
+enum DebuggerType {
+    DEBUG = "",
+    INFO = "INFO",
+    WARN = "WARN",
+    ERROR = "ERROR"
+};
+
 export {
     TestMethods,
     ApiRoutes,
@@ -287,4 +294,5 @@ export {
     UnReadTypes,
     ErrorCodes,
     ErrorTextsApi,
+    DebuggerType
 };

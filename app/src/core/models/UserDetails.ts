@@ -1,8 +1,10 @@
 import i18next from "../../service/i18n";
+import Logger from "../../service/Logger";
 import { IUserDetails } from "../../types/models.types";
 import { muchSelected } from "../../utils";
 import { getMonthName } from "../../utils/time";
 
+const logger = Logger.init("UserDetails");
 const NOT_COMPLITE = i18next.t("profile-module.not_complete");
 
 // Класс, описывающий сущность "Дополнительная информация о пользователе"
@@ -45,6 +47,7 @@ export default class UserDetails {
 
     // Обновление дополнительной информации о пользователе
     setDetails(details: IUserDetails) {
+        logger.debug(`setDetails [detailsUserId=${details.userId}]`);
         this._details = details;
     }
 

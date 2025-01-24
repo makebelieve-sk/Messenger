@@ -29,9 +29,9 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.1",
     "express-session": "^1.18.0",
-    "libphonenumber-js": "^1.11.17",
     "i18next": "^24.2.1",
     "i18next-http-middleware": "^3.7.1",
+    "libphonenumber-js": "^1.11.17",
     "multer": "^1.4.5-lts.1",
     "open": "^10.1.0",
     "passport": "^0.7.0",
@@ -41,7 +41,8 @@
     "sharp": "^0.33.4",
     "socket.io": "^4.7.5",
     "tedious": "^18.1.0",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",

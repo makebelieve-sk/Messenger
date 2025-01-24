@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import http from "http";
 import { v4 as uuid } from "uuid";
 
+import Logger from "../service/logger";
 import { t } from "../service/i18n";
 import Database from "./Database";
 import { ClientToServerEvents, ISocketData, InterServerEvents, ServerToClientEvents, SocketWithUser } from "../types/socket.types";
@@ -11,6 +12,8 @@ import { ISafeUser } from "../types/user.types";
 import { UsersType } from "../types";
 import { getFullName } from "../utils";
 import { SocketError } from "../errors";
+
+const logger = Logger("Socket");
 
 const CLIENT_URL = process.env.CLIENT_URL as string;
 const SOCKET_METHOD = process.env.SOCKET_METHOD as string;
@@ -38,6 +41,8 @@ export default class SocketWorks {
     }
 
     private _init() {
+        logger.debug("init Socket");
+
         this._io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, ISocketData>(this._server, {
             transports: ["websocket"],      // Транспорт для соединений
             cors: {
@@ -81,6 +86,8 @@ export default class SocketWorks {
     }
 
     private _useSocketBus() {
+        logger.debug("_useSocketBus");
+
         this.io.on("connection", async (socket: SocketWithUser) => {
             const socketID = socket.id;
 
@@ -103,7 +110,7 @@ export default class SocketWorks {
 
             try {
                 this._socket = socket;
-                console.log("Пример сессии: ", (this._socket.request as express.Request).session);
+                logger.info("Session example [session=%j]", (this._socket.request as express.Request).session);
 
                 const userId = (this._socket.user as ISafeUser).id;
                 const socketID = this._socket.id;
@@ -571,7 +578,7 @@ export default class SocketWorks {
 
                 // Событие отключения (выполняется немного ранее, чем disconnect) - можно получить доступ к комнатам
                 socket.on("disconnecting", (reason) => {
-                    console.log(t("socket.disconnecting", { reason }));
+                    logger.info(t("socket.disconnecting", { reason }));
 
                     // const rooms = Array.from(socket.rooms);
 
@@ -586,7 +593,7 @@ export default class SocketWorks {
                 // Отключение сокета
                 socket.on("disconnect", async (reason) => {
                     try {
-                        console.log(t("socket.socket_disconnected_with_reason", { socketID, reason }));
+                        logger.info(t("socket.socket_disconnected_with_reason", { socketID, reason }));
 
                         // Добавляем проверку на тот случай, если клиент разорвал соединение (например, закрыл вкладку/браузер)
                         // Иначе через кнопку выхода пользователь уже удаляется из списка
@@ -613,6 +620,8 @@ export default class SocketWorks {
     }
 
     private _useEngineHandlers() {
+        logger.debug("_useEngineHandlers");
+
         // Не нормальное отключение io
         this._io.engine.on("connection_error", (error: { req: string; code: number; message: string; context: string; }) => {
             const { req, code, message, context } = error;
@@ -621,6 +630,8 @@ export default class SocketWorks {
     }
 
     close() {
+        logger.debug("close");
+
         this._io.close();
     }
 }

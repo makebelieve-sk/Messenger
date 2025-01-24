@@ -1,4 +1,7 @@
+import Logger from "../service/logger";
 import { HTTPStatuses } from "../types/enums";
+
+const logger = Logger("BaseError");
 
 export class BaseError extends Error {
     constructor(readonly message: string, readonly status: HTTPStatuses = HTTPStatuses.ServerError) {
@@ -9,7 +12,7 @@ export class BaseError extends Error {
         // Необходимо для корректного указания последовательности вызова ошибки
         Error.captureStackTrace(this, this.constructor);
 
-        console.info(this.stack);
+        logger.error(this.stack);
     }
 }
 

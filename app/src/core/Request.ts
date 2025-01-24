@@ -1,8 +1,11 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 
+import Logger from "../service/Logger";
 import { ApiRoutes } from "../types/enums";
 import CatchErrors, { CatchType } from "./CatchErrors";
 import { AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT, SERVER_URL } from "../utils/constants";
+
+const logger = Logger.init("Request");
 
 interface IGetRequest {
     route: ApiRoutes | string;
@@ -54,6 +57,8 @@ export default class Request {
 
     // GET запрос на сервер
     get({ route, setLoading, successCb, failedText }: IGetRequest): void {
+        logger.debug(`get [route=${route}]`);
+
         setLoading ? setLoading(true) : undefined;
 
         this._instance
@@ -73,6 +78,8 @@ export default class Request {
 
     // POST запрос на сервер
     post({ route, data, setLoading, successCb, failedText, finallyCb, config, failedCb }: IPostRequest): void {
+        logger.debug(`post [route=${route}, data=${JSON.stringify(data)}, config=${JSON.stringify(config)}]`);
+
         setLoading ? setLoading(true) : undefined;
 
         this._instance
@@ -97,6 +104,8 @@ export default class Request {
 
     // GET запрос на скачивание файла с сервера
     downloadFile({ window, document, params, extra, failedText }: IDownloadFileRequest) {
+        logger.debug(`downloadFile [params=${params}, extra.name=${extra.name}]`);
+
         this._instance
             .get(`${ApiRoutes.downloadFile}?${params}`, { responseType: "blob" })
             .then(response => {

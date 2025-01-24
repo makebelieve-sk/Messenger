@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import DownloadIcon from "@mui/icons-material/Download";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 import SnackBarComponent from "../../../ui/Snackbar";
@@ -55,6 +56,11 @@ export default function ModalWithError() {
         }
     };
 
+    // Скачать файл с логами
+    const onDownload = () => {
+        mainClient.downloadLogFile();
+    }
+
     // Обновление страницы
     const onReload = () => {
         navigate(0);
@@ -87,7 +93,8 @@ export default function ModalWithError() {
                     {error}
                 </div>
 
-                <div className="modal-error-container__button">
+                <div className="modal-error-container__buttons">
+                    <Button variant="contained" startIcon={<DownloadIcon />} onClick={onDownload}>{ t("modals.download") }</Button>
                     <Button variant="outlined" startIcon={<RefreshIcon />} onClick={onReload}>{ t("modals.reset_page") }</Button>
                 </div>
             </Box>

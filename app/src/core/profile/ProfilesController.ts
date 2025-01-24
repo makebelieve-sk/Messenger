@@ -1,11 +1,14 @@
 import EventEmitter from "eventemitter3";
 
+import Logger from "../../service/Logger";
 import Profile from "./Profile";
 import Request from "../Request";
 import i18next from "../../service/i18n";
 import { AppDispatch } from "../../types/redux.types";
 import { MainClientEvents } from "../../types/events";
 import { MY_ID } from "../../utils/constants";
+
+const logger = Logger.init("ProfilesController");
 
 // Класс, отвечающий за работу с коллекцией профилей пользователей
 export default class ProfilesController extends EventEmitter {
@@ -14,6 +17,7 @@ export default class ProfilesController extends EventEmitter {
     constructor(private readonly _request: Request, private readonly _dispatch: AppDispatch) {
         super();
 
+        logger.debug("init ProfilesController");
         this.addProfile(MY_ID);
     }
 
@@ -23,6 +27,8 @@ export default class ProfilesController extends EventEmitter {
 
     // Получение объекта пользователя
     getProfile(userId: string = MY_ID, showError: boolean = true) {
+        logger.debug(`getProfile [userId=${userId}, showError=${showError}]`);
+
         const profile = this._profiles.get(userId);
 
         if (!profile) {
@@ -35,6 +41,8 @@ export default class ProfilesController extends EventEmitter {
 
     // Добавление нового профиля пользователя
     addProfile(userId: string = MY_ID) {
+        logger.debug(`addProfile [userId=${userId}]`);
+
         if (this._profiles.has(userId)) {
             this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
             return undefined;
@@ -48,6 +56,8 @@ export default class ProfilesController extends EventEmitter {
 
     // Удаление профиля пользователя
     removeProfile(userId: string = MY_ID) {
+        logger.debug(`removeProfile [userId=${userId}]`);
+
         const profile = this.getProfile(userId);
 
         if (!profile) {
@@ -60,6 +70,9 @@ export default class ProfilesController extends EventEmitter {
 
     // Слушатель события класса Profile
     private _bindListeners(profile: Profile) {
-        profile.on(MainClientEvents.GET_ME, () => this.emit(MainClientEvents.GET_ME));
+        profile.on(MainClientEvents.GET_ME, () => {
+            logger.debug("MainClientEvents.GET_ME");
+            this.emit(MainClientEvents.GET_ME);
+        });
     }
 }

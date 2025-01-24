@@ -1,5 +1,6 @@
 import EventEmitter from "eventemitter3";
 
+import Logger from "../../service/Logger";
 import Request from "../Request";
 import UserDetails from "./UserDetails";
 import { MY_ID, NO_PHOTO } from "../../utils/constants";
@@ -9,6 +10,8 @@ import { ApiRoutes } from "../../types/enums";
 import { MainClientEvents, UserEvents } from "../../types/events";
 import { setLoading } from "../../store/main/slice";
 
+const logger = Logger.init("User");
+
 // Класс, описывающий сущность "Пользователь"
 export default class User extends EventEmitter {
     private readonly _userDetails: UserDetails;
@@ -16,6 +19,8 @@ export default class User extends EventEmitter {
 
     constructor(private readonly _id: string, private readonly _dispatch: AppDispatch, private readonly _request: Request) {
         super();
+
+        logger.debug(`init user [id=${this._id}]`);
 
         this._id === MY_ID
             ? this._getMe()
@@ -51,7 +56,7 @@ export default class User extends EventEmitter {
             setLoading: (loading: boolean) => this._dispatch(setLoading(loading)),
             successCb: (data: { user: IUser }) => {
                 this._user = data.user;
-                console.log("Подгрузили инфу о себе: ", this._user);
+                logger.info(`get info about yourself: ${JSON.stringify(this._user)}`);
                 this.emit(MainClientEvents.GET_ME);
             }
         });
@@ -64,24 +69,27 @@ export default class User extends EventEmitter {
             data: { id: this._id },
             successCb: (data: { user: IUser }) => {
                 // this._user = data.user;
-                console.log("Подгрузили инфу о другом пользователе: ", data.user);
+                logger.info(`get info about another user: ${JSON.stringify(data.user)}`);
             }
         });
     }
 
     // Обновление данных о себе (так как после входа уже существует в мапе мой профиль и сущность Пользователь)
     updateMe() {
+        logger.debug("updateMe");
         this._getMe();
     }
 
     // Замена поля пользователя и обновление в глобальном состоянии
     changeField(field: string, value: string) {
+        logger.debug(`changeField [field: ${field}, value=${value}]`);
         this._user[field] = value;
         this.emit(UserEvents.CHANGE_FIELD, field, value);
     }
 
     // Обновление дополнительной информации о пользователе
     setUserDetails(userDetails: IUserDetails) {
+        logger.debug("setUserDetails");
         this._userDetails.setDetails(userDetails);
     }
 
