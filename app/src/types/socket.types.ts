@@ -2,7 +2,6 @@ import { Socket } from "socket.io-client";
 
 import { SocketActions, MessageReadStatus } from "@custom-types/enums";
 import { IMessage, IUser } from "@custom-types/models.types";
-import { IEditMessage } from "@core/edit-message";
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -19,7 +18,7 @@ interface ClientToServerEvents {
     [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, usersInChat }: { isWrite: boolean; chatId: string; usersInChat: any[]; }) => void;
     [SocketActions.FRIENDS]: (data: ISocketData) => void;
     [SocketActions.MESSAGE]: ({ data, usersInChat }: { data: IMessage; usersInChat: any[]; }) => void;
-    [SocketActions.EDIT_MESSAGE]: ({ data }: { data: IEditMessage; usersInChat: any[]; }) => void;
+    [SocketActions.EDIT_MESSAGE]: ({ data }: { data: any; usersInChat: any[]; }) => void;
     [SocketActions.DELETE_MESSAGE]: ({ companionId, messageId }: { companionId: string; messageId: string; }) => void;
     [SocketActions.DELETE_CHAT]: ({ companionId, chatId }: { companionId: string; chatId: string; }) => void;
     [SocketActions.CHANGE_READ_STATUS]: ({ isRead, messages }: { isRead: MessageReadStatus; messages: IMessage[]; }) => void;
@@ -40,7 +39,7 @@ interface ServerToClientEvents {
 
     [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, userName }: { isWrite: boolean; chatId: string; userName: string; }) => void;
     [SocketActions.SEND_MESSAGE]: (message: IMessage) => void;
-    [SocketActions.EDIT_MESSAGE]: ({ data }: { data: IEditMessage; }) => void;
+    [SocketActions.EDIT_MESSAGE]: ({ data }: { data: any; }) => void;
     [SocketActions.DELETE_MESSAGE]: ({ messageId }: { messageId: string; }) => void;
     [SocketActions.DELETE_CHAT]: ({ chatId }: { chatId: string; }) => void;
     [SocketActions.ACCEPT_CHANGE_READ_STATUS]: ({ message }: { message: IMessage; }) => void;

@@ -2,6 +2,7 @@ import EventEmitter from "eventemitter3";
 
 import ProfileService from "@core/services/ProfileServices";
 import Request from "@core/Request";
+import { Profile } from "@core/models/Profile";
 import i18next from "@service/i18n";
 import { AppDispatch } from "@custom-types/redux.types";
 import { MainClientEvents } from "@custom-types/events";
@@ -9,7 +10,7 @@ import { MY_ID } from "@utils/constants";
 
 // Класс, отвечающий за работу с коллекцией профилей пользователей
 export default class ProfilesController extends EventEmitter {
-    private _profiles: Map<string, ProfileService> = new Map();
+    private _profiles: Map<string, Profile> = new Map();
 
     constructor(private readonly _request: Request, private readonly _dispatch: AppDispatch) {
         super();
@@ -59,7 +60,7 @@ export default class ProfilesController extends EventEmitter {
     }
 
     // Слушатель события класса ProfileService
-    private _bindListeners(profile: ProfileService) {
+    private _bindListeners(profile: Profile) {
         profile.on(MainClientEvents.GET_ME, () => this.emit(MainClientEvents.GET_ME));
     }
 }

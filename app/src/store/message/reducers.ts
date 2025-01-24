@@ -1,7 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
 import i18next from "@service/i18n";
-import { IEditMessage } from "@core/edit-message";
 import { IFile, IMessage } from "@custom-types/models.types";
 import { UnReadTypes } from "@custom-types/enums";
 import { MessageStateType } from "@custom-types/redux.types";
@@ -256,7 +255,7 @@ export default {
         }
     },
     // Редактирование сообщения в списке сообщений
-    editMessage: (state: MessageStateType, action: PayloadAction<IEditMessage>) => {
+    editMessage: (state: MessageStateType, action: PayloadAction<any>) => {
         const { id, files, message } = action.payload;
 
         const findMessage = state.messages.find(message => message.id === id);
