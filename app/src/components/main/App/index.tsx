@@ -8,6 +8,7 @@ import { selectMainState } from "../../../store/main/slice";
 import { useAppSelector } from "../../../hooks/useGlobalState";
 import { UserEvents } from "../../../types/events";
 import useUser from "../../../hooks/useUser";
+
 import "./app.scss";
 
 // Главный компонент, который отрисовывает основноую верстку проекта

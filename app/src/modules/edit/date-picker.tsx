@@ -3,7 +3,7 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ru";
-import { IFormValues } from "../../pages/edit";
+import { IFormValues } from "../../pages/Edit";
 import { useTranslation } from "react-i18next";
 interface DatePickerComponentProps {
 	formValues: IFormValues;

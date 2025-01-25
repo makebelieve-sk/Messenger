@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -8,15 +9,15 @@ import dayjs, { Dayjs } from "dayjs";
 
 import EditTabsModule from "../modules/edit";
 import AlertComponent from "../components/ui/Alert";
+import SpinnerComponent from "../components/ui/Spinner";
+import useMainClient from "../hooks/useMainClient";
+import useUserDetails from "../hooks/useUserDetails";
+import useProfile from "../hooks/useProfile";
+import useUser from "../hooks/useUser";
 import { REQUIRED_FIELD } from "../utils/constants";
 import { UserDetailsEvents } from "../types/events";
-import useProfile from "../hooks/useProfile";
-import useMainClient from "../hooks/useMainClient";
-import SpinnerComponent from "../components/ui/Spinner";
-import useUserDetails from "../hooks/useUserDetails";
+
 import "../styles/pages/edit.scss";
-import useUser from "../hooks/useUser";
-import { useTranslation } from "react-i18next";
 
 export interface IFormValues {
 	name: string;
