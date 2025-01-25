@@ -12,38 +12,47 @@ import "./app.scss";
 
 // Главный компонент, который отрисовывает основноую верстку проекта
 export default function App() {
-  const { isAuth } = useAppSelector(selectMainState);
-  const [loading, setLoading] = useState(false)
-  const user = useUser()
-  const handleOnLoading = (isLoading: boolean) => setLoading(isLoading)
-        
-  //подписка на событие лоадинг
-  useEffect(() => {
-    user.on(UserEvents.SET_LOADING, handleOnLoading)
+	const { isAuth } = useAppSelector(selectMainState);
+	const [loading, setLoading] = useState(true);
+	const user = useUser();
+	const handleOnLoading = (isLoading: boolean) => setLoading(isLoading);
 
-      return  ()=>{
-        user.off(UserEvents.SET_LOADING, handleOnLoading)
-      }
-  }, [])
-  
-  return <div className="root">
-    <ServiceComponents />
+	//подписка на событие лоадинг
+	useEffect(() => {
+		user.on(UserEvents.SET_LOADING, handleOnLoading);
 
-    {loading
-      ? <SpinnerComponent />
-      : <>
-        {isAuth ? <HeaderComponent /> : null}
+		return () => {
+			user.off(UserEvents.SET_LOADING, handleOnLoading);
+		};
+	}, []);
 
-        <div className="root__wrapper">
-          <div className={`root__wrapper__container ${isAuth ? "" : "root__wrapper__container__no-auth"}`}>
-            {isAuth ? <MenuComponent /> : null}
+	return (
+		<div className="root">
+			<ServiceComponents />
 
-            <div className="root__wrapper__container__content">
-              <Router />
-            </div>
-          </div>
-        </div>
-      </>
-    }
-  </div>
-};
+			{loading ? (
+				<SpinnerComponent />
+			) : (
+				<>
+					{isAuth ? <HeaderComponent /> : null}
+
+					<div className="root__wrapper">
+						<div
+							className={`root__wrapper__container ${
+								isAuth
+									? ""
+									: "root__wrapper__container__no-auth"
+							}`}
+						>
+							{isAuth ? <MenuComponent /> : null}
+
+							<div className="root__wrapper__container__content">
+								<Router />
+							</div>
+						</div>
+					</div>
+				</>
+			)}
+		</div>
+	);
+}
