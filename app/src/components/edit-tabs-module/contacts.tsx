@@ -1,57 +1,70 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import { ITabModule } from ".";
+import { useTranslation } from "react-i18next";
 
-export default React.memo(function Contacts({ formValues, formErrors, onChange }: ITabModule) {
-    const onChangeField = (field: string, value: string | boolean | Date | null) => onChange(field, value);
+export default React.memo(function Contacts({
+	formValues,
+	formErrors,
+	onChange,
+}: ITabModule) {
+	const onChangeField = (
+		field: string,
+		value: string | boolean | Date | null
+	) => onChange(field, value);
+	const { t } = useTranslation();
+	return (
+		<>
+			<TextField
+				id="city"
+				name="city"
+				margin="normal"
+				variant="outlined"
+				label={t("edit_tabs.city")}
+				autoComplete={t("edit_tabs.city")}
+				fullWidth
+				value={formValues.city}
+				autoFocus
+				onChange={(e) => onChangeField("city", e.target.value)}
+			/>
 
-    return <>
-        <TextField
-            id="city"
-            name="city"
-            margin="normal"
-            variant="outlined"
-            label="Город"
-            autoComplete="Город"
-            fullWidth
-            value={formValues.city}
-            autoFocus
+			<TextField
+				id="phone"
+				name="phone"
+				margin="normal"
+				variant="outlined"
+				label={t("edit_tabs.phone")}
+				autoComplete={t("edit_tabs.phone")}
+				fullWidth
+				value={formValues.phone}
+				required
+				error={Boolean(formErrors && formErrors.phone)}
+				helperText={
+					formErrors && formErrors.phone
+						? formErrors && formErrors.phone
+						: null
+				}
+				onChange={(e) => onChangeField("phone", e.target.value)}
+			/>
 
-            onChange={e => onChangeField("city", e.target.value)}
-        />
-
-        <TextField
-            id="phone"
-            name="phone"
-            margin="normal"
-            variant="outlined"
-            label="Мобильный телефон"
-            autoComplete="Мобильный телефон"
-            fullWidth
-            value={formValues.phone}
-            required
-
-            error={Boolean(formErrors && formErrors.phone)}
-            helperText={formErrors && formErrors.phone ? formErrors && formErrors.phone : null}
-
-            onChange={e => onChangeField("phone", e.target.value)}
-        />
-
-        <TextField
-            id="email"
-            name="email"
-            margin="normal"
-            variant="outlined"
-            label="Электронная почта"
-            autoComplete="Электронная почта"
-            fullWidth
-            value={formValues.email}
-            required
-
-            error={Boolean(formErrors && formErrors.email)}
-            helperText={formErrors && formErrors.email ? formErrors && formErrors.email : null}
-
-            onChange={e => onChangeField("email", e.target.value)}
-        />
-    </>
+			<TextField
+				id="email"
+				name="email"
+				margin="normal"
+				variant="outlined"
+				label={t("edit_tabs.email")}
+				autoComplete={t("edit_tabs.email")}
+				fullWidth
+				value={formValues.email}
+				required
+				error={Boolean(formErrors && formErrors.email)}
+				helperText={
+					formErrors && formErrors.email
+						? formErrors && formErrors.email
+						: null
+				}
+				onChange={(e) => onChangeField("email", e.target.value)}
+			/>
+		</>
+	);
 });

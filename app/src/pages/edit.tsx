@@ -16,6 +16,7 @@ import SpinnerComponent from "../components/ui/Spinner";
 import useUserDetails from "../hooks/useUserDetails";
 import "../styles/pages/edit.scss";
 import useUser from "../hooks/useUser";
+import { useTranslation } from "react-i18next";
 
 export interface IFormValues {
 	name: string;
@@ -57,6 +58,7 @@ export default function Edit() {
 	const profile = useProfile();
 	const userDetails = useUserDetails();
 	const user = useUser();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		userDetails.on(UserDetailsEvents.UPDATE, () => {
@@ -146,14 +148,11 @@ export default function Edit() {
 					setShowAlert,
 				});
 			} else {
-				throw new Error("Нет пользователя");
+				throw new Error(t("edit.error.no_user"));
 			}
 		} catch (error) {
 			setLoadingSaveBtn(false);
-			mainClient.catchErrors(
-				"Произошла ошибка при изменении информации о пользователе: " +
-					error
-			);
+			mainClient.catchErrors(t("edit.error.change_user_info") + error);
 		}
 	};
 
@@ -178,14 +177,14 @@ export default function Edit() {
 				className={"edit-container__tabs"}
 			>
 				<Tab
-					label="Основное"
+					label={t("edit.main")}
 					id="main"
 					aria-controls="main"
 					disabled={loadingSaveBtn}
 					className={"edit-container__tab-name"}
 				/>
 				<Tab
-					label="Контакты"
+					label={t("edit.contacts")}
 					id="contacts"
 					aria-controls="contacts"
 					disabled={loadingSaveBtn}
@@ -219,8 +218,7 @@ export default function Edit() {
 					{showAlert ? (
 						<AlertComponent show={showAlert}>
 							<>
-								<b>Изменения сохранены</b> - новые данные будут
-								отражены на Вашей странице.
+								<b>{t("edit.save")}</b> - {t("edit.show_data")}
 							</>
 						</AlertComponent>
 					) : null}
