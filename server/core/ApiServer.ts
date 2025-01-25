@@ -33,7 +33,7 @@ export default class ApiServer {
 
     // Запуск контроллеров обработки API запросов
     private _init() {
-        logger.debug("init ApiServer");
+        logger.debug("init");
 
         new AuthController(this._app, this._middleware, this._database, this._redisWork, this._passport, this._users);
         new ImagesController(this._app, this._middleware, this._database);

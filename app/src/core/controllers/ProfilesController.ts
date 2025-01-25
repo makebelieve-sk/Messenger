@@ -18,7 +18,7 @@ export default class ProfilesController extends EventEmitter {
     constructor(private readonly _request: Request, private readonly _dispatch: AppDispatch) {
         super();
 
-        logger.debug("init ProfilesController");
+        logger.debug("init");
         this.addProfile(MY_ID);
     }
 
@@ -28,8 +28,6 @@ export default class ProfilesController extends EventEmitter {
 
     // Получение объекта пользователя
     getProfile(userId: string = MY_ID, showError: boolean = true) {
-        logger.debug(`getProfile [userId=${userId}, showError=${showError}]`);
-
         const profile = this._profiles.get(userId);
 
         if (!profile) {

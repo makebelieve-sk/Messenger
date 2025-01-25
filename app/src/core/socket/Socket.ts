@@ -23,7 +23,7 @@ export default class Socket extends EventEmitter {
     }
 
     init(myUser: IUser) {
-        logger.debug("init Socket");
+        logger.debug("init");
 
         if (!myUser) {
             this.emit(MainClientEvents.ERROR, i18next.t("core.socket.error.user_not_exists"));

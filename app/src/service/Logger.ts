@@ -1,18 +1,12 @@
 import { DebuggerType } from "../types/enums";
 import { ARRAY_LOGS_LENGTH, DEV, LOGS_FILE_NAME } from "../utils/constants";
 
-// Главное название лога
-const APP_NAME = "APP";
-// Генерируем имя файла с timestamp
-const timestamp = new Date().toISOString().replace(/[:.]/g, "-");   // Пример: 2023-10-10T12-34-56-789Z
+const APP_NAME = "APP";             // Главное название лога
+const arrayLogs: string[] = [];     // Массив всех логов, максимум определяется .env переменной ARRAY_LOGS_LENGTH
 
 // Класс, отвечающий за логирование на клиенте. Сохраняет логи в массив для будущего скачивания (в модальном окне ошибки)
 export default class Logger {
-    private _arrayLogs: string[] = [];
-    private _prefix: string = "";
-    protected static instance: Logger;
-
-    private constructor() {}
+    private constructor(private readonly _prefix: string) {}
 
     get debug() {
         return this._getDebugger();
@@ -30,10 +24,6 @@ export default class Logger {
         return this._getDebugger(DebuggerType.ERROR);
     }
 
-    protected set prefix(prefix: string) {
-        this._prefix = prefix;
-    }
-
     // Установка полного префикса для записи логгера
     private _getDebugger(type: DebuggerType = DebuggerType.DEBUG) {
         const typeString = type ? `:${type}` : type;
@@ -41,8 +31,8 @@ export default class Logger {
 
         return (message: string) => {
             // При достижении большого количества записей в массиве - очищаем массив
-            if (this._arrayLogs.length > ARRAY_LOGS_LENGTH) {
-                this._arrayLogs.length = 0;
+            if (arrayLogs.length > ARRAY_LOGS_LENGTH) {
+                arrayLogs.length = 0;
             }
 
             switch (type) {
@@ -61,27 +51,24 @@ export default class Logger {
                     break;
             }
 
+            // Генерируем имя файла с timestamp
+            const timestamp = new Date().toISOString().replace(/[:.]/g, "-");   // Пример: 2023-10-10T12-34-56-789Z
+
             // Записываем строку из логгера в массив
-            this._arrayLogs.push(`[${timestamp}] ${APP_NAME}${typeString}${prefix} | ${message}`);
+            arrayLogs.push(`[${timestamp}] ${APP_NAME}${typeString}${prefix} | ${message}`);
         };
     }
 
-    // Статичный метод, реализует паттерн "Синглтон", то есть воззвращает один и тот же инстанс класса Logger в любом случае
+    // Статичный метод, реализует паттерн "Фабрика"
     static init(prefix: string = "") {
-        if (!Logger.instance) {
-            Logger.instance = new Logger();
-        }
-
-        Logger.instance.prefix = prefix;
-    
-        return Logger.instance;
+        return new Logger(prefix);
     }
 
     // Скачиваем файл с ранее записанными логами
     downloadToFile() {
-        if (this._arrayLogs.length) {
+        if (arrayLogs.length) {
             // Создание Blob объекта со строчными данными в формате обычного текста
-            const blob = new Blob([this._arrayLogs.join("\n")], { type: "text/plain" });
+            const blob = new Blob([arrayLogs.join("\n")], { type: "text/plain" });
 
             // Формирование элемента
             const link = document.createElement("a");

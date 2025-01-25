@@ -12,7 +12,7 @@ import { updateSessionMaxAge } from "../utils/session";
 import { AuthError } from "../errors/controllers";
 import { BaseError, MiddlewareError } from "../errors";
 
-const logger = Logger("Midleware");
+const logger = Logger("Middleware");
 
 // Класс, отвечает за выполнение мидлваров для HTTP-запросов
 export default class Middleware {

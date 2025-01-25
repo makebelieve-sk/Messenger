@@ -26,7 +26,7 @@ export default class MainClient extends EventEmitter {
     constructor(private readonly _dispatch: AppDispatch) {
         super();
 
-        logger.debug("init MainClient");
+        logger.debug("init");
 
         this._catchErrors = new CatchErrors(this._dispatch);
         this._request = new Request(this._catchErrors);

@@ -32,7 +32,7 @@ export default class PassportWorks {
     }
 
     private _init() {
-        logger.debug("init Passport");
+        logger.debug("init");
 
         // Мидлвары авторизации через passport.js
         this._app.use(this._passport.initialize());

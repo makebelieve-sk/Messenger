@@ -6,7 +6,7 @@ const logger = Logger("Relations");
 // Класс, предоставляет отношения между таблицами для корректной работы ORM Sequelize
 export default class Relations {
     constructor(private readonly _models: Models) {
-        logger.debug("init Relations");
+        logger.debug("init");
 
         this._oneToOne();
         this._oneToMany();

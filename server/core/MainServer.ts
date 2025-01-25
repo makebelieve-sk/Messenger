@@ -34,7 +34,7 @@ export default class MainServer {
     constructor(private readonly _app: Express, private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>) {
         this._users = new Map();
 
-        logger.debug("init MainServer");
+        logger.debug("init");
 
         // Инициализируем работу базы данных (модели, отношения)
         this._database = new Database();

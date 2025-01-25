@@ -33,7 +33,7 @@ export default class RedisWorks {
     }
 
     private _connectRedis() {
-        logger.debug("init Redis");
+        logger.debug("init");
 
         this._client = createClient({
             url: REDIS_CONNECTION_URL,   // URL-адрес для подключения к Redis серверу

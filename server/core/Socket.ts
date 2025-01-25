@@ -39,7 +39,7 @@ export default class SocketWorks {
     }
 
     private _init() {
-        logger.debug("init Socket");
+        logger.debug("init");
 
         this._io = new Server(this._server, {
             transports: ["websocket"],      // Транспорт для соединений
