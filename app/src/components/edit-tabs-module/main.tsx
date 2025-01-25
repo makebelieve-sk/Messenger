@@ -75,11 +75,11 @@ export default React.memo(function Main({
 					<MenuItem value="">
 						{t("edit_tabs.sex_not_specified")}
 					</MenuItem>
-					<MenuItem value={t("edit_tabs.male")}>
-						{t("edit_tabs.male")}
+					<MenuItem value={t("edit_tabs.sex_male")}>
+						{t("edit_tabs.sex_male")}
 					</MenuItem>
-					<MenuItem value={t("edit_tabs.female")}>
-						{t("edit_tabs.female")}
+					<MenuItem value={t("edit_tabs.sex_female")}>
+						{t("edit_tabs.sex_female")}
 					</MenuItem>
 				</Select>
 			</FormControl>
