@@ -1,0 +1,27 @@
+echo "Running pre-commit hook"
+
+# Заходим в папку app из корневой папки проекта
+cd app
+
+# Проверка линтера для клиента
+echo "Linting app..."
+if npm run lint; then
+  echo "✅ Client code passed linting!"
+else
+  echo "❌ Client code failed linting. Fix errors before committing."
+  exit 1
+fi
+
+# Выходим из папки app и заходим в папку server
+cd ../server
+
+# Проверка линтера для сервера
+echo "Linting server..."
+if npm run lint; then
+  echo "✅ Server code passed linting!"
+else
+  echo "❌ Server code failed linting. Fix errors before committing."
+  exit 1
+fi
+
+echo "✅ All lint checks passed. Proceeding with commit!"

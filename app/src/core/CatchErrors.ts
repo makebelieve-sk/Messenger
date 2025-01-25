@@ -1,11 +1,11 @@
 import EventEmitter from "eventemitter3";
 import { AxiosError } from "axios";
 
-import i18next from "../service/i18n";
-import { setError } from "../store/error/slice";
-import { ErrorCodes, HTTPStatuses, Pages } from "../types/enums";
-import { AppDispatch } from "../types/redux.types";
-import { MainClientEvents } from "../types/events";
+import i18next from "@service/i18n";
+import { setError } from "@store/error/slice";
+import { ErrorCodes, HTTPStatuses, Pages } from "@custom-types/enums";
+import { AppDispatch } from "@custom-types/redux.types";
+import { MainClientEvents } from "@custom-types/events";
 
 type BadRequestType = { success: boolean; message: string; field?: string; } | string | null;
 export type CatchType = BadRequestType | string | null;

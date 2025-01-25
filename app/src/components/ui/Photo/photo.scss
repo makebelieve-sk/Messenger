@@ -1,4 +1,4 @@
-@use "styles/abstract/colors.scss" as *;
+@use "@styles/abstract/colors.scss" as *;
 
 .photo {
     display: flex;
@@ -38,6 +38,7 @@
     img {
         max-width: 100%;
         height: auto;
+        object-fit: cover;
     }
 
     &:hover {

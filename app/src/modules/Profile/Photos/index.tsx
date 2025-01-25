@@ -4,15 +4,15 @@ import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
-import PhotoComponent from "../../../components/ui/Photo";
-import InputImageComponent from "../../../components/ui/InputImage";
-import NoDataComponent from "../../../components/ui/NoData";
-import SpinnerComponent from "../../../components/ui/Spinner";
-import LinkComponent from "../../../components/ui/Link";
-import { useAppSelector } from "../../../hooks/useGlobalState";
-import useProfile from "../../../hooks/useProfile";
-import { selectUserState } from "../../../store/user/slice";
-import { Pages } from "../../../types/enums";
+import PhotoComponent from "@components/ui/photo";
+import InputImageComponent from "@components/ui/input-image";
+import NoDataComponent from "@components/ui/no-data";
+import SpinnerComponent from "@components/ui/spinner";
+import LinkComponent from "@components/ui/link";
+import { useAppSelector } from "@hooks/useGlobalState";
+import useProfile from "@hooks/useProfile";
+import { selectUserState } from "@store/user/slice";
+import { Pages } from "@custom-types/enums";
 
 import "./photos.scss";
 

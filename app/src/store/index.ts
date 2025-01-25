@@ -1,22 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./user/slice";
-import errorReducer from "./error/slice";
-import friendsReducer from "./friends/slice";
-import mainReducer from "./main/slice";
-import messagesReducer from "./messages/slice";
-import callsReducer from "./calls/slice";
+
+import errorReducer from "@store/error/slice";
+import friendReducer from "@store/friend/slice";
+import mainReducer from "@store/main/slice";
+import messageReducer from "@store/message/slice";
+import userReducer from "@store/user/slice";
 
 export default configureStore({
     reducer: {
-        main: mainReducer,
-        users: userReducer,
         error: errorReducer,
-        friends: friendsReducer,
-        messages: messagesReducer,
-        calls: callsReducer,
-    },
-    // Мидлвар для устранения предупреждения при передаче не сериализованных объектов
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-        serializableCheck: false
-    }),
+        friends: friendReducer,
+        main: mainReducer,
+        messages: messageReducer,
+        users: userReducer,
+    }
 });

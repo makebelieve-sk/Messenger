@@ -1,5 +1,4 @@
-import { IUser } from "../types/models.types";
-// import { UserPartial } from "../pages/messages";
+import { IUser } from "@custom-types/models.types";
 
 // Склонение переданного массива строк по переданому числу
 export const muchSelected = (number: number, txt: string[]) => {

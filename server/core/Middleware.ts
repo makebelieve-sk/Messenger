@@ -47,7 +47,7 @@ export default class Middleware {
 
     // Общая обработка ошибок, вызванных в контроллерах через next(error)
     catch() {
-        this._app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
+        this._app.use((error: Error, _: Request, res: Response) => {
             const nextError = error instanceof BaseError
                 ? error
                 : new BaseError(error.message);

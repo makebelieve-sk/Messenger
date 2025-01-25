@@ -1,14 +1,14 @@
 import express from "express";
 import http from "http";
-import "dotenv/config";
 
+import "./service/env";
 import MainServer from "./core/MainServer";
 import { BaseError } from "./errors";
 import ProcessWorks from "./service/Process";
 import { initI18n, t } from "./service/i18n";
 
-const PORT = process.env.PORT as string;
 const MODE = process.env.NODE_ENV as string;
+const PORT = process.env.PORT as string;
 
 // Запуск сервера
 function init() {

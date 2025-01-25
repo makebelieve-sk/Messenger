@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import AvatarMUI from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
 
-import useImage from "../../../hooks/useImage";
-import { Pages } from "../../../types/enums";
+import useImage from "@hooks/useImage";
+import { Pages } from "@custom-types/enums";
 
 import "./avatar.scss";
 
-interface IAvatar {
+interface IAvatarComponent {
     src?: string;
     alt?: string;
     isOnline?: boolean;
@@ -20,7 +20,7 @@ interface IAvatar {
 const anchorOrigin = { vertical: "bottom", horizontal: "right" } as const;
 
 // Базовый компонент круглого маленького аватара
-export default memo(function AvatarComponent({ src, alt, isOnline = false, avatarClassName, size = 46, pushLeft = false }: IAvatar) {
+export default memo(function AvatarComponent({ src, alt, isOnline = false, avatarClassName, size = 46, pushLeft = false }: IAvatarComponent) {
     const srcImage = useImage(src);
     const navigate = useNavigate();
 
