@@ -34,7 +34,7 @@ export default class UserController {
     };
 
     // Получение детальной информации о пользователе
-    private async _getUserDetail(req: Request, res: Response, next: NextFunction) {        
+    private async _getUserDetail(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req.user as ISafeUser).id;
 
@@ -58,22 +58,28 @@ export default class UserController {
             const { name, surName, sex, birthday, work, city, phone, email }: IFormValues = req.body;
             const userId = (req.user as ISafeUser).id;
 
-            const result: { user: ISafeUser | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = { 
-                user: null, 
-                userDetails: null 
+            if (!phone || !email || !name || !surName) {
+                await transaction.rollback();
+                return next(new UsersError(t("users.error.user_incorrect_data"), HTTPStatuses.BadRequest));  // интернационализация
+            }
+
+            const result: { user: ISafeUser | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = {
+                user: null,
+                userDetails: null
             };
 
             const findUser = await this._database.models.users.findByPk(userId, { transaction });
 
             if (!findUser) {
+                await transaction.rollback();
                 return next(new UsersError(t("users.error.user_with_id_not_found", { id: userId }), HTTPStatuses.NotFound));
-            } 
+            }
 
             result.user = {
                 ...getSafeUserFields(findUser),
-                firstName: name, 
-                thirdName: surName, 
-                email, 
+                firstName: name,
+                thirdName: surName,
+                email,
                 phone
             };
 
@@ -82,12 +88,13 @@ export default class UserController {
             const findUserDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
             if (!findUserDetail) {
+                await transaction.rollback();
                 return next(new UsersError(t("users.error.user_details_not_found"), HTTPStatuses.NotFound));
             }
 
             result.userDetails = {
-                sex, 
-                birthday, 
+                sex,
+                birthday,
                 work,
                 city
             };
