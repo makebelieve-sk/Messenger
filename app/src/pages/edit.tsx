@@ -6,8 +6,8 @@ import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
 import dayjs, { Dayjs } from "dayjs";
 
-import EditTabsModule from "../components/edit-tabs-module";
-import AlertComponent from "../components/Common/Alert";
+import EditTabsModule from "../modules/edit";
+import AlertComponent from "../components/ui/Alert";
 import { REQUIRED_FIELD } from "../utils/constants";
 import { UserDetailsEvents } from "../types/events";
 import useProfile from "../hooks/useProfile";
