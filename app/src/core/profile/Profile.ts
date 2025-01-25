@@ -168,6 +168,11 @@ export default class Profile extends EventEmitter {
         });
     }
 
+    //-------------------------------------------------
+    // Методы страницы редактирования
+    //-------------------------------------------------
+    // Редактирование
+
     public editInfo({ result, setLoading, setShowAlert }: IEditInfoProps) {
         this._request.post({
             route: ApiRoutes.editInfo,

@@ -110,7 +110,7 @@ export default class UserDetails extends EventEmitter {
 
     }
 
-    //
+    //Получение дополнительной информации о пользователе
     private _getUserDetail() {
         this._request.get({
             route: ApiRoutes.getUserDetail,

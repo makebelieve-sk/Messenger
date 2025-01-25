@@ -96,11 +96,7 @@ export default class User extends EventEmitter {
         this.emit(UserEvents.CHANGE_FIELD, field, value);
     }
 
-    // Обновление дополнительной информации о пользователе
-    setUserDetails(userDetails: IUserDetails) {
-        this._userDetails.updateDetails(userDetails);
-    }
-
+    // Обновление данных о пользователе при редактировании
     updateInfo({ user, userDetails }: { user: IUser, userDetails: IUserDetails }) {
         this._user = user;
         this._userDetails.updateDetails(userDetails);
@@ -112,9 +108,5 @@ export default class User extends EventEmitter {
      */
     static create(...args: [string, Request]) {
         return new User(...args);
-    }
-
-    createDetails(details: IUserDetails) {
-        this._userDetails.updateDetails(details)
     }
 } 
