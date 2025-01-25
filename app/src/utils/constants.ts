@@ -1,4 +1,4 @@
-import i18next from "../service/i18n";
+import i18next from "@service/i18n";
 
 export const DEV = import.meta.env.DEV;
 export const CLIENT_URL = import.meta.env.VITE_CLIENT_URL as string;
@@ -15,6 +15,6 @@ export const RECONNECTION_DELAY = parseInt(import.meta.env.VITE_RECONNECTION_DEL
 export const ARRAY_LOGS_LENGTH = parseInt(import.meta.env.VITE_ARRAY_LOGS_LENGTH as string);
 export const LOGS_FILE_NAME = import.meta.env.VITE_LOGS_FILE_NAME as string;
 
-export const NO_PHOTO = "/assets/images/noAvatar.jpg";
+export const NO_PHOTO = "/assets/images/noPhoto.jpg";
 export const REQUIRED_FIELD = i18next.t("utils.required_field");
 export const MY_ID = "me";

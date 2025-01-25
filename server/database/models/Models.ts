@@ -1,7 +1,6 @@
 import { Sequelize } from "sequelize";
 
 import BlockUsers from "./BlockedUsers";
-import Calls from "./Calls";
 import ChatSoundNotifications from "./ChatSoundNotifications";
 import DeletedChats from "./DeletedChats";
 import FilesInMessage from "./FilesInMessage";
@@ -14,14 +13,12 @@ import Photos from "./Photos";
 import ReadMessages from "./ReadMessages";
 import Subscribers from "./Subscribers";
 import UserDetail from "./UserDetails";
-import UsersInCall from "./UsersInCalls";
 import UsersInChat from "./UsersInChat";
 import Users from "./Users";
 
 // Класс, содержит доступы ко всем таблицам базы данных
 export default class Models {
     private _blockUsers!: BlockUsers;
-    private _calls!: Calls;
     private _chatSoundNotifications!: ChatSoundNotifications;
     private _deletedChats!: DeletedChats;
     private _filesInMessage!: FilesInMessage;
@@ -34,7 +31,6 @@ export default class Models {
     private _readMessages!: ReadMessages;
     private _subscribers!: Subscribers;
     private _userDetails!: UserDetail;
-    private _usersInCall!: UsersInCall;
     private _usersInChat!: UsersInChat;
     private _users!: Users;
 
@@ -44,9 +40,6 @@ export default class Models {
 
     get blockUsers() {
         return this._blockUsers.blockUsers;
-    }
-    get calls() {
-        return this._calls.calls;
     }
     get chatSoundNotifications() {
         return this._chatSoundNotifications.chatSoundNotifications;
@@ -84,9 +77,6 @@ export default class Models {
     get userDetails() {
         return this._userDetails.userDetails;
     }
-    get usersInCall() {
-        return this._usersInCall.usersInCall;
-    }
     get usersInChat() {
         return this._usersInChat.usersInChat;
     }
@@ -96,7 +86,6 @@ export default class Models {
 
     private _init() {
         this._blockUsers = new BlockUsers(this._sequelize);
-        this._calls = new Calls(this._sequelize);
         this._chatSoundNotifications = new ChatSoundNotifications(this._sequelize);
         this._deletedChats = new DeletedChats(this._sequelize);
         this._filesInMessage = new FilesInMessage(this._sequelize);
@@ -109,7 +98,6 @@ export default class Models {
         this._readMessages = new ReadMessages(this._sequelize);
         this._subscribers = new Subscribers(this._sequelize);
         this._userDetails = new UserDetail(this._sequelize);
-        this._usersInCall = new UsersInCall(this._sequelize);
         this._usersInChat = new UsersInChat(this._sequelize);
         this._users = new Users(this._sequelize);
     }

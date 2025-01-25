@@ -1,5 +1,5 @@
-import { MY_ID } from "../utils/constants";
-import useMainClient from "./useMainClient";
+import { MY_ID } from "@utils/constants";
+import useMainClient from "@hooks/useMainClient";
 
 // Возврат сущности "Профиль" конкретного пользователя по переданному идентификатору
 export default function useProfile(userId: string = MY_ID) {

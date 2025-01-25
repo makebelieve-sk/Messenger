@@ -15,16 +15,16 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 
-import i18next from "../service/i18n";
-import LinkComponent from "../components/ui/Link";
-import SignUpForm from "../modules/SignUp/Form";
-import ChooseAvatar from "../modules/SignUp/ChooseAvatar";
-import CopyrightComponent from "../components/ui/Copyright";
-import useMainClient from "../hooks/useMainClient";
-import { Pages } from "../types/enums";
-import { IUser } from "../types/models.types";
+import i18next from "@service/i18n";
+import LinkComponent from "@components/ui/link";
+import SignUpForm from "@modules/sign-up/Form";
+import ChooseAvatar from "@modules/sign-up/ChooseAvatar";
+import CopyrightComponent from "@components/ui/copyright";
+import useMainClient from "@hooks/useMainClient";
+import { Pages } from "@custom-types/enums";
+import { IUser } from "@custom-types/models.types";
 
-import styles from "../styles/pages/sign-up.module.scss";
+import styles from "@styles/pages/sign-up.module.scss";
 
 const THEME = createTheme();
 const steps = [i18next.t("sign-up.main_step"), i18next.t("sign-up.choose_avatar_step")];

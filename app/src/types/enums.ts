@@ -57,9 +57,7 @@ enum ApiRoutes {
     getLastSeen = "/get-last-seen",
     getChatSoundStatus = "/get-chat-sound-status",
     setChatSoundStatus = "/set-chat-sound-status",
-    getAttachments = "/get-attachments",
-    //------calls---------
-    endCall = "/end-call",
+    getAttachments = "/get-attachments"
 };
 
 // Статусы HTTP-запросов
@@ -132,25 +130,6 @@ enum SocketActions {
     ACCEPT_CHANGE_READ_STATUS = "ACCEPT_CHANGE_READ_STATUS",
     DELETE_MESSAGE = "DELETE_MESSAGE",
     DELETE_CHAT = "DELETE_CHAT",
-    // --------------CALLS-------------------
-    CALL = "CALL",
-    NOTIFY_CALL = "NOTIFY_CALL",
-    ACCEPT_CALL = "ACCEPT_CALL",
-    CHANGE_CALL_STATUS = "CHANGE_CALL_STATUS",
-    SET_CALL_STATUS = "SET_CALL_STATUS",
-    END_CALL = "END_CALL",
-    CHANGE_STREAM = "CHANGE_STREAM",
-    CANCEL_CALL = "CANCEL_CALL",
-    ALREADY_IN_CALL = "ALREADY_IN_CALL",
-    NOT_ALREADY_IN_CALL = "NOT_ALREADY_IN_CALL",
-    IS_TALKING = "IS_TALKING",
-    // --------------WEBRTC------------------
-    ADD_PEER = "ADD_PEER",
-    TRANSFER_CANDIDATE = "TRANSFER_CANDIDATE",
-    TRANSFER_OFFER = "TRANSFER_OFFER",
-    SESSION_DESCRIPTION = "SESSION_DESCRIPTION",
-    GET_CANDIDATE = "GET_CANDIDATE",
-    REMOVE_PEER = "REMOVE_PEER",
     //-----------------SYSTEM---------------
     SOCKET_CHANNEL_ERROR = "SOCKET_CHANNEL_ERROR",
 };
@@ -175,48 +154,6 @@ enum Times {
     TODAY = 1000 * 60 * 60 * 24,
     YESTERDAY = 1000 * 60 * 60 * 24 * 2,
     HALF_YEAR = 1000 * 60 * 60 * 24 * 30 * 6,
-};
-
-// Общие сообщения с ошибкой
-enum ErrorTexts {
-    NOT_TEMP_CHAT_ID = "id собеседника не найдено, возможно, это временный чат",
-};
-
-// Статусы звонков
-enum CallStatus {
-    NOT_CALL = "NOT_CALL",
-    SET_CONNECTION = "SET_CONNECTION",
-    WAIT = "WAIT",
-    NEW_CALL = "NEW_CALL",
-    ACCEPT = "ACCEPT",
-    REJECTED = "REJECTED",
-    OFFLINE = "OFFLINE",
-};
-
-// Разновидность звонков
-enum SettingType {
-    VIDEO = "VIDEO",
-    AUDIO = "AUDIO"
-};
-
-// Типы ошибочных каналов сокета
-enum SocketChannelErrorTypes {
-    CALLS = "CALLS",
-};
-
-// Типы звонков
-enum CallTypes {
-    SINGLE = 0,
-    GROUP = 1,
-    SEPARATE = 2,
-};
-
-// Наименования звонков
-enum CallNames {
-    OUTGOING = "Исходящий звонок",
-    INCOMING = "Входящий звонок",
-    GROUP = "Групповой звонок",
-    CANCEL = "Звонок отменён"
 };
 
 // Виды файлов, добавляются в объект сообщения при их обработке
@@ -254,16 +191,6 @@ enum ErrorCodes {
     ERR_CANCELED = "ERR_CANCELED"
 };
 
-// Список ошибок по API
-enum ErrorTextsApi {
-    ERROR_MESSAGE = "Ошибка.",
-    ERROR_NETWORK = "Ошибка при получении ответа от сервера. Скорее всего сервер недоступен в данный момент. Проверьте интернет соединение.",
-    ERROR_TIMEOUT = "Возникли проблемы с базой данных или время ожидания ответа превысило 15 секунд.",
-    ERROR_BAD_REQUEST = "Ошибка возникла при попытке дать запрос к серверу. Скорее всего сервер недоступен в данный момент. Проверьте интернет соединение.",
-    ERROR_CANCELED = "Запрос был отменен.",
-    ERROR_UNKNOWN = "Неизвестная ошибка.",
-};
-
 enum DebuggerType {
     DEBUG = "",
     INFO = "INFO",
@@ -282,17 +209,10 @@ export {
     MessageTypes,
     MessageReadStatus,
     Times,
-    ErrorTexts,
-    CallStatus,
-    SettingType,
-    SocketChannelErrorTypes,
-    CallTypes,
-    CallNames,
     FileVarieties,
     FriendsNoticeTypes,
     ImgComponentTypes,
     UnReadTypes,
     ErrorCodes,
-    ErrorTextsApi,
     DebuggerType
 };

@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import reducers from "./reducers";
-import { InitialStateType, RootState } from "../../types/redux.types";
 
-export type UserType = Pick<InitialStateType, "photosCount" | "photos">;
+import reducers from "@store/user/reducers";
+import { UserStateType, RootState } from "@custom-types/redux.types";
 
 // Начальное состояние
-export const initialState: UserType = {
+export const initialState: UserStateType = {
   photosCount: 0,
   photos: []
 };
 
+// Создание состояния сообщений
 export const userSlice = createSlice({
   name: "user",
   initialState,

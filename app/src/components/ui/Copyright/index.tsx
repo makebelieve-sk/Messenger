@@ -2,8 +2,8 @@ import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import LinkComponent from "../Link";
-import { Pages } from "../../../types/enums";
+import LinkComponent from "@components/ui/link";
+import { Pages } from "@custom-types/enums";
 
 import "./copyright.scss";
 

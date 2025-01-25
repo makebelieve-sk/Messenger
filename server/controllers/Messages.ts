@@ -9,7 +9,7 @@ import { getSearchWhere } from "../utils/where";
 import { LIMIT, LOAD_MORE_LIMIT } from "../utils/limits";
 import { isImage } from "../utils/files";
 import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "../types/enums";
-import { ICall, IFile, IMessage } from "../types/models.types";
+import { IFile, IMessage } from "../types/models.types";
 import { IChatInfo, IDialog } from "../types/chat.types";
 import { ISafeUser, UserPartial } from "../types/user.types";
 import { IImage } from "../types";
@@ -185,11 +185,6 @@ export default class MessagesController {
 
                         let files: IFile[] = [];
 
-                        const call = await this._database.models.calls.findByPk(messageId, {
-                            attributes: ["id", "initiatorId"],
-                            transaction
-                        }) as ICall;
-
                         const user = await this._database.models.users.findByPk(messageId, {
                             attributes: ["id", "avatarUrl"],
                             transaction
@@ -219,7 +214,6 @@ export default class MessagesController {
                             createDate,
                             message,
                             type,
-                            call,
                             files,
                             messageAuthor: user,
                             chatSoundStatus
@@ -273,7 +267,7 @@ export default class MessagesController {
             const messagesLimit = loadMore ? LOAD_MORE_LIMIT : LIMIT;
 
             const where: (Where | Literal)[] = [
-                this._database.sequelize.literal(`not exists (select 1 from [Deleted_messages] as [DeletedMessages] where [DeletedMessages].[message_id] = [Messages].id)`)
+                this._database.sequelize.literal("not exists (select 1 from [Deleted_messages] as [DeletedMessages] where [DeletedMessages].[message_id] = [Messages].id)")
             ];
 
             // Получение обработанной строки поиска
@@ -297,12 +291,6 @@ export default class MessagesController {
                     model: this._database.models.users,
                     as: "User",
                     attributes: ["id", "firstName", "thirdName", "avatarUrl"]
-                }, {
-                    model: this._database.models.calls,
-                    include: [{
-                        model: this._database.models.usersInCall,
-                        as: "UsersInCall"
-                    }]
                 }, {
                     model: this._database.models.deletedMessages,
                     as: "DeletedMessages",

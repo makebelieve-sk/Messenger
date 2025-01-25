@@ -73,7 +73,7 @@
     "socket.error.cannot_find_call": "It is impossible to end the call because it has not been found. It may have already been completed.",
     "socket.error.not_correct_user_id_in_socket": "The user ID={{user To}} is not suitable. You must use the notify Me method.",
     "socket.error.update_last_seen": "An error occurred when updating the time of the user's last login.",
-    "socket.error.socket_work": "An error occurred while working with the socket.",
+    "socket.error.socket_work": "An error occurred while working with the socket",
     "socket.error.engine_socket": "Abnormal disconnection of the socket with the {{code}}.\nRequest object: {{req}}.\nError text: {{message}}.\nAdditional context: {{context}}.",
 
     "database.start": "The connection to the database has been successfully established.",

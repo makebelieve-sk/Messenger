@@ -1,11 +1,12 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { ErrorType } from "./slice";
+
+import { ErrorStateType } from "@custom-types/redux.types";
 
 export default {
-    setError: (state: ErrorType, action: PayloadAction<string | null>) => {
+    setError: (state: ErrorStateType, action: PayloadAction<string | null>) => {
         state.error = action.payload;
     },
-    setSystemError: (state: ErrorType, action: PayloadAction<string | null>) => {
+    setSystemError: (state: ErrorStateType, action: PayloadAction<string | null>) => {
         state.systemError = action.payload;
-    },
+    }
 };

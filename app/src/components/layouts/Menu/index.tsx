@@ -9,11 +9,11 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 
-import useMainClient from "../../../hooks/useMainClient";
-import { useAppDispatch, useAppSelector } from "../../../hooks/useGlobalState";
-import { selectMainState, setMessageNotification } from "../../../store/main/slice";
-import { selectMessagesState } from "../../../store/messages/slice";
-import { Pages } from "../../../types/enums";
+import useMainClient from "@hooks/useMainClient";
+import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
+import { selectMainState, setMessageNotification } from "@store/main/slice";
+import { selectMessagesState } from "@store/message/slice";
+import { Pages } from "@custom-types/enums";
 
 import "./menu.scss";
 

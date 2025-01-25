@@ -129,7 +129,7 @@ export default class RedisWorks {
 
         await this._client
             .set(key, value)
-            .then(() => console.log(t("redis.new_pair_is_set", { key, value })))
+            .then(() => logger.info(t("redis.new_pair_is_set", { key, value })))
             .catch((error: Error) => {
                 this._errorHandler(`${t("redis.error.setting_new_pair", { key, value })}: ${error.message}`);
             });
@@ -143,7 +143,7 @@ export default class RedisWorks {
 
         await this._client
             .del(key)
-            .then(() => console.log(t("redis.key_successfull_deleted", { key })))
+            .then(() => logger.info(t("redis.key_successfull_deleted", { key })))
             .catch((error: Error) => {
                 this._errorHandler(`${t("redis.error.deleted_key", { key })}: ${error.message}`);
             });

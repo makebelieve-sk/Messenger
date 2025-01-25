@@ -13,13 +13,13 @@ import Checkbox from "@mui/material/Checkbox";
 import { LoadingButton } from "@mui/lab";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-import useMainClient from "../hooks/useMainClient";
-import CopyrightComponent from "../components/ui/Copyright";
-import LinkComponent from "../components/ui/Link";
-import { Pages } from "../types/enums";
-import { REQUIRED_FIELD } from "../utils/constants";
+import useMainClient from "@hooks/useMainClient";
+import CopyrightComponent from "@components/ui/copyright";
+import LinkComponent from "@components/ui/link";
+import { Pages } from "@custom-types/enums";
+import { REQUIRED_FIELD } from "@utils/constants";
 
-import styles from "../styles/pages/sign-in.module.scss";
+import styles from "@styles/pages/sign-in.module.scss";
 
 const initialValues = {
 	values: {

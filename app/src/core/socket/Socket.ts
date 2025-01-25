@@ -1,14 +1,14 @@
 import EventEmitter from "eventemitter3";
 import { io } from "socket.io-client";
 
-import SocketController from "./SocketController";
-import i18next from "../../service/i18n";
-import Logger from "../../service/Logger";
-import { RECONECTION_ATTEMPTS, RECONNECTION_DELAY, SOCKET_IO_CLIENT } from "../../utils/constants";
-import { AppDispatch } from "../../types/redux.types";
-import { SocketType } from "../../types/socket.types";
-import { MainClientEvents, SocketEvents } from "../../types/events";
-import { IUser } from "../../types/models.types";
+import SocketController from "@core/socket/SocketController";
+import Logger from "@service/Logger";
+import i18next from "@service/i18n";
+import { RECONECTION_ATTEMPTS, RECONNECTION_DELAY, SOCKET_IO_CLIENT } from "@utils/constants";
+import { AppDispatch } from "@custom-types/redux.types";
+import { SocketType } from "@custom-types/socket.types";
+import { MainClientEvents, SocketEvents } from "@custom-types/events";
+import { IUser } from "@custom-types/models.types";
 
 const logger = Logger.init("Socket");
 
@@ -20,11 +20,6 @@ export default class Socket extends EventEmitter {
 
     constructor(private readonly _dispatch: AppDispatch) {
         super();
-    }
-
-    // TODO Удалить после рефакторинга звонков (useWebRTC)
-    get socket() {
-        return this._socket;
     }
 
     init(myUser: IUser) {

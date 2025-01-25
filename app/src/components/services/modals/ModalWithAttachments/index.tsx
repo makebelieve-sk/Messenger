@@ -7,16 +7,18 @@ import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-import SpinnerComponent from "../../../ui/Spinner";
-import useMainClient from "../../../../hooks/useMainClient";
-import { useAppDispatch, useAppSelector } from "../../../../hooks/useGlobalState";
-import { selectMessagesState, setAttachments } from "../../../../store/messages/slice";
-import { setImagesInCarousel } from "../../../../store/main/slice";
-import { IFile } from "../../../../types/models.types";
-import { ValueOf } from "../../../../types";
-import { currentSize } from "../../../../utils/files";
-import { getHoursWithMinutes, transformDate } from "../../../../utils/time";
-import { ICarouselImage } from "../../../../modules/ImagesCarousel/Info/Info";
+import SpinnerComponent from "@components/ui/spinner";
+import { ICarouselImage } from "@modules/carousel";
+import useMainClient from "@hooks/useMainClient";
+import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
+import { selectMessagesState, setAttachments } from "@store/message/slice";
+import { IFile } from "@custom-types/models.types";
+import { ValueOf } from "@custom-types/index";
+import { GlobalEvents } from "@custom-types/events";
+import { currentSize } from "@utils/files";
+import { transformDate } from "@utils/date";
+import { getHoursWithMinutes } from "@utils/time";
+import eventBus from "@utils/event-bus";
 
 import "./modal-with-attachments.scss";
 
@@ -35,7 +37,7 @@ export interface IAttachmentFile extends IFile {
     createDate: string;
 };
 
-// Компонент модального окна с прикреплением файлов/фотографий для сообщения/редактируемого сообщения
+// Компонент модального окна со всеми фотографиями/файлами в диалоге
 export default function ModalWithAttachments() {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState<TabsType>(TABS.PHOTOS);
@@ -81,7 +83,7 @@ export default function ModalWithAttachments() {
     const onSelect = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
         event.stopPropagation();
 
-        dispatch(setImagesInCarousel({ images, index }));
+        eventBus.emit(GlobalEvents.SET_IMAGES_CAROUSEL, { images, index });
     };
 
     // Открытие файла

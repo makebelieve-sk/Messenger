@@ -1,6 +1,5 @@
-import Logger from "../service/Logger";
-import { IUser } from "../types/models.types";
-// import { UserPartial } from "../pages/messages";
+import Logger from "@service/Logger";
+import { IUser } from "@custom-types/models.types";
 
 const logger = Logger.init("utils");
 

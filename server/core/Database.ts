@@ -34,14 +34,16 @@ export default class Database {
 
     // Закрытие базы данных
     close() {
+        logger.debug("close");
+
         this._sequelize.close()
-            .then(() => console.log(t("database.close")))
+            .then(() => logger.info(t("database.close")))
             .catch((error: Error) => new DatabaseError(`${t("database.error.close")}: ${error.message}`));
     }
 
     // Соединение базы данных
     private _init() {
-        logger.debug("init Database");
+        logger.debug("init");
 
         this._sequelize = new Sequelize(
             DATEBASE_NAME,                  // Наименование базы данных

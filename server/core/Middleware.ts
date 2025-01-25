@@ -54,6 +54,7 @@ export default class Middleware {
     catch() {
         logger.debug("catch");
 
+        // Для корректного выполнения обработчика ошибки ендпоинтов необходимо всегда указывать 4 параметра (даже если все 4 не используются)
         this._app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
             const nextError = error instanceof BaseError
                 ? error

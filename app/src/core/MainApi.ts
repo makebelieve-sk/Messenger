@@ -1,12 +1,12 @@
 import EventEmitter from "eventemitter3";
 
-import Request from "./Request";
-import { CatchType } from "./CatchErrors";
-import { IUser } from "../types/models.types";
-import { ApiRoutes } from "../types/enums";
-import { MainClientEvents } from "../types/events";
-import { AppDispatch } from "../types/redux.types";
-import { setFriendNotification, setMessageNotification } from "../store/main/slice";
+import Request from "@core/Request";
+import { CatchType } from "@core/CatchErrors";
+import { IUser } from "@custom-types/models.types";
+import { ApiRoutes } from "@custom-types/enums";
+import { MainClientEvents } from "@custom-types/events";
+import { AppDispatch } from "@custom-types/redux.types";
+import { setFriendNotification, setMessageNotification } from "@store/main/slice";
 
 // Класс, содержит все HTTP запросы, которые являются глобальными по отношению к приложению
 export default class MainApi extends EventEmitter {

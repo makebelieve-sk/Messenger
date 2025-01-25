@@ -1,5 +1,5 @@
-@use "styles/base/index.scss" as *;
-@use "styles/vendors/index.scss" as *;
+@use "@styles/base/index.scss" as *;
+@use "@styles/vendors/index.scss" as *;
 
 // На данный момент используется частичная реализация архитектуры 7 к 1 для стилей.
 // Следующие папки их архитектуры не используются:

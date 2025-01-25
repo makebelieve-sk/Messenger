@@ -50,9 +50,7 @@ enum ApiRoutes {
     getLastSeen = "/get-last-seen",
     getChatSoundStatus = "/get-chat-sound-status",
     setChatSoundStatus = "/set-chat-sound-status",
-    getAttachments = "/get-attachments",
-    //------calls---------
-    endCall = "/end-call",
+    getAttachments = "/get-attachments"
 };
 
 // Статусы HTTP-запросов
@@ -89,25 +87,6 @@ enum SocketActions {
     ACCEPT_CHANGE_READ_STATUS = "ACCEPT_CHANGE_READ_STATUS",
     DELETE_MESSAGE = "DELETE_MESSAGE",
     DELETE_CHAT = "DELETE_CHAT",
-    // --------------CALLS-------------------
-    CALL = "CALL",
-    NOTIFY_CALL = "NOTIFY_CALL",
-    ACCEPT_CALL = "ACCEPT_CALL",
-    CHANGE_CALL_STATUS = "CHANGE_CALL_STATUS",
-    SET_CALL_STATUS = "SET_CALL_STATUS",
-    END_CALL = "END_CALL",
-    CHANGE_STREAM = "CHANGE_STREAM",
-    CANCEL_CALL = "CANCEL_CALL",
-    ALREADY_IN_CALL = "ALREADY_IN_CALL",
-    NOT_ALREADY_IN_CALL = "NOT_ALREADY_IN_CALL",
-    IS_TALKING = "IS_TALKING",
-    // --------------WEBRTC------------------
-    ADD_PEER = "ADD_PEER",
-    TRANSFER_CANDIDATE = "TRANSFER_CANDIDATE",
-    TRANSFER_OFFER = "TRANSFER_OFFER",
-    SESSION_DESCRIPTION = "SESSION_DESCRIPTION",
-    GET_CANDIDATE = "GET_CANDIDATE",
-    REMOVE_PEER = "REMOVE_PEER",
     //-----------------SYSTEM---------------
     SOCKET_CHANNEL_ERROR = "SOCKET_CHANNEL_ERROR",
 };
@@ -142,43 +121,6 @@ enum RedisChannel {
     TEMP_CHAT_ID = "TEMP_CHAT_ID",
 };
 
-// Статусы звонков
-enum CallStatus {
-    NOT_CALL = "NOT_CALL",
-    SET_CONNECTION = "SET_CONNECTION",
-    WAIT = "WAIT",
-    NEW_CALL = "NEW_CALL",
-    ACCEPT = "ACCEPT",
-    REJECTED = "REJECTED",
-    OFFLINE = "OFFLINE",
-};
-
-// Разновидность звонков
-enum SettingType {
-    VIDEO = "VIDEO",
-    AUDIO = "AUDIO"
-};
-
-// Типы ошибочных каналов сокета
-enum SocketChannelErrorTypes {
-    CALLS = "CALLS",
-};
-
-// Типы звонков
-enum CallTypes {
-    SINGLE = 0,
-    GROUP = 1,
-    SEPARATE = 2,
-};
-
-// Наименования звонков
-enum CallNames {
-    OUTGOING = "Исходящий звонок",
-    INCOMING = "Входящий звонок",
-    GROUP = "Групповой звонок",
-    CANCEL = "Звонок отменён"
-};
-
 // Виды файлов, добавляются в объект сообщения при их обработке
 enum FileVarieties {
     IMAGES = "IMAGES",
@@ -198,11 +140,6 @@ export {
     MessageTypes,
     MessageReadStatus,
     RedisChannel,
-    CallStatus,
-    SettingType,
-    SocketChannelErrorTypes,
-    CallTypes,
-    CallNames,
     FileVarieties,
-    RedisKeys,
+    RedisKeys
 };

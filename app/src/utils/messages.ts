@@ -1,9 +1,9 @@
 import { v4 as uuid } from "uuid";
-import { FileVarieties, MessageTypes } from "../types/enums";
-import { IFile, IMessage } from "../types/models.types";
-// import { UserPartial } from "../pages/messages";
-import { isImage } from "./files";
-import Logger from "../service/Logger";
+
+import Logger from "@service/Logger";
+import { FileVarieties, MessageTypes } from "@custom-types/enums";
+import { IFile, IMessage } from "@custom-types/models.types";
+import { isImage } from "@utils/files";
 
 const logger = Logger.init("utils/messages");
 

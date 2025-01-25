@@ -5,13 +5,23 @@ import { t } from "../service/i18n";
 import { ApiRoutes, HTTPStatuses } from "../types/enums";
 import { IUserDetails } from "../types/models.types";
 import { ISafeUser } from "../types/user.types";
-import { IFormValues } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { getSafeUserFields } from "../utils/user";
 import { UsersError } from "../errors/controllers";
 
 const logger = Logger("UserController");
+
+interface IEditInfoBody {
+    name: string;
+    surName: string;
+    sex: string;
+    birthday: string;
+    work: string;
+    city: string;
+    phone: string;
+    email: string;
+};
 
 // Класс, отвечающий за API пользователей
 export default class UserController {
@@ -64,7 +74,7 @@ export default class UserController {
         const transaction = await this._database.sequelize.transaction();
 
         try {
-            const { name, surName, sex, birthday, work, city, phone, email }: IFormValues = req.body;
+            const { name, surName, sex, birthday, work, city, phone, email }: IEditInfoBody = req.body;
             const userId = (req.user as ISafeUser).id;
 
             const result: { user: ISafeUser | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = { 

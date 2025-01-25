@@ -1,19 +1,18 @@
 import EventEmitter from "eventemitter3";
 
-import Logger from "../../service/Logger";
-import i18next from "../../service/i18n";
-import { setCallId, setChatInfo, setModalVisible, setStatus, setUsers } from "../../store/calls/slice";
-import { setSystemError } from "../../store/error/slice";
-import { addFriend, deleteFriend } from "../../store/friends/slice";
-import { deleteOnlineUser, setFriendNotification, setGlobalInCall, setOnlineUsers } from "../../store/main/slice";
-import { changeLastMessageInDialog, deleteDialog, deleteMessage, editMessage, setMessage, setUnRead, setWriteMessage, updateMessage } from "../../store/messages/slice";
-import { CallStatus, FriendsNoticeTypes, Pages, SocketActions, SocketChannelErrorTypes, UnReadTypes } from "../../types/enums";
-import { IUser } from "../../types/models.types";
-import { AppDispatch } from "../../types/redux.types";
-import { SocketType } from "../../types/socket.types";
-import { MainClientEvents, SocketEvents } from "../../types/events";
-import { getFullName } from "../../utils";
-import PlayAudio from "../../utils/play-audio";
+import Logger from "@service/Logger";
+import i18next from "@service/i18n";
+import { setSystemError } from "@store/error/slice";
+import { addFriend, deleteFriend } from "@store/friend/slice";
+import { deleteOnlineUser, setFriendNotification, setOnlineUsers } from "@store/main/slice";
+import { changeLastMessageInDialog, deleteDialog, deleteMessage, editMessage, setMessage, setUnRead, setWriteMessage, updateMessage } from "@store/message/slice";
+import { FriendsNoticeTypes, Pages, SocketActions, UnReadTypes } from "@custom-types/enums";
+import { IUser } from "@custom-types/models.types";
+import { AppDispatch } from "@custom-types/redux.types";
+import { SocketType } from "@custom-types/socket.types";
+import { MainClientEvents, SocketEvents } from "@custom-types/events";
+import { getFullName } from "@utils/index";
+import PlayAudio from "@utils/play-audio";
 
 interface IConstructor {
     socket: SocketType;
@@ -116,12 +115,6 @@ export default class SocketController extends EventEmitter {
             }
         });
 
-        // Добавляем сообщение в массив сообщений для отрисовки (не нужно помечать как непрочитанное)
-        // Здесь просто выводим сообщение и всё
-        this._socket.on(SocketActions.ADD_NEW_MESSAGE, ({ newMessage }) => {
-            this._dispatch(setMessage({ message: newMessage }));
-        });
-
         // Получаем уведомление об удалении сообщения из приватного чата
         this._socket.on(SocketActions.DELETE_MESSAGE, ({ messageId }) => {
             this._dispatch(deleteMessage(messageId));
@@ -147,75 +140,10 @@ export default class SocketController extends EventEmitter {
             this._dispatch(setWriteMessage({ isWrite, chatId, userName }));
         });
 
-        // Меня уведомляют о новом звонке (одиночный/групповой)
-        this._socket.on(SocketActions.NOTIFY_CALL, ({ roomId, chatInfo, users }) => {
-            if (roomId && chatInfo && users && users.length) {
-                if (chatInfo.isSingle) {
-                    this._dispatch(setChatInfo({
-                        ...chatInfo,
-                        chatName: users[0].friendName,
-                        chatAvatar: users[0].avatarUrl
-                    }));
-                } else {
-                    this._dispatch(setChatInfo(chatInfo));
-                }
-
-                this._dispatch(setModalVisible(true));
-                this._dispatch(setStatus(CallStatus.NEW_CALL));
-                this._dispatch(setCallId(roomId));
-                this._dispatch(setUsers(users));
-
-                // Уведомляем инициатора вызова о получении уведомления
-                if (this._socket) {
-                    this._socket.emit(SocketActions.CHANGE_CALL_STATUS, {
-                        status: CallStatus.WAIT,
-                        userTo: chatInfo.initiatorId
-                    });
-                }
-            }
-        });
-
-        // Установка нового статуса для звонка
-        this._socket.on(SocketActions.SET_CALL_STATUS, ({ status }) => {
-            if (status) {
-                this._dispatch(setStatus(status));
-            }
-        });
-
-        // Уведомляем пользователя, что на другой вкладке звонок
-        this._socket.on(SocketActions.ALREADY_IN_CALL, ({ roomId, chatInfo, users }) => {
-            if (roomId && chatInfo && users && users.length) {
-                this._dispatch(setGlobalInCall({ roomId, chatInfo, users }));
-            }
-        });
-
-        // Установка нового статуса для звонка
-        this._socket.on(SocketActions.CANCEL_CALL, () => {
-            // Обнуление состояния звонка
-            // resetCallStore(this._dispatch);
-        });
-
-        // Звонок был завершен, и если текущая вкладка - не вкладка со звонком, 
-        // то мы закрываем плашку с информацией о звонке
-        this._socket.on(SocketActions.NOT_ALREADY_IN_CALL, () => {
-            this._dispatch(setGlobalInCall(null));
-        });
-
         // Обработка системного канала с ошибками
-        this._socket.on(SocketActions.SOCKET_CHANNEL_ERROR, ({ message, type }) => {
+        this._socket.on(SocketActions.SOCKET_CHANNEL_ERROR, (message) => {
             // Вывод ошибки
             this._dispatch(setSystemError(message));
-
-            if (type) {
-                switch (type) {
-                    case SocketChannelErrorTypes.CALLS:
-                        // Обнуление состояния звонка
-                        // resetCallStore(this._dispatch);
-                        break;
-                    default:
-                        break;
-                }
-            }
         });
 
         // Событие возникает при невозможности установить соединение или соединение было отклонено сервером (к примеру мидлваром)

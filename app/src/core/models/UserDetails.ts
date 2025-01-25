@@ -1,98 +1,16 @@
-import i18next from "../../service/i18n";
-import Logger from "../../service/Logger";
-import { IUserDetails } from "../../types/models.types";
-import { muchSelected } from "../../utils";
-import { getMonthName } from "../../utils/time";
+import { IUserDetails } from "@custom-types/models.types";
 
-const logger = Logger.init("UserDetails");
-const NOT_COMPLITE = i18next.t("profile-module.not_complete");
+// Контракт модели "Дополнительная информация о пользователе"
+export interface UserDetails {
+    details: IUserDetails | null;
+    birthday: string;
+    city: string;
+    work: string;
 
-// Класс, описывающий сущность "Дополнительная информация о пользователе"
-export default class UserDetails {
-    private _details: IUserDetails | null = null;
-
-    constructor() {}
-
-    get details() {
-        return this._details;
-    }
-
-    get birthday() {
-        return this._transformBirthday();
-    }
-
-    get city() {
-        return this._details && this._details.city ? this._details.city : NOT_COMPLITE;
-    }
-
-    get work() {
-        return this._details && this._details.work ? this._details.work : NOT_COMPLITE;
-    }
-
-    // Трансформация дня рождения пользователя
-    private _transformBirthday() {
-        if (!this._details || !this._details.city) {
-            return NOT_COMPLITE;
-        }
-
-        const dates = this._details.birthday.split("-");
-    
-        return dates[2] + getMonthName(+dates[1] - 1) + ". " + dates[0];
-    };
-
-    // Возврат общего текста
-    private _getText(...args: [number, string[]]) {
-        return muchSelected(...args);
-    }
-
-    // Обновление дополнительной информации о пользователе
-    setDetails(details: IUserDetails) {
-        logger.debug(`setDetails [detailsUserId=${details.userId}]`);
-        this._details = details;
-    }
-
-    // Получение текста для разного количества друзей
-    getFriendsText(count: number) {
-        return this._getText(count, [
-            i18next.t("profile-module.friends_count_0"), 
-            i18next.t("profile-module.friends_count_1"), 
-            i18next.t("profile-module.friends_count_2")
-        ]);
-    }
-
-    // Получение текста для разного количества подписчиков
-    getSubscribersText(count: number) {
-        return this._getText(count, [
-            i18next.t("profile-module.subscribers_count_0"), 
-            i18next.t("profile-module.subscribers_count_1"), 
-            i18next.t("profile-module.subscribers_count_2")
-        ]);
-    }
-
-    // Получение текста для разного количества фотографий
-    getPhotosText(count: number) {
-        return this._getText(count, [
-            i18next.t("profile-module.photos_count_0"), 
-            i18next.t("profile-module.photos_count_1"), 
-            i18next.t("profile-module.photos_count_2")
-        ]);
-    }
-
-    // Получение текста для разного количества аудиозаписей
-    getAudiosText(count: number) {
-        return this._getText(count, [
-            i18next.t("profile-module.audios_count_0"), 
-            i18next.t("profile-module.audios_count_1"), 
-            i18next.t("profile-module.audios_count_2")
-        ]);
-    }
-
-    // Получение текста для разного количества видеозаписей
-    getVideosText(count: number) {
-        return this._getText(count, [
-            i18next.t("profile-module.videos_count_0"), 
-            i18next.t("profile-module.videos_count_1"), 
-            i18next.t("profile-module.videos_count_2")
-        ]);
-    }
+    setDetails: (details: IUserDetails) => void;
+    getFriendsText: (count: number) => string;
+    getSubscribersText: (count: number) => string;
+    getPhotosText: (count: number) => string;
+    getAudiosText: (count: number) => string;
+    getVideosText: (count: number) => string;
 }

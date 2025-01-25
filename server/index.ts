@@ -1,7 +1,7 @@
 import express from "express";
 import http from "http";
-import "dotenv/config";
 
+import "./service/env";
 import MainServer from "./core/MainServer";
 import { BaseError } from "./errors";
 import ProcessWorks from "./service/Process";

@@ -9,8 +9,6 @@ export class BaseError extends Error {
 
         // Необходимо для корректного наследования имени ошибки от наследуемых "кастомных" классов ошибок
         this.name = this.constructor.name;
-        // Необходимо для корректного указания последовательности вызова ошибки
-        Error.captureStackTrace(this, this.constructor);
 
         logger.error(this.stack);
     }
