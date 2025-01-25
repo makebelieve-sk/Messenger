@@ -55,6 +55,7 @@ export default class Middleware {
         logger.debug("catch");
 
         // Для корректного выполнения обработчика ошибки ендпоинтов необходимо всегда указывать 4 параметра (даже если все 4 не используются)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         this._app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
             const nextError = error instanceof BaseError
                 ? error
