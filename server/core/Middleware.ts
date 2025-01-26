@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction, Express } from "express";
 import path from "path";
 
+import Logger from "../service/logger";
 import { t } from "../service/i18n";
 import RedisWorks from "./Redis";
 import { HTTPStatuses, RedisKeys } from "../types/enums";
@@ -11,6 +12,8 @@ import { updateSessionMaxAge } from "../utils/session";
 import { AuthError } from "../errors/controllers";
 import { BaseError, MiddlewareError } from "../errors";
 
+const logger = Logger("Middleware");
+
 // Класс, отвечает за выполнение мидлваров для HTTP-запросов
 export default class Middleware {
     constructor(private readonly _redisWork: RedisWorks, private readonly _app: Express) {}
@@ -19,6 +22,8 @@ export default class Middleware {
     async mustAuthenticated(req: Request, _: Response, next: NextFunction) {
         try {
             const user = req.user as ISafeUser;
+
+            logger.debug("mustAuthenticated [user=%j]", user);
 
             if (!req.isAuthenticated()) {
                 return next(new MiddlewareError(t("auth.error.not_auth_or_token_expired"), HTTPStatuses.Unauthorized));
@@ -47,7 +52,11 @@ export default class Middleware {
 
     // Общая обработка ошибок, вызванных в контроллерах через next(error)
     catch() {
-        this._app.use((error: Error, _: Request, res: Response) => {
+        logger.debug("catch");
+
+        // Для корректного выполнения обработчика ошибки ендпоинтов необходимо всегда указывать 4 параметра (даже если все 4 не используются)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        this._app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
             const nextError = error instanceof BaseError
                 ? error
                 : new BaseError(error.message);
@@ -65,12 +74,16 @@ export default class Middleware {
                 }
             }
 
+            logger.debug("catch error middleware [errorMessage=%j]", errorMessage);
+
             return res.status(nextError.status).send(errorMessage);
         });
     }
 
     // Сжимаем изображение аватара
     async sharpAvatar(req: Request, _: Response, next: NextFunction) {
+        logger.debug("sharpAvatar [req.file=%j]", req.file);
+
         try {
             // Сживаем переданный аватар пользователя и дублируем его на диск в раздел "Фотографии"
             const { folderPath, outputFile } = await createSharpedImage({ ...req.file!, fieldname: "photo" });
@@ -89,6 +102,8 @@ export default class Middleware {
     async sharpImages(req: Request, _: Response, next: NextFunction) {
         try {
             const files = req.files as Express.Multer.File[];
+
+            logger.debug("sharpImages [files=%j]", files);
 
             if (!files || !files.length) {
                 return next(new MiddlewareError(t("photos.error.photo_not_found"), HTTPStatuses.BadRequest));
@@ -118,6 +133,8 @@ export default class Middleware {
     private async _getSharpedUrl(req: Request) {
         try {
             const file = req.file;
+
+            logger.debug("_getSharpedUrl [file=%j]", file);
 
             if (!file) {
                 throw new MiddlewareError(t("photos.error.photo_not_given"), HTTPStatuses.BadRequest);

@@ -4,6 +4,9 @@ import Relations from "../database/Relations";
 import Models from "../database/models/Models";
 import { DatabaseError } from "../errors";
 import { t } from "../service/i18n";
+import Logger from "../service/logger";
+
+const logger = Logger("Database");
 
 const DATEBASE_NAME = process.env.DATEBASE_NAME as string;
 const DATEBASE_USERNAME = process.env.DATEBASE_USERNAME as string;
@@ -31,13 +34,17 @@ export default class Database {
 
     // Закрытие базы данных
     close() {
+        logger.debug("close");
+
         this._sequelize.close()
-            .then(() => console.log(t("database.close")))
+            .then(() => logger.info(t("database.close")))
             .catch((error: Error) => new DatabaseError(`${t("database.error.close")}: ${error.message}`));
     }
 
     // Соединение базы данных
     private _init() {
+        logger.debug("init");
+
         this._sequelize = new Sequelize(
             DATEBASE_NAME,                  // Наименование базы данных
             DATEBASE_USERNAME,              // Имя пользователя для подключения к базе данных
@@ -58,7 +65,7 @@ export default class Database {
 
         this._sequelize.authenticate()
             .then(() => {
-                console.log(t("database.start"));
+                logger.info(t("database.start"));
                 // Инициализируем модели базы данных
                 this._useModels();
                 // Инициализируем ассоциации (отношения) между таблицами в базе данных

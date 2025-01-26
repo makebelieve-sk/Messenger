@@ -5,6 +5,7 @@ import path from "path";
 import multer from "multer";
 import { Transaction } from "sequelize";
 
+import Logger from "../service/logger";
 import { t } from "../service/i18n";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
@@ -14,6 +15,8 @@ import { ISafeUser } from "../types/user.types";
 import { currentDate } from "../utils/datetime";
 import { ASSETS_PATH, MB_1 } from "../utils/files";
 import { ImagesError } from "../errors/controllers";
+
+const logger = Logger("ImagesController");
 
 const MULTER_MAX_FILE_SIZE = parseInt(process.env.MULTER_MAX_FILE_SIZE as string);
 const MULTER_MAX_FILEX_COUNT = parseInt(process.env.MULTER_MAX_FILEX_COUNT as string);
@@ -57,6 +60,8 @@ export default class ImagesController {
 
     // Обрезаем и сохраняем аватар пользователя на диск при регистрации
     private _uploadAvatar(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_uploadAvatar");
+
         try {
             res.json({ success: true, newAvatarUrl: (req as IRequestWithSharpedAvatar).sharpedAvatarUrl });
         } catch (error) {
@@ -66,6 +71,8 @@ export default class ImagesController {
 
     // Сохранение аватара в таблицы Photos и Users после успешной регистрации нового пользователя
     private async _saveAvatar(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_saveAvatar [req.body=%j]", req.body);
+
         const transaction = await this._database.sequelize.transaction();
 
         try {
@@ -104,11 +111,15 @@ export default class ImagesController {
             const sharpedAvatarUrl = (req as IRequestWithSharpedAvatar).sharpedAvatarUrl;
             const sharpedPhotoUrl = (req as IRequestWithSharpedAvatar).sharpedPhotoUrl;
 
+            logger.debug("_changeAvatar [userId=%s, sharpedAvatarUrl=%s, sharpedPhotoUrl=%s]", userId, sharpedAvatarUrl, sharpedPhotoUrl);
+
             if (!sharpedAvatarUrl) {
+                await transaction.rollback();
                 return next(new ImagesError(t("photos.error.sharp_avatar_path_not_found")));
             }
 
             if (!sharpedPhotoUrl) {
+                await transaction.rollback();
                 return next(new ImagesError(t("photos.error.sharp_photo_path_not_found")));
             }
 
@@ -118,6 +129,7 @@ export default class ImagesController {
             });
 
             if (!findUser) {
+                await transaction.rollback();
                 return next(new ImagesError(t("photos.error.user_not_found"), HTTPStatuses.NotFound));
             }
 
@@ -159,6 +171,7 @@ export default class ImagesController {
     private async _getPhotos(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req.user as ISafeUser).id;
+            logger.debug("_getPhotos [userId=%s]", userId);
 
             const photos = await this._database.models.photos.findAll({
                 where: { userId },
@@ -180,6 +193,8 @@ export default class ImagesController {
         try {
             const imagesUrls = (req as IRequestWithShapedImages).sharpedImageUrls;
             const { id: userId, firstName, thirdName, avatarUrl } = req.user as ISafeUser;
+
+            logger.debug("_savePhotos [imagesUrls=%j]", imagesUrls);
 
             if (!imagesUrls || !imagesUrls.length) {
                 return next(new ImagesError(t("photos.error.sharp_photo_paths_not_found")));
@@ -213,6 +228,8 @@ export default class ImagesController {
 
     // Удаление аватара/фотографии из БД и с диска
     private async _deletePhoto(req: Request, res: Response, next: NextFunction, existsTransaction?: Transaction) {
+        logger.debug("_deletePhoto [req.body=%j]", req.body);
+
         const transaction = existsTransaction || await this._database.sequelize.transaction();
 
         try {
@@ -222,10 +239,12 @@ export default class ImagesController {
             const userId = (req.user as ISafeUser).id;
 
             if (!imageUrl) {
+                await transaction.rollback();
                 return next(new ImagesError(t("photos.error.delete_photo_path_not_found")));
             }
 
             if (!fs.existsSync(filePath)) {
+                await transaction.rollback();
                 return next(new ImagesError(t("photos.error.photo_not_found"), HTTPStatuses.NotFound));
             }
 

@@ -11,11 +11,11 @@ i18n
     fallbackLng: "ru",                      // Язык по умолчанию
     preload: ["ru", "en"],                  // Предзагрузка переводов
     interpolation: {
-      escapeValue: false,                   // React сам экранирует HTML
+      escapeValue: false                    // React сам экранирует HTML
     },
     resources: {
-        ru: { translation: ru },
-        en: { translation: en },
+      ru: { translation: ru },
+      en: { translation: en }
     }
 });
 

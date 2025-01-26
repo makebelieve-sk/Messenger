@@ -6,9 +6,11 @@ import MainServer from "./core/MainServer";
 import { BaseError } from "./errors";
 import ProcessWorks from "./service/Process";
 import { initI18n, t } from "./service/i18n";
+import Logger from "./service/logger";
 
-const MODE = process.env.NODE_ENV as string;
+const logger = Logger();
 const PORT = process.env.PORT as string;
+const MODE = process.env.NODE_ENV as string;
 
 // Запуск сервера
 function init() {
@@ -17,7 +19,7 @@ function init() {
     const mainServer = new MainServer(app, server);
 
     try {
-        server.listen(PORT, () => console.log(t("server_started", { mode: MODE, port: PORT })));
+        server.listen(PORT, () => logger.info(t("server_started", { mode: MODE, port: PORT })));
     } catch (error) {
         new BaseError(`${t("start_server_error")}: ${error}`);
 

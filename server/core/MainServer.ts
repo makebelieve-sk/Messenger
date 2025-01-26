@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
 
+import Logger from "../service/logger";
 import ApiServer from "./ApiServer";
 import RedisWorks from "./Redis";
 import PassportWorks from "./Passport";
@@ -13,6 +14,8 @@ import SocketWorks from "./Socket";
 import { oneHour } from "../utils/datetime";
 import { ASSETS_PATH } from "../utils/files";
 import { UsersType } from "../types";
+
+const logger = Logger("MainServer");
 
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 const SECRET_KEY = process.env.SECRET_KEY as string;
@@ -30,6 +33,8 @@ export default class MainServer {
 
     constructor(private readonly _app: Express, private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>) {
         this._users = new Map();
+
+        logger.debug("init");
 
         // Инициализируем работу базы данных (модели, отношения)
         this._database = new Database();
@@ -95,6 +100,8 @@ export default class MainServer {
 
     // Закрытие сервера
     close() {
+        logger.debug("close");
+
         this._database.close();
         this._redisWork.close();
         this._socket.close();

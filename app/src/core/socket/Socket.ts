@@ -2,12 +2,15 @@ import EventEmitter from "eventemitter3";
 import { io } from "socket.io-client";
 
 import SocketController from "@core/socket/SocketController";
+import Logger from "@service/Logger";
 import i18next from "@service/i18n";
 import { RECONECTION_ATTEMPTS, RECONNECTION_DELAY, SOCKET_IO_CLIENT } from "@utils/constants";
 import { AppDispatch } from "@custom-types/redux.types";
 import { SocketType } from "@custom-types/socket.types";
 import { MainClientEvents, SocketEvents } from "@custom-types/events";
 import { IUser } from "@custom-types/models.types";
+
+const logger = Logger.init("Socket");
 
 // Класс, являющийся оберткой для socket.io-client, позволяющий давать запросы на сервер по протоколу ws через транспорт websocket
 export default class Socket extends EventEmitter {
@@ -20,6 +23,8 @@ export default class Socket extends EventEmitter {
     }
 
     init(myUser: IUser) {
+        logger.debug("init");
+
         if (!myUser) {
             this.emit(MainClientEvents.ERROR, i18next.t("core.socket.error.user_not_exists"));
             return;
@@ -45,20 +50,25 @@ export default class Socket extends EventEmitter {
     }
 
     disconnect() {
+        logger.debug("disconnect");
         this._socket.disconnect();
     }
 
     _connect() {
+        logger.debug("_connect");
+
         this._socket.auth = { user: this._me };
         this._socket.connect();
     }
 
     private _bindSocketControllerListeners() {
         this._socketController.on(MainClientEvents.REDIRECT, (path: string) => {
+            logger.debug(`MainClientEvents.REDIRECT [path=${path}]`);
             this.emit(MainClientEvents.REDIRECT, path);
         });
 
         this._socketController.on(SocketEvents.RECONNECT, () => {
+            logger.debug("SocketEvents.RECONNECT");
             this._connect();
         });
     }

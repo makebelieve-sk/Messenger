@@ -1,5 +1,6 @@
 import EventEmitter from "eventemitter3";
 
+import Logger from "@service/Logger";
 import Request from "@core/Request";
 import UserService from "@core/services/UserService";
 import { Profile } from "@core/models/Profile";
@@ -10,10 +11,12 @@ import { ApiRoutes } from "@custom-types/enums";
 import { IPhoto, IUser, IUserDetails } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
 import { GlobalEvents, MainClientEvents, UserEvents } from "@custom-types/events";
-import { currentDate } from "@utils/time";
 import { AVATAR_URL } from "@utils/files";
 import { getFullName } from "@utils/index";
+import { currentDate } from "@utils/time";
 import eventBus from "@utils/event-bus";
+
+const logger = Logger.init("Profile");
 
 // Класс, являющийся полной сущностью пользователя на стороне клиента. Содержит все данные, относящиеся к пользователю согласно контракту "Профиль пользователя"
 export default class ProfileService extends EventEmitter implements Profile {
@@ -21,6 +24,8 @@ export default class ProfileService extends EventEmitter implements Profile {
 
     constructor(private readonly _userId: string, private readonly _request: Request, private readonly _dispatch: AppDispatch) {
         super();
+
+        logger.debug(`init profile for user [userId=${this._userId}]`);
 
         this._user = UserService.create(this._userId, this._dispatch, this._request);
         this._bindUserListeners();
@@ -31,8 +36,14 @@ export default class ProfileService extends EventEmitter implements Profile {
     }
 
     private _bindUserListeners() {
-        this._user.on(MainClientEvents.GET_ME, () => this.emit(MainClientEvents.GET_ME));
-        this._user.on(UserEvents.CHANGE_FIELD, (...args: string[]) => this.emit(UserEvents.CHANGE_FIELD, ...args));
+        this._user.on(MainClientEvents.GET_ME, () => {
+            logger.debug("MainClientEvents.GET_ME");
+            this.emit(MainClientEvents.GET_ME);
+        });
+        this._user.on(UserEvents.CHANGE_FIELD, (field: string, value: string) => {
+            logger.debug(`UserEvents.CHANGE_FIELD [field: ${field}, value: ${value}]`);
+            this.emit(UserEvents.CHANGE_FIELD, field, value);
+        });
     }
 
     //-------------------------------------------------
@@ -40,6 +51,8 @@ export default class ProfileService extends EventEmitter implements Profile {
     //-------------------------------------------------
     // Клик по аватару
     onClickAvatar() {
+        logger.debug("onClickAvatar");
+
         if (this._user.avatarUrl) {
             eventBus.emit(GlobalEvents.SET_IMAGES_CAROUSEL, {
                 images: [{
@@ -68,6 +81,8 @@ export default class ProfileService extends EventEmitter implements Profile {
 
     // Установка/обновление аватара
     onSetAvatar({ id, newAvatarUrl, newPhotoUrl }: { id: string; newAvatarUrl: string; newPhotoUrl: string; }) {
+        logger.debug(`onSetAvatar [data=${{ id, newAvatarUrl, newPhotoUrl }}]`);
+
         this._user.changeField(AVATAR_URL, newAvatarUrl);
         this._dispatch(addPhotos([{ 
             id, 
@@ -93,11 +108,14 @@ export default class ProfileService extends EventEmitter implements Profile {
 
     // Обновить количество фотографий
     updatePhotosCount(count: number) {
+        logger.debug(`updatePhotosCount [${count}]`);
         this._dispatch(setPhotosCount(count));
     }
 
     // Клик по фотографии
     onClickPhoto(photos: IPhoto[], index: number) {
+        logger.debug(`onClickPhoto [photos=${photos}, index=${index}]`);
+
         if (photos && photos.length) {
             eventBus.emit(GlobalEvents.SET_IMAGES_CAROUSEL, {
                 images: photos.map(photo => ({ 

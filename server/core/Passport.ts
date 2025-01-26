@@ -3,6 +3,7 @@ import crypto from "crypto";
 import Passport, { PassportStatic } from "passport";
 import { IVerifyOptions, Strategy } from "passport-local";
 
+import Logger from "../service/logger";
 import { t } from "../service/i18n";
 import Database from "./Database";
 import { UserInstance } from "../database/models/Users";
@@ -13,6 +14,8 @@ import { UsersType } from "../types";
 import { HTTPStatuses } from "../types/enums";
 import { ISafeUser } from "../types/user.types";
 import { ISocketUser } from "../types/socket.types";
+
+const logger = Logger("Passport");
 
 type DoneType = (error: PassportError | null, user?: ISafeUser | false, options?: IVerifyOptions) => void;
 
@@ -29,6 +32,8 @@ export default class PassportWorks {
     }
 
     private _init() {
+        logger.debug("init");
+
         // Мидлвары авторизации через passport.js
         this._app.use(this._passport.initialize());
         this._app.use(this._passport.session());
@@ -42,7 +47,8 @@ export default class PassportWorks {
             // 2) Создать новую переменную для указания типа
             // В любом варианте не придется писать (user as ISafeUser), что упростит код
             const me = user as ISafeUser;
-            console.log("serializeUser: ", me);
+
+            logger.info("serializeUser [me=%j]", me);
 
             process.nextTick(() => {
                 if (!this._users.has(me.id)) {
@@ -55,6 +61,8 @@ export default class PassportWorks {
 
         // Сохраняем данные о пользователе в его сессию при каждом запросе
         this._passport.deserializeUser((userId: string, done: DoneType) => {
+            logger.debug("deserializeUser [userId=%s]", userId);
+
             process.nextTick(() => {
                 const user = this._users.get(userId);
 
@@ -95,6 +103,8 @@ export default class PassportWorks {
 
     // Проверка подлинности пользователя
     private async _verify(login: string, password: string, done: DoneType) {
+        logger.debug("_verify [login=%s, password=%s]", login, password);
+
         try {
             if (!login || !password) {
                 return done(new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.BadRequest));
@@ -134,6 +144,8 @@ export default class PassportWorks {
 
     // Сравнение паролей пользователя (текущего и сохраненного в БД)
     private _comparePasswords(candidate: UserInstance, password: string, done: DoneType) {
+        logger.debug("_comparePasswords [candidate=%s, password=%s]", candidate, password);
+
         try {
             // Генерируем хеш пароля, приправленным "солью"
             const hash = crypto.pbkdf2Sync(password, candidate.salt, 4096, 256, "sha256");

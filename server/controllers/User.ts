@@ -1,5 +1,6 @@
 import { Request, Response, Express, NextFunction } from "express";
 
+import Logger from "../service/logger";
 import { t } from "../service/i18n";
 import { ApiRoutes, HTTPStatuses } from "../types/enums";
 import { IUserDetails } from "../types/models.types";
@@ -8,6 +9,8 @@ import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { getSafeUserFields } from "../utils/user";
 import { UsersError } from "../errors/controllers";
+
+const logger = Logger("UserController");
 
 interface IEditInfoBody {
     name: string;
@@ -36,6 +39,8 @@ export default class UserController {
 
     // Получение данных о себе
     private _getMe(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_getMe");
+
         if (!req.user) {
             return next(new UsersError(t("users.error.user_not_found"), HTTPStatuses.NotFound));
         }
@@ -44,9 +49,11 @@ export default class UserController {
     };
 
     // Получение детальной информации о пользователе
-    private async _getUserDetail(req: Request, res: Response, next: NextFunction) {        
+    private async _getUserDetail(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req.user as ISafeUser).id;
+
+            logger.debug("_getUserDetail [userId=%s]", userId);
 
             const userDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
@@ -62,6 +69,8 @@ export default class UserController {
 
     // Изменение информации о пользователе
     private async _editInfo(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_editInfo [req.body=%s]", req.body);
+
         const transaction = await this._database.sequelize.transaction();
 
         try {
@@ -76,6 +85,7 @@ export default class UserController {
             const findUser = await this._database.models.users.findByPk(userId, { transaction });
 
             if (!findUser) {
+                await transaction.rollback();
                 return next(new UsersError(t("users.error.user_with_id_not_found", { id: userId }), HTTPStatuses.NotFound));
             } 
 
@@ -92,6 +102,7 @@ export default class UserController {
             const findUserDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
             if (!findUserDetail) {
+                await transaction.rollback();
                 return next(new UsersError(t("users.error.user_details_not_found"), HTTPStatuses.NotFound));
             }
 
@@ -115,6 +126,8 @@ export default class UserController {
 
     // Получение данных о другом пользователе
     private async _getUser(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_getUser [req.body=%s]", req.body);
+
         try {
             const { id }: { id: string; } = req.body;
 

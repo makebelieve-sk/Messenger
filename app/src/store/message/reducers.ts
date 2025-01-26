@@ -1,9 +1,12 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
+import Logger from "@service/Logger";
 import i18next from "@service/i18n";
 import { IFile, IMessage } from "@custom-types/models.types";
 import { UnReadTypes } from "@custom-types/enums";
 import { MessageStateType } from "@custom-types/redux.types";
+
+const logger = Logger.init("store/messages");
 
 interface IUnRead {
     chatId: string; 
@@ -124,7 +127,7 @@ export default {
             };
 
             default: {
-                console.log(i18next.t("redux.error.unknowed_type_if_unread_messages", { type }));
+                logger.error(i18next.t("redux.error.unknowed_type_if_unread_messages", { type }));
                 break;
             };
         };

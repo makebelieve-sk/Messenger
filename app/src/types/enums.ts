@@ -191,6 +191,13 @@ enum ErrorCodes {
     ERR_CANCELED = "ERR_CANCELED"
 };
 
+enum DebuggerType {
+    DEBUG = "",
+    INFO = "INFO",
+    WARN = "WARN",
+    ERROR = "ERROR"
+};
+
 export {
     TestMethods,
     ApiRoutes,
@@ -207,4 +214,5 @@ export {
     ImgComponentTypes,
     UnReadTypes,
     ErrorCodes,
+    DebuggerType
 };

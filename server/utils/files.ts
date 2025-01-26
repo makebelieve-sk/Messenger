@@ -3,6 +3,9 @@ import { v4 as uuid } from "uuid";
 import fs from "fs";
 import path from "path";
 
+import Logger from "../service/logger";
+
+const logger = Logger("utils/files");
 const JPEG_FORMAT = "jpeg";
 const SHARP_QUALITY = parseInt(process.env.SHARP_QUALITY as string);
 
@@ -12,6 +15,8 @@ export const PUBLIC_PATH = "../../app/public";
 
 // Проверка, является ли файл изображением
 export const isImage = (filename: string) => {
+    logger.debug("isImage [filename=%s]", filename);
+
     const fileExt = filename.split(".").pop();
     const imgExts = ["png", "jpeg", "jpg"];
 
@@ -20,6 +25,8 @@ export const isImage = (filename: string) => {
 
 // Обрезаем качество изображению до 80% и сохраняем его на диск сервера
 export async function createSharpedImage(file: Express.Multer.File) {
+    logger.debug("createSharpedImage [file=%j]", file);
+
     const rootPath = path.join(__dirname, ASSETS_PATH);
     const folderPath = `/${file.fieldname}s/`;
     const outputFile = file.fieldname + "-" + uuid() + "." + file.mimetype.split("/").pop();

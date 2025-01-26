@@ -3,6 +3,7 @@ import { Request, Response, NextFunction, Express } from "express";
 import { v4 as uuid } from "uuid";
 import { PassportStatic } from "passport";
 
+import Logger from "../service/logger";
 import { t } from "../service/i18n";
 import { updateSessionMaxAge } from "../utils/session";
 import { getSafeUserFields } from "../utils/user";
@@ -15,6 +16,7 @@ import Database from "../core/Database";
 import { AuthError } from "../errors/controllers";
 import { PassportError } from "../errors";
 
+const logger = Logger("AuthController");
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 
 // Класс, отвечающий за API авторизации/аутентификации
@@ -39,6 +41,8 @@ export default class AuthController {
 
     // Проверяем авторизирован ли пользователь в системе
     private async _isAuthenticated(req: Request, _: Response, next: NextFunction) {
+        logger.debug("_isAuthenticated");
+
         try {
             if (req.isAuthenticated()) {
                 // Получаем поле rememberMe из Redis
@@ -59,6 +63,8 @@ export default class AuthController {
 
     // Регистрация пользователя
     private async _signUp(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_signUp, [body=%j]", req.body);
+
         const transaction = await this._database.sequelize.transaction();
 
         try {
@@ -68,12 +74,14 @@ export default class AuthController {
             const checkDublicateEmail = await this._database.models.users.findOne({ where: { email }, transaction });
 
             if (checkDublicateEmail) {
+                await transaction.rollback();
                 return next(new AuthError(t("auth.error.user_with_email_already_exists", { email }), HTTPStatuses.BadRequest, { field: "email" }));
             }
 
             const checkDublicatePhone = await this._database.models.users.findOne({ where: { phone }, transaction });
 
             if (checkDublicatePhone) {
+                await transaction.rollback();
                 return next(new AuthError(t("auth.error.user_with_phone_already_exists", { phone }), HTTPStatuses.BadRequest, { field: "phone" }));
             }
 
@@ -81,8 +89,9 @@ export default class AuthController {
             const salt = crypto.randomBytes(128);
             const saltString = salt.toString("hex");
 
-            crypto.pbkdf2(password, saltString, 4096, 256, "sha256", (error, hash) => {
+            crypto.pbkdf2(password, saltString, 4096, 256, "sha256", async (error, hash) => {
                 if (error) {
+                    await transaction.rollback();
                     return next(new AuthError(error.message));
                 }
 
@@ -91,16 +100,17 @@ export default class AuthController {
 
                 this._database.models.users
                     .create({ id: uuid(), firstName, thirdName, email, phone, password: hashString, avatarUrl, salt: saltString }, { transaction })
-                    .then(newUser => {
+                    .then(async newUser => {
                         if (newUser) {
                             const user = getSafeUserFields(newUser);
 
                             this._database.models.userDetails
                                 .create({ userId: user.id }, { transaction })
-                                .then(newUserDetail => {
+                                .then(async newUserDetail => {
                                     if (newUserDetail) {
                                         req.login(user, async function (error?: PassportError) {
                                             if (error) {
+                                                await transaction.rollback();
                                                 return next(error);
                                             }
 
@@ -109,17 +119,21 @@ export default class AuthController {
                                             return res.json({ success: true, user });
                                         });
                                     } else {
+                                        await transaction.rollback();
                                         return next(new AuthError(t("auth.error.creating_user_details")));
                                     }
                                 })
-                                .catch((error: Error) => {
+                                .catch(async (error: Error) => {
+                                    await transaction.rollback();
                                     return next(new AuthError(error.message));
                                 });
                         } else {
+                            await transaction.rollback();
                             return next(new AuthError(t("auth.error.creating_user")));
                         }
                     })
-                    .catch((error: Error) => {
+                    .catch(async (error: Error) => {
+                        await transaction.rollback();
                         return next(new AuthError(error.message));
                     });
             });
@@ -131,6 +145,8 @@ export default class AuthController {
 
     // Вход пользователя
     private async _signIn(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_signIn, [body=%j]", req.body);
+
         try {
             const { rememberMe }: { rememberMe: boolean } = req.body;
 
@@ -173,6 +189,8 @@ export default class AuthController {
     private async _logout(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req.user as ISafeUser).id;
+
+            logger.debug("_logout [userId=%s]", userId);
 
             // Выход из passport.js
             req.logout((error?: Error) => {

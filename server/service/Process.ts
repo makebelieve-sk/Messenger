@@ -3,6 +3,10 @@ import path from "path";
 
 import { BaseError } from "../errors";
 import { t } from "./i18n";
+import { timestamp } from "../utils/datetime";
+import Logger from "./logger";
+
+const logger = Logger("Process");
 
 const REPORTS_DIR = process.env.REPORTS_PATH as string;
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -17,6 +21,8 @@ export default class ProcessWorks {
 
     // Конфигурация Diagnostic Report - детальная информация об ошибке
     private _configureReport() {
+        logger.debug("_configureReport");
+
         // Создаём директорию для отчётов, если её нет
         if (!fs.existsSync(REPORTS_PATH)) {
             fs.mkdirSync(REPORTS_PATH);
@@ -29,6 +35,8 @@ export default class ProcessWorks {
     }
 
     private _init() {
+        logger.debug("_init");
+
         // Обрабатываем пробрасываемые исключения синхронного кода
         process.on("uncaughtException", (error: Error) => {
             this._handleError(t("error.unhandled_sync", { errorMessage: error.message }), "exception");
@@ -53,7 +61,8 @@ export default class ProcessWorks {
 
     // Генерация отчета с ошибкой, с учетом timestamp
     private _generateReport(reason: string) {
-        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        logger.debug("_generateReport");
+
         const reportFilePath = `report-${reason}-${timestamp}.json`;
 
         process.report.writeReport(reportFilePath);

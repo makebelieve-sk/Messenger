@@ -99,6 +99,7 @@
     "modals.cancel": "Cancel",
     "modals.copy_successfull": "The text has been successfully copied to the clipboard!",
     "modals.copy_the_message_and_send_to_email": "Please copy the error text and email it to the developers: {{email}}",
+    "modals.download": "Download the log file",
     "modals.reset_page": "Reset page",
 
     "modals.error.copy": "Error when copying text to clipboard: ",

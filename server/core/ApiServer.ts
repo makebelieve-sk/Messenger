@@ -1,6 +1,7 @@
 import { Express } from "express";
 import { PassportStatic } from "passport";
 
+import Logger from "../service/logger";
 import RedisWorks from "./Redis";
 import Middleware from "./Middleware";
 import Database from "./Database";
@@ -11,6 +12,8 @@ import FriendsController from "../controllers/Friends";
 import MessagesController from "../controllers/Messages";
 import UserController from "../controllers/User";
 import { UsersType } from "../types";
+
+const logger = Logger("ApiServer");
 
 // Класс, отвечает за обработку HTTP-запросов от клиента
 export default class ApiServer {
@@ -30,6 +33,8 @@ export default class ApiServer {
 
     // Запуск контроллеров обработки API запросов
     private _init() {
+        logger.debug("init");
+
         new AuthController(this._app, this._middleware, this._database, this._redisWork, this._passport, this._users);
         new ImagesController(this._app, this._middleware, this._database);
         new FilesController(this._app, this._middleware, this._database);

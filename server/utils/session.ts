@@ -1,6 +1,9 @@
 import session from "express-session";
 
 import { oneMonth } from "./datetime";
+import Logger from "../service/logger";
+
+const logger = Logger("utils/session");
 
 // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore.
 // Обновляем только поле maxAge (не expire, при этом автоматически устанавливается поле expire), потому что лишь это поле позволяет синхронизировать данные сессии из хранилища (RedisStore) 
@@ -14,6 +17,8 @@ import { oneMonth } from "./datetime";
 // Если юзер нажал на кнопку "Запомнить меня", то его кука сессии обновляется на 30 дней. При этом, его ttl в RedisStore автоматически устанавливается также 30 дней. При каждом запросе
 // автоматически обновляется время жизни куки и поле ttl на 30 дней.
 export async function updateSessionMaxAge(session: session.Session, rememberMe: boolean) {
+    logger.debug("updateSessionMaxAge [session=%j, rememberMe=%s]", session, rememberMe);
+
     // Если для этого пользователя был установлен флаг "Запомнить меня" - обновляем время жизни куки сессии и времени ее же жизни в RedisStore на 30 дней
     // Иначе обновляем до первого выхода или закрытия окна/вкладки и время ее же жизни в RedisStore в 60 минут
     const maxAge = rememberMe

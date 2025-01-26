@@ -1,5 +1,6 @@
 import EventEmitter from "eventemitter3";
 
+import Logger from "@service/Logger";
 import i18next from "@service/i18n";
 import { setSystemError } from "@store/error/slice";
 import { addFriend, deleteFriend } from "@store/friend/slice";
@@ -19,6 +20,7 @@ interface IConstructor {
     dispatch: AppDispatch;
 };
 
+const logger = Logger.init("SocketController");
 const SERVER_DISCONNECT = "io server disconnect";
 
 export default class SocketController extends EventEmitter {
@@ -38,7 +40,7 @@ export default class SocketController extends EventEmitter {
 
     private _init() {
         this._socket.on("connect", () => {
-            console.log(i18next.t("core.socket.connection_established", { socketId: this._socket.id }));
+            logger.info(i18next.t("core.socket.connection_established", { socketId: this._socket.id }));
         });
 
         // Список всех онлайн пользователей
@@ -49,19 +51,19 @@ export default class SocketController extends EventEmitter {
                 }
             });
 
-            console.log(i18next.t("core.socket.online_users"), users);
+            logger.info(`${i18next.t("core.socket.online_users")} [users=${JSON.stringify(users)}]`);
         });
 
         // Новый пользователь онлайн
         this._socket.on(SocketActions.GET_NEW_USER, (newUser) => {
             this._dispatch(setOnlineUsers(newUser));
-            console.log(i18next.t("core.socket.new_user_connected"), newUser);
+            logger.info(`${i18next.t("core.socket.new_user_connected")} [newUser=${JSON.stringify(newUser)}]`);
         });
 
         // Пользователь отключился
         this._socket.on(SocketActions.USER_DISCONNECT, (userId) => {
             this._dispatch(deleteOnlineUser(userId));
-            console.log(i18next.t("core.socket.user_disconnected"), userId);
+            logger.info(`${i18next.t("core.socket.user_disconnected")} [userId=${userId}]`);
         });
 
         // Подписываемся на пользователя
@@ -148,7 +150,7 @@ export default class SocketController extends EventEmitter {
         this._socket.on("connect_error", (error: Error) => {
             const isSocketActive = this._socket.active;
 
-            console.error(i18next.t("core.socket.error.connection", { isSocketActive: isSocketActive, message: error.message }));
+            logger.error(i18next.t("core.socket.error.connection", { isSocketActive: isSocketActive, message: error.message }));
 
             // Означает, что соединение было отклонено сервером
             if (!isSocketActive) {
@@ -159,6 +161,8 @@ export default class SocketController extends EventEmitter {
         });
 
         this._socket.on("disconnect", (reason) => {
+            logger.debug("disconnect");
+
             const isSocketActive = this._socket.active;
 
             // Если сокет отключился по инициативе сервера, то перезапускаем сокет

@@ -1,6 +1,9 @@
 import i18next from "@service/i18n";
+import Logger from "@service/Logger";
 import { Times } from "@custom-types/enums";
 import { getHoursOrMinutes } from "@utils/time";
+
+const logger = Logger.init("utils/date");
 
 // Список месяцев с короткими именами
 const shortNamesMonths = [
@@ -36,14 +39,20 @@ const fullNameMonths = [
 
 // Получение названия месяца
 export const getMonthName = (month: number) => {
+    logger.debug(`getMonthName [month=${month}]`);
     return " " + shortNamesMonths[month];
 };
 
 // Получение даты
-export const getDate = (date: string) => date && date.length ? new Date(date).getDate() : null;
+export const getDate = (date: string) => {
+    logger.debug(`getDate [date=${date}]`);
+    return date && date.length ? new Date(date).getDate() : null;
+};
 
 // Выводим конечную дату
 export const transformDate = (d: string, getYear = false) => {
+    logger.debug(`transformDate [d=${d}, getYear=${getYear}]`);
+
     const date = new Date(d);
 
     const dayNumber = date.getDate();
@@ -59,6 +68,8 @@ export const transformDate = (d: string, getYear = false) => {
 
 // Получение даты сообщения в списке диалогов
 export const getTime = (createDate: string, options: { withoutYesterday?: boolean; } = {}) => {
+    logger.debug(`getTime [createDate=${createDate}, withoutYesterday=${options.withoutYesterday}]`);
+
     const { withoutYesterday } = options;
     const date = Date.parse(createDate);
     const beforeMidnight = new Date().getDate() - new Date(createDate).getDate() > 0;
