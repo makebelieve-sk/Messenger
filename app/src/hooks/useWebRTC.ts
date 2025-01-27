@@ -1,4 +1,4 @@
-import React from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import freeice from "freeice";
 
 import useStateWithCallback from "./useStateWithCallback";
@@ -69,7 +69,7 @@ export function resetCallStore(dispatch: AppDispatch) {
 
 export default function useWebRTC() {
     const [clients, updateClients] = useStateWithCallback<IClients[], () => void>([]);
-    const [settings, setSettings] = React.useState<ICallSettings>({
+    const [settings, setSettings] = useState<ICallSettings>({
         [SettingType.AUDIO]: false,
         [SettingType.VIDEO]: false
     });
@@ -81,16 +81,16 @@ export default function useWebRTC() {
     const { callId, chatInfo, localStream, users, status } = useAppSelector(selectCallsState);
 
     // Все RTC соединения (свой + других клиентов в комнате (звонке))
-    const peerConnections = React.useRef<{ [key: string]: RTCPeerConnection }>({});
+    const peerConnections = useRef<{ [key: string]: RTCPeerConnection }>({});
     // Локальные потоки (стримы) аудио/видео
-    const localMediaStream = React.useRef<MediaStream | null>(null);
+    const localMediaStream = useRef<MediaStream | null>(null);
     // Содержит все потоки (стримы) аудио/видео
-    const peerMediaElements = React.useRef<{ [key: string]: HTMLVideoElement | null }>({
+    const peerMediaElements = useRef<{ [key: string]: HTMLVideoElement | null }>({
         [LOCAL_VIDEO]: null,
     });
 
     // Добавляем нового участника звонка, после вызываем коллбек
-    const addNewClient = React.useCallback((newClient: IClients, cb: () => void) => {
+    const addNewClient = useCallback((newClient: IClients, cb: () => void) => {
         updateClients(list => {
             const findClient = list.find(client => client.peerId === newClient.peerId);
 
@@ -103,7 +103,7 @@ export default function useWebRTC() {
     }, [clients, updateClients]);
 
     // Выделяем рамку у себя, когда говорим
-    const highlightBorderSpeach = React.useCallback((stream: MediaStream, peerId: string) => {
+    const highlightBorderSpeach = useCallback((stream: MediaStream, peerId: string) => {
         const num = 32;
         const array = new Uint8Array(num * 2);
         const audioContext = new AudioContext();
@@ -138,7 +138,7 @@ export default function useWebRTC() {
     }, [socket, callId, clients, updateClients]);
 
     // Получаем текущую отрисовку, в зависимости от количества участников
-    const layout = React.useMemo((): {} | { width: string; height: string; }[] => {
+    const layout = useMemo((): {} | { width: string; height: string; }[] => {
         if (clients && clients.length) {
             return getLayout(clients.length);
         }
@@ -147,7 +147,7 @@ export default function useWebRTC() {
     }, [clients]);
 
     // Обновлем настройки наших потоков (стримов)
-    React.useEffect(() => {
+    useEffect(() => {
         if (chatInfo && chatInfo.chatSettings) {
             setSettings({
                 [SettingType.AUDIO]: chatInfo.chatSettings.audio,
@@ -157,7 +157,7 @@ export default function useWebRTC() {
     }, [chatInfo]);
 
     // Выделяем рамку у себя, если я - инициатор звонка
-    React.useEffect(() => {
+    useEffect(() => {
         if (localStream) {
             highlightBorderSpeach(localStream, LOCAL_VIDEO);
         }
@@ -165,7 +165,7 @@ export default function useWebRTC() {
 
     // Если в звонке остается только 1 человек - завершаем его
     // При размонтировании компонента очищаем все сохраненные локально потоки (стримы)
-    React.useEffect(() => {
+    useEffect(() => {
         if (users && users.length && users.length === 1) {
             // Уведомляем всех участников звонка о его завершении
             if (socket && callId) {
@@ -180,7 +180,7 @@ export default function useWebRTC() {
     }, [users, user]);
 
     // (2 ШАГ) Добавление нового подключения
-    React.useEffect(() => {
+    useEffect(() => {
         if (socket) {
             socket.on(SocketActions.ADD_PEER, async ({ peerId, createOffer, userId }) => {
                 // Если у нас уже RTC соединение создано (свое/другого клиента в комнате) - выводим ошибку
@@ -278,7 +278,7 @@ export default function useWebRTC() {
     }, [users, localStream]);
 
     // (3 ШАГ) Создание сессии передается от меня другому участнику звонка (я себе записываю ОТВЕТ от другого участника)
-    React.useEffect(() => {
+    useEffect(() => {
         if (socket) {
             socket.on(SocketActions.SESSION_DESCRIPTION, async ({ peerId, sessionDescription: remoteDescription }) => {
                 if (peerConnections.current && peerConnections.current[peerId]) {
@@ -312,7 +312,7 @@ export default function useWebRTC() {
     // (4 ШАГ ПОСЛЕДНИЙ) Получаем кандидата после события onicecandidate
     // После этого стороны могут напрямую обмениваться медиаданными
     // При размонтировании обнуляем все
-    React.useEffect(() => {
+    useEffect(() => {
         if (socket) {
             socket.on(SocketActions.GET_CANDIDATE, ({ peerId, iceCandidate }) => {
                 if (peerConnections.current && peerConnections.current[peerId]) {
@@ -337,7 +337,7 @@ export default function useWebRTC() {
     }, []);
 
     // Выделение тех собеседников, кто говорит в данный момент
-    React.useEffect(() => {
+    useEffect(() => {
         if (socket) {
             socket.on(SocketActions.IS_TALKING, ({ peerId, isTalking }) => {
                 if (peerId && clients && clients.length) {
@@ -366,7 +366,7 @@ export default function useWebRTC() {
     }, [clients]);
 
     // При изменении потоков аудио/видео у другого участника звонка обновляем информацию об этом клиенте у нас
-    React.useEffect(() => {
+    useEffect(() => {
         if (socket) {
             socket.on(SocketActions.CHANGE_STREAM, async ({ peerId, type, value }) => {
                 if (clients && clients.length) {
@@ -406,7 +406,7 @@ export default function useWebRTC() {
     }, [clients]);
 
     // Удаление стримов(потоков) пользователя у себя
-    React.useEffect(() => {
+    useEffect(() => {
         if (socket) {
             socket.on(SocketActions.REMOVE_PEER, ({ peerId, userId }) => {
                 const isLocal = Boolean(user && userId === user.id);
@@ -452,7 +452,7 @@ export default function useWebRTC() {
     };
 
     // Принятие звонка
-    const onAccept = React.useCallback(() => {
+    const onAccept = useCallback(() => {
         if (socket && callId && chatInfo && users) {
             startCapture()
                 .then(() => socket.emit(SocketActions.ACCEPT_CALL, { roomId: callId, chatInfo, usersInCall: users }))
@@ -588,7 +588,7 @@ export default function useWebRTC() {
     };
 
     // Определяем корректный peerId для элемента video
-    const provideMediaRef = React.useCallback((id: string, node: HTMLVideoElement | null) => {
+    const provideMediaRef = useCallback((id: string, node: HTMLVideoElement | null) => {
         peerMediaElements.current[id] = node;
     }, []);
 

@@ -1,11 +1,12 @@
 import EventEmitter from "eventemitter3";
+
+import Request from "../Request";
 import i18next from "../../service/i18n";
 import { IUserDetails } from "../../types/models.types";
 import { muchSelected } from "../../utils";
 import { getMonthName } from "../../utils/time";
 import { ApiRoutes } from "../../types/enums";
 import { UserDetailsEvents } from "../../types/events";
-import Request from "../Request";
 
 const NOT_COMPLITE = i18next.t("profile-module.not_complete");
 
@@ -115,12 +116,12 @@ export default class UserDetails extends EventEmitter {
         this._request.get({
             route: ApiRoutes.getUserDetail,
             setLoading: (isLoading: boolean) => {
-                this.emit(UserDetailsEvents.SET_LOADING, isLoading)
+                this.emit(UserDetailsEvents.SET_LOADING, isLoading);
             },
             successCb: (data: { success: boolean, userDetail: IUserDetails }) => {
-                this._details = data.userDetail
+                this._details = data.userDetail;
                 console.log(`Emitting UPDATE event. Details:`, this._details);
-                this.emit(UserDetailsEvents.UPDATE)
+                this.emit(UserDetailsEvents.UPDATE);
             }
         });
     }

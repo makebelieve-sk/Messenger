@@ -59,9 +59,9 @@ export default memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
 						{t("profile-module.edit")}
 					</div>
 
-					{loading ? (
+					{loading ? 
 						<SpinnerComponent />
-					) : (
+					  : 
 						<>
 							<div className="info-container__short-info-block__row">
 								<div className="info-container__short-info-block__row__title">
@@ -84,7 +84,7 @@ export default memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
 								<span>{userDetails.work}</span>
 							</div>
 						</>
-					)}
+					}
 				</div>
 
 				<div className="info-container__counts-block">

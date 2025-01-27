@@ -1,8 +1,11 @@
-import React from "react";
+import { memo } from "react";
 import { Dayjs } from "dayjs";
+
 import { IFormErrors, IFormValues } from "../../pages/Edit";
 import Contacts from "./contacts";
 import Main from "./main";
+import {EditTabs} from "../../types/enums";
+// import {EditTabs} from "@custom-types/enums";
 
 interface IEditTabsModule extends ITabModule {
 	tab: number;
@@ -17,17 +20,12 @@ export interface ITabModule {
 	) => void;
 }
 
-enum TAB_NUMBER {
-	MAIN = 0,
-	CONTACTS = 1,
-}
-
 const Tabcomponents = {
-	[TAB_NUMBER.MAIN]: Main,
-	[TAB_NUMBER.CONTACTS]: Contacts,
+	[EditTabs.MAIN]: Main,
+	[EditTabs.CONTACTS]: Contacts,
 };
 
-export default React.memo(function EditTabsModule({
+export default memo(function EditTabsModule({
 	tab,
 	formValues,
 	formErrors,

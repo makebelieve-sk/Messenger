@@ -11,15 +11,15 @@ import { MainClientEvents, UserEvents } from "../../types/events";
 export default class User extends EventEmitter {
     private readonly _userDetails: UserDetails;
     private _user!: IUser;
-    // private _userDetails: UserDetails;
-    constructor(private readonly _id: string, private readonly request: Request,) {
+
+    constructor(private readonly _id: string, private readonly _request: Request) {
         super();
 
         this._id === MY_ID
             ? this._getMe()
             : this._getUser();
 
-        this._userDetails = new UserDetails(this.request)
+        this._userDetails = new UserDetails(this._request)
     }
 
     get id(): string {
@@ -60,7 +60,7 @@ export default class User extends EventEmitter {
 
     // Получение данных о себе
     private _getMe() {
-        this.request.get({
+        this._request.get({
             route: ApiRoutes.getMe,
             setLoading: (isLoading: boolean) => {
                 this.emit(UserEvents.SET_LOADING, isLoading);
@@ -75,7 +75,7 @@ export default class User extends EventEmitter {
 
     // Получение данных другого пользователя
     private _getUser() {
-        this.request.post({
+        this._request.post({
             route: ApiRoutes.getUser,
             data: { id: this._id },
             successCb: (data: { user: IUser }) => {

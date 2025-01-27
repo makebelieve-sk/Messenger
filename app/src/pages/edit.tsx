@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
@@ -8,13 +8,14 @@ import { LoadingButton } from "@mui/lab";
 import dayjs, { Dayjs } from "dayjs";
 
 import EditTabsModule from "../modules/edit";
-import AlertComponent from "../components/ui/Alert";
+import AlertComponent from "../components/ui/alert";
 import SpinnerComponent from "../components/ui/Spinner";
 import useMainClient from "../hooks/useMainClient";
 import useUserDetails from "../hooks/useUserDetails";
 import useProfile from "../hooks/useProfile";
 import useUser from "../hooks/useUser";
 import { REQUIRED_FIELD } from "../utils/constants";
+import {formattedValue} from  "../utils/time";
 import { UserDetailsEvents } from "../types/events";
 
 import "../styles/pages/edit.scss";
@@ -23,7 +24,7 @@ export interface IFormValues {
 	name: string;
 	surName: string;
 	sex: string;
-	birthday: dayjs.Dayjs | string;
+	birthday: dayjs.Dayjs | string | null;
 	work: string;
 	city: string;
 	phone: string;
@@ -61,35 +62,35 @@ export default function Edit() {
 	const user = useUser();
 	const { t } = useTranslation();
 
+	const REQUIRED_FIELDS = ["name", "surName", "phone", "email"];
+
+	const handleSetFormValues = () => {
+		setFormValues({
+			name: user.firstName,
+			surName: user.thirdName,
+			sex: userDetails.details.sex,
+			birthday: userDetails.details.birthday,
+			work: userDetails.details.work,
+			city: userDetails.details.city,
+			phone: user.phone,
+			email: user.email,
+		});
+	}
+
+	// Отлавливаем событие апдейт и отписываемся от него так же делаем проверку на наличие данных чтобы не было пустых полей 
 	useEffect(() => {
 		userDetails.on(UserDetailsEvents.UPDATE, () => {
-			setFormValues({
-				name: user.firstName,
-				surName: user.thirdName,
-				sex: userDetails.details.sex,
-				birthday: userDetails.details.birthday,
-				work: userDetails.details.work,
-				city: userDetails.details.city,
-				phone: user.phone,
-				email: user.email,
-			});
+			handleSetFormValues
 		});
 
 		if (userDetails.details) {
-			setFormValues({
-				name: user.firstName,
-				surName: user.thirdName,
-				sex: userDetails.details.sex,
-				birthday: userDetails.details.birthday,
-				work: userDetails.details.work,
-				city: userDetails.details.city,
-				phone: user.phone,
-				email: user.email,
-			});
+			handleSetFormValues();
 		}
 
 		return () => {
-			userDetails.off(UserDetailsEvents.UPDATE, () => {});
+			userDetails.off(UserDetailsEvents.UPDATE, () => {
+			handleSetFormValues
+			});
 		};
 	}, []);
 
@@ -101,7 +102,7 @@ export default function Edit() {
 		);
 	}, [loadingSaveBtn, formValues]);
 
-	const onChangeTab = (_: React.SyntheticEvent, newValue: number) => {
+	const onChangeTab = (_: SyntheticEvent, newValue: number) => {
 		setTab(newValue);
 		setShowAlert(false);
 	};
@@ -116,7 +117,7 @@ export default function Edit() {
 				[field]: value,
 			});
 
-			if (["name", "surName", "phone", "email"].includes(field)) {
+			if (REQUIRED_FIELDS.includes(field)) {
 				setFormErrors({
 					[field]: value ? "" : REQUIRED_FIELD,
 				});
@@ -124,7 +125,7 @@ export default function Edit() {
 		}
 	};
 
-	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		try {
 			event.preventDefault();
 
@@ -138,18 +139,16 @@ export default function Edit() {
 					result["birthday"] &&
 					typeof result["birthday"] !== "string"
 				) {
-					result["birthday"] = (
-						result["birthday"] as dayjs.Dayjs
-					).format("YYYY-MM-DD");
+					result["birthday"] = formattedValue(result["birthday"]);
 				}
 
 				profile.editInfo({
 					result,
-					setLoading: setLoadingSaveBtn,
+					setLoading,
 					setShowAlert,
 				});
 			} else {
-				throw new Error(t("edit.error.no_user"));
+				mainClient.catchErrors(t("edit.error.no_user"));
 			}
 		} catch (error) {
 			setLoadingSaveBtn(false);
@@ -165,6 +164,16 @@ export default function Edit() {
 
 		return () => {
 			userDetails.off(UserDetailsEvents.SET_LOADING, handleOnLoading);
+		};
+	}, []);
+
+	const handleOnLoadingSaveBtn = (isLoading: boolean) => setLoadingSaveBtn(isLoading);
+
+	useEffect(() => {
+		profile.on(UserDetailsEvents.SET_LOADING, handleOnLoadingSaveBtn);
+
+		return () => {
+			profile.off(UserDetailsEvents.SET_LOADING, handleOnLoadingSaveBtn);
 		};
 	}, []);
 
@@ -195,16 +204,16 @@ export default function Edit() {
 
 			<div className={"edit-container__module"}>
 				<Box component="form" noValidate onSubmit={onSubmit}>
-					{loading ? (
+					{loading ? 
 						<SpinnerComponent />
-					) : (
+					 : 
 						<EditTabsModule
 							tab={tab}
 							formValues={formValues}
 							formErrors={formErrors}
 							onChange={onChange}
 						/>
-					)}
+					}
 					<LoadingButton
 						fullWidth
 						type="submit"
@@ -216,13 +225,13 @@ export default function Edit() {
 						Сохранить
 					</LoadingButton>
 
-					{showAlert ? (
+					{showAlert ? 
 						<AlertComponent show={showAlert}>
 							<>
 								<b>{t("edit.save")}</b> - {t("edit.show_data")}
 							</>
 						</AlertComponent>
-					) : null}
+					 : null}
 				</Box>
 			</div>
 		</Paper>

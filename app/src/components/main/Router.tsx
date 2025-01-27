@@ -32,7 +32,7 @@ export default function Router() {
 		navigate(path);
 	};
 
-	return isAuth ? (
+	return isAuth ? 
 		<Routes>
 			<Route path={Pages.profile} element={<Profile />} />
 			<Route path={Pages.edit} element={<Edit />} />
@@ -42,7 +42,7 @@ export default function Router() {
 				element={<Navigate to={Pages.profile} />}
 			/>
 		</Routes>
-	) : (
+	: 
 		<Routes>
 			<Route path={Pages.signIn} element={<SignIn />} />
 			<Route path={Pages.signUp} element={<SignUp />} />
@@ -51,5 +51,5 @@ export default function Router() {
 				element={<Navigate to={Pages.signIn} />}
 			/>
 		</Routes>
-	);
+	;
 }

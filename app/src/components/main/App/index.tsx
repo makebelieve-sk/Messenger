@@ -1,22 +1,23 @@
-import Router from "../Router";
 import { useEffect, useState } from "react";
+
+import Router from "../Router";
 import ServiceComponents from "../ServiceComponents";
+import SpinnerComponent from "../../ui/Spinner";
 import HeaderComponent from "../../layouts/Header";
 import MenuComponent from "../../layouts/Menu";
-import SpinnerComponent from "../../ui/Spinner";
-import { selectMainState } from "../../../store/main/slice";
 import { useAppSelector } from "../../../hooks/useGlobalState";
-import { UserEvents } from "../../../types/events";
 import useUser from "../../../hooks/useUser";
+import { selectMainState } from "../../../store/main/slice";
+import { UserEvents } from "../../../types/events";
 
 import "./app.scss";
 
 // Главный компонент, который отрисовывает основноую верстку проекта
 export default function App() {
-	const { isAuth } = useAppSelector(selectMainState);
 	const [loading, setLoading] = useState(true);
+
+	const { isAuth } = useAppSelector(selectMainState);
 	const user = useUser();
-	const handleOnLoading = (isLoading: boolean) => setLoading(isLoading);
 
 	//подписка на событие лоадинг
 	useEffect(() => {
@@ -27,13 +28,16 @@ export default function App() {
 		};
 	}, []);
 
+	// Обрабочик на событие UserEvents.SET_LOADING
+	const handleOnLoading = (isLoading: boolean) => setLoading(isLoading);
+
 	return (
 		<div className="root">
 			<ServiceComponents />
 
-			{loading ? (
+			{loading ? 
 				<SpinnerComponent />
-			) : (
+			 : 
 				<>
 					{isAuth ? <HeaderComponent /> : null}
 
@@ -53,7 +57,7 @@ export default function App() {
 						</div>
 					</div>
 				</>
-			)}
+			}
 		</div>
 	);
 }

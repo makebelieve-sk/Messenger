@@ -1,16 +1,18 @@
-import React from "react";
+import { memo } from "react";
 import { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
-import DatePickerComponent from "./date-picker";
+import DatePickerComponent from "../date-picker";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { ITabModule } from ".";
-import "../../styles/pages/edit-tab.scss";
 import { useTranslation } from "react-i18next";
 
-export default React.memo(function Main({
+import { ITabModule } from "..";
+
+import "./main.scss";
+
+export default memo(function Main({
 	formValues,
 	formErrors,
 	onChange,
@@ -22,7 +24,6 @@ export default React.memo(function Main({
 	) => {
 		onChange(field, value);
 	};
-	console.log("Main", formValues);
 
 	return (
 		<>
@@ -41,7 +42,7 @@ export default React.memo(function Main({
 				helperText={
 					formErrors && formErrors.name ? formErrors.name : null
 				}
-				onChange={(e) => onChangeField("name", e.target.value)}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeField("name", e.target.value)}
 			/>
 
 			<TextField
@@ -60,7 +61,7 @@ export default React.memo(function Main({
 						? formErrors && formErrors.surName
 						: null
 				}
-				onChange={(e) => onChangeField("surName", e.target.value)}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeField("surName", e.target.value)}
 			/>
 
 			<FormControl fullWidth className={"edit-container__sex-select"}>

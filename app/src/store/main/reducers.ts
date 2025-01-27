@@ -10,9 +10,6 @@ export default {
     setAuth: (state: MainType, action: PayloadAction<boolean>) => {
         state.isAuth = action.payload;
     },
-    // setLoading: (state: MainType, action: PayloadAction<boolean>) => {
-    //     state.loading = action.payload;
-    // },
     setLoadingUserDetails: (state: MainType, action: PayloadAction<boolean>) => {
         state.loadingUserDetails = action.payload;
     },

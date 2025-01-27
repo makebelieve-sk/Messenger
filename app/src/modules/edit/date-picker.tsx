@@ -1,10 +1,13 @@
-import React from "react";
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { FC } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ru";
-import { IFormValues } from "../../pages/Edit";
 import { useTranslation } from "react-i18next";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
+import {formattedValue} from "../../utils/time";
+import { IFormValues } from "../../pages/Edit";
+
 interface DatePickerComponentProps {
 	formValues: IFormValues;
 	onChangeField: (
@@ -13,11 +16,7 @@ interface DatePickerComponentProps {
 	) => void;
 }
 
-const formattedValue = (date: Dayjs | null): string | null => {
-	return date ? date.format("YYYY-MM-DD") : null;
-};
-
-const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
+const DatePickerComponent: FC<DatePickerComponentProps> = ({
 	formValues,
 	onChangeField,
 }) => {
@@ -28,7 +27,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
 				disableFuture
 				label={t("edit_tabs.birthday")}
 				value={dayjs(formValues.birthday)}
-				onChange={(newValue) => {
+				onChange={(newValue: Dayjs | null) => {
 					onChangeField("birthday", formattedValue(newValue));
 				}}
 				slotProps={{

@@ -1,5 +1,6 @@
 import i18next from "../service/i18n";
 import { Times } from "../types/enums";
+import { Dayjs } from "dayjs";
 
 // Список месяцев с короткими именами
 const shortNamesMonths = [
@@ -85,4 +86,9 @@ export const getTime = (createDate: string, options: IGetTimeOptions = {}) => {
                 : Date.now() - date < Times.TODAY
                     ? `${beforeMidnight ? i18next.t("utils.yesterday") : ""}` + getHoursOrMinutes(new Date(createDate).getHours()) + ":" + getHoursOrMinutes(new Date(createDate).getMinutes())
                     : null;
+};
+
+// Форматирование даты
+export const formattedValue = (date: Dayjs | null): string | null => {
+    return date ? date.format("YYYY-MM-DD") : null;
 };

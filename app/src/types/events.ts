@@ -16,8 +16,8 @@ enum UserEvents {
 };
 
 enum UserDetailsEvents {
-    UPDATE = 'update',
-    SET_LOADING = 'set-loading'
+    UPDATE = "update",
+    SET_LOADING = "set-loading"
 }
 
 export {

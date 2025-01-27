@@ -1,9 +1,10 @@
-import React from "react";
+import { memo } from "react";
 import TextField from "@mui/material/TextField";
-import { ITabModule } from ".";
 import { useTranslation } from "react-i18next";
 
-export default React.memo(function Contacts({
+import { ITabModule } from ".";
+
+export default memo(function Contacts({
 	formValues,
 	formErrors,
 	onChange,
