@@ -1,5 +1,7 @@
-import { IUser } from "../types/models.types";
-// import { UserPartial } from "../pages/messages";
+import Logger from "@service/Logger";
+import { IUser } from "@custom-types/models.types";
+
+const logger = Logger.init("utils");
 
 // Склонение переданного массива строк по переданому числу
 export const muchSelected = (number: number, txt: string[]) => {
@@ -12,11 +14,14 @@ export const muchSelected = (number: number, txt: string[]) => {
 
 // Получить полное имя пользователя (Имя + Фамилия)
 export const getFullName = (user: IUser | any) => {
+    logger.debug(`getFullName [firstName=${user.firstName}, thirdName=${user.thirdName}]`);
     return user ? user.firstName + " " + user.thirdName : "";
 };
 
 // Установка фокуса HTML элементу в самый конец
 export const setFocusOnEndNodeElement = (node: HTMLElement, pos = node.childNodes.length) => {
+    logger.debug(`setFocusOnEndNodeElement [pos=${pos}]`);
+
     const range = document.createRange();
     const selection = window.getSelection() as Selection;
     range.setStart(node, pos);

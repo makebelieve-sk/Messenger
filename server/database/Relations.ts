@@ -1,8 +1,13 @@
+import Logger from "../service/logger";
 import Models from "./models/Models";
+
+const logger = Logger("Relations");
 
 // Класс, предоставляет отношения между таблицами для корректной работы ORM Sequelize
 export default class Relations {
     constructor(private readonly _models: Models) {
+        logger.debug("init");
+
         this._oneToOne();
         this._oneToMany();
         this._manyToMany();
@@ -11,8 +16,7 @@ export default class Relations {
     //--------------ONE-TO-ONE----------------------
     // Одно сообщение содержит информацию об одном звонке, и информация об одном звонке может содеражться только в одном сообщении
     private _oneToOne() {
-        this._models.calls.hasOne(this._models.messages, { foreignKey: "callId" });
-        this._models.messages.belongsTo(this._models.calls, { foreignKey: "callId" });
+
     }
 
     //---------------ONE-TO-MANY--------------------
@@ -46,11 +50,6 @@ export default class Relations {
         this._models.filesInMessage.belongsTo(this._models.messages, { foreignKey: "messageId" });
         this._models.files.hasMany(this._models.filesInMessage, { foreignKey: "fileId", as: "FilesInMessage" });
         this._models.filesInMessage.belongsTo(this._models.files, { foreignKey: "fileId" });
-    
-        this._models.users.hasMany(this._models.usersInCall, { foreignKey: "userId", as: "UsersInCall" });
-        this._models.usersInCall.belongsTo(this._models.users, { foreignKey: "id" });
-        this._models.calls.hasMany(this._models.usersInCall, { foreignKey: "callId", as: "UsersInCall" });
-        this._models.usersInCall.belongsTo(this._models.calls, { foreignKey: "id" });
     
         this._models.messages.hasMany(this._models.deletedMessages, { foreignKey: "messageId", as: "DeletedMessages" });
         this._models.deletedMessages.belongsTo(this._models.messages, { foreignKey: "messageId" });

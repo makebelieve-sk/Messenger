@@ -6,16 +6,16 @@ import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Paper from "@mui/material/Paper";
 
-import AvatarComponent from "../../../components/ui/Avatar";
-import NoDataComponent from "../../../components/ui/NoData";
-import SpinnerComponent from "../../../components/ui/Spinner";
-import { FriendsTab, MainFriendTabs, Pages } from "../../../types/enums";
-import { IUser } from "../../../types/models.types";
-import { useAppSelector } from "../../../hooks/useGlobalState";
-import useProfile from "../../../hooks/useProfile";
-import { selectMainState } from "../../../store/main/slice";
-import { selectFriendState } from "../../../store/friends/slice";
-import { getFullName } from "../../../utils";
+import AvatarComponent from "@components/ui/avatar";
+import NoDataComponent from "@components/ui/no-data";
+import SpinnerComponent from "@components/ui/spinner";
+import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
+import { IUser } from "@custom-types/models.types";
+import { useAppSelector } from "@hooks/useGlobalState";
+import useProfile from "@hooks/useProfile";
+import { selectMainState } from "@store/main/slice";
+import { selectFriendState } from "@store/friend/slice";
+import { getFullName } from "@utils/index";
 
 import "./friends.scss";
 

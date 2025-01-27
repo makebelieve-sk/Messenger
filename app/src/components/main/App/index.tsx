@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 
-import Router from "../Router";
-import ServiceComponents from "../ServiceComponents";
-import SpinnerComponent from "../../ui/Spinner";
-import HeaderComponent from "../../layouts/Header";
-import MenuComponent from "../../layouts/Menu";
-import { useAppSelector } from "../../../hooks/useGlobalState";
-import useUser from "../../../hooks/useUser";
-import { selectMainState } from "../../../store/main/slice";
-import { UserEvents } from "../../../types/events";
+import Router from "@components/main/Router";
+import ServiceComponents from "@components/main/ServiceComponents";
+import HeaderComponent from "@components/layouts/header";
+import MenuComponent from "@components/layouts/menu";
+import SpinnerComponent from "@components/ui/spinner";
+import { selectMainState } from "@store/main/slice";
+import { useAppSelector } from "@hooks/useGlobalState";
+import useUser from "@hooks/useUser";
+import { UserEvents } from "@custom-types/events";
 
 import "./app.scss";
 

@@ -1,10 +1,10 @@
-import ModalWithError from "../services/modals/ModalWithError";
-import ModalWithAttachments from "../services/modals/ModalWithAttachments";
-import ModalWithConfirm from "../services/modals/ModalWithConfirm";
-import ModalWithImagesCarousel from "../services/modals/ModalWithImagesCarousel";
-import SnackBarWithSocketError from "../services/snackbars/SnackBarWithSocketError";
-import { useAppSelector } from "../../hooks/useGlobalState";
-import { selectMainState } from "../../store/main/slice";
+import ModalWithError from "@components/services/modals/error";
+import ModalWithAttachments from "@components/services/modals/ModalWithAttachments";
+import ModalWithConfirm from "@components/services/modals/confirm";
+import ModalWithImagesCarousel from "@components/services/modals/carousel";
+import SnackBarWithSocketError from "@components/services/snackbars/SnackBarWithSocketError";
+import { useAppSelector } from "@hooks/useGlobalState";
+import { selectMainState } from "@store/main/slice";
 
 // Компонент, содержащий дополнительные "сервисные" модули, такие как всплывающие/модальные окна и подсказки
 export default function ServiceComponents() {
@@ -17,8 +17,6 @@ export default function ServiceComponents() {
         {isAuth
             ? <>
                 <SnackBarWithSocketError />
-                {/* <SnackBarWithCall /> */}
-                {/* <ModalWithCall /> */}
                 <ModalWithImagesCarousel />
                 <ModalWithAttachments />
             </>

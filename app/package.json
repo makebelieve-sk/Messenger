@@ -4,11 +4,14 @@
   "private": true,
   "description": "messenger front",
   "author": "Aleksey Skriabin",
+  "license": "ISC",
   "type": "module",
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
-    "build": "tsc -b && vite build"
+    "build": "tsc && vite build",
+    "prepare": "cd .. && husky",
+    "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -34,12 +37,20 @@
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.13.5",
+    "@types/debug": "^4.1.12",
     "@types/react": "^19.0.4",
     "@types/react-dom": "^19.0.2",
     "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.18.0",
+    "husky": "^9.1.7",
+    "jiti": "^2.4.2",
+    "rollup-plugin-visualizer": "^5.14.0",
     "sass": "^1.83.1",
     "typescript": "^5.7.3",
-    "vite": "^6.0.7"
+    "vite": "^6.0.7",
+    "vite-plugin-eslint": "^1.8.1"
   }
 }

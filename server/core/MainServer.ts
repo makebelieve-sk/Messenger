@@ -5,14 +5,17 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
 
+import Logger from "../service/logger";
 import ApiServer from "./ApiServer";
 import RedisWorks from "./Redis";
 import PassportWorks from "./Passport";
 import Database from "./Database";
 import SocketWorks from "./Socket";
 import { oneHour } from "../utils/datetime";
-import { ASSETS_PATH, PUBLIC_PATH } from "../utils/files";
+import { ASSETS_PATH } from "../utils/files";
 import { UsersType } from "../types";
+
+const logger = Logger("MainServer");
 
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 const SECRET_KEY = process.env.SECRET_KEY as string;
@@ -30,6 +33,8 @@ export default class MainServer {
 
     constructor(private readonly _app: Express, private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>) {
         this._users = new Map();
+
+        logger.debug("init");
 
         // Инициализируем работу базы данных (модели, отношения)
         this._database = new Database();
@@ -86,21 +91,7 @@ export default class MainServer {
                 {
                     dotfiles: "ignore",     // Игнорируем передачу файлов, начинающихся с точки, например, .env, .gitignore и тд
                     maxAge: "1d",           // Задаем максимальное время жизни кеша со статическими файлами (то есть браузер кеширует данный файл по времени)
-                    fallthrough: true,     // Запрещаем Express искать другие маршруты в случае, если файл не найден
-                    cacheControl: true      // Добавляем заголовок Cache-Control в ответ для лучшего кеширования
-                }
-            )
-        );
-        // Указываем Express использовать папку public для обслуживания статических файлов (опции express.static необходимо прописывать каждому мидлвару в отдельности)
-        this._app.use(
-            "/public", 
-            express.static(
-                path.join(__dirname, PUBLIC_PATH), 
-                {
-                    dotfiles: "ignore",     // Игнорируем пережачу файлов, начинающихся с точки, например, .env, .gitignore и тд
-                    index: "index.html",    // Указываем отдачу файла index.html, если в запросе не указан файл, например, запрос к / или к /folder/
-                    maxAge: "1d",           // Задаем максимальное время жизни кеша со статическими файлами (то есть браузер кеширует данный файл по времени)
-                    fallthrough: true,     // Запрещаем Express искать другие маршруты в случае, если файл не найден
+                    fallthrough: true,      // Запрещаем Express искать другие маршруты в случае, если файл не найден
                     cacheControl: true      // Добавляем заголовок Cache-Control в ответ для лучшего кеширования
                 }
             )
@@ -109,6 +100,8 @@ export default class MainServer {
 
     // Закрытие сервера
     close() {
+        logger.debug("close");
+
         this._database.close();
         this._redisWork.close();
         this._socket.close();

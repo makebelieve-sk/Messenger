@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-import {formattedValue} from "../../utils/time";
+import {formattedValue} from "../../utils/date";
 import { IFormValues } from "../../pages/Edit";
 
 interface DatePickerComponentProps {

@@ -9,14 +9,14 @@ import dayjs, { Dayjs } from "dayjs";
 
 import EditTabsModule from "../modules/edit";
 import AlertComponent from "../components/ui/alert";
-import SpinnerComponent from "../components/ui/Spinner";
-import useMainClient from "../hooks/useMainClient";
-import useUserDetails from "../hooks/useUserDetails";
-import useProfile from "../hooks/useProfile";
-import useUser from "../hooks/useUser";
-import { REQUIRED_FIELD } from "../utils/constants";
-import {formattedValue} from  "../utils/time";
-import { UserDetailsEvents } from "../types/events";
+import SpinnerComponent from "@components/ui/spinner";
+import useMainClient from "@hooks/useMainClient";
+import useUserDetails from "@hooks/useUserDetails";
+import useProfile from "@hooks/useProfile";
+import useUser from "@hooks/useUser";
+import { REQUIRED_FIELD } from "@utils/constants";
+import {formattedValue} from  "@utils/date";
+import { UserDetailsEvents } from "@custom-types/events";
 
 import "../styles/pages/edit.scss";
 
@@ -68,10 +68,10 @@ export default function Edit() {
 		setFormValues({
 			name: user.firstName,
 			surName: user.thirdName,
-			sex: userDetails.details.sex,
-			birthday: userDetails.details.birthday,
-			work: userDetails.details.work,
-			city: userDetails.details.city,
+			sex: userDetails.details!.sex,
+			birthday: userDetails.details!.birthday,
+			work: userDetails.details!.work,
+			city: userDetails.details!.city,
 			phone: user.phone,
 			email: user.email,
 		});
@@ -144,7 +144,6 @@ export default function Edit() {
 
 				profile.editInfo({
 					result,
-					setLoading,
 					setShowAlert,
 				});
 			} else {

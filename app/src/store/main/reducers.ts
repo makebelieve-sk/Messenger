@@ -1,19 +1,17 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-// import { IImage } from "../../components/message-types/image-message";
-import { FriendsNoticeTypes } from "../../types/enums";
-import { IUser } from "../../types/models.types";
-import { ICallData } from "../../types/socket.types";
-import { MainType } from "./slice";
-import { ICarouselImage } from "../../modules/ImagesCarousel/Info/Info";
+
+import { FriendsNoticeTypes } from "@custom-types/enums";
+import { IUser } from "@custom-types/models.types";
+import { MainStateType } from "@custom-types/redux.types";
 
 export default {
-    setAuth: (state: MainType, action: PayloadAction<boolean>) => {
+    setAuth: (state: MainStateType, action: PayloadAction<boolean>) => {
         state.isAuth = action.payload;
     },
-    setLoadingUserDetails: (state: MainType, action: PayloadAction<boolean>) => {
+    setLoadingUserDetails: (state: MainStateType, action: PayloadAction<boolean>) => {
         state.loadingUserDetails = action.payload;
     },
-    setFriendNotification: (state: MainType, action: PayloadAction<FriendsNoticeTypes | number>) => {
+    setFriendNotification: (state: MainStateType, action: PayloadAction<FriendsNoticeTypes | number>) => {
         const data = action.payload;
 
         switch (data) {
@@ -28,19 +26,10 @@ export default {
                 break;
         }
     },
-    setModalConfirm: (state: MainType, action: PayloadAction<{ text: string; btnActionTitle: string; cb: Function; } | null>) => {
-        state.modalConfirm = action.payload;
-    },
-    setGlobalInCall: (state: MainType, action: PayloadAction<null | ICallData>) => {
-        state.globalCall = action.payload;
-    },
-    setImagesInCarousel: (state: MainType, action: PayloadAction<{ images: ICarouselImage[], index: number } | null>) => {
-        state.imagesInCarousel = action.payload;
-    },
-    setMessageNotification: (state: MainType, action: PayloadAction<number>) => {
+    setMessageNotification: (state: MainStateType, action: PayloadAction<number>) => {
         state.messageNotification = action.payload;
     },
-    setOnlineUsers: (state: MainType, action: PayloadAction<IUser>) => {
+    setOnlineUsers: (state: MainStateType, action: PayloadAction<IUser>) => {
         const newUser = action.payload;
         const findUser = state.onlineUsers.find(onlineUser => onlineUser.id === newUser.id);
 
@@ -48,7 +37,7 @@ export default {
             state.onlineUsers.push(newUser);
         }
     },
-    deleteOnlineUser: (state: MainType, action: PayloadAction<string>) => {
+    deleteOnlineUser: (state: MainStateType, action: PayloadAction<string>) => {
         state.onlineUsers = state.onlineUsers.filter(onlineUser => onlineUser.id !== action.payload);
     },
 };

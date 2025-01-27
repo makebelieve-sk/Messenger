@@ -1,14 +1,27 @@
 import { Request, Response, Express, NextFunction } from "express";
 
+import Logger from "../service/logger";
 import { t } from "../service/i18n";
 import { ApiRoutes, HTTPStatuses } from "../types/enums";
 import { IUserDetails } from "../types/models.types";
 import { ISafeUser } from "../types/user.types";
-import { IFormValues } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { getSafeUserFields } from "../utils/user";
 import { UsersError } from "../errors/controllers";
+
+const logger = Logger("UserController");
+
+interface IEditInfoBody {
+    name: string;
+    surName: string;
+    sex: string;
+    birthday: string;
+    work: string;
+    city: string;
+    phone: string;
+    email: string;
+};
 
 // Класс, отвечающий за API пользователей
 export default class UserController {
@@ -26,6 +39,8 @@ export default class UserController {
 
     // Получение данных о себе
     private _getMe(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_getMe");
+
         if (!req.user) {
             return next(new UsersError(t("users.error.user_not_found"), HTTPStatuses.NotFound));
         }
@@ -37,6 +52,8 @@ export default class UserController {
     private async _getUserDetail(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req.user as ISafeUser).id;
+
+            logger.debug("_getUserDetail [userId=%s]", userId);
 
             const userDetail = await this._database.models.userDetails.findOne({ where: { userId } });
 
@@ -52,10 +69,12 @@ export default class UserController {
 
     // Изменение информации о пользователе
     private async _editInfo(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_editInfo [req.body=%s]", req.body);
+
         const transaction = await this._database.sequelize.transaction();
 
         try {
-            const { name, surName, sex, birthday, work, city, phone, email }: IFormValues = req.body;
+            const { name, surName, sex, birthday, work, city, phone, email }: IEditInfoBody = req.body;
             const userId = (req.user as ISafeUser).id;
 
             if (!phone || !email || !name || !surName) {
@@ -112,6 +131,8 @@ export default class UserController {
 
     // Получение данных о другом пользователе
     private async _getUser(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_getUser [req.body=%s]", req.body);
+
         try {
             const { id }: { id: string; } = req.body;
 

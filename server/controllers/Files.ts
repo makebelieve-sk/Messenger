@@ -4,12 +4,15 @@ import fs from "fs";
 import { Op } from "sequelize";
 import { Request, Response, NextFunction, Express } from "express";
 
+import Logger from "../service/logger";
 import { t } from "../service/i18n";
 import { ApiRoutes, HTTPStatuses } from "../types/enums";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { FilesError } from "../errors/controllers";
 import { MB_1 } from "../utils/files";
+
+const logger = Logger("FilesController");
 
 const MULTER_MAX_FILE_SIZE = parseInt(process.env.MULTER_MAX_FILE_SIZE as string);
 const MULTER_MAX_FILEX_COUNT = parseInt(process.env.MULTER_MAX_FILEX_COUNT as string);
@@ -38,6 +41,8 @@ export default class FilesController {
 
     // Сохраняем файлы (req.files) в таблицу Files
     private async _saveFiles(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_saveFiles [req.files=%j]", req.files);
+
         const transaction = await this._database.sequelize.transaction();
 
         try {
@@ -61,6 +66,7 @@ export default class FilesController {
                     res.json({ success: true, files: prepFiles });
                 }
             } else {
+                await transaction.rollback();
                 return next(new FilesError(t("files.error.files_not_found")));
             }
         } catch (error) {
@@ -71,12 +77,15 @@ export default class FilesController {
 
     // Удаляем старые файлы редактируемого сообщения
     private async _deleteFiles(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_deleteFiles [req.body=%j]", req.body);
+
         const transaction = await this._database.sequelize.transaction();
 
         try {
             const { messageId }: { messageId: string; } = req.body;
 
             if (!messageId) {
+                await transaction.rollback();
                 return next(new FilesError(t("files.error.message_id_not_found"), HTTPStatuses.BadRequest));
             }
 
@@ -125,6 +134,8 @@ export default class FilesController {
 
     // Открываем файл при клике на него
     private _openFile(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_openFile [req.body=%j]", req.body);
+
         const { path }: { path: string; } = req.body;
 
         if (!path) {
@@ -140,6 +151,8 @@ export default class FilesController {
 
     // Скачивание файла
     private _downloadFile(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_openFile [req.query=%j]", req.query);
+
         try {
             const { name, path } = req.query as { name: string; path: string; };
 

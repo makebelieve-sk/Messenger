@@ -1,14 +1,17 @@
 import EventEmitter from "eventemitter3";
 import { AxiosError } from "axios";
 
-import i18next from "../service/i18n";
-import { setError } from "../store/error/slice";
-import { ErrorCodes, HTTPStatuses, Pages } from "../types/enums";
-import { AppDispatch } from "../types/redux.types";
-import { MainClientEvents } from "../types/events";
+import Logger from "@service/Logger";
+import i18next from "@service/i18n";
+import { setError } from "@store/error/slice";
+import { ErrorCodes, HTTPStatuses, Pages } from "@custom-types/enums";
+import { AppDispatch } from "@custom-types/redux.types";
+import { MainClientEvents } from "@custom-types/events";
 
 type BadRequestType = { success: boolean; message: string; field?: string; } | string | null;
 export type CatchType = BadRequestType | string | null;
+
+const logger = Logger.init("CatchErrors");
 
 const ERROR_MESSAGE = i18next.t("core.catch-errors.error");
 const ERROR_NETWORK = i18next.t("core.catch-errors.error.timeout");
@@ -36,7 +39,7 @@ export default class CatchErrors extends EventEmitter {
         this._errorText = errorText;
         this._axiosError = axiosError;
 
-        console.error(this._axiosError);
+        logger.error(this.error);
 
         if (this._axiosError) {
             // Сервер вернул ответ с ошибкой (в объекте ответа присутствует статус ошибки)

@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import { Request, Response, Express, NextFunction } from "express";
 import { Transaction } from "sequelize";
 
+import Logger from "../service/logger";
 import { t } from "../service/i18n";
 import { getSearchWhere } from "../utils/where";
 import { ApiRoutes, FriendsTab, HTTPStatuses } from "../types/enums";
@@ -10,6 +11,8 @@ import { UsersType } from "../types";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { FriendsError } from "../errors/controllers";
+
+const logger = Logger("FriendsController");
 
 // Класс, отвечающий за API друзей
 export default class FriendsController {
@@ -74,6 +77,9 @@ export default class FriendsController {
     private async _getFriendsNotification(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req.user as ISafeUser).id;
+
+            logger.debug("_getFriendsNotification  [userId=%s]", userId);
+
             const friends = await this._database.sequelize.query(this._getFreindsRequestsQuery(userId));
 
             if (friends && friends[0]) {
@@ -90,6 +96,8 @@ export default class FriendsController {
     private async _getPossibleUsers(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req.user as ISafeUser).id;
+
+            logger.debug("_getPossibleUsers  [userId=%s]", userId);
 
             const possibleUsers = await this._database.sequelize.query(this._possibleUsersQuery(userId));
 
@@ -109,6 +117,8 @@ export default class FriendsController {
 
         try {
             const userId = (req.user as ISafeUser).id;
+
+            logger.debug("_getCountFriends  [userId=%s]", userId);
 
             const friendsCount: [any[], any] = await this._database.sequelize.query(`
                 SELECT COUNT(*) AS count
@@ -159,6 +169,8 @@ export default class FriendsController {
 
     // Получение 5 возможных друзей, всех друзей и друзей онлайн
     private async _getFriends(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_getCountFriends  [req.body=%j]", req.body);
+
         try {
             const { tab = 0, search }: { tab: number; search: string; } = req.body;
             const userId = (req.user as ISafeUser).id;
@@ -285,6 +297,8 @@ export default class FriendsController {
 
     // Получить специфичную информацию о друге, с которым открыт диалог
     private async _getFriendInfo(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_getFriendInfo  [req.body=%j]", req.body);
+
         const transaction = await this._database.sequelize.transaction();
 
         try {
@@ -292,6 +306,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!chatId) {
+                await transaction.rollback();
                 return next(new FriendsError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
             }
 
@@ -320,6 +335,7 @@ export default class FriendsController {
                 : null;
 
             if (!friendInfo) {
+                await transaction.rollback();
                 return next(new FriendsError(t("friends.error.friend_id_not_found"), HTTPStatuses.BadRequest));
             }
 
@@ -341,6 +357,8 @@ export default class FriendsController {
 
     // Добавить пользователя в друзья
     private async _addToFriend(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_addToFriend  [req.body=%j]", req.body);
+
         const transaction = await this._database.sequelize.transaction();
         
         try {
@@ -348,6 +366,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
+                await transaction.rollback();
                 return next(new FriendsError(t("friends.error.subscribed_id_not_found"), HTTPStatuses.BadRequest));
             }
 
@@ -379,6 +398,8 @@ export default class FriendsController {
 
     // Отписаться от пользователя
     private async _unsubscribeUser(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_unsubscribeUser  [req.body=%j]", req.body);
+
         try {
             const { friendId }: { friendId: string; } = req.body;
             const userId = (req.user as ISafeUser).id;
@@ -399,6 +420,8 @@ export default class FriendsController {
 
     // Добавить пользователя из подписчиков в друзья
     private async _acceptUser(req: Request, res: Response, next: NextFunction, { curTransaction }: { curTransaction?: Transaction } = {}) {
+        logger.debug("_acceptUser  [req.body=%j]", req.body);
+
         const transaction = curTransaction || await this._database.sequelize.transaction();
 
         try {
@@ -406,6 +429,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
+                await transaction.rollback();
                 return next(new FriendsError(t("friends.error.added_id_not_found"), HTTPStatuses.BadRequest));
             }
 
@@ -440,6 +464,8 @@ export default class FriendsController {
 
     // Оставить пользователя в подписчиках
     private async _leftInSubscribers(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_leftInSubscribers  [req.body=%j]", req.body);
+
         try {
             const { friendId }: { friendId: string; } = req.body;
             const userId = (req.user as ISafeUser).id;
@@ -461,6 +487,8 @@ export default class FriendsController {
 
     // Удалить из друзей
     private async _deleteFriend(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_deleteFriend  [req.body=%j]", req.body);
+
         const transaction: Transaction = await this._database.sequelize.transaction();
 
         try {
@@ -468,6 +496,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
+                await transaction.rollback();
                 return next(new FriendsError(t("friends.error.deleted_id_not_found"), HTTPStatuses.BadRequest));
             }
 
@@ -498,6 +527,8 @@ export default class FriendsController {
 
     // Заблокировать пользователя
     private async _blockFriend(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_blockFriend  [req.body=%j]", req.body);
+
         const transaction: Transaction = await this._database.sequelize.transaction();
 
         try {
@@ -505,6 +536,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!friendId) {
+                await transaction.rollback();
                 return next(new FriendsError(t("friends.error.blocked_id_not_found"), HTTPStatuses.BadRequest));
             }
 
@@ -538,6 +570,8 @@ export default class FriendsController {
 
     // Проверка на блокировку пользователя 
     private async _checkBlockStatus(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_checkBlockStatus  [req.body=%j]", req.body);
+
         const transaction: Transaction = await this._database.sequelize.transaction();
 
         try {
@@ -545,6 +579,7 @@ export default class FriendsController {
             const userId = (req.user as ISafeUser).id;
 
             if (!checkingUser) {
+                await transaction.rollback();
                 return next(new FriendsError(t("friends.error.check_blocked_id_not_found"), HTTPStatuses.BadRequest));
             }
 

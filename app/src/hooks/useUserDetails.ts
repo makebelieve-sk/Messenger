@@ -1,5 +1,5 @@
-import { MY_ID } from "../utils/constants";
-import useUser from "./useUser";
+import { MY_ID } from "@utils/constants";
+import useUser from "@hooks/useUser";
 
 // Возврат сущности "Дополнительная информация пользователя" по переданному идентификатору
 export default function useUserDetails(userId: string = MY_ID) {

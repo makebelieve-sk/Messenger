@@ -1,5 +1,5 @@
 import { MessageTypes } from "./enums";
-import { ICall, IFile } from "./models.types";
+import { IFile } from "./models.types";
 
 export interface IEditMessage {
     id: string;
@@ -13,7 +13,6 @@ export type MessageExt = {
     message: string;
     type: MessageTypes;
     files: IFile[];
-    call: ICall | undefined;
     messageAuthor: { id: string; avatarUrl: string; } | undefined;
     chatSoundStatus: boolean;
 };

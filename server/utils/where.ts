@@ -1,7 +1,12 @@
 import { Sequelize } from "sequelize";
+import Logger from "../service/logger";
+
+const logger = Logger("utils/where");
 
 // Формирование запроса для поиска (для сообщений, диалогов, друзей) или просто возврат обработанной строки
 export const getSearchWhere = (search: string, colname: string | undefined = undefined, sequelize: Sequelize | undefined = undefined) => {
+    logger.debug("getSearchWhere [search=%s, colname=%s]", search, colname);
+
     if (!search) {
         return "";
     }
