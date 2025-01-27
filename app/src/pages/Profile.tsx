@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 
 import { Pages } from "@custom-types/enums";
-import MainPhoto from "@modules/Profile/main-photo";
-import Friends from "@modules/Profile/Friends";
-import PersonalInfo from "@modules/Profile/personal-info";
-import Photos from "@modules/Profile/Photos";
+import MainPhoto from "@modules/profile/main-photo";
+import Friends from "@modules/profile/friends";
+import PersonalInfo from "@modules/profile/personal-info";
+import Photos from "@modules/profile/photos";
 
 import "@styles/pages/profile.scss";
 

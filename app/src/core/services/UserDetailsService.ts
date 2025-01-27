@@ -11,11 +11,10 @@ import { UserDetailsEvents } from "@custom-types/events";
 import { ApiRoutes } from "@custom-types/enums";
 
 const logger = Logger.init("UserDetails");
-const NOT_COMPLITE = i18next.t("profile-module.not_complete");
+const NOT_COMPLETE = i18next.t("profile-module.not_complete");
 
 // Класс, реализовывающий сущность "Дополнительная информация о пользователе" согласно контракту "Пользователь"
 export default class UserDetailsService extends EventEmitter implements UserDetails {
-   
   private _details!: IUserDetails;
 
     constructor(private readonly _request: Request) {
@@ -24,7 +23,7 @@ export default class UserDetailsService extends EventEmitter implements UserDeta
     }
 
     get sex() {
-        return this._details?.sex || ""
+        return this._details?.sex || NOT_COMPLETE;
     }
     set sex(value: string) {
         if (this._details) {
@@ -42,17 +41,17 @@ export default class UserDetailsService extends EventEmitter implements UserDeta
     }
 
     get city() {
-        return this._details && this._details.city ? this._details.city : NOT_COMPLITE;
+        return this._details && this._details.city ? this._details.city : NOT_COMPLETE;
     }
 
     get work() {
-        return this._details && this._details.work ? this._details.work : NOT_COMPLITE;
+        return this._details && this._details.work ? this._details.work : NOT_COMPLETE;
     }
 
     // Трансформация дня рождения пользователя
     private _transformBirthday() {
         if (!this._details || !this._details.city) {
-            return NOT_COMPLITE;
+            return NOT_COMPLETE;
         }
 
         const dates = this._details.birthday.split("-");
@@ -66,9 +65,13 @@ export default class UserDetailsService extends EventEmitter implements UserDeta
     }
 
     // Обновление дополнительной информации о пользователе
-    updateDetails(details: IUserDetails) {
+    editDetails(details: IUserDetails) {
         logger.debug(`updateDetails [detailsUserId=${details.userId}]`);
         this._details = details;
+    }
+
+    updateDetails() {
+        this._getUserDetail();
     }
 
     private _getUserDetail() {
@@ -80,7 +83,6 @@ export default class UserDetailsService extends EventEmitter implements UserDeta
             successCb: (data: { success: boolean, userDetail: IUserDetails }) => {
                 this._details = data.userDetail;
                 logger.info(`_getUserDetail: ${JSON.stringify(this._details)}`);
-                // console.log(`Emitting UPDATE event. Details:`, this._details);
                 this.emit(UserDetailsEvents.UPDATE);
             }
         });

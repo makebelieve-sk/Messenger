@@ -8,6 +8,9 @@ export default {
     setAuth: (state: MainStateType, action: PayloadAction<boolean>) => {
         state.isAuth = action.payload;
     },
+    setLoading: (state: MainStateType, action: PayloadAction<boolean>) => {
+        state.loading = action.payload;
+    },
     setLoadingUserDetails: (state: MainStateType, action: PayloadAction<boolean>) => {
         state.loadingUserDetails = action.payload;
     },

@@ -26,6 +26,7 @@ export const selectMainState = (state: RootState) => state.main;
 // Экшены
 export const {
   setAuth,
+  setLoading,
   setLoadingUserDetails,
   setFriendNotification,
   setMessageNotification,

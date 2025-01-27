@@ -36,7 +36,7 @@ export default class ProfileService extends EventEmitter implements Profile {
 
         logger.debug(`init profile for user [userId=${this._userId}]`);
 
-        this._user = UserService.create(this._userId, this._request);
+        this._user = UserService.create(this._userId, this._request, this._dispatch);
         this._bindUserListeners();
     }
 

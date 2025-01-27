@@ -4,12 +4,13 @@ import EventEmitter from "eventemitter3";
 
 // Контракт модели "Дополнительная информация о пользователе"
 export interface UserDetails extends EventEmitter {
-    details: IUserDetails | null;
+    details: IUserDetails;
     birthday: string;
     city: string;
     work: string;
 
-    updateDetails: (details: IUserDetails) => void;
+    editDetails: (details: IUserDetails) => void;
+    updateDetails: () => void;
     getFriendsText: (count: number) => string;
     getSubscribersText: (count: number) => string;
     getPhotosText: (count: number) => string;

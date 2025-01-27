@@ -9,6 +9,8 @@ import { MY_ID } from "@utils/constants";
 import { IUser, IUserDetails } from "@custom-types/models.types";
 import { ApiRoutes } from "@custom-types/enums";
 import { MainClientEvents, UserEvents } from "@custom-types/events";
+import { setLoading } from "@store/main/slice";
+import { AppDispatch } from "@custom-types/redux.types";
 
 const logger = Logger.init("User");
 
@@ -17,7 +19,7 @@ export default class UserService extends EventEmitter implements User {
     private readonly _userDetails: UserDetails;
     private _user!: IUser;
 
-    constructor(private readonly _id: string, private readonly _request: Request) {
+    constructor(private readonly _id: string, private readonly _request: Request, private readonly _dispatch: AppDispatch) {
         super();
 
         logger.debug(`init user [id=${this._id}]`);
@@ -70,7 +72,7 @@ export default class UserService extends EventEmitter implements User {
         this._request.get({
             route: ApiRoutes.getMe,
             setLoading: (isLoading: boolean) => {
-                this.emit(UserEvents.SET_LOADING, isLoading);
+                this._dispatch(setLoading(isLoading));
             },
             successCb: (data: { user: IUser }) => {
                 this._user = data.user;
@@ -96,6 +98,7 @@ export default class UserService extends EventEmitter implements User {
     updateMe() {
         logger.debug("updateMe");
         this._getMe();
+        this._userDetails.updateDetails();
     }
 
     // Замена поля пользователя и обновление в глобальном состоянии
@@ -109,14 +112,14 @@ export default class UserService extends EventEmitter implements User {
     updateInfo({ user, userDetails }: { user: IUser, userDetails: IUserDetails }) {
         logger.debug("updateInfo");
         this._user = user;
-        this._userDetails.updateDetails(userDetails);
+        this._userDetails.editDetails(userDetails);
     }
 
     /**
      * Статичный метод фабрика
      * Возвращает сущность "Пользователь"
      */
-    static create(...args: [string, Request]) {
+    static create(...args: [string, Request, AppDispatch]) {
         return new UserService(...args);
     }
 }

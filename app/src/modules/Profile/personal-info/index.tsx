@@ -10,7 +10,7 @@ import { useAppSelector } from "@hooks/useGlobalState";
 import { selectFriendState } from "@store/friend/slice";
 import { selectUserState } from "@store/user/slice";
 import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
-import { onClickBlockType } from "@modules/Profile/Friends";
+import { onClickBlockType } from "@modules/profile/friends";
 import SpinnerComponent from "@components/ui/spinner";
 import { UserDetailsEvents } from "@custom-types/events";
 import "./personal-info.scss";
