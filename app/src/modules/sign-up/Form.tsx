@@ -50,15 +50,15 @@ export default memo(function SignUpForm({
 					e.target.value === formValues.values.password
 						? ""
 						: e.target.value !== formValues.values.password
-						? t("sign-up-module.password_incorrect")
-						: REQUIRED_FIELD,
+							? t("sign-up-module.password_incorrect")
+							: REQUIRED_FIELD,
 				passwordConfirm:
 					e.target.value &&
 					e.target.value === formValues.values.password
 						? ""
 						: e.target.value !== formValues.values.password
-						? t("sign-up-module.password_incorrect")
-						: REQUIRED_FIELD,
+							? t("sign-up-module.password_incorrect")
+							: REQUIRED_FIELD,
 			}
 		});
 	};
