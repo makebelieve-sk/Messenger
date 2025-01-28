@@ -4,8 +4,7 @@ import { Dayjs } from "dayjs";
 import { IFormErrors, IFormValues } from "../../pages/Edit";
 import Contacts from "./contacts";
 import Main from "./main";
-import {EditTabs} from "../../types/enums";
-// import {EditTabs} from "@custom-types/enums";
+import {EditTabs} from "@custom-types/enums";
 
 interface IEditTabsModule extends ITabModule {
 	tab: number;

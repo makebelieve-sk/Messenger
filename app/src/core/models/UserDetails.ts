@@ -1,4 +1,3 @@
-import { UserDetailsEvents } from "@custom-types/events";
 import { IUserDetails } from "@custom-types/models.types";
 import EventEmitter from "eventemitter3";
 

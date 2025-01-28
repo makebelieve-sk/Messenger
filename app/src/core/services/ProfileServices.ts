@@ -209,5 +209,4 @@ export default class ProfileService extends EventEmitter implements Profile {
         });
 
     }
-
 }

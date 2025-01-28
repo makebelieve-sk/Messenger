@@ -1,13 +1,13 @@
 import EventEmitter from "eventemitter3";
 
 import i18next from "@service/i18n";
-import Request from "@core/Request";
 import Logger from "@service/Logger";
-import { IUserDetails } from "@custom-types/models.types";
+import Request from "@core/Request";
+import { UserDetails } from "@core/models/UserDetails";
 import { muchSelected } from "@utils/index";
 import { getMonthName } from "@utils/date";
-import { UserDetails } from "@core/models/UserDetails";
 import { UserDetailsEvents } from "@custom-types/events";
+import { IUserDetails } from "@custom-types/models.types";
 import { ApiRoutes } from "@custom-types/enums";
 
 const logger = Logger.init("UserDetails");
