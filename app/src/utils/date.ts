@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import { Times } from "@custom-types/enums";
@@ -83,4 +85,9 @@ export const getTime = (createDate: string, options: { withoutYesterday?: boolea
                 : Date.now() - date < Times.TODAY
                     ? `${beforeMidnight ? i18next.t("utils.yesterday") : ""}` + getHoursOrMinutes(new Date(createDate).getHours()) + ":" + getHoursOrMinutes(new Date(createDate).getMinutes())
                     : null;
+};
+
+// Форматирование даты
+export const formattedValue = (date: Dayjs | null): string | null => {
+    return date ? date.format("YYYY-MM-DD") : null;
 };

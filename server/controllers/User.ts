@@ -77,9 +77,14 @@ export default class UserController {
             const { name, surName, sex, birthday, work, city, phone, email }: IEditInfoBody = req.body;
             const userId = (req.user as ISafeUser).id;
 
-            const result: { user: ISafeUser | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = { 
-                user: null, 
-                userDetails: null 
+            if (!phone || !email || !name || !surName) {
+                await transaction.rollback();
+                return next(new UsersError(t("users.error.user_incorrect_data"), HTTPStatuses.BadRequest));
+            }
+
+            const result: { user: ISafeUser | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = {
+                user: null,
+                userDetails: null
             };
 
             const findUser = await this._database.models.users.findByPk(userId, { transaction });
@@ -87,13 +92,13 @@ export default class UserController {
             if (!findUser) {
                 await transaction.rollback();
                 return next(new UsersError(t("users.error.user_with_id_not_found", { id: userId }), HTTPStatuses.NotFound));
-            } 
+            }
 
             result.user = {
                 ...getSafeUserFields(findUser),
-                firstName: name, 
-                thirdName: surName, 
-                email, 
+                firstName: name,
+                thirdName: surName,
+                email,
                 phone
             };
 
@@ -107,8 +112,8 @@ export default class UserController {
             }
 
             result.userDetails = {
-                sex, 
-                birthday, 
+                sex,
+                birthday,
                 work,
                 city
             };

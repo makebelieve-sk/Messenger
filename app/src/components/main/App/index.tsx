@@ -8,28 +8,34 @@ import { useAppSelector } from "@hooks/useGlobalState";
 
 import "./app.scss";
 
-// Главный компонент, который отрисовывает основноую верстку проекта
+// Главный компонент, который отрисовывает основную верстку проекта
 export default function App() {
-  const { isAuth, loading } = useAppSelector(selectMainState);
+	const { isAuth, loading } = useAppSelector(selectMainState);
 
-  return <div className="root">
-    <ServiceComponents />
+	return <div className="root">
+		<ServiceComponents />
 
-    {loading
-      ? <SpinnerComponent />
-      : <>
-        {isAuth ? <HeaderComponent /> : null}
+		{loading
+			? <SpinnerComponent />
+			: <>
+				{isAuth ? <HeaderComponent /> : null}
 
-        <div className="root__wrapper">
-          <div className={`root__wrapper__container ${isAuth ? "" : "root__wrapper__container__no-auth"}`}>
-            {isAuth ? <MenuComponent /> : null}
+				<div className="root__wrapper">
+					<div
+						className={`root__wrapper__container ${
+							isAuth
+								? ""
+								: "root__wrapper__container__no-auth"
+						}`}
+					>
+						{isAuth ? <MenuComponent /> : null}
 
-            <div className="root__wrapper__container__content">
-              <Router />
-            </div>
-          </div>
-        </div>
-      </>
-    }
-  </div>
-};
+						<div className="root__wrapper__container__content">
+							<Router />
+						</div>
+					</div>
+				</div>
+			</>
+		}
+	</div>
+}

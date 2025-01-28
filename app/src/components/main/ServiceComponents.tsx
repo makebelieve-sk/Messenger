@@ -2,7 +2,7 @@ import ModalWithError from "@components/services/modals/error";
 import ModalWithAttachments from "@components/services/modals/ModalWithAttachments";
 import ModalWithConfirm from "@components/services/modals/confirm";
 import ModalWithImagesCarousel from "@components/services/modals/carousel";
-import SnackBarWithSocketError from "@components/services/snackbars/SnackBarWithSocketError";
+import SnackBarWithSocketError from "@components/services/snackbars/socket-error";
 import { useAppSelector } from "@hooks/useGlobalState";
 import { selectMainState } from "@store/main/slice";
 

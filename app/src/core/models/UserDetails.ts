@@ -1,13 +1,15 @@
+import EventEmitter from "eventemitter3";
 import { IUserDetails } from "@custom-types/models.types";
 
 // Контракт модели "Дополнительная информация о пользователе"
-export interface UserDetails {
-    details: IUserDetails | null;
+export interface UserDetails extends EventEmitter {
+    details: IUserDetails;
     birthday: string;
     city: string;
     work: string;
 
-    setDetails: (details: IUserDetails) => void;
+    editDetails: (details: IUserDetails) => void;
+    updateDetails: () => void;
     getFriendsText: (count: number) => string;
     getSubscribersText: (count: number) => string;
     getPhotosText: (count: number) => string;

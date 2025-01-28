@@ -1,5 +1,6 @@
 import EventEmitter from "eventemitter3";
 
+import { IFormValues } from "@pages/Edit";
 import Logger from "@service/Logger";
 import Request from "@core/Request";
 import UserService from "@core/services/UserService";
@@ -10,7 +11,7 @@ import { setFriendsCount, setSubscribersCount, setTopFriends } from "@store/frie
 import { ApiRoutes } from "@custom-types/enums";
 import { IPhoto, IUser, IUserDetails } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
-import { GlobalEvents, MainClientEvents, UserEvents } from "@custom-types/events";
+import { GlobalEvents, MainClientEvents, UserEvents, UserDetailsEvents, ProfileEvents } from "@custom-types/events";
 import { AVATAR_URL } from "@utils/files";
 import { getFullName } from "@utils/index";
 import { currentDate } from "@utils/time";
@@ -27,7 +28,7 @@ export default class ProfileService extends EventEmitter implements Profile {
 
         logger.debug(`init profile for user [userId=${this._userId}]`);
 
-        this._user = UserService.create(this._userId, this._dispatch, this._request);
+        this._user = UserService.create(this._userId, this._request, this._dispatch);
         this._bindUserListeners();
     }
 
@@ -84,10 +85,10 @@ export default class ProfileService extends EventEmitter implements Profile {
         logger.debug(`onSetAvatar [data=${{ id, newAvatarUrl, newPhotoUrl }}]`);
 
         this._user.changeField(AVATAR_URL, newAvatarUrl);
-        this._dispatch(addPhotos([{ 
-            id, 
-            userId: this._user.id, 
-            path: newPhotoUrl, 
+        this._dispatch(addPhotos([{
+            id,
+            userId: this._user.id,
+            path: newPhotoUrl,
             createDate: currentDate
         }]));
     }
@@ -154,24 +155,10 @@ export default class ProfileService extends EventEmitter implements Profile {
 
                     if (deletedPhoto) {
                         const indexOf = photos.indexOf(deletedPhoto);
-        
+
                         this._dispatch(deletePhoto(indexOf));
                     }
                 }
-            }
-        });
-    }
-
-    //-------------------------------------------------
-    // Методы блока с основной информацией
-    //-------------------------------------------------
-    // Получение дополнительной информации о пользователе
-    getUserDetail(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
-        this._request.get({
-            route: ApiRoutes.getUserDetail, 
-            setLoading,
-            successCb: (data: { success: boolean; userDetail: IUserDetails; }) => {
-                this._user.setUserDetails(data.userDetail);
             }
         });
     }
@@ -182,7 +169,7 @@ export default class ProfileService extends EventEmitter implements Profile {
     // Получение друзей топ-6
     getFriends(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
         this._request.get({
-            route: ApiRoutes.getCountFriends, 
+            route: ApiRoutes.getCountFriends,
             setLoading,
             successCb: (data: { success: boolean, friendsCount: number, topFriends: IUser[] | null, subscribersCount: number; }) => {
                 this._dispatch(setFriendsCount(data.friendsCount));
@@ -190,5 +177,27 @@ export default class ProfileService extends EventEmitter implements Profile {
                 this._dispatch(setTopFriends(data.topFriends));
             }
         });
+    }
+
+    //-------------------------------------------------
+    // Методы страницы редактирования
+    //-------------------------------------------------
+    // Редактирование
+    editInfo(result: IFormValues) {
+        this._request.post({
+            route: ApiRoutes.editInfo,
+            data: {...result, userId: this._user.id},
+            setLoading: (value: React.SetStateAction<boolean>) => {
+                this.emit( UserDetailsEvents.SET_LOADING, value );
+            },
+            successCb:
+                (data: { success: boolean, user: IUser, userDetails: IUserDetails }) => {
+                    if (data.success) {
+                        this._user.updateInfo(data);
+                        this.emit(ProfileEvents.SET_ALERT);
+                    }
+                },
+        });
+
     }
 }

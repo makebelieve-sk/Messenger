@@ -1,18 +1,36 @@
+import EventEmitter from "eventemitter3";
+
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
-import { IUserDetails } from "@custom-types/models.types";
+import Request from "@core/Request";
+import { UserDetails } from "@core/models/UserDetails";
 import { muchSelected } from "@utils/index";
 import { getMonthName } from "@utils/date";
-import { UserDetails } from "@core/models/UserDetails";
+import { UserDetailsEvents } from "@custom-types/events";
+import { IUserDetails } from "@custom-types/models.types";
+import { ApiRoutes } from "@custom-types/enums";
 
 const logger = Logger.init("UserDetails");
-const NOT_COMPLITE = i18next.t("profile-module.not_complete");
+const NOT_COMPLETE = i18next.t("profile-module.not_complete");
 
 // Класс, реализовывающий сущность "Дополнительная информация о пользователе" согласно контракту "Пользователь"
-export default class UserDetailsService implements UserDetails {
-    private _details: IUserDetails | null = null;
+export default class UserDetailsService extends EventEmitter implements UserDetails {
+  private _details!: IUserDetails;
 
-    constructor() {}
+    constructor(private readonly _request: Request) {
+        super();
+        this._getUserDetail()
+    }
+
+    get sex() {
+        return this._details?.sex || NOT_COMPLETE;
+    }
+    set sex(value: string) {
+        if (this._details) {
+            this._details.sex = value
+        }
+    }
+    
 
     get details() {
         return this._details;
@@ -23,17 +41,17 @@ export default class UserDetailsService implements UserDetails {
     }
 
     get city() {
-        return this._details && this._details.city ? this._details.city : NOT_COMPLITE;
+        return this._details && this._details.city ? this._details.city : NOT_COMPLETE;
     }
 
     get work() {
-        return this._details && this._details.work ? this._details.work : NOT_COMPLITE;
+        return this._details && this._details.work ? this._details.work : NOT_COMPLETE;
     }
 
     // Трансформация дня рождения пользователя
     private _transformBirthday() {
         if (!this._details || !this._details.city) {
-            return NOT_COMPLITE;
+            return NOT_COMPLETE;
         }
 
         const dates = this._details.birthday.split("-");
@@ -47,9 +65,29 @@ export default class UserDetailsService implements UserDetails {
     }
 
     // Обновление дополнительной информации о пользователе
-    setDetails(details: IUserDetails) {
-        logger.debug(`setDetails [detailsUserId=${details.userId}]`);
+    editDetails(details: IUserDetails) {
+        logger.debug(`editDetails [detailsUserId=${details.userId}]`);
         this._details = details;
+    }
+
+    // Получение дополнительной информации о пользователе
+    updateDetails() {
+        this._getUserDetail();
+    }
+
+    // Получение дополнительной информации о пользователе
+    private _getUserDetail() {
+        this._request.get({
+            route: ApiRoutes.getUserDetail,
+            setLoading: (isLoading: boolean) => {
+                this.emit(UserDetailsEvents.SET_LOADING, isLoading);
+            },
+            successCb: (data: { success: boolean, userDetail: IUserDetails }) => {
+                this.editDetails(data.userDetail);
+                logger.info(`_getUserDetail: ${JSON.stringify(this._details)}`);
+                this.emit(UserDetailsEvents.UPDATE);
+            }
+        });
     }
 
     // Получение текста для разного количества друзей

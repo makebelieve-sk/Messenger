@@ -6,6 +6,7 @@ import { MainStateType, RootState } from "@custom-types/redux.types";
 // Начальное состояние
 export const initialState: MainStateType = {
   isAuth: false,
+  loadingUserDetails: false,
   loading: true,
   friendNotification: 0,
   messageNotification: 0,
@@ -24,8 +25,9 @@ export const selectMainState = (state: RootState) => state.main;
 
 // Экшены
 export const {
-  setAuth, 
+  setAuth,
   setLoading,
+  setLoadingUserDetails,
   setFriendNotification,
   setMessageNotification,
   setOnlineUsers,

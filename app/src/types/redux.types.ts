@@ -24,6 +24,7 @@ export interface FriendStateType {
 export interface MainStateType {
     isAuth: boolean;
     loading: boolean;
+    loadingUserDetails: boolean;
     friendNotification: number;
     messageNotification: number;
     onlineUsers: IUser[];

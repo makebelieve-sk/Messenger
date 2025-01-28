@@ -106,6 +106,12 @@ enum FriendsTab {
     search = 5,
 };
 
+// Вкладки страницы редактирования
+enum EditTabs {
+	MAIN = 0,
+	CONTACTS = 1,
+}
+
 // SOCKET маршруты
 enum SocketActions {
     // ---------------USERS------------------
@@ -205,6 +211,7 @@ export {
     Pages,
     MainFriendTabs,
     FriendsTab,
+    EditTabs,
     SocketActions,
     MessageTypes,
     MessageReadStatus,

@@ -1,7 +1,9 @@
 import EventEmitter from "eventemitter3";
 import { Dispatch, SetStateAction } from "react";
+import dayjs from "dayjs";
 
 import { User } from "@core/models/User";
+import { IFormValues } from "@pages/Edit";
 import { IPhoto } from "@custom-types/models.types";
 
 // Контракт модели "Профиль пользователя"
@@ -16,6 +18,6 @@ export interface Profile extends EventEmitter {
     onClickPhoto: (photos: IPhoto[], index: number) => void;
     addPhotos: (data: Object, setLoading: Dispatch<SetStateAction<boolean>>) => void;
     deletePhoto: (data: Object, photos: IPhoto[], path: string) => void;
-    getUserDetail: (setLoading: Dispatch<SetStateAction<boolean>>) => void;
     getFriends: (setLoading: Dispatch<SetStateAction<boolean>>) => void;
+    editInfo: ( result: IFormValues) => void;
 }
