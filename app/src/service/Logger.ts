@@ -1,5 +1,5 @@
-import { DebuggerType } from "../types/enums";
-import { ARRAY_LOGS_LENGTH, DEV, LOGS_FILE_NAME } from "../utils/constants";
+import { DebuggerType } from "@custom-types/enums";
+import { ARRAY_LOGS_LENGTH, DEV, LOGS_FILE_NAME } from "@utils/constants";
 
 const APP_NAME = "APP";             // Главное название лога
 const arrayLogs: string[] = [];     // Массив всех логов, максимум определяется .env переменной ARRAY_LOGS_LENGTH

@@ -75,6 +75,7 @@ export default class UserDetailsService extends EventEmitter implements UserDeta
         this._getUserDetail();
     }
 
+    // Получение дополнительной информации о пользователе
     private _getUserDetail() {
         this._request.get({
             route: ApiRoutes.getUserDetail,

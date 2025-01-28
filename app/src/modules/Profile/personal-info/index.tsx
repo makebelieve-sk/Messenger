@@ -34,7 +34,7 @@ export default memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
 
 	const handleOnLoading = (isLoading: boolean) => setLoading(isLoading);
 
-	//подписка на событие лоадинг
+	// Подписка на событие лоадинг
 	useEffect(() => {
 		userDetails.on(UserDetailsEvents.SET_LOADING, handleOnLoading);
 

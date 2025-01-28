@@ -6,7 +6,7 @@ import AppService from "@components/main/Main";
 import store from "@store/index";
 import "@service/i18n";
 
-import "./styles/index.scss";
+import "@styles/index.scss";
 
 createRoot(document.getElementById("root") as HTMLElement)
   .render(

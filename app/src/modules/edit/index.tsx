@@ -2,8 +2,8 @@ import { memo } from "react";
 import { Dayjs } from "dayjs";
 
 import { IFormErrors, IFormValues } from "@pages/Edit";
-import Contacts from "./contacts";
-import Main from "./main";
+import Contacts from "@modules/edit/contacts";
+import Main from "@modules/edit/main";
 import {EditTabs} from "@custom-types/enums";
 
 interface IEditTabsModule extends ITabModule {

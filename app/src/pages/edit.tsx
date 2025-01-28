@@ -7,8 +7,8 @@ import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
 import dayjs, { Dayjs } from "dayjs";
 
-import EditTabsModule from "../modules/edit";
-import AlertComponent from "../components/ui/alert";
+import EditTabsModule from "@modules/edit";
+import AlertComponent from "@components/ui/alert";
 import SpinnerComponent from "@components/ui/spinner";
 import useMainClient from "@hooks/useMainClient";
 import useUserDetails from "@hooks/useUserDetails";

@@ -183,7 +183,7 @@ export default class ProfileService extends EventEmitter implements Profile {
     // Методы страницы редактирования
     //-------------------------------------------------
     // Редактирование
-    editInfo(result:IFormValues) {
+    editInfo(result: IFormValues) {
         this._request.post({
             route: ApiRoutes.editInfo,
             data: {...result, userId: this._user.id},

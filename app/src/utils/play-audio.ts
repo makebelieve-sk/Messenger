@@ -1,7 +1,7 @@
 // import { NextRouter } from "next/router";
 // import Request from "../core/Request";
 // import catchErrors from "../core/CatchErrors";
-import { AppDispatch } from "../types/redux.types";
+import { AppDispatch } from "@custom-types/redux.types";
 // import { ApiRoutes } from "../types/enums";
 
 export default class PlayAudio {

@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
-import DatePickerComponent from "../date-picker";
+import DatePickerComponent from "@modules/edit/date-picker";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
