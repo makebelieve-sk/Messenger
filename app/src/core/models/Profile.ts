@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import dayjs from "dayjs";
 
 import { User } from "@core/models/User";
+import { IFormValues } from "@pages/Edit";
 import { IPhoto } from "@custom-types/models.types";
 
 // Контракт модели "Профиль пользователя"
@@ -18,5 +19,5 @@ export interface Profile extends EventEmitter {
     addPhotos: (data: Object, setLoading: Dispatch<SetStateAction<boolean>>) => void;
     deletePhoto: (data: Object, photos: IPhoto[], path: string) => void;
     getFriends: (setLoading: Dispatch<SetStateAction<boolean>>) => void;
-    editInfo: ({ result, setShowAlert }: { result: { userId: string; birthday: dayjs.Dayjs | string | null; }; setShowAlert: Dispatch<SetStateAction<boolean>>; }) => void;
+    editInfo: ( result: IFormValues) => void;
 }

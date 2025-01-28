@@ -16,5 +16,3 @@ export const getHoursWithMinutes = (createDate: string) => {
     logger.debug(`getHoursWithMinutes [createDate=${createDate}]`);
     return `${getHoursOrMinutes(new Date(createDate).getHours())}:${getHoursOrMinutes(new Date(createDate).getMinutes())}`;
 };
-
-

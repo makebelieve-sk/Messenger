@@ -18,6 +18,12 @@ enum UserEvents {
     SET_LOADING = "set-loading",
 };
 
+// Список событий, отправляемых в рамках сущности "Профиль"
+enum ProfileEvents {
+    SET_ALERT = "set-alert"
+}
+
+// Список событий, отправляемых в рамках сущности "Детали пользователя"
 enum UserDetailsEvents {
     UPDATE = "update",
     SET_LOADING = "set-loading"
@@ -32,6 +38,7 @@ export {
     MainClientEvents,
     SocketEvents,
     UserEvents,
+    ProfileEvents,
     UserDetailsEvents,
     GlobalEvents
 };

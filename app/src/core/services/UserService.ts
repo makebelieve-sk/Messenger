@@ -9,8 +9,8 @@ import { MY_ID } from "@utils/constants";
 import { IUser, IUserDetails } from "@custom-types/models.types";
 import { ApiRoutes } from "@custom-types/enums";
 import { MainClientEvents, UserEvents } from "@custom-types/events";
-import { setLoading } from "@store/main/slice";
 import { AppDispatch } from "@custom-types/redux.types";
+import { setLoading } from "@store/main/slice";
 
 const logger = Logger.init("User");
 
@@ -43,15 +43,15 @@ export default class UserService extends EventEmitter implements User {
         return this._user.firstName;
     }
 
-    get thirdName(){
+    get thirdName() {
         return this._user.thirdName;
     }
 
-    get phone(){
+    get phone() {
         return this._user.phone;
     }
 
-    get email(){
+    get email() {
         return this._user.email;
     }
 
@@ -97,6 +97,7 @@ export default class UserService extends EventEmitter implements User {
     // Обновление данных о себе (так как после входа уже существует в мапе мой профиль и сущность Пользователь)
     updateMe() {
         logger.debug("updateMe");
+
         this._getMe();
         this._userDetails.updateDetails();
     }
@@ -104,6 +105,7 @@ export default class UserService extends EventEmitter implements User {
     // Замена поля пользователя и обновление в глобальном состоянии
     changeField(field: string, value: string) {
         logger.debug(`changeField [field: ${field}, value=${value}]`);
+        
         this._user[field] = value;
         this.emit(UserEvents.CHANGE_FIELD, field, value);
     }
@@ -111,6 +113,7 @@ export default class UserService extends EventEmitter implements User {
     // Обновление данных о пользователе при редактировании
     updateInfo({ user, userDetails }: { user: IUser, userDetails: IUserDetails }) {
         logger.debug("updateInfo");
+
         this._user = user;
         this._userDetails.editDetails(userDetails);
     }

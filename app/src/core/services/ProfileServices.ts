@@ -1,6 +1,6 @@
 import EventEmitter from "eventemitter3";
-import dayjs from "dayjs";
 
+import { IFormValues } from "@pages/Edit";
 import Logger from "@service/Logger";
 import Request from "@core/Request";
 import UserService from "@core/services/UserService";
@@ -11,19 +11,11 @@ import { setFriendsCount, setSubscribersCount, setTopFriends } from "@store/frie
 import { ApiRoutes } from "@custom-types/enums";
 import { IPhoto, IUser, IUserDetails } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
-import { GlobalEvents, MainClientEvents, UserEvents, UserDetailsEvents } from "@custom-types/events";
+import { GlobalEvents, MainClientEvents, UserEvents, UserDetailsEvents, ProfileEvents } from "@custom-types/events";
 import { AVATAR_URL } from "@utils/files";
 import { getFullName } from "@utils/index";
 import { currentDate } from "@utils/time";
 import eventBus from "@utils/event-bus";
-
-interface IEditInfoProps {
-    result: {
-        userId: string;
-        birthday: dayjs.Dayjs | string | null;
-    };
-    setShowAlert: (value: React.SetStateAction<boolean>) => void;
-}
 
 const logger = Logger.init("Profile");
 
@@ -191,11 +183,10 @@ export default class ProfileService extends EventEmitter implements Profile {
     // Методы страницы редактирования
     //-------------------------------------------------
     // Редактирование
-
-    editInfo({ result, setShowAlert }: IEditInfoProps) {
+    editInfo(result:IFormValues) {
         this._request.post({
             route: ApiRoutes.editInfo,
-            data: result,
+            data: {...result, userId: this._user.id},
             setLoading: (value: React.SetStateAction<boolean>) => {
                 this.emit( UserDetailsEvents.SET_LOADING, value );
             },
@@ -203,7 +194,7 @@ export default class ProfileService extends EventEmitter implements Profile {
                 (data: { success: boolean, user: IUser, userDetails: IUserDetails }) => {
                     if (data.success) {
                         this._user.updateInfo(data);
-                        setShowAlert(true);
+                        this.emit(ProfileEvents.SET_ALERT);
                     }
                 },
         });

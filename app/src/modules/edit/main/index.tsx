@@ -5,10 +5,10 @@ import DatePickerComponent from "../date-picker";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useTranslation } from "react-i18next";
 
-import { ITabModule } from "..";
+import { ITabModule } from "@modules/edit";
 
 import "./main.scss";
 
@@ -18,6 +18,7 @@ export default memo(function Main({
 	onChange,
 }: ITabModule) {
 	const { t } = useTranslation();
+
 	const onChangeField = (
 		field: string,
 		value: string | boolean | Date | null | Dayjs
@@ -71,7 +72,7 @@ export default memo(function Main({
 					id="sex-select"
 					value={formValues.sex}
 					label={t("edit_tabs.sex")}
-					onChange={(e) => onChangeField("sex", e.target.value)}
+					onChange={(e: SelectChangeEvent<string>) => onChangeField("sex", e.target.value)}
 				>
 					<MenuItem value="">
 						{t("edit_tabs.sex_not_specified")}
@@ -100,7 +101,7 @@ export default memo(function Main({
 				fullWidth
 				value={formValues.work}
 				className={"edit-container__work"}
-				onChange={(e) => onChangeField("work", e.target.value)}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeField("work", e.target.value)}
 			/>
 		</>
 	);

@@ -15,10 +15,9 @@ import useUserDetails from "@hooks/useUserDetails";
 import useProfile from "@hooks/useProfile";
 import useUser from "@hooks/useUser";
 import { REQUIRED_FIELD } from "@utils/constants";
-import {formattedValue} from  "@utils/date";
-import { UserDetailsEvents } from "@custom-types/events";
+import { ProfileEvents, UserDetailsEvents } from "@custom-types/events";
 
-import "../styles/pages/edit.scss";
+import "@styles/pages/edit.scss";
 
 export interface IFormValues {
 	name: string;
@@ -83,13 +82,21 @@ export default function Edit() {
 			handleSetFormValues();
 		});
 
+		profile.on(ProfileEvents.SET_ALERT, () => {
+			setShowAlert(true);
+		});
+
 		if (userDetails.details) {
 			handleSetFormValues();
 		}
 
 		return () => {
 			userDetails.off(UserDetailsEvents.UPDATE, () => {
-			handleSetFormValues();
+				handleSetFormValues();
+			});
+
+			profile.off(ProfileEvents.SET_ALERT, () => {
+				setShowAlert(true);
 			});
 		};
 	}, []);
@@ -130,22 +137,7 @@ export default function Edit() {
 			event.preventDefault();
 
 			if (formValues && !saveDisabled) {
-				const result = {
-					...formValues,
-					userId: profile.user.id,
-				};
-
-				if (
-					result["birthday"] &&
-					typeof result["birthday"] !== "string"
-				) {
-					result["birthday"] = formattedValue(result["birthday"]);
-				}
-
-				profile.editInfo({
-					result,
-					setShowAlert,
-				});
+				profile.editInfo(formValues);
 			} else {
 				mainClient.catchErrors(t("edit.error.no_user"));
 			}
@@ -176,63 +168,60 @@ export default function Edit() {
 		};
 	}, []);
 
-	return (
-		<Paper className={"edit-container"}>
-			<Tabs
-				orientation="vertical"
-				value={tab}
-				onChange={onChangeTab}
-				aria-label="Edit tabs"
-				className={"edit-container__tabs"}
-			>
-				<Tab
-					label={t("edit.main")}
-					id="main"
-					aria-controls="main"
-					disabled={loadingSaveBtn}
-					className={"edit-container__tab-name"}
-				/>
-				<Tab
-					label={t("edit.contacts")}
-					id="contacts"
-					aria-controls="contacts"
-					disabled={loadingSaveBtn}
-					className={"edit-container__tab-name"}
-				/>
-			</Tabs>
+	return <Paper className={"edit-container"}>
+		<Tabs
+			orientation="vertical"
+			value={tab}
+			onChange={onChangeTab}
+			aria-label="Edit tabs"
+			className={"edit-container__tabs"}
+		>
+			<Tab
+				label={t("edit.main")}
+				id="main"
+				aria-controls="main"
+				disabled={loadingSaveBtn}
+				className={"edit-container__tab-name"}
+			/>
+			<Tab
+				label={t("edit.contacts")}
+				id="contacts"
+				aria-controls="contacts"
+				disabled={loadingSaveBtn}
+				className={"edit-container__tab-name"}
+			/>
+		</Tabs>
 
-			<div className={"edit-container__module"}>
-				<Box component="form" noValidate onSubmit={onSubmit}>
-					{loading ? 
-						<SpinnerComponent />
-					 : 
-						<EditTabsModule
-							tab={tab}
-							formValues={formValues}
-							formErrors={formErrors}
-							onChange={onChange}
-						/>
-					}
-					<LoadingButton
-						fullWidth
-						type="submit"
-						variant="contained"
-						className={"edit-container__module__loading-button"}
-						loading={loadingSaveBtn}
-						disabled={saveDisabled}
-					>
-						Сохранить
-					</LoadingButton>
+		<div className={"edit-container__module"}>
+			<Box component="form" noValidate onSubmit={onSubmit}>
+				{loading
+				 	? <SpinnerComponent />
+					: <EditTabsModule
+						tab={tab}
+						formValues={formValues}
+						formErrors={formErrors}
+						onChange={onChange}
+					/>
+				}
+				<LoadingButton
+					fullWidth
+					type="submit"
+					variant="contained"
+					className={"edit-container__module__loading-button"}
+					loading={loadingSaveBtn}
+					disabled={saveDisabled}
+				>
+					Сохранить
+				</LoadingButton>
 
-					{showAlert ? 
-						<AlertComponent show={showAlert}>
-							<>
-								<b>{t("edit.save")}</b> - {t("edit.show_data")}
-							</>
-						</AlertComponent>
-					 : null}
-				</Box>
-			</div>
-		</Paper>
-	);
+				{showAlert 
+				? <AlertComponent show={showAlert}>
+						<>
+							<b>{t("edit.save")}</b> - {t("edit.show_data")}
+						</>
+					</AlertComponent>
+				: null}
+			</Box>
+		</div>
+	</Paper>
 }

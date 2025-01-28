@@ -79,7 +79,7 @@ export default class UserController {
 
             if (!phone || !email || !name || !surName) {
                 await transaction.rollback();
-                return next(new UsersError(t("users.error.user_incorrect_data"), HTTPStatuses.BadRequest));  // интернационализация
+                return next(new UsersError(t("users.error.user_incorrect_data"), HTTPStatuses.BadRequest));
             }
 
             const result: { user: ISafeUser | null, userDetails: Omit<IUserDetails, "id" | "userId"> | null } = {

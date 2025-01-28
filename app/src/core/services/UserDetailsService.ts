@@ -66,10 +66,11 @@ export default class UserDetailsService extends EventEmitter implements UserDeta
 
     // Обновление дополнительной информации о пользователе
     editDetails(details: IUserDetails) {
-        logger.debug(`updateDetails [detailsUserId=${details.userId}]`);
+        logger.debug(`editDetails [detailsUserId=${details.userId}]`);
         this._details = details;
     }
 
+    // Получение дополнительной информации о пользователе
     updateDetails() {
         this._getUserDetail();
     }
@@ -81,7 +82,7 @@ export default class UserDetailsService extends EventEmitter implements UserDeta
                 this.emit(UserDetailsEvents.SET_LOADING, isLoading);
             },
             successCb: (data: { success: boolean, userDetail: IUserDetails }) => {
-                this._details = data.userDetail;
+                this.editDetails(data.userDetail);
                 logger.info(`_getUserDetail: ${JSON.stringify(this._details)}`);
                 this.emit(UserDetailsEvents.UPDATE);
             }

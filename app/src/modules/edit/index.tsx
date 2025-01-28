@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Dayjs } from "dayjs";
 
-import { IFormErrors, IFormValues } from "../../pages/Edit";
+import { IFormErrors, IFormValues } from "@pages/Edit";
 import Contacts from "./contacts";
 import Main from "./main";
 import {EditTabs} from "@custom-types/enums";
@@ -31,17 +31,15 @@ export default memo(function EditTabsModule({
 	onChange,
 }: IEditTabsModule) {
 	const Tabcomponent = Tabcomponents[tab];
-	return (
-		<div
-			role="tabpanel"
-			id={`vertical-tabpanel-${tab}`}
-			aria-labelledby={`vertical-tab-${tab}`}
-		>
-			<Tabcomponent
-				formValues={formValues}
-				formErrors={formErrors}
-				onChange={onChange}
-			/>
-		</div>
-	);
+	return <div
+		role="tabpanel"
+		id={`vertical-tabpanel-${tab}`}
+		aria-labelledby={`vertical-tab-${tab}`}
+	>
+		<Tabcomponent
+			formValues={formValues}
+			formErrors={formErrors}
+			onChange={onChange}
+		/>
+	</div>
 });

@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-import {formattedValue} from "../../utils/date";
-import { IFormValues } from "../../pages/Edit";
+import { IFormValues } from "@pages/Edit";
+import {formattedValue} from "@utils/date";
 
 interface DatePickerComponentProps {
 	formValues: IFormValues;
@@ -21,26 +21,25 @@ const DatePickerComponent: FC<DatePickerComponentProps> = ({
 	onChangeField,
 }) => {
 	const { t } = useTranslation();
-	return (
-		<LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
-			<DatePicker
-				disableFuture
-				label={t("edit_tabs.birthday")}
-				value={dayjs(formValues.birthday)}
-				onChange={(newValue: Dayjs | null) => {
-					onChangeField("birthday", formattedValue(newValue));
-				}}
-				slotProps={{
-					textField: {
-						fullWidth: true,
-						inputProps: {
-							placeholder: t("edit_tabs.birthday_date"),
-						},
-					},
-				}}
-			/>
-		</LocalizationProvider>
-	);
+
+	return <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
+		<DatePicker
+			disableFuture
+			label={t("edit_tabs.birthday")}
+			value={dayjs(formValues.birthday)}
+			onChange={(newValue: Dayjs | null) => {
+				onChangeField("birthday", formattedValue(newValue));
+			}}
+			slotProps={{
+				textField: {
+					fullWidth: true,
+					inputProps: {
+						placeholder: t("edit_tabs.birthday_date")
+					}
+				},
+			}}
+		/>
+	</LocalizationProvider>
 };
 
 export default DatePickerComponent;

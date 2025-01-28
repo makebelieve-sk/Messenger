@@ -2,7 +2,7 @@ import { memo } from "react";
 import TextField from "@mui/material/TextField";
 import { useTranslation } from "react-i18next";
 
-import { ITabModule } from ".";
+import { ITabModule } from "@modules/edit";
 
 export default memo(function Contacts({
 	formValues,

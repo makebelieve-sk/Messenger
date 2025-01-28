@@ -14,17 +14,15 @@ export default memo(function AlertComponent({
 	children,
 	status = "success",
 }: IAlertComponent) {
-	return (
-		<Slide
-			in={show}
-			mountOnEnter
-			unmountOnExit
-			timeout={1000}
-			className={"slide"}
-		>
-			<Alert color={status} className={"alert"}>
-				{children}
-			</Alert>
-		</Slide>
-	);
+	return <Slide
+		in={show}
+		mountOnEnter
+		unmountOnExit
+		timeout={1000}
+		className={"slide"}
+	>
+		<Alert color={status} className={"alert"}>
+			{children}
+		</Alert>
+	</Slide>
 });
