@@ -1,6 +1,5 @@
 import EventEmitter from "eventemitter3";
 
-import { IFormValues } from "@pages/Edit";
 import Logger from "@service/Logger";
 import Request from "@core/Request";
 import UserService from "@core/services/UserService";
@@ -16,6 +15,7 @@ import { AVATAR_URL } from "@utils/files";
 import { getFullName } from "@utils/index";
 import { currentDate } from "@utils/time";
 import eventBus from "@utils/event-bus";
+import { IFormValues } from "@pages/Edit";
 
 const logger = Logger.init("Profile");
 
@@ -186,12 +186,12 @@ export default class ProfileService extends EventEmitter implements Profile {
     editInfo(result: IFormValues) {
         this._request.post({
             route: ApiRoutes.editInfo,
-            data: {...result, userId: this._user.id},
+            data: { ...result, userId: this._user.id },
             setLoading: (value: React.SetStateAction<boolean>) => {
                 this.emit( UserDetailsEvents.SET_LOADING, value );
             },
             successCb:
-                (data: { success: boolean, user: IUser, userDetails: IUserDetails }) => {
+                (data: { success: boolean; user: IUser; userDetails: IUserDetails; }) => {
                     if (data.success) {
                         this._user.updateInfo(data);
                         this.emit(ProfileEvents.SET_ALERT);

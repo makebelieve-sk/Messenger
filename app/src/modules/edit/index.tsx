@@ -1,10 +1,9 @@
 import { memo } from "react";
-import { Dayjs } from "dayjs";
 
 import { IFormErrors, IFormValues } from "@pages/Edit";
 import Contacts from "@modules/edit/contacts";
 import Main from "@modules/edit/main";
-import {EditTabs} from "@custom-types/enums";
+import { EditTabs } from "@custom-types/enums";
 
 interface IEditTabsModule extends ITabModule {
 	tab: number;
@@ -13,30 +12,23 @@ interface IEditTabsModule extends ITabModule {
 export interface ITabModule {
 	formValues: IFormValues;
 	formErrors: IFormErrors | null;
-	onChange: (
-		field: string,
-		value: string | boolean | Date | null | Dayjs
-	) => void;
+	onChange: (field: string, value: string | null) => void;
 }
 
-const Tabcomponents = {
+const TabComponents = {
 	[EditTabs.MAIN]: Main,
 	[EditTabs.CONTACTS]: Contacts,
 };
 
-export default memo(function EditTabsModule({
-	tab,
-	formValues,
-	formErrors,
-	onChange,
-}: IEditTabsModule) {
-	const Tabcomponent = Tabcomponents[tab];
+export default memo(function EditTabsModule({ tab, formValues, formErrors, onChange }: IEditTabsModule) {
+	const TabComponent = TabComponents[tab];
+
 	return <div
 		role="tabpanel"
 		id={`vertical-tabpanel-${tab}`}
 		aria-labelledby={`vertical-tab-${tab}`}
 	>
-		<Tabcomponent
+		<TabComponent
 			formValues={formValues}
 			formErrors={formErrors}
 			onChange={onChange}

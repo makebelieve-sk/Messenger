@@ -5,7 +5,6 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
-import dayjs, { Dayjs } from "dayjs";
 
 import EditTabsModule from "@modules/edit";
 import AlertComponent from "@components/ui/alert";
@@ -23,7 +22,7 @@ export interface IFormValues {
 	name: string;
 	surName: string;
 	sex: string;
-	birthday: dayjs.Dayjs | string | null;
+	birthday: string | null;
 	work: string;
 	city: string;
 	phone: string;
@@ -63,6 +62,37 @@ export default function Edit() {
 
 	const REQUIRED_FIELDS = ["name", "surName", "phone", "email"];
 
+	// Подписываемся на события сущностей
+	useEffect(() => {
+		userDetails.on(UserDetailsEvents.UPDATE, handleSetFormValues);
+		userDetails.on(UserDetailsEvents.SET_LOADING, handleOnLoading);
+		profile.on(UserDetailsEvents.SET_LOADING, handleOnLoadingSaveBtn);
+
+		profile.on(ProfileEvents.SET_ALERT, () => setShowAlert(true));
+
+		// Добавляем проверку на то, чтобы не было пустых полей при монтировании
+		if (userDetails.details) {
+			handleSetFormValues();
+		}
+
+		return () => {
+			userDetails.off(UserDetailsEvents.UPDATE, handleSetFormValues);
+			userDetails.off(UserDetailsEvents.SET_LOADING, handleOnLoading);
+			userDetails.off(UserDetailsEvents.SET_LOADING, handleOnLoadingSaveBtn);
+
+			profile.off(ProfileEvents.SET_ALERT, () => setShowAlert(true));
+		};
+	}, []);
+
+	// Установка disabled кнопке "Сохранить"
+	useEffect(() => {
+		setSaveDisabled(
+			loadingSaveBtn || 
+			Boolean(formErrors && Object.values(formErrors).some(Boolean))
+		);
+	}, [loadingSaveBtn, formValues]);
+
+	// Обработчик на событие UserDetailsEvents.UPDATE
 	const handleSetFormValues = () => {
 		setFormValues({
 			name: user.firstName,
@@ -76,97 +106,48 @@ export default function Edit() {
 		});
 	}
 
-	// Отлавливаем событие апдейт и отписываемся от него так же делаем проверку на наличие данных чтобы не было пустых полей 
-	useEffect(() => {
-		userDetails.on(UserDetailsEvents.UPDATE, () => {
-			handleSetFormValues();
-		});
+	// Обработчик на событие UserDetailsEvents.UPDATE
+	const handleOnLoading = (isLoading: boolean) => setLoading(isLoading);
 
-		profile.on(ProfileEvents.SET_ALERT, () => {
-			setShowAlert(true);
-		});
+	// Обработчик на событие UserDetailsEvents.SET_LOADING
+	const handleOnLoadingSaveBtn = (isLoading: boolean) => setLoadingSaveBtn(isLoading);
 
-		if (userDetails.details) {
-			handleSetFormValues();
-		}
-
-		return () => {
-			userDetails.off(UserDetailsEvents.UPDATE, () => {
-				handleSetFormValues();
-			});
-
-			profile.off(ProfileEvents.SET_ALERT, () => {
-				setShowAlert(true);
-			});
-		};
-	}, []);
-
-	// Установка disabled кнопке "Сохранить"
-	useEffect(() => {
-		setSaveDisabled(
-			loadingSaveBtn ||
-				Boolean(formErrors && Object.values(formErrors).some(Boolean))
-		);
-	}, [loadingSaveBtn, formValues]);
-
+	// Обработка смены вкладки
 	const onChangeTab = (_: SyntheticEvent, newValue: number) => {
 		setTab(newValue);
 		setShowAlert(false);
 	};
 
-	const onChange = (
-		field: string,
-		value: string | boolean | Date | null | Dayjs
-	) => {
-		if (formValues) {
-			setFormValues({
-				...formValues,
-				[field]: value,
-			});
+	// Обработка изменения значения поля формы
+	const onChange = (field: string, value: string | null) => {
+		setFormValues({
+			...formValues,
+			[field]: value,
+		});
 
-			if (REQUIRED_FIELDS.includes(field)) {
-				setFormErrors({
-					[field]: value ? "" : REQUIRED_FIELD,
-				});
-			}
+		if (REQUIRED_FIELDS.includes(field)) {
+			setFormErrors({
+				[field]: value ? "" : REQUIRED_FIELD
+			});
 		}
 	};
 
+	// Обработка кнопки "Сохранить"
 	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		try {
 			event.preventDefault();
 
-			if (formValues && !saveDisabled) {
-				profile.editInfo(formValues);
-			} else {
+			if (!formValues || saveDisabled) {
 				mainClient.catchErrors(t("edit.error.no_user"));
+				return;
 			}
+
+			profile.editInfo(formValues);
 		} catch (error) {
 			setLoadingSaveBtn(false);
 			mainClient.catchErrors(t("edit.error.change_user_info") + error);
 		}
 	};
-
-	const handleOnLoading = (isLoading: boolean) => setLoading(isLoading);
-
-	//подписка на событие лоадинг
-	useEffect(() => {
-		userDetails.on(UserDetailsEvents.SET_LOADING, handleOnLoading);
-
-		return () => {
-			userDetails.off(UserDetailsEvents.SET_LOADING, handleOnLoading);
-		};
-	}, []);
-
-	const handleOnLoadingSaveBtn = (isLoading: boolean) => setLoadingSaveBtn(isLoading);
-
-	useEffect(() => {
-		profile.on(UserDetailsEvents.SET_LOADING, handleOnLoadingSaveBtn);
-
-		return () => {
-			profile.off(UserDetailsEvents.SET_LOADING, handleOnLoadingSaveBtn);
-		};
-	}, []);
 
 	return <Paper className={"edit-container"}>
 		<Tabs
@@ -203,6 +184,7 @@ export default function Edit() {
 						onChange={onChange}
 					/>
 				}
+
 				<LoadingButton
 					fullWidth
 					type="submit"
@@ -215,12 +197,13 @@ export default function Edit() {
 				</LoadingButton>
 
 				{showAlert 
-				? <AlertComponent show={showAlert}>
-						<>
-							<b>{t("edit.save")}</b> - {t("edit.show_data")}
-						</>
-					</AlertComponent>
-				: null}
+					? <AlertComponent show={showAlert}>
+							<>
+								<b>{t("edit.save")}</b> - {t("edit.show_data")}
+							</>
+						</AlertComponent>
+					: null
+				}
 			</Box>
 		</div>
 	</Paper>

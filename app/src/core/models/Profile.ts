@@ -1,6 +1,5 @@
 import EventEmitter from "eventemitter3";
 import { Dispatch, SetStateAction } from "react";
-import dayjs from "dayjs";
 
 import { User } from "@core/models/User";
 import { IFormValues } from "@pages/Edit";
@@ -19,5 +18,5 @@ export interface Profile extends EventEmitter {
     addPhotos: (data: Object, setLoading: Dispatch<SetStateAction<boolean>>) => void;
     deletePhoto: (data: Object, photos: IPhoto[], path: string) => void;
     getFriends: (setLoading: Dispatch<SetStateAction<boolean>>) => void;
-    editInfo: ( result: IFormValues) => void;
+    editInfo: (result: IFormValues) => void;
 }

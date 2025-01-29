@@ -1,28 +1,20 @@
 import { memo } from "react";
-import { Dayjs } from "dayjs";
+import { useTranslation } from "react-i18next";
 import TextField from "@mui/material/TextField";
-import DatePickerComponent from "@modules/edit/date-picker";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useTranslation } from "react-i18next";
 
+import DatePickerComponent from "@modules/edit/date-picker";
 import { ITabModule } from "@modules/edit";
 
 import "./main.scss";
 
-export default memo(function Main({
-	formValues,
-	formErrors,
-	onChange,
-}: ITabModule) {
+export default memo(function Main({ formValues, formErrors, onChange }: ITabModule) {
 	const { t } = useTranslation();
 
-	const onChangeField = (
-		field: string,
-		value: string | boolean | Date | null | Dayjs
-	) => {
+	const onChangeField = (field: string, value: string | null) => {
 		onChange(field, value);
 	};
 
@@ -41,7 +33,9 @@ export default memo(function Main({
 				autoFocus
 				error={Boolean(formErrors && formErrors.name)}
 				helperText={
-					formErrors && formErrors.name ? formErrors.name : null
+					formErrors && formErrors.name 
+						? formErrors.name 
+						: null
 				}
 				onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeField("name", e.target.value)}
 			/>
