@@ -1,6 +1,5 @@
 import express from "express";
 import { Server } from "socket.io";
-import http from "http";
 
 import Logger from "../service/logger";
 import { t } from "../service/i18n";
@@ -8,7 +7,7 @@ import Database from "./Database";
 import { SocketType, SocketWithUser } from "../types/socket.types";
 import { SocketActions } from "../types/enums";
 import { ISafeUser } from "../types/user.types";
-import { UsersType } from "../types";
+import { ServerType, UsersType } from "../types";
 import { SocketError } from "../errors";
 
 const logger = Logger("Socket");
@@ -26,7 +25,7 @@ export default class SocketWorks {
     private _socket!: SocketWithUser;
 
     constructor(
-        private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>, 
+        private readonly _server: ServerType, 
         private readonly _users: UsersType, 
         private readonly _database: Database,
         private readonly _expressSession: express.RequestHandler

@@ -9,7 +9,7 @@ import AvatarComponent from "@components/ui/avatar";
 import Logo from "@components/layouts/header/logo";
 import useMainClient from "@hooks/useMainClient";
 import useProfile from "@hooks/useProfile";
-import { CLIENT_URL } from "@utils/constants";
+import { BASE_URL } from "@utils/constants";
 import { AVATAR_URL } from "@utils/files";
 import {  Pages } from "@custom-types/enums";
 import { UserEvents } from "@custom-types/events";
@@ -54,7 +54,7 @@ export default function HeaderComponent() {
     // Клик по лого колесиком мыши
     const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
         if (event.button === 1) {
-            window.open(CLIENT_URL);
+            window.open(BASE_URL);
         }
     }
 
