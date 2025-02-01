@@ -6,12 +6,12 @@ server/node_modules
 app/dist
 server/dist
 
-# .env файлы клиента
+# .env файлы клиента (они копируются перед запуском построения билда клиента)
 app/.env
 app/.env.development
 app/.env.production
 
-# .env файлы сервера
+# .env файлы сервера (они копируются в момент запуска сервиса сервера)
 server/.env
 server/.env.development
 server/.env.production
@@ -29,7 +29,7 @@ server/reports
 # Файлы с логами
 server/logs
 
-# Временные и другие файлы nginx
+# Временные и другие файлы nginx (они копируются в момент запуска сервисов)
 nginx/logs/
 nginx/cache/
 nginx/tmp/

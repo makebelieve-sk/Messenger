@@ -1,6 +1,5 @@
 import express, { Express } from "express";
 import path from "path";
-import http from "http";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
@@ -13,7 +12,7 @@ import Database from "./Database";
 import SocketWorks from "./Socket";
 import { oneHour } from "../utils/datetime";
 import { ASSETS_PATH } from "../utils/files";
-import { UsersType } from "../types";
+import { ServerType, UsersType } from "../types";
 
 const logger = Logger("MainServer");
 
@@ -31,7 +30,7 @@ export default class MainServer {
     private readonly _socket: SocketWorks;
     private _session!: express.RequestHandler;
 
-    constructor(private readonly _app: Express, private readonly _server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>) {
+    constructor(private readonly _app: Express, private readonly _server: ServerType) {
         this._users = new Map();
 
         logger.debug("init");
@@ -63,7 +62,7 @@ export default class MainServer {
             name: COOKIE_NAME,                  // Наименование сессии в хранилище
             secret: SECRET_KEY,                 // Секретный ключ для шифрования данных сессии
             cookie: {
-                secure: false,                  // Требует https (без него установлен в false)
+                secure: false,                  // Требует передачу куки только через протокол https 
                 httpOnly: true,                 // Доступна только через http/https
                 domain: EXPRESS_SESSION_DOMAIN, // На каких доменах доступна куки с id сессии
                 maxAge: undefined               // Устанавливаем время жизни сессий только до закрытия браузера. При входе перезаписываем. При переоткрытии вкладки сессия восстанавливается

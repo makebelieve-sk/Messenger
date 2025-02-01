@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import Logger from "@service/Logger";
 import CatchErrors, { CatchType } from "@core/CatchErrors";
 import { ApiRoutes } from "@custom-types/enums";
-import { AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT, SERVER_URL } from "@utils/constants";
+import { AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT, API_URL } from "@utils/constants";
 
 const logger = Logger.init("Request");
 
@@ -39,12 +39,12 @@ export default class Request {
 
     constructor(private readonly _catchErrors: CatchErrors) {
         this._instance = axios.create({
-            baseURL: SERVER_URL,                                            // Основное URL-адрес для всех запросов
-            withCredentials: true,                                          // Разрешает отправлять cookie и авторизационные заголовкис запросами к другому домену
+            baseURL: API_URL,                                               // Основное URL-адрес для всех запросов
+            withCredentials: true,                                          // Разрешает отправлять cookie и авторизационные заголовки с запросами к другому домену
             timeout: AXIOS_TIMEOUT,                                         // Время ожидания ответа от сервера (иначе будет выброшена ошибка)
             headers: {
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": SERVER_URL,
+                "Access-Control-Allow-Origin": API_URL,
                 "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE"
             },                                                              // Объект заголовков HTTP-запросов
             responseEncoding: AXIOS_RESPONSE_ENCODING                       // Кодировка, используемая для декодирования ответа от сервера

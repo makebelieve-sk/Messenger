@@ -8,7 +8,9 @@
   "main": "index.ts",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon index.ts",
-    "build": "npm run lint && tsc && cross-env NODE_ENV=production node dist/index.js",
+    "start:production": "node dist/index.js",
+    "build": "npm run lint && tsc",
+    "build:local": "npm run build && cross-env NODE_ENV=production npm run start:production",
     "test": "npm run test",
     "lint": "eslint \"**/*.ts\""
   },
