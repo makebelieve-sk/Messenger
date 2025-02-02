@@ -9,7 +9,9 @@ enum MainClientEvents {
 
 // Список событий, отправляемых в рамках работы сокет-соединения
 enum SocketEvents {
-    RECONNECT = "reconnect"
+    RECONNECT = "reconnect",
+    SET_ONLINE_USER = "setOnlineUser",
+    ADD_MESSAGE = "addMessange"
 };
 
 // Список событий, отправляемых в рамках сущности "Пользователь"

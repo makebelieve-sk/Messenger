@@ -66,7 +66,7 @@
 	"chats.error.chat_not_found": "Чат с идентификатором {{chatId}} не найден.",
 
 	"socket.disconnecting": "В процессе отключения сокет соединения ({{reason}}).",
-	"socket.socket_disconnected_with_reason": "Сокет с идентификатором соединения {{socketID}} отключился по причине: {{reason}}.",
+	"socket.socket_disconnected_with_reason": "Сокет с идентификатором соединения {{socketId}} отключился по причине: {{reason}}.",
 
     "socket.error.user_with_id_not_exists": "Пользователя с идентификатором {{userId}} не существует.",
     "socket.error.user_id_not_found": "Не передан идентификатор пользователя.",
