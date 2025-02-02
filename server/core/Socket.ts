@@ -162,28 +162,34 @@ export default class SocketWorks {
             this._handleError(error);
         });
 
-        this._friendsController.on(SocketEvents.NOTIFY_ANOTHER_USER, (userTo: string, type: keyof ServerToClientEvents, payload?: any) => {
-            // Если получатель - это я, то выводим ошибку
-            if (userTo === this._socket.user.id) {
-                throw new SocketError(t("socket.error.not_correct_user_id_in_socket", { userTo }));
-            }
+        this._friendsController.on(
+            SocketEvents.NOTIFY_ANOTHER_USER, 
+            <T extends keyof ServerToClientEvents>(userTo: string, type: T, ...payload: Parameters<ServerToClientEvents[T]>) => {
+                // Если получатель - это я, то выводим ошибку
+                if (userTo === this._socket.user.id) {
+                    throw new SocketError(t("socket.error.not_correct_user_id_in_socket", { userTo }));
+                }
 
-            const findUser = this._getUser(userTo);
+                const findUser = this._getUser(userTo);
 
-            if (findUser) {
-                this._io.to(findUser.socketId).emit(type, payload);
-            }
-        });
-
-        this._messagesController.on(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, (users: { id: string }[], type: keyof ServerToClientEvents, payload?: any) => {
-            for (const user of users) {
-                const findUser = this._getUser(user.id);
-
-                if (findUser && user.id !== this._socket.user.id) {
-                    this._io.to(findUser.socketId).emit(type, payload);
+                if (findUser) {
+                    this._io.to(findUser.socketId).emit(type, ...payload);
                 }
             }
-        });
+        );
+
+        this._messagesController.on(
+            SocketEvents.NOTIFY_ALL_ANOTHER_USERS, 
+            <T extends keyof ServerToClientEvents>(users: { id: string }[], type: T, ...payload: Parameters<ServerToClientEvents[T]>) => {
+                for (const user of users) {
+                    const findUser = this._getUser(user.id);
+
+                    if (findUser && user.id !== this._socket.user.id) {
+                        this._io.to(findUser.socketId).emit(type, ...payload);
+                    }
+                }
+            }
+        );
     }
 
     private _handleError(message: string) {
