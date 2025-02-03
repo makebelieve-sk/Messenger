@@ -44,7 +44,7 @@ export default class Socket extends EventEmitter {
         });
         this._socket.auth = { user: this._me };
 
-        this._socketController = new SocketController({ socket: this._socket, myUser: this._me, dispatch: this._dispatch });
+        this._socketController = new SocketController(this._socket, this._dispatch, this._me);
 
         this._bindSocketControllerListeners();
     }

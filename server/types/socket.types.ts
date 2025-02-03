@@ -6,13 +6,13 @@ import { ISafeUser, UserPartial } from "./user.types";
 import { IEditMessage } from "./message.types";
 
 interface ISocketUser extends ISafeUser {
-    socketID: string;
+    socketId: string;
 };
 
 type SocketType = Server<ClientToServerEvents, ServerToClientEvents>;
 
 interface SocketWithUser extends Socket<ClientToServerEvents, ServerToClientEvents> { 
-    user?: ISafeUser;
+    user: ISocketUser;
 };
 
 // Отправляем события с клиента на сервер
