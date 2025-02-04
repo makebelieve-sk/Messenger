@@ -67,6 +67,7 @@
 
 	"socket.disconnecting": "In the process of disconnecting the socket connection ({{reason}}).",
 	"socket.socket_disconnected_with_reason": "The socket with the connection ID {{socketId}} was disconnected due to: {{reason}}.",
+	"socket.emit_handled": "The event has been processed on the client [type={{type}}, timestamp={{timestamp}}].",
 
     "socket.error.user_with_id_not_exists": "User with id={{userId}} not exists.",
     "socket.error.user_id_not_found": "The user ID was not transmitted.",
@@ -75,6 +76,10 @@
     "socket.error.not_correct_user_id_in_socket": "The user ID={{user To}} is not suitable. You must use the notify Me method.",
     "socket.error.update_last_seen": "An error occurred when updating the time of the user's last login.",
     "socket.error.socket_work": "An error occurred while working with the socket",
+	"socket.error.socket_emit_with_ack": "An error occurred while processing the received event {{type}}",
+	"socket.error.socket_emit_broadcast_with_ack": "An error occurred while processing the received event from all users except myself {{type}}",
+	"socket.error.emit_event_on_the_server_from_all_users": "An error occurred on some client when processing this event.",
+	"socket.error.emit_event_on_the_server": "[{{timestamp}}] | An error occurred on the client when processing this event: {{message}}",
     "socket.error.engine_socket": "Abnormal disconnection of the socket with the {{code}}.\nRequest object: {{req}}.\nError text: {{message}}.\nAdditional context: {{context}}.",
 
 	"database.start": "The connection to the database has been successfully established.",

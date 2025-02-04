@@ -11,9 +11,12 @@ interface ISocketUser extends ISafeUser {
 
 type SocketType = Server<ClientToServerEvents, ServerToClientEvents>;
 
-interface SocketWithUser extends Socket<ClientToServerEvents, ServerToClientEvents> { 
+interface SocketWithUser extends Socket { 
     user: ISocketUser;
 };
+
+interface IAck { success: boolean; message?: string; timestamp: number; };
+type CallbackAckType = (ack: IAck) => void;
 
 // Отправляем события с клиента на сервер
 interface ClientToServerEvents {
@@ -28,9 +31,9 @@ interface ClientToServerEvents {
 
 // Отправляем события с сервера на клиент
 interface ServerToClientEvents {
-    [SocketActions.GET_ALL_USERS]: (users: ISocketUser[]) => void;
-    [SocketActions.GET_NEW_USER]: (user: ISocketUser) => void;
-    [SocketActions.USER_DISCONNECT]: (userId: string) => void;
+    [SocketActions.GET_ALL_USERS]: (users: ISocketUser[], callback: CallbackAckType) => void;
+    [SocketActions.GET_NEW_USER]: (user: ISocketUser, callback: CallbackAckType) => void;
+    [SocketActions.USER_DISCONNECT]: (userId: string, callback: CallbackAckType) => void;
 
     [SocketActions.ADD_TO_FRIENDS]: () => void;
     [SocketActions.UNSUBSCRIBE]: () => void;
@@ -52,5 +55,6 @@ export type {
     SocketType,
     SocketWithUser,
     ClientToServerEvents, 
-    ServerToClientEvents
+    ServerToClientEvents,
+    IAck
 };
