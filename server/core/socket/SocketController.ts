@@ -187,7 +187,7 @@ export default class SocketController extends EventEmitter {
         }
     }
 
-    // Основной метод отправки события с сервера текущему конкретному клиенту с добавлением ack (подтверждение обработки клиентом данного события)
+    // Основной метод отправки события с сервера конкретному клиенту с добавлением ack (подтверждение обработки клиентом данного события)
     sendTo: SocketToEventHandler = async (socketTo: string, type, ...args) => {
         try {
             const response = await this._socket.to(socketTo).timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, ...args);
