@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import SocketController from "@core/socket/SocketController";
 import Logger from "@service/Logger";
 import i18next from "@service/i18n";
-import { SOCKET_RECONECTION_ATTEMPTS, SOCKET_RECONNECTION_DELAY, API_URL, SOCKET_ACK_TIMEOUT } from "@utils/constants";
+import { SOCKET_RECONECTION_ATTEMPTS, SOCKET_RECONNECTION_DELAY, SOCKET_URL, SOCKET_ACK_TIMEOUT } from "@utils/constants";
 import { AppDispatch } from "@custom-types/redux.types";
 import { ClientToServerEvents, SocketType } from "@custom-types/socket.types";
 import { MainClientEvents, SocketEvents } from "@custom-types/events";
@@ -32,7 +32,7 @@ export default class Socket extends EventEmitter {
 
         this._me = myUser;
 
-        this._socket = io(API_URL, { 
+        this._socket = io(SOCKET_URL, { 
             transports: ["websocket"],                  // Виды транспортов (идут один за другим по приоритету, данный массив на сервере должен совпадать)
             autoConnect: true,                          // Автоматически подключаться при создании экземпляра клиента (без вызова connect())
             reconnectionAttempts: SOCKET_RECONECTION_ATTEMPTS, // Количество попыток переподключения перед тем, как закрыть соединение
