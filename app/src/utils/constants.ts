@@ -9,8 +9,9 @@ export const TIMEOUT_IS_WRITE_MESSAGE = parseInt(import.meta.env.VITE_TIMEOUT_IS
 export const TIMEOUT_HIDE_UPPER_DATE = parseInt(import.meta.env.VITE_TIMEOUT_HIDE_UPPER_DATE as string);
 export const AXIOS_RESPONSE_ENCODING = import.meta.env.VITE_AXIOS_RESPONSE_ENCODING as string;
 export const AXIOS_TIMEOUT = parseInt(import.meta.env.VITE_AXIOS_TIMEOUT as string);
-export const RECONECTION_ATTEMPTS = parseInt(import.meta.env.VITE_RECONECTION_ATTEMPTS as string);
-export const RECONNECTION_DELAY = parseInt(import.meta.env.VITE_RECONNECTION_DELAY as string);
+export const SOCKET_RECONECTION_ATTEMPTS = parseInt(import.meta.env.VITE_SOCKET_RECONECTION_ATTEMPTS as string);
+export const SOCKET_RECONNECTION_DELAY = parseInt(import.meta.env.VITE_SOCKET_RECONNECTION_DELAY as string);
+export const SOCKET_ACK_TIMEOUT = parseInt(import.meta.env.VITE_SOCKET_ACK_TIMEOUT as string);
 export const ARRAY_LOGS_LENGTH = parseInt(import.meta.env.VITE_ARRAY_LOGS_LENGTH as string);
 export const LOGS_FILE_NAME = import.meta.env.VITE_LOGS_FILE_NAME as string;
 

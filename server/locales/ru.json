@@ -67,6 +67,7 @@
 
 	"socket.disconnecting": "В процессе отключения сокет соединения ({{reason}}).",
 	"socket.socket_disconnected_with_reason": "Сокет с идентификатором соединения {{socketId}} отключился по причине: {{reason}}.",
+	"socket.emit_handled": "Событие обработано на клиенте [type={{type}}, timestamp={{timestamp}}].",
 
     "socket.error.user_with_id_not_exists": "Пользователя с идентификатором {{userId}} не существует.",
     "socket.error.user_id_not_found": "Не передан идентификатор пользователя.",
@@ -75,6 +76,10 @@
     "socket.error.not_correct_user_id_in_socket": "Не подходящий идентификатор пользователя id={{userTo}}. Необходимо использовать метод notifyMe.",
     "socket.error.update_last_seen": "Возникла ошибка при обновлении времени последнего захода пользователя.",
     "socket.error.socket_work": "Произошла ошибка при работе с сокетом",
+	"socket.error.socket_emit_with_ack": "Произошла ошибка при обработке полученного события {{type}}",
+	"socket.error.socket_emit_broadcast_with_ack": "Произошла ошибка при обработке полученного события от всех пользователей кроме себя {{type}}",
+	"socket.error.emit_event_on_the_server_from_all_users": "При обработке данного события на каком то клиенте возникла ошибка.",
+	"socket.error.emit_event_on_the_server": "[{{timestamp}}] | При обработке данного события на клиенте возникла ошибка: {{message}}",
     "socket.error.engine_socket": "Не нормальное отключение сокета с кодом {{code}}.\nОбъект запроса: {{req}}.\nТекст ошибки: {{message}}.\nДополнительный контекст: {{context}}.",
 
 	"database.start": "Соединение с базой данных успешно установлено.",

@@ -9,7 +9,7 @@ import ApiServer from "./ApiServer";
 import RedisWorks from "./Redis";
 import PassportWorks from "./Passport";
 import Database from "./Database";
-import SocketWorks from "./Socket";
+import SocketWorks from "./socket/Socket";
 import { oneHour } from "../utils/datetime";
 import { ASSETS_PATH } from "../utils/files";
 import { ServerType, UsersType } from "../types";

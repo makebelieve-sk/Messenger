@@ -20,24 +20,30 @@ export default class UsersController extends EventEmitter {
 
     private _init() {
         // Список всех онлайн пользователей
-        this._socket.on(SocketActions.GET_ALL_USERS, (users) => {
+        this._socket.on(SocketActions.GET_ALL_USERS, (users, callback) => {
             logger.info(`${i18next.t("core.socket.online_users")} [users=${JSON.stringify(users)}]`);
 
             users.forEach(onlineUser => {
                 this.emit(SocketEvents.SET_ONLINE_USER, onlineUser);
             });
+
+            callback({ success: true, timestamp: Date.now() });
         });
 
         // Новый пользователь онлайн
-        this._socket.on(SocketActions.GET_NEW_USER, (newUser) => {
+        this._socket.on(SocketActions.GET_NEW_USER, (newUser, callback) => {
             logger.info(`${i18next.t("core.socket.new_user_connected")} [newUser=${JSON.stringify(newUser)}]`);
             this._dispatch(setOnlineUsers(newUser));
+
+            callback({ success: true, timestamp: Date.now() });
         });
 
         // Пользователь отключился
-        this._socket.on(SocketActions.USER_DISCONNECT, (userId) => {
+        this._socket.on(SocketActions.USER_DISCONNECT, (userId, callback) => {
             logger.info(`${i18next.t("core.socket.user_disconnected")} [userId=${userId}]`);
             this._dispatch(deleteOnlineUser(userId));
+
+            callback({ success: true, timestamp: Date.now() });
         });
     }
 }

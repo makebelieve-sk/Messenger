@@ -13,6 +13,8 @@ interface ISocketData {
     };
 };
 
+type CallbackAckType = (ack: { success: true; timestamp: number; } | { success: false, message: string; }) => void;
+
 // Отправляем события с клиента на сервер
 interface ClientToServerEvents {
     [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, usersInChat }: { isWrite: boolean; chatId: string; usersInChat: any[]; }) => void;
@@ -26,9 +28,9 @@ interface ClientToServerEvents {
 
 // Отправляем события с сервера на клиент
 interface ServerToClientEvents {
-    [SocketActions.GET_ALL_USERS]: (users: IUser[]) => void;
-    [SocketActions.GET_NEW_USER]: (user: IUser) => void;
-    [SocketActions.USER_DISCONNECT]: (userId: string) => void;
+    [SocketActions.GET_ALL_USERS]: (users: IUser[], callback: CallbackAckType) => void;
+    [SocketActions.GET_NEW_USER]: (user: IUser, callback: CallbackAckType) => void;
+    [SocketActions.USER_DISCONNECT]: (userId: string, callback: CallbackAckType) => void;
 
     [SocketActions.ADD_TO_FRIENDS]: () => void;
     [SocketActions.UNSUBSCRIBE]: () => void;

@@ -68,8 +68,11 @@
 	"sign-up-module.repeat_password": "Repeat the password",
 
 	"core.profiles-controller.error.profile_not_exists": "Profile with id: {{id}} not exists.",
+
 	"core.socket.error.user_not_exists": "User not exists.",
 	"core.socket.error.connection": "The socket connection error [isSocketActive: {{isSocketActive}}]: {{message}}",
+	"core.socket.error.emit": "Error when processing an event on the server [type: {{type}}]: {{message}}",
+	"core.socket.error.emit_event_on_the_server": "[{{timestamp}}] | An error occurred on the server when processing this event: {{message}}",
 
 	"core.catch-errors.error": "Error.",
 	"core.catch-errors.error.network": "Error when receiving a response from the server. The server is most likely unavailable at the moment. Check your internet connection.",
@@ -82,6 +85,7 @@
 	"core.socket.online_users": "Online users: ",
 	"core.socket.new_user_connected": "New user connected: ",
 	"core.socket.user_disconnected": "User disconnected: ",
+	"core.socket.emit_handled": "The event has been processed on the server [type={{type}}, timestamp={{timestamp}}].",
 
 	"header.settings": "Settings",
 	"header.help": "Help",

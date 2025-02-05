@@ -1,9 +1,9 @@
 import EventEmitter from "events";
 
-import Logger from "../../service/logger";
-import { SocketActions } from "../../types/enums";
-import { ISocketUser, SocketWithUser } from "../../types/socket.types";
-import { SocketEvents } from "../../types/events";
+import Logger from "../../../service/logger";
+import { SocketActions } from "../../../types/enums";
+import { ISocketUser, SocketWithUser } from "../../../types/socket.types";
+import { SocketEvents } from "../../../types/events";
 
 const logger = Logger("Socket:MessagesController");
 
