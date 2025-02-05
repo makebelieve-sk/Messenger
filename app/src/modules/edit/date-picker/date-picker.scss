@@ -1,0 +1,9 @@
+@use "@styles/abstract/colors.scss" as *;
+
+.date-picker {
+    &__loading {
+        position: relative;
+        height: 60px;
+        background-color: $spinner-background;
+    }
+}

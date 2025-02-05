@@ -1,18 +1,18 @@
 // import { NextRouter } from "next/router";
-import Request from "../core/Request";
-import catchErrors from "../core/CatchErrors";
-import { AppDispatch } from "../types/redux.types";
-import { ApiRoutes } from "../types/enums";
+// import Request from "../core/Request";
+// import catchErrors from "../core/CatchErrors";
+import { AppDispatch } from "@custom-types/redux.types";
+// import { ApiRoutes } from "../types/enums";
 
 export default class PlayAudio {
-    private _path: undefined | string = undefined;
-    private _dispatch: undefined | AppDispatch = undefined;
+    // private _path: undefined | string = undefined;
+    // private _dispatch: undefined | AppDispatch = undefined;
     private _isSoundNotification: boolean = false;
     private _chatId: undefined | string = undefined;
 
-    constructor(path: string, dispatch: AppDispatch, isSoundNotification: boolean, chatId: string) {
-        this._path = path;
-        this._dispatch = dispatch;
+    constructor(_: string, __: AppDispatch, isSoundNotification: boolean, chatId: string) {
+        // this._path = path;
+        // this._dispatch = dispatch;
         this._isSoundNotification = isSoundNotification;
         this._chatId = chatId;
     };

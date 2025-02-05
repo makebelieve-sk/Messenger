@@ -3,39 +3,32 @@ import { Request, Response, NextFunction, Express } from "express";
 import { v4 as uuid } from "uuid";
 import { PassportStatic } from "passport";
 
-import { getExpiredToken } from "../utils/token";
-import { getSaveUserFields } from "../utils/user";
-import { ApiRoutes, ErrorTextsApi, HTTPStatuses, RedisKeys } from "../types/enums";
-import { IUser } from "../types/models.types";
+import Logger from "../service/logger";
+import { t } from "../service/i18n";
+import { updateSessionMaxAge } from "../utils/session";
+import { getSafeUserFields } from "../utils/user";
+import { UsersType } from "../types";
+import { ApiRoutes, HTTPStatuses, RedisKeys } from "../types/enums";
+import { ISafeUser } from "../types/user.types";
 import RedisWorks from "../core/Redis";
 import Middleware from "../core/Middleware";
 import Database from "../core/Database";
 import { AuthError } from "../errors/controllers";
+import { PassportError } from "../errors";
 
+const logger = Logger("AuthController");
 const COOKIE_NAME = process.env.COOKIE_NAME as string;
 
-interface IConstructor {
-    app: Express;
-    redisWork: RedisWorks;
-    middleware: Middleware;
-    database: Database;
-    passport: PassportStatic;
-};
-
+// Класс, отвечающий за API авторизации/аутентификации
 export default class AuthController {
-    private readonly _app: Express;
-    private readonly _redisWork: RedisWorks;
-    private readonly _middleware: Middleware;
-    private readonly _database: Database;
-    private readonly _passport: PassportStatic;
-
-    constructor({ app, redisWork, middleware, database, passport }: IConstructor) {
-        this._app = app;
-        this._redisWork = redisWork;
-        this._middleware = middleware;
-        this._database = database;
-        this._passport = passport;
-
+    constructor(
+        private readonly _app: Express,
+        private readonly _middleware: Middleware,
+        private readonly _database: Database,
+        private readonly _redisWork: RedisWorks,
+        private readonly _passport: PassportStatic,
+        private readonly _users: UsersType
+    ) {
         this._init();
     }
 
@@ -47,29 +40,31 @@ export default class AuthController {
     }
 
     // Проверяем авторизирован ли пользователь в системе
-    private async _isAuthenticated(req: Request, res: Response, next: NextFunction) {
+    private async _isAuthenticated(req: Request, _: Response, next: NextFunction) {
+        logger.debug("_isAuthenticated");
+
         try {
             if (req.isAuthenticated()) {
                 // Получаем поле rememberMe из Redis
-                const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, (req.user as IUser).id);
+                const rememberMe = await this._redisWork.get(RedisKeys.REMEMBER_ME, (req.user as ISafeUser).id);
 
-                // Обновляем время жизни токена сессии (куки)
-                req.session.cookie.expires = getExpiredToken(Boolean(rememberMe));
+                // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
+                await updateSessionMaxAge(req.session, Boolean(rememberMe));
     
-                return res.status(HTTPStatuses.PermanentRedirect).send({ success: false, message: ErrorTextsApi.YOU_ALREADY_AUTH });
+                return next(new AuthError(t("auth.error.you_already_auth"), HTTPStatuses.PermanentRedirect));
             }
-    
+
             next();
         } catch (error) {
-            const nextError = error instanceof AuthError
-                ? error
-                : new AuthError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            // return необходим для точного возврата ошибки в мидлвар ошибки (так как этот метод и сам является мидлваром только для текущих ендпоинтов)
+            return next(error);
         }
     };
 
     // Регистрация пользователя
-    private async _signUp(req: Request, res: Response) {
+    private async _signUp(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_signUp, [body=%j]", req.body);
+
         const transaction = await this._database.sequelize.transaction();
 
         try {
@@ -80,23 +75,24 @@ export default class AuthController {
 
             if (checkDublicateEmail) {
                 await transaction.rollback();
-                return res.status(HTTPStatuses.BadRequest).send({ success: false, message: `Пользователь с почтовым адресом ${email} уже существует`, field: "email" });
+                return next(new AuthError(t("auth.error.user_with_email_already_exists", { email }), HTTPStatuses.BadRequest, { field: "email" }));
             }
 
             const checkDublicatePhone = await this._database.models.users.findOne({ where: { phone }, transaction });
 
             if (checkDublicatePhone) {
                 await transaction.rollback();
-                return res.status(HTTPStatuses.BadRequest).send({ success: false, message: `Пользователь с номером телефона ${phone} уже существует`, field: "phone" });
+                return next(new AuthError(t("auth.error.user_with_phone_already_exists", { phone }), HTTPStatuses.BadRequest, { field: "phone" }));
             }
 
             // "Соль"
             const salt = crypto.randomBytes(128);
             const saltString = salt.toString("hex");
 
-            crypto.pbkdf2(password, saltString, 4096, 256, "sha256", (error, hash) => {
+            crypto.pbkdf2(password, saltString, 4096, 256, "sha256", async (error, hash) => {
                 if (error) {
-                    throw error;
+                    await transaction.rollback();
+                    return next(new AuthError(error.message));
                 }
 
                 // Генерируем хеш пароля, приправленным "солью"
@@ -104,17 +100,18 @@ export default class AuthController {
 
                 this._database.models.users
                     .create({ id: uuid(), firstName, thirdName, email, phone, password: hashString, avatarUrl, salt: saltString }, { transaction })
-                    .then(newUser => {
+                    .then(async newUser => {
                         if (newUser) {
-                            const user = getSaveUserFields(newUser);
+                            const user = getSafeUserFields(newUser);
 
                             this._database.models.userDetails
                                 .create({ userId: user.id }, { transaction })
-                                .then(newUserDetail => {
+                                .then(async newUserDetail => {
                                     if (newUserDetail) {
-                                        req.login(user, async function (error: string) {
+                                        req.login(user, async function (error?: PassportError) {
                                             if (error) {
-                                                throw new Error(error);
+                                                await transaction.rollback();
+                                                return next(error);
                                             }
 
                                             await transaction.commit();
@@ -122,105 +119,107 @@ export default class AuthController {
                                             return res.json({ success: true, user });
                                         });
                                     } else {
-                                        throw new Error("Пользователь не создался в базе данных в таблице UserDetails");
+                                        await transaction.rollback();
+                                        return next(new AuthError(t("auth.error.creating_user_details")));
                                     }
                                 })
-                                .catch((error: Error) => {
-                                    throw new Error(`Ошибка при создании записи в таблице UserDetails: ${error}`);
+                                .catch(async (error: Error) => {
+                                    await transaction.rollback();
+                                    return next(new AuthError(error.message));
                                 });
                         } else {
-                            throw new Error("Пользователь не создался в базе данных в таблице Users");
+                            await transaction.rollback();
+                            return next(new AuthError(t("auth.error.creating_user")));
                         }
                     })
-                    .catch((error: Error) => {
-                        throw new Error(`Создание новой записи в базе данных завершилось не удачно: ${error}`);
+                    .catch(async (error: Error) => {
+                        await transaction.rollback();
+                        return next(new AuthError(error.message));
                     });
             });
         } catch (error) {
-            const nextError = error instanceof AuthError
-                ? error
-                : new AuthError(error);
-
             await transaction.rollback();
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            next(error);
         }
     };
 
     // Вход пользователя
     private async _signIn(req: Request, res: Response, next: NextFunction) {
+        logger.debug("_signIn, [body=%j]", req.body);
+
         try {
             const { rememberMe }: { rememberMe: boolean } = req.body;
 
-            this._passport.authenticate("local", { session: true }, async (error: string, user: IUser, info: { message: string }) => {
+            this._passport.authenticate("local", { session: true }, async (error: PassportError | null, user: ISafeUser) => {
                 if (error) {
-                    throw new Error(error);
-                }
-
-                if (!user) {
-                    return res.status(HTTPStatuses.BadRequest).send({ success: false, message: info.message });
+                    // Далее обрабатывается глобальным мидлваром на ошибку, поэтому прокидываем просто error
+                    return next(error);
                 }
 
                 if (!req.sessionID) {
-                    throw new Error("уникальный идентификатор сессии не существует");
+                    return next(new AuthError(t("auth.error.session_id_not_exists")))
                 }
 
-                return req.logIn(user, async (error: string) => {
+                req.logIn(user, async (error?: PassportError) => {
                     if (error) {
-                        throw new Error(error);
+                        // Далее обрабатывается глобальным мидлваром на ошибку, поэтому прокидываем просто error
+                        return next(error);
                     }
 
                     // Записываем в Redis значение поля rememberMe
                     await this._redisWork.set(RedisKeys.REMEMBER_ME, user.id, JSON.stringify(rememberMe));
 
-                    // Обновляем срок жизни токена сессии (куки)
-                    req.session.cookie.expires = getExpiredToken(rememberMe);
+                    // Обновляем время жизни записи только в том случае, если пользователь не нажал на "Запомнить меня"
+                    if (!rememberMe) {
+                        await this._redisWork.expire(RedisKeys.REMEMBER_ME, user.id);
+                    }
+
+                    // Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
+                    await updateSessionMaxAge(req.session, Boolean(rememberMe));
 
                     return res.json({ success: true });
                 });
             })(req, res, next);
         } catch (error) {
-            const nextError = error instanceof AuthError
-                ? error
-                : new AuthError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            next(error);
         }
     };
 
     // Выход пользователя
-    private async _logout(req: Request, res: Response) {
+    private async _logout(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = (req.user as IUser).id;
+            const userId = (req.user as ISafeUser).id;
+
+            logger.debug("_logout [userId=%s]", userId);
 
             // Выход из passport.js
-            req.logout((error) => {
+            req.logout((error?: Error) => {
                 if (error) {
-                    throw new Error(`удаление пользователя из запроса завершилось неудачно: ${error}`);
+                    return next(new AuthError(error.message));
                 }
 
-                // Удаляем текущую сессию пользователя
-                req.session.destroy(async (error: string) => {
+                // Удаляем текущую сессию express.js пользователя
+                req.session.destroy(async (error?: Error) => {
                     if (error) {
-                        throw new Error(`удаление сессии пользователя завершилось не удачно: ${error}`);
+                        return next(new AuthError(error.message));
                     }
 
                     if (!req.sessionID) {
-                        throw new Error(`отсутствует id сессии пользователя (session=${req.session})`);
+                        return next(new AuthError(t("auth.error.session_id_not_exists_on_deleted_session", { session: req.session.toString() })));
                     }
 
-                    // Удаляем сессию из Redis
-                    await this._redisWork.delete(RedisKeys.SESSION, req.sessionID);
                     // Удаляем флаг rememberMe из Redis
                     await this._redisWork.delete(RedisKeys.REMEMBER_ME, userId);
+
+                    // Удаляем пользователя из списка пользователей
+                    this._users.delete(userId);
 
                     // Удаляем session-cookie (sid)
                     return res.clearCookie(COOKIE_NAME).json({ success: true });
                 });
             });
         } catch (error) {
-            const nextError = error instanceof AuthError
-                ? error
-                : new AuthError(error);
-            return res.status(HTTPStatuses.ServerError).send({ success: false, message: nextError.message });
+            next(error);
         }
     };
 };

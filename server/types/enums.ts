@@ -9,16 +9,17 @@ enum ApiRoutes {
     getUser = "/get-user",
     editInfo = "/edit-info",
     getUserDetail = "/get-user-detail",
-    getPhotos = "/get-photos",
-    //----file-----------
-    saveAvatar = "/save-avatar",
+    //----images---------
     uploadAvatar = "/upload-avatar",
-    uploadAvatarAuth = "/upload-avatar-auth",
+    saveAvatar = "/save-avatar",
+    changeAvatar = "/change-avatar",
+    getPhotos = "/get-photos",
+    savePhotos = "/save-photos",
+    deletePhoto = "/delete-photo",
+    //----file-----------
     saveFiles = "/save-files",
     openFile = "/open-file",
     downloadFile = "/download-file",
-    savePhotos = "/save-photos",
-    deleteImage = "/delete-image",
     deleteFiles = "/delete-files",
     //----friends--------
     friends = "/friends",
@@ -49,9 +50,7 @@ enum ApiRoutes {
     getLastSeen = "/get-last-seen",
     getChatSoundStatus = "/get-chat-sound-status",
     setChatSoundStatus = "/set-chat-sound-status",
-    getAttachments = "/get-attachments",
-    //------calls---------
-    endCall = "/end-call",
+    getAttachments = "/get-attachments"
 };
 
 // Статусы HTTP-запросов
@@ -88,25 +87,6 @@ enum SocketActions {
     ACCEPT_CHANGE_READ_STATUS = "ACCEPT_CHANGE_READ_STATUS",
     DELETE_MESSAGE = "DELETE_MESSAGE",
     DELETE_CHAT = "DELETE_CHAT",
-    // --------------CALLS-------------------
-    CALL = "CALL",
-    NOTIFY_CALL = "NOTIFY_CALL",
-    ACCEPT_CALL = "ACCEPT_CALL",
-    CHANGE_CALL_STATUS = "CHANGE_CALL_STATUS",
-    SET_CALL_STATUS = "SET_CALL_STATUS",
-    END_CALL = "END_CALL",
-    CHANGE_STREAM = "CHANGE_STREAM",
-    CANCEL_CALL = "CANCEL_CALL",
-    ALREADY_IN_CALL = "ALREADY_IN_CALL",
-    NOT_ALREADY_IN_CALL = "NOT_ALREADY_IN_CALL",
-    IS_TALKING = "IS_TALKING",
-    // --------------WEBRTC------------------
-    ADD_PEER = "ADD_PEER",
-    TRANSFER_CANDIDATE = "TRANSFER_CANDIDATE",
-    TRANSFER_OFFER = "TRANSFER_OFFER",
-    SESSION_DESCRIPTION = "SESSION_DESCRIPTION",
-    GET_CANDIDATE = "GET_CANDIDATE",
-    REMOVE_PEER = "REMOVE_PEER",
     //-----------------SYSTEM---------------
     SOCKET_CHANNEL_ERROR = "SOCKET_CHANNEL_ERROR",
 };
@@ -141,69 +121,14 @@ enum RedisChannel {
     TEMP_CHAT_ID = "TEMP_CHAT_ID",
 };
 
-// Общие сообщения с ошибкой
-enum ErrorTexts {
-    NOT_TEMP_CHAT_ID = "id собеседника не найдено, возможно, это временный чат",
-};
-
-// Статусы звонков
-enum CallStatus {
-    NOT_CALL = "NOT_CALL",
-    SET_CONNECTION = "SET_CONNECTION",
-    WAIT = "WAIT",
-    NEW_CALL = "NEW_CALL",
-    ACCEPT = "ACCEPT",
-    REJECTED = "REJECTED",
-    OFFLINE = "OFFLINE",
-};
-
-// Разновидность звонков
-enum SettingType {
-    VIDEO = "VIDEO",
-    AUDIO = "AUDIO"
-};
-
-// Типы ошибочных каналов сокета
-enum SocketChannelErrorTypes {
-    CALLS = "CALLS",
-};
-
-// Типы звонков
-enum CallTypes {
-    SINGLE = 0,
-    GROUP = 1,
-    SEPARATE = 2,
-};
-
-// Наименования звонков
-enum CallNames {
-    OUTGOING = "Исходящий звонок",
-    INCOMING = "Входящий звонок",
-    GROUP = "Групповой звонок",
-    CANCEL = "Звонок отменён"
-};
-
 // Виды файлов, добавляются в объект сообщения при их обработке
 enum FileVarieties {
     IMAGES = "IMAGES",
     FILES = "FILES"
 };
 
-// Типы сообщений об ошибке, отправляемые с сервера на фронт по АПИ
-enum ErrorTextsApi {
-    NOT_AUTH_OR_TOKEN_EXPIRED = "Вы не авторизованы или время жизни токена сессии подошло к концу",
-    CANNOT_FIND_CALL = "Невозможно завершить звонок, так как он не найден. Возможно, он уже завершен.",
-    YOU_ALREADY_AUTH = "Вы уже авторизированы",
-    USER_NOT_FOUND = "Пользователь не найден",
-    IMAGE_NOT_FOUND = "Изображение не найдено",
-    FILE_NOT_FOUND = "Файл не найден",
-    USER_NOT_FOUND_IN_DATABASE = "Запись пользователя в таблице не найдена",
-    IMAGE_NOT_GIVEN = "В req.file не передано изображение",
-};
-
 // Список ключей редиса
 enum RedisKeys {
-    SESSION = "sess",
     REMEMBER_ME = "rememberMe"
 };
 
@@ -215,13 +140,6 @@ export {
     MessageTypes,
     MessageReadStatus,
     RedisChannel,
-    ErrorTexts,
-    CallStatus,
-    SettingType,
-    SocketChannelErrorTypes,
-    CallTypes,
-    CallNames,
     FileVarieties,
-    ErrorTextsApi,
-    RedisKeys,
+    RedisKeys
 };

@@ -1,0 +1,12 @@
+@use "../abstract/colors.scss" as *;
+
+::-webkit-scrollbar {
+    width: 14px;
+}
+  
+::-webkit-scrollbar-thumb {
+    border: 4px solid $scroll-border-color;
+    background-clip: padding-box;
+    border-radius: 9999px;
+    background-color: $scroll-background;
+}

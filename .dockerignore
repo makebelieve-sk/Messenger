@@ -1,0 +1,35 @@
+# Зависимости
+app/node_modules
+server/node_modules
+
+# Сборка production
+app/dist
+server/dist
+
+# .env файлы клиента (они копируются перед запуском построения билда клиента)
+app/.env
+app/.env.development
+app/.env.production
+
+# .env файлы сервера (они копируются в момент запуска сервиса сервера)
+server/.env
+server/.env.development
+server/.env.production
+
+# Файлы npm логов
+app/npm-debug.log*
+server/npm-debug.log*
+
+# Пользовательские файлы/изображения
+server/assets
+
+# Файлы отчетов сервера
+server/reports
+
+# Файлы с логами
+server/logs
+
+# Временные и другие файлы nginx (они копируются в момент запуска сервисов)
+nginx/logs/
+nginx/cache/
+nginx/tmp/

@@ -1,21 +1,18 @@
 import EventEmitter from "eventemitter3";
 
-import Socket from "./socket/Socket";
-import Request from "./Request";
-import ProfilesController from "./profile/ProfilesController";
-import { CatchType } from "./CatchErrors";
-import { IUser } from "../types/models.types";
-import { ApiRoutes, Pages } from "../types/enums";
-import { MainClientEvents } from "../types/events";
-import { AppDispatch } from "../types/redux.types";
-import { setAuth, setFriendNotification, setMessageNotification } from "../state/main/slice";
+import Request from "@core/Request";
+import { CatchType } from "@core/CatchErrors";
+import { IUser } from "@custom-types/models.types";
+import { ApiRoutes } from "@custom-types/enums";
+import { MainClientEvents } from "@custom-types/events";
+import { AppDispatch } from "@custom-types/redux.types";
+import { setFriendNotification, setMessageNotification } from "@store/main/slice";
 
+// Класс, содержит все HTTP запросы, которые являются глобальными по отношению к приложению
 export default class MainApi extends EventEmitter {
     constructor(
-        private readonly _request: Request, 
-        private readonly _socket: Socket, 
-        private readonly _dispatch: AppDispatch, 
-        private readonly _profilesController: ProfilesController
+        private readonly _request: Request,
+        private readonly _dispatch: AppDispatch
     ) {
         super();
     }
@@ -25,10 +22,7 @@ export default class MainApi extends EventEmitter {
             route: ApiRoutes.signIn,
             data,
             setLoading,
-            successCb: () => {
-                this._profilesController.addProfile();
-                this.emit(MainClientEvents.REDIRECT, Pages.profile);
-            },
+            successCb: () => this.emit(MainClientEvents.SIGN_IN),
             failedCb: cb
         });
     }
@@ -47,16 +41,9 @@ export default class MainApi extends EventEmitter {
     }
 
     logout() {
-        this.emit(MainClientEvents.REDIRECT, Pages.signIn);
-        this._dispatch(setAuth(false));
-        this._socket.disconnect();
-
         this._request.get({
             route: ApiRoutes.logout,
-            successCb: () => {
-                // Сделано в обработчике специально, так как нужно дождаться размонтирования компонент на странице профиля (они используют текущий профиль)
-                this._profilesController.removeProfile();
-            }
+            successCb: () => this.emit(MainClientEvents.LOG_OUT)
         });
     }
 
@@ -104,12 +91,9 @@ export default class MainApi extends EventEmitter {
 
     private _uploadAvatar(data: Object) {
         this._request.post({
-            route: ApiRoutes.uploadAvatar,
+            route: ApiRoutes.saveAvatar,
             data,
-            successCb: () => {
-                this._profilesController.addProfile();
-                this.emit(MainClientEvents.REDIRECT, Pages.profile)
-            }
+            successCb: () => this.emit(MainClientEvents.SIGN_IN)
         });
     }
 }

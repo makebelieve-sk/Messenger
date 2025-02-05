@@ -1,14 +1,16 @@
-@import "../colors.scss";
-@import "../variables.scss";
+@use "@styles/abstract/colors.scss" as *;
+@use "@styles/abstract/variables.scss" as *;
 
 .signUpForm {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	margin-top: $signMarginXLarge;
+
 	@media (max-height: 700px) {
 		margin-top: 0;
 	}
+
 	.avatar {
 		margin: $signMarginXSmall;
 		background-color: $avatar-color;
@@ -17,19 +19,24 @@
 			margin: 0;
 		}
 	}
+
 	.title {
 		@media (max-height: 700px) {
 			font-size: 1.2rem;
 		}
 	}
+
 	.signInArea {
 		margin-bottom: 24px;
+
 		@media (max-height: 700px) {
 			margin-bottom: 0;
 		}
+
 		.secondaryButton {
-			color: blue;
+			color: $blue;
 			text-decoration: none;
+
 			&:hover {
 				cursor: pointer;
 			}
@@ -40,9 +47,11 @@
 		display: flex;
 		flex-direction: row;
 		padding-top: $signMarginMedium;
+
 		@media (max-height: 700px) {
 			padding-top: 0;
 		}
+
 		.loadingButton {
 			margin-left: $signMarginXSmall;
 			width: 250%;

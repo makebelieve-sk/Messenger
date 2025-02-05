@@ -1,57 +1,50 @@
-import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
-import { CallStatus } from "./enums";
-// import { IDialog, UserPartial } from "../pages/messages";
-// import { IFullChatInfo } from "../pages/messages/[id]";
-import store from "../state/store";
-import { IMessage, IPhoto, IUser, IUserDetails } from "./models.types";
-import { ICallData } from "./socket.types";
-import { ICarouselImage } from "../modules/ImagesCarousel/Info";
-// import { IImage } from "../components/message-types/image-message";
+import store from "@store/index";
+import { IMessage, IPhoto, IUser } from "@custom-types/models.types";
 
-export type InitialStateType = {
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+
+// Интерфейс состояния ошибки приложения
+export interface ErrorStateType {
+    error: null | string;
+    systemError: null | string;
+};
+
+// Интерфейс состояния друзей приложения
+export interface FriendStateType {
+    possibleUsers: null | IUser[];
+    friends: null | IUser[];
+    friendsCount: number;
+    topFriends: null | IUser[];
+    subscribersCount: number;
+    searchValue: string;
+};
+
+// Интерфейс состояния общего приложения
+export interface MainStateType {
     isAuth: boolean;
     loading: boolean;
-    user: IUser;
-    userDetail: IUserDetails | null;
-    error: null | string;
-    systemError: string | null;
-    friends: IUser[] | null;
-    friendsCount: number;
-    subscribersCount: number;
-    topFriends: IUser[] | null;
-    possibleUsers: IUser[] | null;
+    loadingUserDetails: boolean;
     friendNotification: number;
-    globalCall: null | ICallData;
-    imagesInCarousel: { images: ICarouselImage[]; index: number; } | null;
     messageNotification: number;
+    onlineUsers: IUser[];
+};
+
+// Интерфейс состояния сообщений приложения
+export interface MessageStateType {
     dialogs: any[];
     unRead: { [chatId: string]: string[]; };
     messages: IMessage[];
-    visibleUnReadMessages: string | null;
-    visible: boolean;
-    status: CallStatus;
-    callId: string | null;
-    localStream: MediaStream | null;
-    chatInfo: any | null;
-    users: IUser[] | null;
+    visibleUnReadMessages: null | string;
     isWrite: { [chatId: string]: string[]; };
     scrollDownAfterNewMsg: boolean;
     usersInChat: any[];
     editMessage: null | IMessage;
-    onlineUsers: IUser[];
-    searchValue: string;
+    attachmentsModal: null | { chatId: string; isOpen: boolean; };
+};
+
+// Интерфейс состояния сообщений приложения
+export interface UserStateType {
     photosCount: number;
     photos: IPhoto[];
-    modalConfirm: { text: string; btnActionTitle: string; cb: Function;} | null;
-    attachmentsModal: { chatId: string; isOpen: boolean; } | null;
 };
-
-export interface ICallSettings {
-    audio: boolean; 
-    video: { width: number; height: number; } | boolean;
-};
-
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;
-export type StoreType = ReturnType<typeof configureStore>;

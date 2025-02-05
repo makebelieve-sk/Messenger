@@ -1,5 +1,6 @@
-import * as React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { LoadingButton } from "@mui/lab";
 import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,17 +15,19 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 
-import { MainClientContext } from "../service/AppService";
-import SignUpForm from "../modules/SignUp/Form";
-import ChooseAvatar from "../modules/SignUp/ChooseAvatar";
-import Copyright from "../components/Copyright";
-import { Pages } from "../types/enums";
-import { IUser } from "../types/models.types";
-import styles from "../styles/pages/sign-up.module.scss";
-import LinkComponent from "../components/Common/Link";
+import i18next from "@service/i18n";
+import LinkComponent from "@components/ui/link";
+import SignUpForm from "@modules/sign-up/Form";
+import ChooseAvatar from "@modules/sign-up/ChooseAvatar";
+import CopyrightComponent from "@components/ui/copyright";
+import useMainClient from "@hooks/useMainClient";
+import { Pages } from "@custom-types/enums";
+import { IUser } from "@custom-types/models.types";
+
+import styles from "@styles/pages/sign-up.module.scss";
 
 const THEME = createTheme();
-const steps = ["Основные данные", "Выбор аватара"];
+const steps = [i18next.t("sign-up.main_step"), i18next.t("sign-up.choose_avatar_step")];
 
 const initialValues = {
 	values: {
@@ -66,27 +69,27 @@ export interface ISignUpState {
 		passwordConfirm: string;
 		avatarUrl: string;
 	};
-}
+};
 
 export default function SignUp() {
-	const [activeStep, setActiveStep] = React.useState(0);
-	const [loading, setLoading] = React.useState(false);
-	const [formValues, setFormValues] = React.useState(initialValues);
+	const [activeStep, setActiveStep] = useState(0);
+	const [loading, setLoading] = useState(false);
+	const [formValues, setFormValues] = useState(initialValues);
 
-	const mainClient = React.useContext(MainClientContext);
-
+	const mainClient = useMainClient();
+	const { t } = useTranslation();
 	const navigate = useNavigate();
 
 	const handleNext = () => {
 		if (activeStep + 1 === steps.length) {
 			handleSubmit();
 		} else {
-			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			setActiveStep(prevActiveStep => prevActiveStep + 1);
 		}
 	};
 
 	const handleBack = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
+		setActiveStep(prevActiveStep => prevActiveStep - 1);
 	};
 
 	const checkValidation = (step: number) => {
@@ -152,13 +155,13 @@ export default function SignUp() {
 		}
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = () => {
 		formValues.values.phone = formValues.values.phone
 			.replace(/\s/g, "")
 			.replace("(", "")
 			.replace(")", "");
 
-		const user: Omit<IUser, "id" | "secondName" | "salt"> = {
+		const user: Omit<IUser, "id" | "secondName" | "salt"> & { password: string } = {
 			firstName: formValues.values.firstName,
 			thirdName: formValues.values.thirdName,
 			email: formValues.values.email,
@@ -204,7 +207,8 @@ export default function SignUp() {
 					/>
 				);
 			default:
-				return "Неизвестный шаг";
+				mainClient.catchErrors(t("sign-up.error.step_unknowed", { step }));
+				return;
 		}
 	};
 
@@ -222,7 +226,7 @@ export default function SignUp() {
 						component="h1"
 						variant="h5"
 					>
-						Регистрация
+						{ t("sign-up.sign_up") }
 					</Typography>
 
 					<Grid
@@ -237,20 +241,19 @@ export default function SignUp() {
 								onClick={() => navigate(Pages.signIn)}
 								component="p"
 							>
-								Уже есть аккаунт? Войдите
+								{ t("sign-up.enter") }
 							</LinkComponent>
 						</Grid>
 					</Grid>
 
 					<Stepper activeStep={activeStep}>
-						{steps.map((label) => (
-							<Step key={label}>
-								<StepLabel>{label}</StepLabel>
-							</Step>
-						))}
+						{steps.map(label => <Step key={label}>
+							<StepLabel>{label}</StepLabel>
+						</Step>
+						)}
 					</Stepper>
 
-					{getStepContent(activeStep)}
+					{ getStepContent(activeStep) }
 
 					<Box className={styles.footerButtonArea}>
 						<Button
@@ -259,7 +262,7 @@ export default function SignUp() {
 							disabled={activeStep === 0}
 							onClick={handleBack}
 						>
-							Назад
+							{ t("sign-up.back") }
 						</Button>
 
 						<LoadingButton
@@ -272,13 +275,13 @@ export default function SignUp() {
 							onClick={handleNext}
 						>
 							{activeStep === steps.length - 1
-								? "Зарегистрироваться"
-								: "Далее"}
+								? t("sign-up.register")
+								: t("sign-up.further")}
 						</LoadingButton>
 					</Box>
 				</Box>
 
-				<Copyright />
+				<CopyrightComponent />
 			</Container>
 		</ThemeProvider>
 	);

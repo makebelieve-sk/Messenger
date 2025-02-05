@@ -1,60 +1,92 @@
 import EventEmitter from "eventemitter3";
 import { io } from "socket.io-client";
 
-import { SOCKET_IO_CLIENT } from "../../utils/constants";
-import { AppDispatch } from "../../types/redux.types";
-import { SocketType } from "../../types/socket.types";
-import { MainClientEvents } from "../../types/events";
-import SocketController from "./SocketController";
-import Profile from "../profile/Profile";
-import User from "../models/User";
+import SocketController from "@core/socket/SocketController";
+import Logger from "@service/Logger";
+import i18next from "@service/i18n";
+import { SOCKET_RECONECTION_ATTEMPTS, SOCKET_RECONNECTION_DELAY, API_URL, SOCKET_ACK_TIMEOUT } from "@utils/constants";
+import { AppDispatch } from "@custom-types/redux.types";
+import { ClientToServerEvents, SocketType } from "@custom-types/socket.types";
+import { MainClientEvents, SocketEvents } from "@custom-types/events";
+import { IUser } from "@custom-types/models.types";
 
-interface IConstructor {
-    myProfile: Profile;
-    dispatch: AppDispatch;
-};
+const logger = Logger.init("Socket");
 
+// Класс, являющийся оберткой для socket.io-client, позволяющий давать запросы на сервер по протоколу ws через транспорт websocket
 export default class Socket extends EventEmitter {
-    private readonly _socket: SocketType;
-    private readonly _user: User;
-    private readonly _dispatch: AppDispatch;
+    private _socket!: SocketType;
     private _socketController!: SocketController;
+    private _me!: IUser;
 
-    constructor({ myProfile, dispatch }: IConstructor) {
+    constructor(private readonly _dispatch: AppDispatch) {
         super();
-
-        this._user = myProfile.user;
-        this._socket = io(SOCKET_IO_CLIENT, { transports: ["websocket"] });
-        this._dispatch = dispatch;
-
-        this._init();
-        this._bindSocketControllerListeners();
     }
 
-    // TODO Удалить после рефакторинга звонков (useWebRTC)
-    public getSocketInstance() {
-        return this._socket;
-    }
+    init(myUser: IUser) {
+        logger.debug("init");
 
-    private _init() {
-        if (!this._user) {
-            this.emit(MainClientEvents.ERROR, "Объект пользователя не существует");
+        if (!myUser) {
+            this.emit(MainClientEvents.ERROR, i18next.t("core.socket.error.user_not_exists"));
             return;
         }
 
-        this._socket.auth = { user: this._user.user };
-        this._socket.connect();
+        this._me = myUser;
 
-        this._socketController = new SocketController({ socket: this._socket, user: this._user, dispatch: this._dispatch });
+        this._socket = io(API_URL, { 
+            transports: ["websocket"],                  // Виды транспортов (идут один за другим по приоритету, данный массив на сервере должен совпадать)
+            autoConnect: true,                          // Автоматически подключаться при создании экземпляра клиента (без вызова connect())
+            reconnectionAttempts: SOCKET_RECONECTION_ATTEMPTS, // Количество попыток переподключения перед тем, как закрыть соединение
+            reconnectionDelay: SOCKET_RECONNECTION_DELAY,      // Задержка между попытками переподключения
+            forceNew: false,                            // Не создает новое соединение, если оно уже существует
+            upgrade: true,                              // Позволяет улучшать соединение с polling до websocket (в нашем случае улучшается с первого http-запроса (handshake) до websocket)
+            closeOnBeforeunload: true,                  // Позволяет сокет соединению автоматически закрываться при событии beforeunload (закрытие вкладки/браузера/обновление страницы)
+            withCredentials: true                       // Включает передачу куки при кросс-доменных запросах (работает только с аналогичным параметром на сервере)
+        });
+        this._socket.auth = { user: this._me };
+
+        this._socketController = new SocketController(this._socket, this._dispatch, this._me);
+
+        this._bindSocketControllerListeners();
+    }
+
+    // Основной метод отправки события с клиента на сервер с добавлением ack (подтверждение обработки сервером данного события)
+    // Необходимо корректно указать тип аргументов => [infer _] нам необходим, но на него ругается линтер
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async send<T extends keyof ClientToServerEvents>(type: T, ...args: Parameters<ClientToServerEvents[T]> extends [...infer R, infer _] ? R : any[]) {
+        try {
+            const { success, message, timestamp } = await this._socket.timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, ...args);
+
+            if (!success) {
+                throw i18next.t("core.socket.error.emit_event_on_the_server", { message, timestamp });
+            }
+
+            logger.debug(i18next.t("core.socket.emit_handled", { type, timestamp }));
+        } catch (error) {
+            this.emit(MainClientEvents.ERROR, i18next.t("core.socket.error.emit", { type, message: error }));
+        }
+    }
+
+    disconnect() {
+        logger.debug("disconnect");
+        this._socket.disconnect();
+    }
+
+    _connect() {
+        logger.debug("_connect");
+
+        this._socket.auth = { user: this._me };
+        this._socket.connect();
     }
 
     private _bindSocketControllerListeners() {
         this._socketController.on(MainClientEvents.REDIRECT, (path: string) => {
+            logger.debug(`MainClientEvents.REDIRECT [path=${path}]`);
             this.emit(MainClientEvents.REDIRECT, path);
         });
-    }
 
-    public disconnect() {
-        this._socket.disconnect();
+        this._socketController.on(SocketEvents.RECONNECT, () => {
+            logger.debug("SocketEvents.RECONNECT");
+            this._connect();
+        });
     }
 }

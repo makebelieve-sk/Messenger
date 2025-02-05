@@ -1,3 +1,8 @@
+import http, { IncomingMessage, ServerResponse } from "http";
+import { ISocketUser } from "./socket.types";
+
+export type UsersType = Map<string, ISocketUser>;
+
 export interface IImage {
     id: string;
     src: string;
@@ -11,17 +16,6 @@ export interface IImage {
     fromProfile?: boolean;
 };
 
-export interface IFormValues {
-    name: string;
-    surName: string;
-    sex: string;
-    birthday: string;
-    work: string;
-    city: string;
-    phone: string;
-    email: string;
-};
-
 export type TimeoutType = ReturnType<typeof setTimeout>;
 
-export type ErrorType = unknown | Error;
+export type ServerType = http.Server<typeof IncomingMessage, typeof ServerResponse>;

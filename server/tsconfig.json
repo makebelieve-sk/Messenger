@@ -1,12 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
+    "target": "ES2021",                       // Выбор стандарта ES2016
+    "module": "NodeNext",                     // Тип модулей для Node.js
+    "esModuleInterop": true,                  // Устанавливается для совместимости с импортом ES6 модулей
+    "forceConsistentCasingInFileNames": true, // Предотвращает ошибки из-за регистра
+    "strict": true,                           // Включает все строгие проверки
+    "skipLibCheck": true,                     // Пропускает проверку типов библиотек
+    "outDir": "./dist",                       // Директория для скомпилированных файлов
+    "resolveJsonModule": true,                // Позволяет импортировать .json файлы
+    "sourceMap": true,                        // Генерация карт для отладки
+    "allowJs": false,                                   // Не разрешаем использование js файлов
+    "noImplicitAny": false,                   // Пока что разрешаем использование any в типах (TODO удалим позднее, когда проект будет близок к завершению)
+    "noUnusedLocals": true,                   // Сообщает о неиспользуемых, но объявленных переменных
+    "noUnusedParameters": true,               // Сообщает о неиспользуемых параметрах функции
+    "noImplicitReturns": true,                // Предупреждение, если путь в функции не возвращает значение
+    "noFallthroughCasesInSwitch": true,       // Предупреждает о случаях fallthrough в switch
+    "moduleResolution": "nodenext",               // Использует резолвер модулей Node.js
+    "typeRoots": ["./node_modules/@types"],   // Указывает пути для типов
+    "incremental": true                       // Включает инкрементальную сборку
   },
-  "include": ["**/*.ts", "types.d.ts", "errors/controllers"],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist", "assets"]
 }

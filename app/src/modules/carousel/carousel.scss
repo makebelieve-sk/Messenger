@@ -1,0 +1,27 @@
+@use "@styles/abstract/colors.scss" as *;
+
+.carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 400px;
+    max-height: max-content;
+    background: $light-grey;
+
+    &__info {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: max-content;
+    }
+
+    &__photo {
+        width: 100%;
+
+        .photo {
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
+    }
+}

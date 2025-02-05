@@ -1,11 +1,16 @@
 import { v4 as uuid } from "uuid";
-import { FileVarieties, MessageTypes } from "../types/enums";
-import { IFile, IMessage } from "../types/models.types";
-// import { UserPartial } from "../pages/messages";
-import { isImage } from "./files";
+
+import Logger from "@service/Logger";
+import { FileVarieties, MessageTypes } from "@custom-types/enums";
+import { IFile, IMessage } from "@custom-types/models.types";
+import { isImage } from "@utils/files";
+
+const logger = Logger.init("utils/messages");
 
 // Обработка сообщений с файлами (разделение на отдельные сообщения)
 export const handlingMessagesWithFiles = (messages: IMessage[]) => {
+    logger.debug(`handlingMessagesWithFiles [messages.length=${messages.length}]`);
+
     return messages.reduce((acc, message) => {
         switch (message.type) {
             // Несколько файлов в сообщении
@@ -89,6 +94,8 @@ export const handlingMessagesWithFiles = (messages: IMessage[]) => {
 
 // Проверка на первый/последний элемент для сообщения в блоке (показ имени, аватара)
 export const checkIsFirstOrLastMessage = (message: IMessage, prevMessage: IMessage | null, postMessage: IMessage | null) => {
+    logger.debug(`checkIsFirstOrLastMessage [messageUserId=${message.id}, prevMessageUserId=${prevMessage?.userId}, postMessageUserId=${postMessage?.userId}]`);
+
     let isFirst = false;
     let isLast = false;
 
@@ -109,5 +116,6 @@ export const checkIsFirstOrLastMessage = (message: IMessage, prevMessage: IMessa
 
 // Получение всех остальных пользователей чата
 export const getLeftChatUsers = (usersInChat: any[], userId: string) => {
+    logger.debug(`getLeftChatUsers [usersInChat.length=${usersInChat.length}, userId=${userId}]`);
     return usersInChat.filter(userInChat => userInChat.id !== userId);
 };
