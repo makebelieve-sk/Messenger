@@ -70,7 +70,7 @@ export default defineConfig({
             "@pages": path.resolve(__dirname, "src/pages"),            // Короткий путь для папки pages
             "@service": path.resolve(__dirname, "src/service"),        // Короткий путь для папки service
             "@store": path.resolve(__dirname, "src/store"),            // Короткий путь для папки store
-            "@custom-types": path.resolve(__dirname, "src/types"),            // Короткий путь для папки types
+            "@custom-types": path.resolve(__dirname, "src/types"),     // Короткий путь для папки types
             "@styles": path.resolve(__dirname, "src/styles"),          // Короткий путь для папки styles
             "@utils": path.resolve(__dirname, "src/utils")             // Короткий путь для папки utils
         }                   // Добавление коротких путей

@@ -1,5 +1,6 @@
 import EventEmitter from "eventemitter3";
 
+import { IFormValues } from "@pages/Edit";
 import Logger from "@service/Logger";
 import Request from "@core/Request";
 import UserService from "@core/services/UserService";
@@ -15,7 +16,6 @@ import { AVATAR_URL } from "@utils/files";
 import { getFullName } from "@utils/index";
 import { currentDate } from "@utils/time";
 import eventBus from "@utils/event-bus";
-import { IFormValues } from "@pages/Edit";
 
 const logger = Logger.init("Profile");
 
