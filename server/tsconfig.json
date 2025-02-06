@@ -9,13 +9,13 @@
     "outDir": "./dist",                       // Директория для скомпилированных файлов
     "resolveJsonModule": true,                // Позволяет импортировать .json файлы
     "sourceMap": true,                        // Генерация карт для отладки
-    "allowJs": false,                                   // Не разрешаем использование js файлов
+    "allowJs": false,                         // Не разрешаем использование js файлов
     "noImplicitAny": false,                   // Пока что разрешаем использование any в типах (TODO удалим позднее, когда проект будет близок к завершению)
     "noUnusedLocals": true,                   // Сообщает о неиспользуемых, но объявленных переменных
     "noUnusedParameters": true,               // Сообщает о неиспользуемых параметрах функции
     "noImplicitReturns": true,                // Предупреждение, если путь в функции не возвращает значение
     "noFallthroughCasesInSwitch": true,       // Предупреждает о случаях fallthrough в switch
-    "moduleResolution": "nodenext",               // Использует резолвер модулей Node.js
+    "moduleResolution": "nodenext",           // Использует резолвер модулей Node.js
     "typeRoots": ["./node_modules/@types"],   // Указывает пути для типов
     "incremental": true                       // Включает инкрементальную сборку
   },

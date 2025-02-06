@@ -11,44 +11,47 @@ interface ISocketUser extends ISafeUser {
 
 type SocketType = Server<ClientToServerEvents, ServerToClientEvents>;
 
-interface SocketWithUser extends Socket { 
+interface SocketWithUser extends Socket<ClientToServerEvents, ServerToClientEvents> { 
     user: ISocketUser;
 };
 
-interface IAck { success: boolean; message?: string; timestamp: number; };
+interface IAck { success: boolean; message?: string; timestamp?: number; };
 type CallbackAckType = (ack: IAck) => void;
 
 // Отправляем события с клиента на сервер
 interface ClientToServerEvents {
-    [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, usersInChat }: { isWrite: boolean; chatId: string; usersInChat: UserPartial[]; }) => void;
-    [SocketActions.FRIENDS]: (data: { type: string; payload: { to: string; acceptedFriend?: ISafeUser; }; }) => void;
-    [SocketActions.MESSAGE]: ({ data, usersInChat }: { data: IMessage; usersInChat: UserPartial[]; }) => void;
-    [SocketActions.EDIT_MESSAGE]: ({ data }: { data: IEditMessage; usersInChat: UserPartial[]; }) => void;
-    [SocketActions.DELETE_MESSAGE]: ({ companionId, messageId }: { companionId: string; messageId: string; }) => void;
-    [SocketActions.DELETE_CHAT]: ({ companionId, chatId }: { companionId: string; chatId: string; }) => void;
-    [SocketActions.CHANGE_READ_STATUS]: ({ isRead, messages }: { isRead: MessageReadStatus; messages: IMessage[]; }) => void;    
+    [SocketActions.FRIENDS]: (data: { type: string; payload: { to: string; acceptedFriend?: ISafeUser; }; }, callback: CallbackAckType) => void;
+
+    [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, usersInChat }: { isWrite: boolean; chatId: string; usersInChat: UserPartial[]; }, callback: CallbackAckType) => void;
+    [SocketActions.MESSAGE]: ({ data, usersInChat }: { data: IMessage; usersInChat: UserPartial[]; }, callback: CallbackAckType) => void;
+    [SocketActions.EDIT_MESSAGE]: ({ data, usersInChat }: { data: IEditMessage; usersInChat: UserPartial[]; }, callback: CallbackAckType) => void;
+    [SocketActions.DELETE_MESSAGE]: ({ companionId, messageId }: { companionId: string; messageId: string; }, callback: CallbackAckType) => void;
+    [SocketActions.DELETE_CHAT]: ({ companionId, chatId }: { companionId: string; chatId: string; }, callback: CallbackAckType) => void;
+    [SocketActions.CHANGE_READ_STATUS]: ({ isRead, messages }: { isRead: MessageReadStatus; messages: IMessage[]; }, callback: CallbackAckType) => void;    
 };
 
 // Отправляем события с сервера на клиент
 interface ServerToClientEvents {
-    [SocketActions.GET_ALL_USERS]: (users: ISocketUser[], callback: CallbackAckType) => void;
-    [SocketActions.GET_NEW_USER]: (user: ISocketUser, callback: CallbackAckType) => void;
-    [SocketActions.USER_DISCONNECT]: (userId: string, callback: CallbackAckType) => void;
+    [SocketActions.GET_ALL_USERS]: ({ users }: { users: ISocketUser[]; }) => void;
+    [SocketActions.GET_NEW_USER]: ({ user }: { user: ISocketUser; }) => void;
+    [SocketActions.USER_DISCONNECT]: ({ userId }: { userId: string; }) => void;
 
     [SocketActions.ADD_TO_FRIENDS]: () => void;
     [SocketActions.UNSUBSCRIBE]: () => void;
     [SocketActions.ACCEPT_FRIEND]: ({ user }: { user: ISafeUser; }) => void;
     [SocketActions.BLOCK_FRIEND]: ({ userId }: { userId: string; }) => void;
 
-    [SocketActions.SOCKET_CHANNEL_ERROR]: (message: string) => void;
+    [SocketActions.SOCKET_CHANNEL_ERROR]: ({ message }: { message: string; }) => void;
 
     [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, userName }: { isWrite: boolean; chatId: string; userName: string; }) => void;
-    [SocketActions.SEND_MESSAGE]: (message: IMessage) => void;
+    [SocketActions.SEND_MESSAGE]: ({ message }: { message: IMessage; }) => void;
     [SocketActions.EDIT_MESSAGE]: ({ data }: { data: IEditMessage; }) => void;
     [SocketActions.DELETE_MESSAGE]: ({ messageId }: { messageId: string; }) => void;
     [SocketActions.DELETE_CHAT]: ({ chatId }: { chatId: string; }) => void;
     [SocketActions.ACCEPT_CHANGE_READ_STATUS]: ({ message }: { message: IMessage; }) => void;
 };
+
+type HandleArgsType<D extends (...args: any[]) => void> = Parameters<D> extends [infer R, infer _] ? R : unknown;
 
 export type {
     ISocketUser,
@@ -56,5 +59,7 @@ export type {
     SocketWithUser,
     ClientToServerEvents, 
     ServerToClientEvents,
-    IAck
+    IAck,
+    CallbackAckType,
+    HandleArgsType
 };

@@ -8,6 +8,7 @@ import { SocketType } from "@custom-types/socket.types";
 import { MainClientEvents, SocketEvents } from "@custom-types/events";
 import { changeLastMessageInDialog, deleteDialog, deleteMessage, editMessage, setUnRead, setWriteMessage, updateMessage } from "@store/message/slice";
 import { getFullName } from "@utils/index";
+import { validateHandleEvent } from "@core/socket/validation";
 
 const logger = Logger.init("Socket:MessagesController");
 
@@ -21,60 +22,96 @@ export default class MessangesController extends EventEmitter {
 
     private _init() {
         // Получаем сообщение от пользователя
-        this._socket.on(SocketActions.SEND_MESSAGE, (message) => {
-            logger.debug(`SocketActions.SEND_MESSAGE [messageId=${message.id}]`);
+        this._socket.on(SocketActions.SEND_MESSAGE, ({ message }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.SEND_MESSAGE, { message });
 
-            if (message) {
-                this.emit(SocketEvents.ADD_MESSAGE, message);
+            if (validateData.success) {
+                logger.debug(`SocketActions.SEND_MESSAGE [messageId=${message.id}]`);
 
-                // Удаляем набирающего сообщения пользователя
-                this._dispatch(setWriteMessage({ isWrite: false, chatId: message.chatId, userName: getFullName(message.User as IUser) }));
-                // Добавляем непрочитанное сообщение в глобальное состояние непрочитанных сообщений конкретного чата
-                this._dispatch(setUnRead({ type: UnReadTypes.ADD_MESSAGE, payload: { chatId: message.chatId, messageId: message.id } }));
-                // Обновляем последнее сообщение в диалогах
-                this._dispatch(changeLastMessageInDialog(message));
+                if (message) {
+                    this.emit(SocketEvents.ADD_MESSAGE, message);
+    
+                    // Удаляем набирающего сообщения пользователя
+                    this._dispatch(setWriteMessage({ isWrite: false, chatId: message.chatId, userName: getFullName(message.User as IUser) }));
+                    // Добавляем непрочитанное сообщение в глобальное состояние непрочитанных сообщений конкретного чата
+                    this._dispatch(setUnRead({ type: UnReadTypes.ADD_MESSAGE, payload: { chatId: message.chatId, messageId: message.id } }));
+                    // Обновляем последнее сообщение в диалогах
+                    this._dispatch(changeLastMessageInDialog(message));
+                }
             }
+
+            this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
 
         // Получаем уведомление о том, что кто-то прочитал мое сообщение
-        this._socket.on(SocketActions.ACCEPT_CHANGE_READ_STATUS, ({ message }) => {
-            logger.debug(`SocketActions.ACCEPT_CHANGE_READ_STATUS [messageId=${message.id}]`);
+        this._socket.on(SocketActions.ACCEPT_CHANGE_READ_STATUS, ({ message }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.ACCEPT_CHANGE_READ_STATUS, { message });
 
-            if (message) {
-                if (window.location.pathname.toLowerCase() === Pages.messages + "/" + message.chatId.toLowerCase()) {
-                    this._dispatch(updateMessage({ messageId: message.id, field: "isRead", value: message.isRead }));
+            if (validateData.success) {
+                logger.debug(`SocketActions.ACCEPT_CHANGE_READ_STATUS [messageId=${message.id}]`);
+
+                if (message) {
+                    if (window.location.pathname.toLowerCase() === Pages.messages + "/" + message.chatId.toLowerCase()) {
+                        this._dispatch(updateMessage({ messageId: message.id, field: "isRead", value: message.isRead }));
+                    }
                 }
             }
+
+            this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
 
         // Получаем уведомление об удалении сообщения из приватного чата
-        this._socket.on(SocketActions.DELETE_MESSAGE, ({ messageId }) => {
-            logger.debug(`SocketActions.DELETE_MESSAGE [messageId=${messageId}]`);
-            this._dispatch(deleteMessage(messageId));
+        this._socket.on(SocketActions.DELETE_MESSAGE, ({ messageId }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.DELETE_MESSAGE, { messageId });
+
+            if (validateData.success) {
+                logger.debug(`SocketActions.DELETE_MESSAGE [messageId=${messageId}]`);
+                this._dispatch(deleteMessage(messageId));
+            }
+            
+            this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
 
         // Получаем уведомление об удалении приватного чата
-        this._socket.on(SocketActions.DELETE_CHAT, ({ chatId }) => {
-            logger.debug(`SocketActions.DELETE_CHAT [chatId=${chatId}]`);
+        this._socket.on(SocketActions.DELETE_CHAT, ({ chatId }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.DELETE_CHAT, { chatId });
 
-            // Если собеседник приватного чата находится на странице с чатом - перенаправляем его на страницу всех диалогов
-            if (window.location.pathname.toLowerCase() === Pages.messages + "/" + chatId.toLowerCase()) {
-                this.emit(MainClientEvents.REDIRECT, Pages.messages);
+            if (validateData.success) {
+                logger.debug(`SocketActions.DELETE_CHAT [chatId=${chatId}]`);
+
+                // Если собеседник приватного чата находится на странице с чатом - перенаправляем его на страницу всех диалогов
+                if (window.location.pathname.toLowerCase() === Pages.messages + "/" + chatId.toLowerCase()) {
+                    this.emit(MainClientEvents.REDIRECT, Pages.messages);
+                }
+    
+                this._dispatch(deleteDialog(chatId));
             }
 
-            this._dispatch(deleteDialog(chatId));
+            this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
 
         // Получаем уведомление об изменении/редактировании сообщения
-        this._socket.on(SocketActions.EDIT_MESSAGE, ({ data }) => {
-            logger.debug(`SocketActions.EDIT_MESSAGE [data=${data}]`);
-            this._dispatch(editMessage(data));
+        this._socket.on(SocketActions.EDIT_MESSAGE, ({ data }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.EDIT_MESSAGE, { data });
+
+            if (validateData.success) {
+                logger.debug(`SocketActions.EDIT_MESSAGE [data=${data}]`);
+                this._dispatch(editMessage(data));
+            }
+            
+            this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
 
         // Отрисовываем блок о том, что собеседник набирает сообщение
-        this._socket.on(SocketActions.NOTIFY_WRITE, ({ isWrite, chatId, userName }) => {
-            logger.debug(`SocketActions.NOTIFY_WRITE [isWrite=${isWrite}, chatId=${chatId}, userName=${userName}]`);
-            this._dispatch(setWriteMessage({ isWrite, chatId, userName }));
+        this._socket.on(SocketActions.NOTIFY_WRITE, ({ isWrite, chatId, userName }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.NOTIFY_WRITE, { isWrite, chatId, userName });
+
+            if (validateData.success) {
+                logger.debug(`SocketActions.NOTIFY_WRITE [isWrite=${isWrite}, chatId=${chatId}, userName=${userName}]`);
+                this._dispatch(setWriteMessage({ isWrite, chatId, userName }));
+            }
+
+            this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
     }
 }

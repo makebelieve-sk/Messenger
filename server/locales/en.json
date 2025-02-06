@@ -67,20 +67,22 @@
 
 	"socket.disconnecting": "In the process of disconnecting the socket connection ({{reason}}).",
 	"socket.socket_disconnected_with_reason": "The socket with the connection ID {{socketId}} was disconnected due to: {{reason}}.",
-	"socket.emit_handled": "The event has been processed on the client [type={{type}}, timestamp={{timestamp}}].",
+	"socket.emit_handled": "[{{timestamp}}] | The event {{type}} has been processed on the client.",
 
     "socket.error.user_with_id_not_exists": "User with id={{userId}} not exists.",
     "socket.error.user_id_not_found": "The user ID was not transmitted.",
     "socket.error.not_correct_friends_action_type": "Incorrect type of action when working with friends.",
     "socket.error.cannot_find_call": "It is impossible to end the call because it has not been found. It may have already been completed.",
     "socket.error.not_correct_user_id_in_socket": "The user ID={{user To}} is not suitable. You must use the notify Me method.",
-    "socket.error.update_last_seen": "An error occurred when updating the time of the user's last login.",
+    "socket.error.update_last_seen": "An error occurred when updating the time of the user's last login: {{message}}.",
     "socket.error.socket_work": "An error occurred while working with the socket",
-	"socket.error.socket_emit_with_ack": "An error occurred while processing the received event {{type}}",
-	"socket.error.socket_emit_broadcast_with_ack": "An error occurred while processing the received event from all users except myself {{type}}",
-	"socket.error.emit_event_on_the_server_from_all_users": "An error occurred on some client when processing this event.",
-	"socket.error.emit_event_on_the_server": "[{{timestamp}}] | An error occurred on the client when processing this event: {{message}}",
+	"socket.error.emit_with_ack": "An error occurred while trying to send an event {{type}}: {{message}}",
+	"socket.error.emit_broadcast_with_ack": "An error occurred when trying to send an event to all users except myself {{type}}: {{message}}",
+	"socket.error.emit_to_with_ack": "An error occurred when trying to send a {{type}} event to a specific user: {{message}}",
+	"socket.error.emit_broadcast_empty_response": "The socket connection failed. The list of confirmed event treatments from clients is empty.",
+	"socket.error.handle_event_on_client": "An error occurred on the client when processing this event {{type}}: {{message}}",
     "socket.error.engine_socket": "Abnormal disconnection of the socket with the {{code}}.\nRequest object: {{req}}.\nError text: {{message}}.\nAdditional context: {{context}}.",
+	"socket.error.validation_emit": "When trying to send an event to the client, a schema validation error occurred: {{message}}",
 
 	"database.start": "The connection to the database has been successfully established.",
 	"database.close": "The database connection has been successfully closed.",
@@ -107,5 +109,29 @@
 
 	"error.unhandled_sync": "An unhandled error in synchronous code: {{errorMessage}}",
 	"error.unhandled_async": "An unhandled error in asynchronous code: {{reason}} ({{promise}})",
-	"error.initialize_i18n": "An error occurred while initializing the i18n package."
+	"error.initialize_i18n": "An error occurred while initializing the i18n package.",
+
+	"validation.socket.emit_event": "Validation of the schema when sending an event {{event}}.",
+	"validation.socket.handle_event": "Validation of the schema during event processing {{event}}.",
+
+	"validation.socket.error.emit_unknown_event": "This type of {{event}} does not exist in the validation scheme for sent events.",
+	"validation.socket.error.handle_unknown_event": "This type of {{event}} does not exist in the validation scheme for received events.",
+
+	"validation.schema.error.required_user_id": "The unique user ID must be filled in.",
+	"validation.schema.error.required_socket_error": "The socket connection error message must be filled in.",
+	"validation.schema.error.required_companion_id": "The unique identifier of the chat interlocutor must be filled in.",
+	"validation.schema.error.required_message_id": "The unique identifier of the message must be filled in.",
+	"validation.schema.error.required_chat_id": "The unique chat ID must be filled in.",
+	"validation.schema.error.required_firstname": "The user's name must be filled in.",
+	"validation.schema.error.required_thirdname": "The user's last name must be filled in.",
+	"validation.schema.error.incorrect_email": "The email address is filled in incorrectly.",
+	"validation.schema.error.required_email": "The email address must be filled in.",
+	"validation.schema.error.required_phone": "The phone number must be filled in.",
+	"validation.schema.error.required_socket_id": "The unique identifier of the socket connection must be filled in.",
+	"validation.schema.error.required_message_type": "The message type must be filled in.",
+	"validation.schema.error.required_message_create_date": "The date of the message creation must be filled in correctly.",
+	"validation.schema.error.required_message": "The message body must be filled in.",
+	"validation.schema.error.required_write_username": "The full name of the printer must be filled in.",
+	"validation.schema.error.required_friend_type": "The friendship request type must be filled in.",
+	"validation.schema.error.required_friend_id": "The friend's unique ID must be filled in."
 }

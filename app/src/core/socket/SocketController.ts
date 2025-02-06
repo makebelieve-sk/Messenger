@@ -3,6 +3,7 @@ import EventEmitter from "eventemitter3";
 import UsersController from "@core/socket/controllers/Users";
 import FriendsController from "@core/socket/controllers/Friends";
 import MessangesController from "@core/socket/controllers/Messages";
+import { ValidateHandleReturnType } from "@core/socket/validation";
 import Logger from "@service/Logger";
 import i18next from "@service/i18n";
 import PlayAudio from "@utils/play-audio";
@@ -12,7 +13,7 @@ import { setMessage } from "@store/message/slice";
 import { Pages, SocketActions } from "@custom-types/enums";
 import { IMessage, IUser } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
-import { SocketType } from "@custom-types/socket.types";
+import { CallbackAckType, SocketType } from "@custom-types/socket.types";
 import { SocketEvents } from "@custom-types/events";
 
 const logger = Logger.init("SocketController");
@@ -21,6 +22,7 @@ const SERVER_DISCONNECT = "io server disconnect";
 // Главный контроллер по управлению всеми событиями сокет соединения, при этом, обрабатывая системные события
 export default class SocketController extends EventEmitter {
     private readonly _usersController: UsersController;
+    private readonly _friendsController: FriendsController;
     private readonly _messagesController: MessangesController;
 
     constructor(private readonly _socket: SocketType, private readonly _dispatch: AppDispatch, private readonly _myUser: IUser) {
@@ -29,7 +31,7 @@ export default class SocketController extends EventEmitter {
         this._init();
 
         this._usersController = new UsersController(this._socket, this._dispatch);
-        new FriendsController(this._socket, this._dispatch);
+        this._friendsController = new FriendsController(this._socket, this._dispatch);
         this._messagesController = new MessangesController(this._socket, this._dispatch);
 
         this._bindListeners();
@@ -41,9 +43,11 @@ export default class SocketController extends EventEmitter {
         });
 
         // Обработка системного канала с ошибками
-        this._socket.on(SocketActions.SOCKET_CHANNEL_ERROR, (message) => {
+        this._socket.on(SocketActions.SOCKET_CHANNEL_ERROR, ({ message }, callback) => {
             // Вывод ошибки
             this._dispatch(setSystemError(message));
+
+            callback({ success: true, timestamp: Date.now() });
         });
 
         // Событие возникает при невозможности установить соединение или соединение было отклонено сервером (к примеру мидлваром)
@@ -81,6 +85,10 @@ export default class SocketController extends EventEmitter {
             }
         });
 
+        this._usersController.on(SocketEvents.SEND_ACK, this._handleAck.bind(this));
+        this._friendsController.on(SocketEvents.SEND_ACK, this._handleAck.bind(this));
+        this._messagesController.on(SocketEvents.SEND_ACK, this._handleAck.bind(this));
+
         this._messagesController.on(SocketEvents.ADD_MESSAGE, (message: IMessage) => {
             if (window.location.pathname.toLowerCase() === Pages.messages + "/" + message.chatId.toLowerCase()) {
                 this._dispatch(setMessage({ message, showUnreadDie: true, userId: this._myUser.id }));
@@ -90,5 +98,13 @@ export default class SocketController extends EventEmitter {
                 playAudio.init();
             }
         });
+    }
+
+    private _handleAck(validateData: ValidateHandleReturnType, cb: CallbackAckType) {
+        const ackData = validateData.success
+            ? { success: true, timestamp: Date.now() }
+            : { success: false, message: validateData.message };
+
+        cb(ackData);
     }
 }

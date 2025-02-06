@@ -5,20 +5,14 @@ import { IMessage, IUser } from "@custom-types/models.types";
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
-interface ISocketData {
-    type: string;
-    payload: {
-        to: string;
-        acceptedFriend?: IUser;
-    };
-};
-
-type CallbackAckType = (ack: { success: true; timestamp: number; } | { success: false, message: string; }) => void;
+interface IAck { success: boolean; message?: string; timestamp?: number; };
+type CallbackAckType = (ack: IAck) => void;
 
 // Отправляем события с клиента на сервер
 interface ClientToServerEvents {
+    [SocketActions.FRIENDS]: ({ type, payload }: { type: string; payload: { to: string; acceptedFriend?: IUser; }; }) => void;
+
     [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, usersInChat }: { isWrite: boolean; chatId: string; usersInChat: any[]; }) => void;
-    [SocketActions.FRIENDS]: (data: ISocketData) => void;
     [SocketActions.MESSAGE]: ({ data, usersInChat }: { data: IMessage; usersInChat: any[]; }) => void;
     [SocketActions.EDIT_MESSAGE]: ({ data }: { data: any; usersInChat: any[]; }) => void;
     [SocketActions.DELETE_MESSAGE]: ({ companionId, messageId }: { companionId: string; messageId: string; }) => void;
@@ -28,28 +22,31 @@ interface ClientToServerEvents {
 
 // Отправляем события с сервера на клиент
 interface ServerToClientEvents {
-    [SocketActions.GET_ALL_USERS]: (users: IUser[], callback: CallbackAckType) => void;
-    [SocketActions.GET_NEW_USER]: (user: IUser, callback: CallbackAckType) => void;
-    [SocketActions.USER_DISCONNECT]: (userId: string, callback: CallbackAckType) => void;
+    [SocketActions.GET_ALL_USERS]: ({ users }: { users: IUser[]; }, callback: CallbackAckType) => void;
+    [SocketActions.GET_NEW_USER]: ({ user }: { user: IUser; }, callback: CallbackAckType) => void;
+    [SocketActions.USER_DISCONNECT]: ({ userId }: { userId: string; }, callback: CallbackAckType) => void;
 
-    [SocketActions.ADD_TO_FRIENDS]: () => void;
-    [SocketActions.UNSUBSCRIBE]: () => void;
-    [SocketActions.ACCEPT_FRIEND]: ({ user }: { user: IUser; }) => void;
-    [SocketActions.BLOCK_FRIEND]: ({ userId }: { userId: string; }) => void;
+    [SocketActions.ADD_TO_FRIENDS]: (callback: CallbackAckType) => void;
+    [SocketActions.UNSUBSCRIBE]: (callback: CallbackAckType) => void;
+    [SocketActions.ACCEPT_FRIEND]: ({ user }: { user: IUser; }, callback: CallbackAckType) => void;
+    [SocketActions.BLOCK_FRIEND]: ({ userId }: { userId: string; }, callback: CallbackAckType) => void;
 
-    [SocketActions.SOCKET_CHANNEL_ERROR]: (message: string) => void;
+    [SocketActions.SOCKET_CHANNEL_ERROR]: ({ message }: { message: string; }, callback: CallbackAckType) => void;
 
-    [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, userName }: { isWrite: boolean; chatId: string; userName: string; }) => void;
-    [SocketActions.SEND_MESSAGE]: (message: IMessage) => void;
-    [SocketActions.EDIT_MESSAGE]: ({ data }: { data: any; }) => void;
-    [SocketActions.DELETE_MESSAGE]: ({ messageId }: { messageId: string; }) => void;
-    [SocketActions.DELETE_CHAT]: ({ chatId }: { chatId: string; }) => void;
-    [SocketActions.ACCEPT_CHANGE_READ_STATUS]: ({ message }: { message: IMessage; }) => void;
+    [SocketActions.NOTIFY_WRITE]: ({ isWrite, chatId, userName }: { isWrite: boolean; chatId: string; userName: string; }, callback: CallbackAckType) => void;
+    [SocketActions.SEND_MESSAGE]: ({ message }: { message: IMessage; }, callback: CallbackAckType) => void;
+    [SocketActions.EDIT_MESSAGE]: ({ data }: { data: IMessage; }, callback: CallbackAckType) => void;
+    [SocketActions.DELETE_MESSAGE]: ({ messageId }: { messageId: string; }, callback: CallbackAckType) => void;
+    [SocketActions.DELETE_CHAT]: ({ chatId }: { chatId: string; }, callback: CallbackAckType) => void;
+    [SocketActions.ACCEPT_CHANGE_READ_STATUS]: ({ message }: { message: IMessage; }, callback: CallbackAckType) => void;
 };
+
+type HandleArgsType<D extends (...args: any[]) => void> = Parameters<D> extends [infer R, infer _] ? R : unknown;
 
 export type {
     SocketType,
     ClientToServerEvents, 
-    ServerToClientEvents, 
-    ISocketData
+    ServerToClientEvents,
+    HandleArgsType,
+    CallbackAckType
 };
