@@ -50,7 +50,9 @@ export default defineConfig({
                     // Вынесем React Router
                     router: ["react-router-dom"],
                     // Вынесем Axios
-                    axios: ["axios"]
+                    axios: ["axios"],
+                    // Вынесем Zod
+                    zod: ["zod"]
                 }   // Разбиваем большой чанк на более мелкие по размерности (с помощью плагина visualizer)
             }
         }                   // Опции для разбиения основного чанка на более мелкие чанки
