@@ -51,6 +51,8 @@ interface ServerToClientEvents {
     [SocketActions.ACCEPT_CHANGE_READ_STATUS]: ({ message }: { message: IMessage; }) => void;
 };
 
+// Необходимо корректно указать тип аргументов => [infer _] нам необходим, но на него ругается линтер
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type HandleArgsType<D extends (...args: any[]) => void> = Parameters<D> extends [infer R, infer _] ? R : unknown;
 
 export type {
