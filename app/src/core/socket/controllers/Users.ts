@@ -2,11 +2,12 @@ import EventEmitter from "eventemitter3";
 
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
+import { validateHandleEvent } from "@core/socket/validation";
+import { deleteOnlineUser, setOnlineUsers } from "@store/main/slice";
 import { SocketActions } from "@custom-types/enums";
 import { AppDispatch } from "@custom-types/redux.types";
 import { SocketType } from "@custom-types/socket.types";
 import { SocketEvents } from "@custom-types/events";
-import { deleteOnlineUser, setOnlineUsers } from "@store/main/slice";
 
 const logger = Logger.init("Socket:UsersController");
 
@@ -20,30 +21,42 @@ export default class UsersController extends EventEmitter {
 
     private _init() {
         // Список всех онлайн пользователей
-        this._socket.on(SocketActions.GET_ALL_USERS, (users, callback) => {
-            logger.info(`${i18next.t("core.socket.online_users")} [users=${JSON.stringify(users)}]`);
+        this._socket.on(SocketActions.GET_ALL_USERS, ({ users }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.GET_ALL_USERS, { users });
 
-            users.forEach(onlineUser => {
-                this.emit(SocketEvents.SET_ONLINE_USER, onlineUser);
-            });
+            if (validateData.success) {
+                logger.info(`${i18next.t("core.socket.online_users")} [users=${JSON.stringify(users)}]`);
 
-            callback({ success: true, timestamp: Date.now() });
+                users.forEach(onlineUser => {
+                    this.emit(SocketEvents.SET_ONLINE_USER, onlineUser);
+                });
+            }
+
+            this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
 
         // Новый пользователь онлайн
-        this._socket.on(SocketActions.GET_NEW_USER, (newUser, callback) => {
-            logger.info(`${i18next.t("core.socket.new_user_connected")} [newUser=${JSON.stringify(newUser)}]`);
-            this._dispatch(setOnlineUsers(newUser));
+        this._socket.on(SocketActions.GET_NEW_USER, ({ user }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.GET_NEW_USER, { user });
 
-            callback({ success: true, timestamp: Date.now() });
+            if (validateData.success) {
+                logger.info(`${i18next.t("core.socket.new_user_connected")} [user=${JSON.stringify(user)}]`);
+                this._dispatch(setOnlineUsers(user));
+            }
+
+            this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
 
         // Пользователь отключился
-        this._socket.on(SocketActions.USER_DISCONNECT, (userId, callback) => {
-            logger.info(`${i18next.t("core.socket.user_disconnected")} [userId=${userId}]`);
-            this._dispatch(deleteOnlineUser(userId));
+        this._socket.on(SocketActions.USER_DISCONNECT, ({ userId }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.USER_DISCONNECT, { userId });
 
-            callback({ success: true, timestamp: Date.now() });
+            if (validateData.success) {
+                logger.info(`${i18next.t("core.socket.user_disconnected")} [userId=${userId}]`);
+                this._dispatch(deleteOnlineUser(userId));
+            }
+            
+            this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
     }
 }

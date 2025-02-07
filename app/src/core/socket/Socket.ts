@@ -2,6 +2,7 @@ import EventEmitter from "eventemitter3";
 import { io } from "socket.io-client";
 
 import SocketController from "@core/socket/SocketController";
+import { validateEmitEvent } from "@core/socket/validation";
 import Logger from "@service/Logger";
 import i18next from "@service/i18n";
 import { SOCKET_RECONECTION_ATTEMPTS, SOCKET_RECONNECTION_DELAY, SOCKET_URL, SOCKET_ACK_TIMEOUT } from "@utils/constants";
@@ -52,15 +53,19 @@ export default class Socket extends EventEmitter {
     // Основной метод отправки события с клиента на сервер с добавлением ack (подтверждение обработки сервером данного события)
     // Необходимо корректно указать тип аргументов => [infer _] нам необходим, но на него ругается линтер
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async send<T extends keyof ClientToServerEvents>(type: T, ...args: Parameters<ClientToServerEvents[T]> extends [...infer R, infer _] ? R : any[]) {
+    async send<T extends keyof ClientToServerEvents>(type: T, ...args: Parameters<ClientToServerEvents[T]> extends [...infer R, infer _] ? R : unknown[]) {
         try {
-            const { success, message, timestamp } = await this._socket.timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, ...args);
+            const validateData = validateEmitEvent(type, args[0]);
 
-            if (!success) {
-                throw i18next.t("core.socket.error.emit_event_on_the_server", { message, timestamp });
+            if (validateData) {
+                const { success, message, timestamp } = await this._socket.timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, ...args);
+
+                if (!success) {
+                    throw i18next.t("core.socket.error.emit_event_on_the_server", { message, timestamp });
+                }
+    
+                logger.debug(i18next.t("core.socket.emit_handled", { type, timestamp }));
             }
-
-            logger.debug(i18next.t("core.socket.emit_handled", { type, timestamp }));
         } catch (error) {
             this.emit(MainClientEvents.ERROR, i18next.t("core.socket.error.emit", { type, message: error }));
         }

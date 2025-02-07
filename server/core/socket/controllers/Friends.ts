@@ -5,6 +5,7 @@ import Logger from "../../../service/logger";
 import { SocketActions } from "../../../types/enums";
 import { SocketWithUser } from "../../../types/socket.types";
 import { SocketEvents } from "../../../types/events";
+import { validateHandleEvent } from "../validation";
 
 const logger = Logger("Socket:FriendsController");
 
@@ -20,45 +21,59 @@ export default class FriendsController extends EventEmitter {
         logger.debug("_init");
 
         // Уведомляем конкретного пользователя о действиях дружбы
-        this._socket.on(SocketActions.FRIENDS, data => {
-            switch (data.type) {
-                case SocketActions.ADD_TO_FRIENDS: {
-                    const { to } = data.payload;
+        this._socket.on(SocketActions.FRIENDS, (data, callback) => {
+            const validateData = validateHandleEvent(SocketActions.FRIENDS, data);
 
-                    logger.debug("SocketActions.ADD_TO_FRIENDS [to=%s, type=%s]", to, SocketActions.ADD_TO_FRIENDS);
-                    this.emit(SocketEvents.NOTIFY_ANOTHER_USER, to, SocketActions.ADD_TO_FRIENDS);
-                    break;
+            if (validateData.success) {
+                switch (data.type) {
+                    case SocketActions.ADD_TO_FRIENDS: {
+                        const { to } = data.payload;
+    
+                        logger.debug("SocketActions.ADD_TO_FRIENDS [to=%s, type=%s]", to, SocketActions.ADD_TO_FRIENDS);
+                        this.emit(SocketEvents.NOTIFY_ANOTHER_USER, to, SocketActions.ADD_TO_FRIENDS);
+                        break;
+                    }
+    
+                    case SocketActions.ACCEPT_FRIEND: {
+                        const { to, acceptedFriend } = data.payload;
+    
+                        logger.debug("SocketActions.ACCEPT_FRIEND [to=%s, type=%s, data=%j]", to, SocketActions.ACCEPT_FRIEND, { user: acceptedFriend });
+                        this.emit(SocketEvents.NOTIFY_ANOTHER_USER, to, SocketActions.ACCEPT_FRIEND, { user: acceptedFriend });
+                        break;
+                    }
+    
+                    case SocketActions.UNSUBSCRIBE: {
+                        const { to } = data.payload;
+    
+                        logger.debug("SocketActions.UNSUBSCRIBE [to=%s, type=%s]", to, SocketActions.UNSUBSCRIBE);
+                        this.emit(SocketEvents.NOTIFY_ANOTHER_USER, to, SocketActions.UNSUBSCRIBE);
+                        break;
+                    }
+    
+                    case SocketActions.BLOCK_FRIEND: {
+                        const { to } = data.payload;
+    
+                        logger.debug("SocketActions.BLOCK_FRIEND [to=%s, type=%s, data=%j]", to, SocketActions.BLOCK_FRIEND, { userId: this._socket.user.id });
+                        this.emit(SocketEvents.NOTIFY_ANOTHER_USER, to, SocketActions.BLOCK_FRIEND, { userId: this._socket.user.id });
+                        break;
+                    }
+    
+                    default:
+                        logger.debug("unknown SocketActions [type=%s]", data.type);
+                        this._handleError(t("socket.error.not_correct_friends_action_type"));
+                        break;
                 }
-
-                case SocketActions.ACCEPT_FRIEND: {
-                    const { to, acceptedFriend } = data.payload;
-
-                    logger.debug("SocketActions.ACCEPT_FRIEND [to=%s, type=%s, data=%j]", to, SocketActions.ACCEPT_FRIEND, { user: acceptedFriend });
-                    this.emit(SocketEvents.NOTIFY_ANOTHER_USER, to, SocketActions.ACCEPT_FRIEND, { user: acceptedFriend });
-                    break;
-                }
-
-                case SocketActions.UNSUBSCRIBE: {
-                    const { to } = data.payload;
-
-                    logger.debug("SocketActions.UNSUBSCRIBE [to=%s, type=%s]", to, SocketActions.UNSUBSCRIBE);
-                    this.emit(SocketEvents.NOTIFY_ANOTHER_USER, to, SocketActions.UNSUBSCRIBE);
-                    break;
-                }
-
-                case SocketActions.BLOCK_FRIEND: {
-                    const { to } = data.payload;
-
-                    logger.debug("SocketActions.BLOCK_FRIEND [to=%s, type=%s, data=%j]", to, SocketActions.BLOCK_FRIEND, { userId: this._socket.user.id });
-                    this.emit(SocketEvents.NOTIFY_ANOTHER_USER, to, SocketActions.BLOCK_FRIEND, { userId: this._socket.user.id });
-                    break;
-                }
-
-                default:
-                    logger.debug("unknown SocketActions [type=%s]", data.type);
-                    this.emit(SocketEvents.HANDLE_ERROR, t("socket.error.not_correct_friends_action_type"));
-                    break;
             }
+
+            const ackData = validateData.success
+                ? { success: true, timestamp: Date.now() }
+                : { success: false, message: validateData.message };
+
+            callback(ackData);
         });
+    }
+
+    private _handleError(error: string) {
+        this.emit(SocketEvents.HANDLE_ERROR, error);
     }
 }

@@ -2,8 +2,9 @@ import EventEmitter from "events";
 
 import Logger from "../../../service/logger";
 import { SocketActions } from "../../../types/enums";
-import { ISocketUser, SocketWithUser } from "../../../types/socket.types";
+import { CallbackAckType, ISocketUser, SocketWithUser } from "../../../types/socket.types";
 import { SocketEvents } from "../../../types/events";
+import { validateHandleEvent, ValidateHandleReturnType } from "../validation";
 
 const logger = Logger("Socket:MessagesController");
 
@@ -22,63 +23,108 @@ export default class MessagesController extends EventEmitter {
         logger.debug("_init");
 
         // Уведомляем всех пользователей чата (кроме себя) об отправке нового сообщения
-        this._socket.on(SocketActions.MESSAGE, ({ data, usersInChat }) => {
-            const newMessage = {
-                ...data, 
-                User: { 
-                    id: this._user.id, 
-                    firstName: this._user.firstName, 
-                    thirdName: this._user.thirdName, 
-                    avatarUrl: this._user.avatarUrl
-                } 
-            };
+        this._socket.on(SocketActions.MESSAGE, ({ data, usersInChat }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.MESSAGE, { data, usersInChat });
 
-            logger.debug("SocketActions.MESSAGE [usersInChat=%j, type=%s, data=%j]", usersInChat, SocketActions.SEND_MESSAGE, newMessage);
-            this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, usersInChat, SocketActions.SEND_MESSAGE, newMessage);
+            if (validateData.success) {
+                const newMessage = {
+                    ...data, 
+                    User: { 
+                        id: this._user.id, 
+                        firstName: this._user.firstName, 
+                        thirdName: this._user.thirdName, 
+                        avatarUrl: this._user.avatarUrl
+                    } 
+                };
+    
+                logger.debug("SocketActions.MESSAGE [usersInChat=%j, type=%s, data=%j]", usersInChat, SocketActions.SEND_MESSAGE, newMessage);
+                this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, usersInChat, SocketActions.SEND_MESSAGE, { message: newMessage });
+            }
+
+            this._sendAck(validateData, callback);
         });
 
         // Уведомляем собеседника приватного чата об удалении сообщения
-        this._socket.on(SocketActions.DELETE_MESSAGE, ({ companionId, messageId }) => {
-            logger.debug("SocketActions.DELETE_MESSAGE [companionId=%s, type=%s, data=%j]", companionId, SocketActions.DELETE_MESSAGE, { messageId });
-            this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, companionId, SocketActions.DELETE_MESSAGE, { messageId });
+        this._socket.on(SocketActions.DELETE_MESSAGE, ({ companionId, messageId }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.DELETE_MESSAGE, { companionId, messageId });
+
+            if (validateData.success) {
+                logger.debug("SocketActions.DELETE_MESSAGE [companionId=%s, type=%s, data=%j]", companionId, SocketActions.DELETE_MESSAGE, { messageId });
+                this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, companionId, SocketActions.DELETE_MESSAGE, { messageId });
+            }
+
+            this._sendAck(validateData, callback);
         });
 
         // Уведомляем собеседника приватного чата об его удалении
-        this._socket.on(SocketActions.DELETE_CHAT, ({ chatId, companionId }) => {
-            logger.debug("SocketActions.DELETE_CHAT [companionId=%s, type=%s, data=%j]", companionId, SocketActions.DELETE_CHAT, { chatId });
-            this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, companionId, SocketActions.DELETE_CHAT, { chatId });
+        this._socket.on(SocketActions.DELETE_CHAT, ({ chatId, companionId }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.DELETE_CHAT, { chatId, companionId });
+
+            if (validateData.success) {
+                logger.debug("SocketActions.DELETE_CHAT [companionId=%s, type=%s, data=%j]", companionId, SocketActions.DELETE_CHAT, { chatId });
+                this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, companionId, SocketActions.DELETE_CHAT, { chatId });
+            }
+
+            this._sendAck(validateData, callback);
         });
 
         // Уведомляем всех участников чата (кроме себя) об изменении/редактировании сообщения
-        this._socket.on(SocketActions.EDIT_MESSAGE, ({ data, usersInChat }) => {
-            logger.debug("SocketActions.EDIT_MESSAGE [usersInChat=%j, type=%s, data=%j]", usersInChat, SocketActions.EDIT_MESSAGE, { data });
-            this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, usersInChat, SocketActions.EDIT_MESSAGE, { data });
+        this._socket.on(SocketActions.EDIT_MESSAGE, ({ data, usersInChat }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.EDIT_MESSAGE, { data, usersInChat });
+
+            if (validateData.success) {
+                logger.debug("SocketActions.EDIT_MESSAGE [usersInChat=%j, type=%s, data=%j]", usersInChat, SocketActions.EDIT_MESSAGE, { data });
+                this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, usersInChat, SocketActions.EDIT_MESSAGE, { data });
+            }
+            
+            this._sendAck(validateData, callback);
         });
 
         // Уведомляем каждого автора сообщения о том, что оно было прочитано
-        this._socket.on(SocketActions.CHANGE_READ_STATUS, ({ isRead, messages }) => {
-            logger.debug("SocketActions.CHANGE_READ_STATUS [isRead=%s, type=%s, messages=%j]", isRead, SocketActions.ACCEPT_CHANGE_READ_STATUS, messages);
+        this._socket.on(SocketActions.CHANGE_READ_STATUS, ({ isRead, messages }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.CHANGE_READ_STATUS, { isRead, messages });
 
-            for (const message of messages) {
-                this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, message.userId, SocketActions.ACCEPT_CHANGE_READ_STATUS, { ...message, isRead });
+            if (validateData.success) {
+                logger.debug("SocketActions.CHANGE_READ_STATUS [isRead=%s, type=%s, messages=%j]", isRead, SocketActions.ACCEPT_CHANGE_READ_STATUS, messages);
+
+                for (const message of messages) {
+                    this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, message.userId, SocketActions.ACCEPT_CHANGE_READ_STATUS, { ...message, isRead });
+                }
             }
+            
+            this._sendAck(validateData, callback);
         });
 
         // Уведомляем собеседников чата о том, что идет набор сообщения
-        this._socket.on(SocketActions.NOTIFY_WRITE, ({ isWrite, chatId, usersInChat }) => {
-            const data = { 
-                isWrite, 
-                chatId, 
-                userName: this._user.firstName + " " + this._user.thirdName 
-            };
+        this._socket.on(SocketActions.NOTIFY_WRITE, ({ isWrite, chatId, usersInChat }, callback) => {
+            const validateData = validateHandleEvent(SocketActions.NOTIFY_WRITE, { isWrite, chatId, usersInChat });
 
-            logger.debug("SocketActions.NOTIFY_WRITE [usersInChat=%j, type=%s, data=%j]", usersInChat, SocketActions.NOTIFY_WRITE, data);
-            this.emit(
-                SocketEvents.NOTIFY_ALL_ANOTHER_USERS, 
-                usersInChat, 
-                SocketActions.NOTIFY_WRITE, 
-                data
-            );
+            if (validateData.success) {
+                const data = { 
+                    isWrite, 
+                    chatId, 
+                    userName: this._user.firstName + " " + this._user.thirdName 
+                };
+    
+                logger.debug("SocketActions.NOTIFY_WRITE [usersInChat=%j, type=%s, data=%j]", usersInChat, SocketActions.NOTIFY_WRITE, data);
+                this.emit(
+                    SocketEvents.NOTIFY_ALL_ANOTHER_USERS, 
+                    usersInChat, 
+                    SocketActions.NOTIFY_WRITE, 
+                    data
+                );
+            }
+
+            this._sendAck(validateData, callback);
         });
+    }
+
+    // Отправка ack обратно клиенту
+    private _sendAck(validateData: ValidateHandleReturnType, cb: CallbackAckType) {
+        const ackData = validateData.success
+            ? { success: true, timestamp: Date.now() }
+            : { success: false, message: validateData.message };
+
+        cb(ackData);
     }
 }

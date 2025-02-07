@@ -1,5 +1,6 @@
 import { Request } from "express";
 import EventEmitter from "events";
+import { Socket } from "socket.io";
 
 import Database from "../Database";
 import UsersController from "./controllers/Users";
@@ -7,11 +8,12 @@ import FriendsController from "./controllers/Friends";
 import MessagesController from "./controllers/Messages";
 import Logger from "../../service/logger";
 import { t } from "../../service/i18n";
-import { IAck, ServerToClientEvents, SocketWithUser } from "../../types/socket.types";
+import { HandleArgsType, IAck, ServerToClientEvents, SocketWithUser } from "../../types/socket.types";
 import { UsersType } from "../../types";
 import { SocketActions } from "../../types/enums";
 import { SocketEvents } from "../../types/events";
 import { SocketError } from "../../errors";
+import { validateEmitEvent } from "./validation";
 
 const logger = Logger("SocketController");
 
@@ -19,13 +21,13 @@ const SOCKET_ACK_TIMEOUT = parseInt(process.env.SOCKET_ACK_TIMEOUT as string);
 
 type SocketEventHandler = <T extends keyof ServerToClientEvents>(
     type: T,
-    ...args: Parameters<ServerToClientEvents[T]>
+    data: HandleArgsType<ServerToClientEvents[T]>
 ) => Promise<void>;
 
 type SocketToEventHandler = <T extends keyof ServerToClientEvents>(
     socketTo: string,
     type: T,
-    ...args: Parameters<ServerToClientEvents[T]>
+    data: HandleArgsType<ServerToClientEvents[T]>
 ) => Promise<void>;
 
 // Класс, отвечает за работу текущего сокет-соединения
@@ -74,8 +76,11 @@ export default class SocketController extends EventEmitter {
                     this._users.delete(userId);
                 }
 
-                // Оповещаем все сокеты (кроме себя) об отключении пользователя
-                this._socket.broadcast.emit(SocketActions.USER_DISCONNECT, userId);
+                // Если в системе остались другие пользователи
+                if (this._users.size) {
+                    // Оповещаем все сокеты (кроме себя) об отключении пользователя
+                    this.sendBroadcast(SocketActions.USER_DISCONNECT, { userId });
+                }
 
                 // Обновляем дату моего последнего захода
                 await this._database.models.userDetails.update(
@@ -83,7 +88,7 @@ export default class SocketController extends EventEmitter {
                     { where: { userId } }
                 );
             } catch (error) {
-                this._handleError(`${t("socket.error.update_last_seen")}: ${(error as Error).message}`);
+                this._handleError(t("socket.error.update_last_seen", { message: (error as Error).message }));
             }
         });
     }
@@ -97,7 +102,7 @@ export default class SocketController extends EventEmitter {
         const nextError = new SocketError(message);
 
         if (this._socket && this._socket.id) {
-            this.send(SocketActions.SOCKET_CHANNEL_ERROR, nextError.message);
+            this.send(SocketActions.SOCKET_CHANNEL_ERROR, { message: nextError.message });
         }
     }
 
@@ -116,7 +121,7 @@ export default class SocketController extends EventEmitter {
 
         this._friendsController.on(
             SocketEvents.NOTIFY_ANOTHER_USER,
-            <T extends keyof ServerToClientEvents>(userTo: string, type: T, ...payload: Parameters<ServerToClientEvents[T]>) => {
+            <T extends keyof ServerToClientEvents>(userTo: string, type: T, data: HandleArgsType<ServerToClientEvents[T]>) => {
                 // Если получатель - это я, то выводим ошибку
                 if (userTo === this._socket.user.id) {
                     throw new SocketError(t("socket.error.not_correct_user_id_in_socket", { userTo }));
@@ -125,76 +130,96 @@ export default class SocketController extends EventEmitter {
                 const findUser = this._getUser(userTo);
 
                 if (findUser) {
-                    this.sendTo(findUser.socketId, type, ...payload);
-                    // this._io.to(findUser.socketId).emit(type, ...payload);
+                    this.sendTo(findUser.socketId, type, data);
                 }
             }
         );
 
         this._messagesController.on(
             SocketEvents.NOTIFY_ALL_ANOTHER_USERS,
-            <T extends keyof ServerToClientEvents>(users: { id: string }[], type: T, ...payload: Parameters<ServerToClientEvents[T]>) => {
+            <T extends keyof ServerToClientEvents>(users: { id: string }[], type: T, data: HandleArgsType<ServerToClientEvents[T]>) => {
                 for (const user of users) {
                     const findUser = this._getUser(user.id);
 
                     if (findUser && user.id !== this._socket.user.id) {
-                        this.sendTo(findUser.socketId, type, ...payload);
-                        // this._io.to(findUser.socketId).emit(type, ...payload);
+                        this.sendTo(findUser.socketId, type, data);
                     }
                 }
             }
         );
     }
 
-    // Обработка ack (ответа от клиента) при отправке события
-    private _handleEmit(response: IAck[], type: keyof ServerToClientEvents) {
+    // Обработка ack при отправке события от одного клиента
+    private _handleEmit(response: IAck, type: keyof ServerToClientEvents) {
+        const { success, message, timestamp } = response;
+
+        success
+            ? logger.debug(t("socket.emit_handled", { type, timestamp: (timestamp as number).toString() }))
+            : this._handleError(t("socket.error.handle_event_on_client", { type, message: message as string }));
+
+        return success;
+    }
+
+    // Обработка ack при отправке события от нескольких клиентов
+    private _handleEmits(response: IAck[], type: keyof ServerToClientEvents) {
         if (!response || !response.length) {
-            this._handleError(t("socket.error.emit_event_on_the_server_from_all_users"));
+            this._handleError(t("socket.error.emit_broadcast_empty_response"));
             return;
         }
 
         for (let i = 0; i < response.length; i++) {
-            const { success, message, timestamp } = response[i];
+            const isSuccess = this._handleEmit(response[i], type);
 
-            if (!success) {
-                this._handleError(t("socket.error.emit_event_on_the_server", { message: message as string, timestamp: timestamp.toString() }));
-                return;
+            if (!isSuccess) {
+                break;
             }
 
-            logger.debug(t("socket.emit_handled", { type, timestamp: timestamp.toString() }));
+            logger.debug(t("socket.emit_handled", { type, timestamp: (response[i].timestamp as number).toString() }));
         }
     }
 
     // Основной метод отправки события с сервера текущему конкретному клиенту с добавлением ack (подтверждение обработки клиентом данного события)
-    send: SocketEventHandler = async (type, ...args) => {
+    send: SocketEventHandler = async (type, data) => {
         try {
-            const response = await this._socket.timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, ...args);
+            const validateData = validateEmitEvent(this._handleError.bind(this), type, data);
 
-            this._handleEmit(response, type);
+            if (validateData) {
+                const response = await (this._socket as Socket).timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, validateData);
+
+                this._handleEmit(response, type);
+            }
         } catch (error) {
-            this._handleError(`${t("socket.error.socket_emit_with_ack", { type })}: ${(error as Error).message}`);
+            this._handleError(t("socket.error.emit_with_ack", { type, message: (error as Error).message }));
         }
     }
 
     // Основной метод отправки события с сервера на все подключенные клиенты кроме текущего с добавлением ack (подтверждение обработки клиентом данного события)
-    sendBroadcast: SocketEventHandler = async (type, ...args) => {
+    sendBroadcast: SocketEventHandler = async (type, data) => {
         try {
-            const response = await this._socket.broadcast.timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, ...args);
+            const validateData = validateEmitEvent(this._handleError.bind(this), type, data);
 
-            this._handleEmit(response, type);
+            if (validateData) {
+                const response = await (this._socket as Socket).broadcast.timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, validateData);
+
+                this._handleEmits(response, type);
+            }
         } catch (error) {
-            this._handleError(`${t("socket.error.socket_emit_broadcast_with_ack", { type })}: ${(error as Error).message}`);
+            this._handleError(t("socket.error.emit_broadcast_with_ack", { type, message: (error as Error).message }));
         }
     }
 
     // Основной метод отправки события с сервера конкретному клиенту с добавлением ack (подтверждение обработки клиентом данного события)
-    sendTo: SocketToEventHandler = async (socketTo: string, type, ...args) => {
+    sendTo: SocketToEventHandler = async (socketTo, type, data) => {
         try {
-            const response = await this._socket.to(socketTo).timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, ...args);
+            const validateData = validateEmitEvent(this._handleError.bind(this), type, data);
 
-            this._handleEmit(response, type);
+            if (validateData) {
+                const response = await (this._socket as Socket).to(socketTo).timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, validateData);
+
+                this._handleEmit(response, type);
+            }
         } catch (error) {
-            this._handleError(`${t("socket.error.socket_emit_with_ack", { type })}: ${(error as Error).message}`);
+            this._handleError(t("socket.error.emit_to_with_ack", { type, message: (error as Error).message }));
         }
     }
 }
