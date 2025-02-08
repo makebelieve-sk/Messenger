@@ -68,9 +68,12 @@
 	"socket.disconnecting": "In the process of disconnecting the socket connection ({{reason}}).",
 	"socket.socket_disconnected_with_reason": "The socket with the connection ID {{socketId}} was disconnected due to: {{reason}}.",
 	"socket.emit_handled": "[{{timestamp}}] | The event {{type}} has been processed on the client.",
+	"socket.handshake_connection_successful": "The socket connection is ready to establish a new connection.",
+	"socket.session_done": "The session verification in the Redis store has been completed successfully.",
 
     "socket.error.user_with_id_not_exists": "User with id={{userId}} not exists.",
     "socket.error.user_id_not_found": "The user ID was not transmitted.",
+	"socket.error.user_not_found": "The user does not exist.",
     "socket.error.not_correct_friends_action_type": "Incorrect type of action when working with friends.",
     "socket.error.cannot_find_call": "It is impossible to end the call because it has not been found. It may have already been completed.",
     "socket.error.not_correct_user_id_in_socket": "The user ID={{user To}} is not suitable. You must use the notify Me method.",
@@ -81,7 +84,8 @@
 	"socket.error.emit_to_with_ack": "An error occurred when trying to send a {{type}} event to a specific user: {{message}}",
 	"socket.error.emit_broadcast_empty_response": "The socket connection failed. The list of confirmed event treatments from clients is empty.",
 	"socket.error.handle_event_on_client": "An error occurred on the client when processing this event {{type}}: {{message}}",
-    "socket.error.engine_socket": "Abnormal disconnection of the socket with the {{code}}.\nRequest object: {{req}}.\nError text: {{message}}.\nAdditional context: {{context}}.",
+	"socket.error.sessions_not_match_or_exists": "An error occurred while checking the user's session [sessionId={{sessionId}}]. You are not logged in, or the lifetime of the session token has come to an end.",
+    "socket.error.engine_socket": "Abnormal disconnection of the socket with the {{code}}.\nError text: {{message}}.\nAdditional context: {{context}}.",
 	"socket.error.validation_emit": "When trying to send an event to the client, a schema validation error occurred: {{message}}",
 
 	"database.start": "The connection to the database has been successfully established.",

@@ -14,7 +14,7 @@ import { Pages, SocketActions } from "@custom-types/enums";
 import { IMessage, IUser } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
 import { CallbackAckType, SocketType } from "@custom-types/socket.types";
-import { SocketEvents } from "@custom-types/events";
+import { MainClientEvents, SocketEvents } from "@custom-types/events";
 
 const logger = Logger.init("SocketController");
 const SERVER_DISCONNECT = "io server disconnect";
@@ -24,11 +24,13 @@ export default class SocketController extends EventEmitter {
     private readonly _usersController: UsersController;
     private readonly _friendsController: FriendsController;
     private readonly _messagesController: MessangesController;
+    private _attemptsReconnection = 0;
 
-    constructor(private readonly _socket: SocketType, private readonly _dispatch: AppDispatch, private readonly _myUser: IUser) {
+    constructor(private readonly _socket: SocketType, private readonly _dispatch: AppDispatch, private readonly _myId: string) {
         super();
 
         this._init();
+        this._socketManagerListeners();
 
         this._usersController = new UsersController(this._socket, this._dispatch);
         this._friendsController = new FriendsController(this._socket, this._dispatch);
@@ -39,7 +41,9 @@ export default class SocketController extends EventEmitter {
 
     private _init() {
         this._socket.on("connect", () => {
-            logger.info(i18next.t("core.socket.connection_established", { socketId: this._socket.id }));
+            this._socket.recovered
+                ? logger.info(i18next.t("core.socket.connection_successfully_recovered", { socketId: this._socket.id }))
+                : logger.info(i18next.t("core.socket.connection_established", { socketId: this._socket.id }));
         });
 
         // Обработка системного канала с ошибками
@@ -51,23 +55,24 @@ export default class SocketController extends EventEmitter {
         });
 
         // Событие возникает при невозможности установить соединение или соединение было отклонено сервером (к примеру мидлваром)
-        this._socket.on("connect_error", (error: Error) => {
+        this._socket.on("connect_error", error => {
             const isSocketActive = this._socket.active;
 
-            logger.error(i18next.t("core.socket.error.connection", { isSocketActive: isSocketActive, message: error.message }));
+            logger.error(i18next.t("core.socket.error.connect_error", { isSocketActive, message: error.message }));
 
-            // Означает, что соединение было отклонено сервером
-            if (!isSocketActive) {
+            // Означает, что соединение было отклонено сервером и не равно авторизационной ошибке мидлвара сервера
+            if (!isSocketActive && error.message !== i18next.t("core.socket.error.user_not_exists_on_server")) {
                 this.emit(SocketEvents.RECONNECT);
+                return;
             }
 
             // Иначе сокет попытается переподключиться автоматически (временный разрыв соединения)
         });
 
-        this._socket.on("disconnect", (reason) => {
-            logger.debug("disconnect");
-
+        this._socket.on("disconnect", reason => {
             const isSocketActive = this._socket.active;
+
+            logger.debug(`disconnect [isSocketActive=${isSocketActive}, reason=${reason}]`);
 
             // Если сокет отключился по инициативе сервера, то перезапускаем сокет
             if (!isSocketActive && reason === SERVER_DISCONNECT) {
@@ -78,9 +83,36 @@ export default class SocketController extends EventEmitter {
         });
     }
 
+    // Обработка системных событий у Manager socket.io-client
+    private _socketManagerListeners() {
+        this._socket.io.on("error", error => {
+            this.emit(MainClientEvents.ERROR, i18next.t("core.socket.error.connect_error", { isSocketActive: this._socket.active, message: error.message }));
+        });
+
+        this._socket.io.on("ping", () => {
+            logger.debug("pong sent to server");
+        });
+
+        this._socket.io.on("reconnect", attempt => {
+            logger.info(`successfully reconnected after ${attempt} attempts`);
+        });
+
+        this._socket.io.on("reconnect_attempt", attempt => {
+            logger.info(`reconnecting attempts number: ${attempt}...`);
+        });
+
+        this._socket.io.on("reconnect_error", error => {
+            logger.info(`reconnecting failed with error: ${error}`);
+        });
+
+        this._socket.io.on("reconnect_failed", () => {
+            this.emit(MainClientEvents.ERROR, i18next.t("core.socket.error.reconnect_failed"));
+        });
+    }
+
     private _bindListeners() {
         this._usersController.on(SocketEvents.SET_ONLINE_USER, (onlineUser: IUser) => {
-            if (onlineUser && onlineUser.id !== this._myUser.id) {
+            if (onlineUser && onlineUser.id !== this._myId) {
                 this._dispatch(setOnlineUsers(onlineUser));
             }
         });
@@ -91,7 +123,7 @@ export default class SocketController extends EventEmitter {
 
         this._messagesController.on(SocketEvents.ADD_MESSAGE, (message: IMessage) => {
             if (window.location.pathname.toLowerCase() === Pages.messages + "/" + message.chatId.toLowerCase()) {
-                this._dispatch(setMessage({ message, showUnreadDie: true, userId: this._myUser.id }));
+                this._dispatch(setMessage({ message, showUnreadDie: true, userId: this._myId }));
             } else {
                 // Проигрываем аудио при получении нового сообщения
                 const playAudio = new PlayAudio("/assets/audios/new-message-notification.mp3", this._dispatch, true, message.chatId);

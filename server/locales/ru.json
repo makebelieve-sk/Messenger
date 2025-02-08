@@ -68,9 +68,12 @@
 	"socket.disconnecting": "В процессе отключения сокет соединения ({{reason}}).",
 	"socket.socket_disconnected_with_reason": "Сокет с идентификатором соединения {{socketId}} отключился по причине: {{reason}}.",
 	"socket.emit_handled": "[{{timestamp}}] | Событие {{type}} обработано на клиенте.",
+	"socket.handshake_connection_successful": "Сокет-соединение готово для установки нового соединения.",
+	"socket.session_done": "Проверка сессии в хранилище Redis успешно завершена.",
 
     "socket.error.user_with_id_not_exists": "Пользователя с идентификатором {{userId}} не существует.",
     "socket.error.user_id_not_found": "Не передан идентификатор пользователя.",
+	"socket.error.user_not_found": "Пользователь не существует.",
     "socket.error.not_correct_friends_action_type": "Некорректный тип действия при работе с друзьями.",
     "socket.error.cannot_find_call": "Невозможно завершить звонок, так как он не найден. Возможно, он уже завершен.",
     "socket.error.not_correct_user_id_in_socket": "Не подходящий идентификатор пользователя id={{userTo}}. Необходимо использовать метод notifyMe.",
@@ -81,7 +84,8 @@
 	"socket.error.emit_to_with_ack": "Произошла ошибка при попытке отправки события {{type}} конкретному пользователю: {{message}}",
 	"socket.error.emit_broadcast_empty_response": "Сбой в работе сокет-соединения. Список подтвердженных обработок событий от клиентов пуст.",
 	"socket.error.handle_event_on_client": "При обработке данного события {{type}} на клиенте возникла ошибка: {{message}}",
-    "socket.error.engine_socket": "Не нормальное отключение сокета с кодом {{code}}.\nОбъект запроса: {{req}}.\nТекст ошибки: {{message}}.\nДополнительный контекст: {{context}}.",
+	"socket.error.sessions_not_match_or_exists": "При проверке сессии пользователя [sessionId={{sessionId}}] возникла ошибка. Вы не авторизованы или время жизни токена сессии подошло к концу.",
+    "socket.error.engine_socket": "Не нормальное отключение сокета с кодом {{code}}.\nТекст ошибки: {{message}}.\nДополнительный контекст: {{context}}.",
 	"socket.error.validation_emit": "При попытке отправить событие клиенту произошла ошибка валидации схемы: {{message}}",
 
 	"database.start": "Соединение с базой данных успешно установлено.",
