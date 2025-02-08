@@ -5,7 +5,7 @@ import session from "express-session";
 import cors from "cors";
 
 import Logger from "../service/logger";
-import ApiServer from "./ApiServer";
+import ApiServer from "./api/ApiServer";
 import RedisWorks from "./Redis";
 import PassportWorks from "./Passport";
 import Database from "./Database";
@@ -52,7 +52,7 @@ export default class MainServer {
             this._passport.passport
         );
         // Инициализируем работу socket.io
-        this._socket = new SocketWorks(this._server, this._users, this._database, this._session);
+        this._socket = new SocketWorks(this._server, this._users, this._database, this._redisWork, this._session);
     }
 
     private _useExpressMiddlewares() {
@@ -60,7 +60,7 @@ export default class MainServer {
         this._session = session({
             store: this._redisWork.redisStore,  // Место хранения сессий (выбран Redis)
             name: COOKIE_NAME,                  // Наименование сессии в хранилище
-            secret: SECRET_KEY,                 // Секретный ключ для шифрования данных сессии
+            secret: SECRET_KEY,                 // Секретный ключ для шифрования ключа и данных сессии
             cookie: {
                 secure: false,                  // Требует передачу куки только через протокол https 
                 httpOnly: true,                 // Доступна только через http/https

@@ -9,7 +9,6 @@ import { SOCKET_RECONECTION_ATTEMPTS, SOCKET_RECONNECTION_DELAY, SOCKET_URL, SOC
 import { AppDispatch } from "@custom-types/redux.types";
 import { ClientToServerEvents, SocketType } from "@custom-types/socket.types";
 import { MainClientEvents, SocketEvents } from "@custom-types/events";
-import { IUser } from "@custom-types/models.types";
 
 const logger = Logger.init("Socket");
 
@@ -17,25 +16,26 @@ const logger = Logger.init("Socket");
 export default class Socket extends EventEmitter {
     private _socket!: SocketType;
     private _socketController!: SocketController;
-    private _me!: IUser;
+    private _myId!: string;
 
     constructor(private readonly _dispatch: AppDispatch) {
         super();
     }
 
-    init(myUser: IUser) {
+    init(myId: string) {
         logger.debug("init");
 
-        if (!myUser) {
+        this._myId = myId;
+
+        if (!this._myId) {
             this.emit(MainClientEvents.ERROR, i18next.t("core.socket.error.user_not_exists"));
             return;
         }
 
-        this._me = myUser;
-
         this._socket = io(SOCKET_URL, { 
             transports: ["websocket"],                  // Виды транспортов (идут один за другим по приоритету, данный массив на сервере должен совпадать)
-            autoConnect: true,                          // Автоматически подключаться при создании экземпляра клиента (без вызова connect())
+            autoConnect: false,                         // Автоматически подключаться при создании экземпляра клиента (без вызова connect())
+            reconnection: true,                         // Включаем автоматическое переподключения для учитывания попыток и задержки
             reconnectionAttempts: SOCKET_RECONECTION_ATTEMPTS, // Количество попыток переподключения перед тем, как закрыть соединение
             reconnectionDelay: SOCKET_RECONNECTION_DELAY,      // Задержка между попытками переподключения
             forceNew: false,                            // Не создает новое соединение, если оно уже существует
@@ -43,9 +43,10 @@ export default class Socket extends EventEmitter {
             closeOnBeforeunload: true,                  // Позволяет сокет соединению автоматически закрываться при событии beforeunload (закрытие вкладки/браузера/обновление страницы)
             withCredentials: true                       // Включает передачу куки при кросс-доменных запросах (работает только с аналогичным параметром на сервере)
         });
-        this._socket.auth = { user: this._me };
 
-        this._socketController = new SocketController(this._socket, this._dispatch, this._me);
+        this._connect();
+
+        this._socketController = new SocketController(this._socket, this._dispatch, this._myId);
 
         this._bindSocketControllerListeners();
     }
@@ -79,7 +80,7 @@ export default class Socket extends EventEmitter {
     _connect() {
         logger.debug("_connect");
 
-        this._socket.auth = { user: this._me };
+        this._socket.auth = { userId: this._myId };
         this._socket.connect();
     }
 
@@ -87,6 +88,11 @@ export default class Socket extends EventEmitter {
         this._socketController.on(MainClientEvents.REDIRECT, (path: string) => {
             logger.debug(`MainClientEvents.REDIRECT [path=${path}]`);
             this.emit(MainClientEvents.REDIRECT, path);
+        });
+
+        this._socketController.on(MainClientEvents.ERROR, (message: string) => {
+            logger.debug("MainClientEvents.ERROR");
+            this.emit(MainClientEvents.ERROR, message);
         });
 
         this._socketController.on(SocketEvents.RECONNECT, () => {

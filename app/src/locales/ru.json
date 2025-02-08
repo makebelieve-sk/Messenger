@@ -69,8 +69,10 @@
 
 	"core.profiles-controller.error.profile_not_exists": "Профиля с id: {{id}} не существует.",
 
+	"core.socket.error.user_not_exists_on_server": "Пользователь не существует.",
 	"core.socket.error.user_not_exists": "Объект пользователя не существует.",
-	"core.socket.error.connection": "Ошибка сокет-соединения [isSocketActive: {{isSocketActive}}]: {{message}}",
+	"core.socket.error.connect_error": "Ошибка сокет-соединения [isSocketActive={{isSocketActive}}]: {{message}}",
+	"core.socket.error.reconnect_failed": "Не удалось переподключиться к серверу.",
 	"core.socket.error.emit": "Ошибка при обработке события на сервере [type: {{type}}]: {{message}}",
 	"core.socket.error.emit_event_on_the_server": "[{{timestamp}}] | При обработке данного события на сервере возникла ошибка: {{message}}",
 
@@ -82,6 +84,7 @@
 	"core.catch-errors.error.unknown": "Неизвестная ошибка.",
 
 	"core.socket.connection_established": "Сокет-соединение с сервером установлено [socket.id={{socketId}}]",
+	"core.socket.connection_successfully_recovered": "Сокет-соединение с сервером успешно восстановлено [socket.id={{socketId}}]",
 	"core.socket.online_users": "Пользователи онлайн: ",
 	"core.socket.new_user_connected": "Новый пользователь подключился: ",
 	"core.socket.user_disconnected": "Пользователь отключился: ",

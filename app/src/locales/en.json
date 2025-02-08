@@ -69,8 +69,10 @@
 
 	"core.profiles-controller.error.profile_not_exists": "Profile with id: {{id}} not exists.",
 
+	"core.socket.error.user_not_exists_on_server": "The user does not exist.",
 	"core.socket.error.user_not_exists": "User not exists.",
-	"core.socket.error.connection": "The socket connection error [isSocketActive: {{isSocketActive}}]: {{message}}",
+	"core.socket.error.connect_error": "The socket connection error [isSocketActive={{isSocketActive}}]: {{message}}",
+	"core.socket.error.reconnect_failed": "Couldn't reconnect to the server.",
 	"core.socket.error.emit": "Error when processing an event on the server [type: {{type}}]: {{message}}",
 	"core.socket.error.emit_event_on_the_server": "[{{timestamp}}] | An error occurred on the server when processing this event: {{message}}",
 
@@ -82,6 +84,7 @@
 	"core.catch-errors.error.unknown": "Unknown error.",
 
 	"core.socket.connection_established": "The socket connection to the server is established [socket.id={{socketId}}]",
+	"core.socket.connection_successfully_recovered": "The socket connection to the server has been successfully recovered [socket.id={{socketId}}]",
 	"core.socket.online_users": "Online users: ",
 	"core.socket.new_user_connected": "New user connected: ",
 	"core.socket.user_disconnected": "User disconnected: ",

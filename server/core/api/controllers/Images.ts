@@ -5,16 +5,16 @@ import path from "path";
 import multer from "multer";
 import { Transaction } from "sequelize";
 
-import Logger from "../service/logger";
-import { t } from "../service/i18n";
-import Middleware from "../core/Middleware";
-import Database from "../core/Database";
-import { ApiRoutes, HTTPStatuses } from "../types/enums";
-import { IRequestWithShapedImages, IRequestWithSharpedAvatar } from "../types/express.types";
-import { ISafeUser } from "../types/user.types";
-import { currentDate } from "../utils/datetime";
-import { ASSETS_PATH, MB_1 } from "../utils/files";
-import { ImagesError } from "../errors/controllers";
+import Logger from "../../../service/logger";
+import { t } from "../../../service/i18n";
+import Middleware from "../../../core/Middleware";
+import Database from "../../../core/Database";
+import { ApiRoutes, HTTPStatuses } from "../../../types/enums";
+import { IRequestWithShapedImages, IRequestWithSharpedAvatar } from "../../../types/express.types";
+import { ISafeUser } from "../../../types/user.types";
+import { currentDate } from "../../../utils/datetime";
+import { ASSETS_PATH, MB_1 } from "../../../utils/files";
+import { ImagesError } from "../../../errors/controllers";
 
 const logger = Logger("ImagesController");
 

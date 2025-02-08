@@ -130,7 +130,7 @@ export default class MainClient extends EventEmitter {
         logger.debug("_initSocket");
 
         const userInstance = this.getProfile().user;
-        this._socket.init(userInstance.user);
+        this._socket.init(userInstance.user.id);
     }
 
     // Редирект в зависимости от текущего урла

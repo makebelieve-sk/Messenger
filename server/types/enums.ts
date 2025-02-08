@@ -129,6 +129,7 @@ enum FileVarieties {
 
 // Список ключей редиса
 enum RedisKeys {
+    SESS = "sess",
     REMEMBER_ME = "rememberMe"
 };
 
