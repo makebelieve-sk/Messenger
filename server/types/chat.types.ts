@@ -1,5 +1,5 @@
-import { MessageExt } from "./message.types";
-import { UserPartial } from "./user.types";
+import { MessageExt } from "@custom-types/message.types";
+import { UserPartial } from "@custom-types/user.types";
 
 export interface IChatInfo {
     chatId: string;

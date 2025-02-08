@@ -3,15 +3,15 @@ import { Server } from "socket.io";
 import EventEmitter from "events";
 import { IncomingMessage } from "http";
 
-import Database from "../Database";
-import RedisWorks from "../Redis";
-import SocketController from "./SocketController";
-import Logger from "../../service/logger";
-import { t } from "../../service/i18n";
-import { SocketType, SocketWithUser } from "../../types/socket.types";
-import { ServerType, UsersType } from "../../types";
-import { SocketError } from "../../errors";
-import { RedisKeys } from "../../types/enums";
+import Database from "@core/Database";
+import RedisWorks from "@core/Redis";
+import SocketController from "@core/socket/SocketController";
+import Logger from "@service/logger";
+import { t } from "@service/i18n";
+import { SocketType, SocketWithUser } from "@custom-types/socket.types";
+import { ServerType, UsersType } from "@custom-types/index";
+import { RedisKeys } from "@custom-types/enums";
+import { SocketError } from "@errors/index";
 
 declare module "http" {
     interface IncomingMessage {

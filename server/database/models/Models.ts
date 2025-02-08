@@ -1,20 +1,20 @@
 import { Sequelize } from "sequelize";
 
-import BlockUsers from "./BlockedUsers";
-import ChatSoundNotifications from "./ChatSoundNotifications";
-import DeletedChats from "./DeletedChats";
-import FilesInMessage from "./FilesInMessage";
-import Chats from "./Chats";
-import DeletedMessages from "./DeletedMessages";
-import Files from "./Files";
-import Friends from "./Friends";
-import Messages from "./Messages";
-import Photos from "./Photos";
-import ReadMessages from "./ReadMessages";
-import Subscribers from "./Subscribers";
-import UserDetail from "./UserDetails";
-import UsersInChat from "./UsersInChat";
-import Users from "./Users";
+import BlockUsers from "@database/models/BlockedUsers";
+import ChatSoundNotifications from "@database/models/ChatSoundNotifications";
+import DeletedChats from "@database/models/DeletedChats";
+import FilesInMessage from "@database/models/FilesInMessage";
+import Chats from "@database/models/Chats";
+import DeletedMessages from "@database/models/DeletedMessages";
+import Files from "@database/models/Files";
+import Friends from "@database/models/Friends";
+import Messages from "@database/models/Messages";
+import Photos from "@database/models/Photos";
+import ReadMessages from "@database/models/ReadMessages";
+import Subscribers from "@database/models/Subscribers";
+import UserDetail from "@database/models/UserDetails";
+import UsersInChat from "@database/models/UsersInChat";
+import Users from "@database/models/Users";
 
 // Класс, содержит доступы ко всем таблицам базы данных
 export default class Models {

@@ -1,6 +1,6 @@
-import Logger from "../service/logger";
-import { IUser } from "../types/models.types";
-import { ISafeUser } from "../types/user.types";
+import Logger from "@service/logger";
+import { IUser } from "@custom-types/models.types";
+import { ISafeUser } from "@custom-types/user.types";
 
 const logger = Logger("utils/user");
 

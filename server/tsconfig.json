@@ -17,7 +17,16 @@
     "noFallthroughCasesInSwitch": true,       // Предупреждает о случаях fallthrough в switch
     "moduleResolution": "nodenext",           // Использует резолвер модулей Node.js
     "typeRoots": ["./node_modules/@types"],   // Указывает пути для типов
-    "incremental": true                       // Включает инкрементальную сборку
+    "incremental": true,                      // Включает инкрементальную сборку
+    "paths": {
+      "@core/*": ["./core/*"],                // Короткий путь для папки core
+      "@database/*": ["./database/*"],        // Короткий путь для папки database
+      "@errors/*": ["./errors/*"],            // Короткий путь для папки errors
+      "@locales/*": ["./locales/*"],          // Короткий путь для папки locales
+      "@service/*": ["./service/*"],          // Короткий путь для папки service
+      "@custom-types/*": ["./types/*"],       // Короткий путь для папки types
+      "@utils/*": ["./utils/*"]               // Короткий путь для папки utils
+    }
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "assets"]

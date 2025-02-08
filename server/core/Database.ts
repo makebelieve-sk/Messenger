@@ -1,10 +1,10 @@
 import { Dialect, Sequelize } from "sequelize";
 
-import Relations from "../database/Relations";
-import Models from "../database/models/Models";
-import { DatabaseError } from "../errors";
-import { t } from "../service/i18n";
-import Logger from "../service/logger";
+import Relations from "@database/Relations";
+import Models from "@database/models/Models";
+import { DatabaseError } from "@errors/index";
+import { t } from "@service/i18n";
+import Logger from "@service/logger";
 
 const logger = Logger("Database");
 

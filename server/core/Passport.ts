@@ -3,17 +3,17 @@ import crypto from "crypto";
 import Passport, { PassportStatic } from "passport";
 import { IVerifyOptions, Strategy } from "passport-local";
 
-import Logger from "../service/logger";
-import { t } from "../service/i18n";
-import Database from "./Database";
-import { UserInstance } from "../database/models/Users";
-import { getSafeUserFields } from "../utils/user";
-import { validateEmail, validatePhoneNumber } from "../utils/auth";
-import { PassportError } from "../errors";
-import { UsersType } from "../types";
-import { HTTPStatuses } from "../types/enums";
-import { ISafeUser } from "../types/user.types";
-import { ISocketUser } from "../types/socket.types";
+import Logger from "@service/logger";
+import { t } from "@service/i18n";
+import Database from "@core/Database";
+import { UserInstance } from "@database/models/Users";
+import { getSafeUserFields } from "@utils/user";
+import { validateEmail, validatePhoneNumber } from "@utils/auth";
+import { PassportError } from "@errors/index";
+import { UsersType } from "@custom-types/index";
+import { HTTPStatuses } from "@custom-types/enums";
+import { ISafeUser } from "@custom-types/user.types";
+import { ISocketUser } from "@custom-types/socket.types";
 
 const logger = Logger("Passport");
 

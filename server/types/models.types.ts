@@ -1,4 +1,4 @@
-import { FileVarieties, MessageTypes } from "./enums";
+import { FileVarieties, MessageTypes } from "@custom-types/enums";
 
 // Интерфейс атрибутов модели Users
 export interface IUser {

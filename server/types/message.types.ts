@@ -1,5 +1,5 @@
-import { MessageTypes } from "./enums";
-import { IFile } from "./models.types";
+import { MessageTypes } from "@custom-types/enums";
+import { IFile } from "@custom-types/models.types";
 
 export interface IEditMessage {
     id: string;

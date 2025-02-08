@@ -1,10 +1,10 @@
 import EventEmitter from "events";
 
-import Logger from "../../../service/logger";
-import { UsersType } from "../../../types";
-import { SocketActions } from "../../../types/enums";
-import { SocketWithUser } from "../../../types/socket.types";
-import { SocketEvents } from "../../../types/events";
+import Logger from "@service/logger";
+import { UsersType } from "@custom-types/index";
+import { SocketActions } from "@custom-types/enums";
+import { SocketWithUser } from "@custom-types/socket.types";
+import { SocketEvents } from "@custom-types/events";
 
 const logger = Logger("Socket:UsersController");
 

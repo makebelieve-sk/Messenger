@@ -3,19 +3,19 @@ import { Request, Response, Express, NextFunction } from "express";
 import { Op } from "sequelize";
 import { Literal, Where } from "sequelize/types/utils";
 
-import Logger from "../../../service/logger";
-import { t } from "../../../service/i18n";
-import { getSearchWhere } from "../../../utils/where";
-import { LIMIT, LOAD_MORE_LIMIT } from "../../../utils/limits";
-import { isImage } from "../../../utils/files";
-import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "../../../types/enums";
-import { IFile, IMessage } from "../../../types/models.types";
-import { IChatInfo, IDialog } from "../../../types/chat.types";
-import { ISafeUser, UserPartial } from "../../../types/user.types";
-import { IImage } from "../../../types";
-import Middleware from "../../../core/Middleware";
-import Database from "../../../core/Database";
-import { MessagesError } from "../../../errors/controllers";
+import Logger from "@service/logger";
+import { t } from "@service/i18n";
+import { getSearchWhere } from "@utils/where";
+import { LIMIT, LOAD_MORE_LIMIT } from "@utils/limits";
+import { isImage } from "@utils/files";
+import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "@custom-types/enums";
+import { IFile, IMessage } from "@custom-types/models.types";
+import { IChatInfo, IDialog } from "@custom-types/chat.types";
+import { ISafeUser, UserPartial } from "@custom-types/user.types";
+import { IImage } from "@custom-types/index";
+import Middleware from "@core/Middleware";
+import Database from "@core/Database";
+import { MessagesError } from "@errors/controllers";
 
 const logger = Logger("MessagesController");
 

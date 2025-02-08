@@ -1,5 +1,5 @@
-import Logger from "../service/logger";
-import { ISafeUser, UserPartial } from "../types/user.types";
+import Logger from "@service/logger";
+import { ISafeUser, UserPartial } from "@custom-types/user.types";
 
 const logger = Logger("utils");
 

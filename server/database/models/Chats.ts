@@ -1,5 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
-import { IChat } from "../../types/models.types";
+import { IChat } from "@custom-types/models.types";
 
 // Тип модели Chats, унаследованного от Sequelize
 export type ChatsInstance = IChat & Model & {};

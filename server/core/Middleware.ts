@@ -1,16 +1,16 @@
 import { Request, Response, NextFunction, Express } from "express";
 import path from "path";
 
-import Logger from "../service/logger";
-import { t } from "../service/i18n";
-import RedisWorks from "./Redis";
-import { HTTPStatuses, RedisKeys } from "../types/enums";
-import { IRequestWithShapedImages, IRequestWithSharpedAvatar } from "../types/express.types";
-import { ISafeUser } from "../types/user.types";
-import { createSharpedImage } from "../utils/files";
-import { updateSessionMaxAge } from "../utils/session";
-import { AuthError } from "../errors/controllers";
-import { BaseError, MiddlewareError } from "../errors";
+import Logger from "@service/logger";
+import { t } from "@service/i18n";
+import RedisWorks from "@core/Redis";
+import { HTTPStatuses, RedisKeys } from "@custom-types/enums";
+import { IRequestWithShapedImages, IRequestWithSharpedAvatar } from "@custom-types/express.types";
+import { ISafeUser } from "@custom-types/user.types";
+import { createSharpedImage } from "@utils/files";
+import { updateSessionMaxAge } from "@utils/session";
+import { AuthError } from "@errors/controllers";
+import { BaseError, MiddlewareError } from "@errors/index";
 
 const logger = Logger("Middleware");
 

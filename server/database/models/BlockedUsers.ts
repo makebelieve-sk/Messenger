@@ -1,5 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
-import { IBlockUsers } from "../../types/models.types";
+import { IBlockUsers } from "@custom-types/models.types";
 
 // Тип модели BlockUsers, унаследованного от Sequelize
 export type BlockUsersInstance = IBlockUsers & Model & {};

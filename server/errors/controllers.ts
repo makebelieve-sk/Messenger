@@ -1,5 +1,5 @@
-import { BaseError } from ".";
-import { HTTPStatuses } from "../types/enums";
+import { BaseError } from "@errors/index";
+import { HTTPStatuses } from "@custom-types/enums";
 
 export class AuthError extends BaseError {
     constructor(readonly message: string, readonly status: HTTPStatuses = HTTPStatuses.ServerError, readonly options?: { [key: string]: string }) {

@@ -1,5 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
-import { IDeletedMessages } from "../../types/models.types";
+import { IDeletedMessages } from "@custom-types/models.types";
 
 // Тип модели DeletedMessages, унаследованного от Sequelize
 export type DeletedMessagesInstance = IDeletedMessages & Model & {};

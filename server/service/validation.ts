@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { t } from "./i18n";
+import { t } from "@service/i18n";
 
 // Общая схема объекта пользователя
 export const UserSchema = z.object({

@@ -1,6 +1,7 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
-import { MessageReadStatus, MessageTypes } from "../../types/enums";
-import { IMessage } from "../../types/models.types";
+
+import { MessageReadStatus, MessageTypes } from "@custom-types/enums";
+import { IMessage } from "@custom-types/models.types";
 
 // Тип модели Messages, унаследованного от Sequelize
 export type MessagesInstance = IMessage & Model & {};

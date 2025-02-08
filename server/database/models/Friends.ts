@@ -1,5 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
-import { IFriend } from "../../types/models.types";
+import { IFriend } from "@custom-types/models.types";
 
 // Тип модели Friends, унаследованного от Sequelize
 export type FriendsInstance = IFriend & Model & {};
