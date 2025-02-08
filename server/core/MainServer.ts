@@ -5,7 +5,7 @@ import session from "express-session";
 import cors from "cors";
 
 import Logger from "../service/logger";
-import ApiServer from "./ApiServer";
+import ApiServer from "./api/ApiServer";
 import RedisWorks from "./Redis";
 import PassportWorks from "./Passport";
 import Database from "./Database";
