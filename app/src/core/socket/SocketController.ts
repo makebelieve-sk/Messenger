@@ -24,7 +24,6 @@ export default class SocketController extends EventEmitter {
     private readonly _usersController: UsersController;
     private readonly _friendsController: FriendsController;
     private readonly _messagesController: MessangesController;
-    private _attemptsReconnection = 0;
 
     constructor(private readonly _socket: SocketType, private readonly _dispatch: AppDispatch, private readonly _myId: string) {
         super();
