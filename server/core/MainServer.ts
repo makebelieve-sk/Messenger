@@ -4,15 +4,15 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
 
-import Logger from "../service/logger";
-import ApiServer from "./api/ApiServer";
-import RedisWorks from "./Redis";
-import PassportWorks from "./Passport";
-import Database from "./Database";
-import SocketWorks from "./socket/Socket";
-import { oneHour } from "../utils/datetime";
-import { ASSETS_PATH } from "../utils/files";
-import { ServerType, UsersType } from "../types";
+import Logger from "@service/logger";
+import ApiServer from "@core/api/ApiServer";
+import RedisWorks from "@core/Redis";
+import PassportWorks from "@core/Passport";
+import Database from "@core/Database";
+import SocketWorks from "@core/socket/Socket";
+import { oneHour } from "@utils/datetime";
+import { ASSETS_PATH } from "@utils/files";
+import { ServerType, UsersType } from "@custom-types/index";
 
 const logger = Logger("MainServer");
 

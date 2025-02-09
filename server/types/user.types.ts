@@ -1,4 +1,4 @@
-import { IUser } from "./models.types";
+import { IUser } from "@custom-types/models.types";
 
 export type ISafeUser = Omit<IUser, "password" | "salt">;
 

@@ -4,13 +4,13 @@ import fs from "fs";
 import { Op } from "sequelize";
 import { Request, Response, NextFunction, Express } from "express";
 
-import Logger from "../../../service/logger";
-import { t } from "../../../service/i18n";
-import { ApiRoutes, HTTPStatuses } from "../../../types/enums";
-import Middleware from "../../../core/Middleware";
-import Database from "../../../core/Database";
-import { FilesError } from "../../../errors/controllers";
-import { MB_1 } from "../../../utils/files";
+import Logger from "@service/logger";
+import { t } from "@service/i18n";
+import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
+import Middleware from "@core/Middleware";
+import Database from "@core/Database";
+import { FilesError } from "@errors/controllers";
+import { MB_1 } from "@utils/files";
 
 const logger = Logger("FilesController");
 

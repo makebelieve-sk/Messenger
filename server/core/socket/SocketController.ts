@@ -2,18 +2,18 @@ import { Request } from "express";
 import EventEmitter from "events";
 import { Socket } from "socket.io";
 
-import Database from "../Database";
-import UsersController from "./controllers/Users";
-import FriendsController from "./controllers/Friends";
-import MessagesController from "./controllers/Messages";
-import Logger from "../../service/logger";
-import { t } from "../../service/i18n";
-import { HandleArgsType, IAck, ServerToClientEvents, SocketWithUser } from "../../types/socket.types";
-import { UsersType } from "../../types";
-import { SocketActions } from "../../types/enums";
-import { SocketEvents } from "../../types/events";
-import { SocketError } from "../../errors";
-import { validateEmitEvent } from "./validation";
+import Database from "@core/Database";
+import UsersController from "@core/socket/controllers/Users";
+import FriendsController from "@core/socket/controllers/Friends";
+import MessagesController from "@core/socket/controllers/Messages";
+import { validateEmitEvent } from "@core/socket/validation";
+import Logger from "@service/logger";
+import { t } from "@service/i18n";
+import { HandleArgsType, IAck, ServerToClientEvents, SocketWithUser } from "@custom-types/socket.types";
+import { UsersType } from "@custom-types/index";
+import { SocketActions } from "@custom-types/enums";
+import { SocketEvents } from "@custom-types/events";
+import { SocketError } from "@errors/index";
 
 const logger = Logger("SocketController");
 

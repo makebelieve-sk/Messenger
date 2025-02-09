@@ -17,17 +17,17 @@
     "noImplicitAny": false,                             // Временно разрешаем использовать any (TODO удалим позднее, когда проект будет близок к завершению)
     "allowJs": false,                                   // Не разрешаем использование js файлов
     "paths": {
-      "@components/*": ["./src/components/*"],             // Короткий путь для папки component
-      "@core/*": ["./src/core/*"],                         // Короткий путь для папки core
-      "@hooks/*": ["./src/hooks/*"],                       // Короткий путь для папки hooks
-      "@locales/*": ["./src/locales/*"],                   // Короткий путь для папки locales
-      "@modules/*": ["./src/modules/*"],                   // Короткий путь для папки modules
-      "@pages/*": ["./src/pages/*"],                       // Короткий путь для папки pages
-      "@service/*": ["./src/service/*"],                   // Короткий путь для папки service
-      "@store/*": ["./src/store/*"],                       // Короткий путь для папки store
-      "@custom-types/*": ["./src/types/*"],                // Короткий путь для папки types
-      "@styles/*": ["./src/styles/*"],                     // Короткий путь для папки styles
-      "@utils/*": ["./src/utils/*"]                        // Короткий путь для папки utils
+      "@components/*": ["./src/components/*"],          // Короткий путь для папки component
+      "@core/*": ["./src/core/*"],                      // Короткий путь для папки core
+      "@hooks/*": ["./src/hooks/*"],                    // Короткий путь для папки hooks
+      "@locales/*": ["./src/locales/*"],                // Короткий путь для папки locales
+      "@modules/*": ["./src/modules/*"],                // Короткий путь для папки modules
+      "@pages/*": ["./src/pages/*"],                    // Короткий путь для папки pages
+      "@service/*": ["./src/service/*"],                // Короткий путь для папки service
+      "@store/*": ["./src/store/*"],                    // Короткий путь для папки store
+      "@custom-types/*": ["./src/types/*"],             // Короткий путь для папки types
+      "@styles/*": ["./src/styles/*"],                  // Короткий путь для папки styles
+      "@utils/*": ["./src/utils/*"]                     // Короткий путь для папки utils
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],                      // Включаем все файлы с расширением .tsx/.ts и декларации типов для корректной проверки типов

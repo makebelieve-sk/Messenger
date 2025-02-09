@@ -1,5 +1,5 @@
-import Logger from "../service/logger";
-import { HTTPStatuses } from "../types/enums";
+import Logger from "@service/logger";
+import { HTTPStatuses } from "@custom-types/enums";
 
 const logger = Logger("BaseError");
 

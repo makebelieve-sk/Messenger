@@ -2,15 +2,15 @@ import { v4 as uuid } from "uuid";
 import { Request, Response, Express, NextFunction } from "express";
 import { Transaction } from "sequelize";
 
-import Logger from "../../../service/logger";
-import { t } from "../../../service/i18n";
-import { getSearchWhere } from "../../../utils/where";
-import { ApiRoutes, FriendsTab, HTTPStatuses } from "../../../types/enums";
-import { ISafeUser } from "../../../types/user.types";
-import { UsersType } from "../../../types";
-import Middleware from "../../../core/Middleware";
-import Database from "../../../core/Database";
-import { FriendsError } from "../../../errors/controllers";
+import Logger from "@service/logger";
+import { t } from "@service/i18n";
+import { getSearchWhere } from "@utils/where";
+import { ApiRoutes, FriendsTab, HTTPStatuses } from "@custom-types/enums";
+import { ISafeUser } from "@custom-types/user.types";
+import { UsersType } from "@custom-types/index";
+import Middleware from "@core/Middleware";
+import Database from "@core/Database";
+import { FriendsError } from "@errors/controllers";
 
 const logger = Logger("FriendsController");
 

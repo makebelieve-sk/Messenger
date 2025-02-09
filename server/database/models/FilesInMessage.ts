@@ -1,5 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
-import { IFilesInMessage } from "../../types/models.types";
+import { IFilesInMessage } from "@custom-types/models.types";
 
 // Тип модели FilesInMessages, унаследованного от Sequelize
 export type FilesInMessageInstance = IFilesInMessage & Model & {};

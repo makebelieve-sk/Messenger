@@ -1,5 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
-import { IUserDetails } from "../../types/models.types";
+import { IUserDetails } from "@custom-types/models.types";
 
 // Тип модели User, унаследованного от Sequelize
 export type UserDetailsInstance = IUserDetails & Model & {};

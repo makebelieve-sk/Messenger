@@ -1,9 +1,9 @@
 import { Socket, Server } from "socket.io";
 
-import { SocketActions, MessageReadStatus } from "./enums";
-import { IMessage } from "./models.types";
-import { ISafeUser, UserPartial } from "./user.types";
-import { IEditMessage } from "./message.types";
+import { SocketActions, MessageReadStatus } from "@custom-types/enums";
+import { IMessage } from "@custom-types/models.types";
+import { ISafeUser, UserPartial } from "@custom-types/user.types";
+import { IEditMessage } from "@custom-types/message.types";
 
 interface ISocketUser extends ISafeUser {
     socketId: string;

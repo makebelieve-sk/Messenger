@@ -1,10 +1,10 @@
 import fs from "fs";
 import path from "path";
 
-import { BaseError } from "../errors";
-import { t } from "./i18n";
-import { timestamp } from "../utils/datetime";
-import Logger from "./logger";
+import { BaseError } from "@errors/index";
+import { timestamp } from "@utils/datetime";
+import { t } from "@service/i18n";
+import Logger from "@service/logger";
 
 const logger = Logger("Process");
 

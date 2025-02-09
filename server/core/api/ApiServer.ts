@@ -1,17 +1,17 @@
 import { Express } from "express";
 import { PassportStatic } from "passport";
 
-import Logger from "../../service/logger";
-import RedisWorks from "../Redis";
-import Middleware from "../Middleware";
-import Database from "../Database";
-import AuthController from "./controllers/Auth";
-import ImagesController from "./controllers/Images";
-import FilesController from "./controllers/Files";
-import FriendsController from "./controllers/Friends";
-import MessagesController from "./controllers/Messages";
-import UserController from "./controllers/User";
-import { UsersType } from "../../types";
+import Logger from "@service/logger";
+import RedisWorks from "@core/Redis";
+import Middleware from "@core/Middleware";
+import Database from "@core/Database";
+import AuthController from "@core/api/controllers/Auth";
+import ImagesController from "@core/api/controllers/Images";
+import FilesController from "@core/api/controllers/Files";
+import FriendsController from "@core/api/controllers/Friends";
+import MessagesController from "@core/api/controllers/Messages";
+import UserController from "@core/api/controllers/User";
+import { UsersType } from "@custom-types/index";
 
 const logger = Logger("ApiServer");
 

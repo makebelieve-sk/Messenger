@@ -1,10 +1,10 @@
 import i18next from "i18next";
 import middleware from "i18next-http-middleware";
 
-import ru from "../locales/ru.json";
-import en from "../locales/en.json";
-import { BaseError } from "../errors";
-import Logger from "./logger";
+import ru from "@locales/ru.json";
+import en from "@locales/en.json";
+import { BaseError } from "@errors/index";
+import Logger from "@service/logger";
 
 const logger = Logger("i18");
 

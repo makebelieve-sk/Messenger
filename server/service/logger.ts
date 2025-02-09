@@ -2,7 +2,7 @@ import { createLogger, format, transports } from "winston";
 import path from "path";
 import fs from "fs";
 
-import { timestamp } from "../utils/datetime";
+import { timestamp } from "@utils/datetime";
 
 const LOGS_PATH = "../logs";
 

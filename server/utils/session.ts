@@ -1,7 +1,7 @@
 import session from "express-session";
 
-import { oneMonth } from "./datetime";
-import Logger from "../service/logger";
+import { oneMonth } from "@utils/datetime";
+import Logger from "@service/logger";
 
 const logger = Logger("utils/session");
 

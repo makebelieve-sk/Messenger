@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import fs from "fs";
 import path from "path";
 
-import Logger from "../service/logger";
+import Logger from "@service/logger";
 
 const logger = Logger("utils/files");
 const JPEG_FORMAT = "jpeg";

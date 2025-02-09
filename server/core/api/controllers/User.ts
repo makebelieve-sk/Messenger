@@ -1,14 +1,14 @@
 import { Request, Response, Express, NextFunction } from "express";
 
-import Logger from "../../../service/logger";
-import { t } from "../../../service/i18n";
-import { ApiRoutes, HTTPStatuses } from "../../../types/enums";
-import { IUserDetails } from "../../../types/models.types";
-import { ISafeUser } from "../../../types/user.types";
-import Middleware from "../../../core/Middleware";
-import Database from "../../../core/Database";
-import { getSafeUserFields } from "../../../utils/user";
-import { UsersError } from "../../../errors/controllers";
+import Logger from "@service/logger";
+import { t } from "@service/i18n";
+import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
+import { IUserDetails } from "@custom-types/models.types";
+import { ISafeUser } from "@custom-types/user.types";
+import Middleware from "@core/Middleware";
+import Database from "@core/Database";
+import { getSafeUserFields } from "@utils/user";
+import { UsersError } from "@errors/controllers";
 
 const logger = Logger("UserController");
 
