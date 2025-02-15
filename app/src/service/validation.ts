@@ -50,6 +50,7 @@ export const NotifyWriteSchema = z.object({
     userName: z.string().min(1, i18next.t("validation.schema.error.required_write_username")),
 });
 
+// Общая схема объекта пользователя в разделе "Друзья"
 export const FriendSchema = z.object({
     type: z.string().min(1, i18next.t("validation.schema.error.required_friend_type")),
     payload: z.object({
