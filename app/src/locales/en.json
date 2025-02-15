@@ -88,6 +88,7 @@
 	"core.socket.online_users": "Online users: ",
 	"core.socket.new_user_connected": "New user connected: ",
 	"core.socket.user_disconnected": "User disconnected: ",
+	"core.socket.logout": "The user logged out.",
 	"core.socket.emit_handled": "The event has been processed on the server [type={{type}}, timestamp={{timestamp}}].",
 
 	"header.settings": "Settings",
@@ -184,7 +185,6 @@
 	"validation.schema.error.incorrect_email": "The email address is filled in incorrectly.",
 	"validation.schema.error.required_email": "The email address must be filled in.",
 	"validation.schema.error.required_phone": "The phone number must be filled in.",
-	"validation.schema.error.required_socket_id": "The unique identifier of the socket connection must be filled in.",
 	"validation.schema.error.required_message_type": "The message type must be filled in.",
 	"validation.schema.error.required_message_create_date": "The date of the message creation must be filled in correctly.",
 	"validation.schema.error.required_message": "The message body must be filled in.",

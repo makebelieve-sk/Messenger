@@ -41,10 +41,7 @@ export default class MainApi extends EventEmitter {
     }
 
     logout() {
-        this._request.get({
-            route: ApiRoutes.logout,
-            successCb: () => this.emit(MainClientEvents.LOG_OUT)
-        });
+        this._request.get({ route: ApiRoutes.logout });
     }
 
     uploadAvatarAuth(

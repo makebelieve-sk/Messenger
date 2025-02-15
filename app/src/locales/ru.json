@@ -88,6 +88,7 @@
 	"core.socket.online_users": "Пользователи онлайн: ",
 	"core.socket.new_user_connected": "Новый пользователь подключился: ",
 	"core.socket.user_disconnected": "Пользователь отключился: ",
+	"core.socket.logout": "Пользователь вышел.",
 	"core.socket.emit_handled": "Событие обработано на сервере [type={{type}}, timestamp={{timestamp}}].",
 
 	"header.settings": "Настройки",
@@ -184,7 +185,6 @@
 	"validation.schema.error.incorrect_email": "Адрес электронной почты заполнен неверно.",
 	"validation.schema.error.required_email": "Адрес электронной почты должен быть заполнен.",
 	"validation.schema.error.required_phone": "Номер телефона должен быть заполнен.",
-	"validation.schema.error.required_socket_id": "Уникальный идентификатор сокет-соединения должен быть заполнен.",
 	"validation.schema.error.required_message_type": "Тип сообщения должен быть заполнен.",
 	"validation.schema.error.required_message_create_date": "Дата создания сообщения должна быть заполнена корректно.",
 	"validation.schema.error.required_message": "Тело сообщения должно быть заполнено.",

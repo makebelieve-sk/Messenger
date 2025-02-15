@@ -22,7 +22,9 @@ export default class UsersController extends EventEmitter {
     }
 
     get _allUsers() {
-        return Array.from(this._users.values());
+        // Преобразовываем список пользователей, при этом, не отправляя поле sockets на клиент
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return Array.from(this._users.values()).map(({ sockets, ...rest }) => rest);
     }
 
     private _init() {
@@ -31,8 +33,8 @@ export default class UsersController extends EventEmitter {
         // Отправляем всем пользователям обновленный список активных пользователей
         this.emit(SocketEvents.SEND, SocketActions.GET_ALL_USERS, { users: this._allUsers });
 
-        // Оповещаем все сокеты (кроме себя) о новом пользователе
-        if (this._socket.user && this._otherUsers.length) {
+        // Оповещаем все сокеты (кроме себя) о новом пользователе только в том случае, если есть другие пользователи и количество сокет-соединений текущего пользователя одно
+        if (this._otherUsers.length && this._socket.user.sockets.size === 1) {
             this.emit(SocketEvents.SEND_BROADCAST, SocketActions.GET_NEW_USER, { user: this._socket.user });
         }
     }

@@ -8,7 +8,7 @@ import { t } from "@service/i18n";
 import { updateSessionMaxAge } from "@utils/session";
 import { getSafeUserFields } from "@utils/user";
 import { UsersType } from "@custom-types/index";
-import { ApiRoutes, HTTPStatuses, RedisKeys } from "@custom-types/enums";
+import { ApiRoutes, HTTPStatuses, RedisKeys, SocketActions } from "@custom-types/enums";
 import { ISafeUser } from "@custom-types/user.types";
 import RedisWorks from "@core/Redis";
 import Middleware from "@core/Middleware";
@@ -211,11 +211,25 @@ export default class AuthController {
                     // Удаляем флаг rememberMe из Redis
                     await this._redisWork.delete(RedisKeys.REMEMBER_ME, userId);
 
-                    // Удаляем пользователя из списка пользователей
-                    this._users.delete(userId);
+                    // Получаем из списка пользователей текущего пользователя
+                    const logoutingUser = this._users.get(userId);
 
-                    // Удаляем session-cookie (sid)
-                    return res.clearCookie(COOKIE_NAME).json({ success: true });
+                    if (!logoutingUser) {
+                        return next(new AuthError(t("auth.error.user_not_exists")));
+                    }
+
+                    // Отправляем событие пользователю о выходе (всем открытым вкладках одного пользователя)
+                    return Promise
+                        .all(Array.from(logoutingUser.sockets.values()).map(socketController =>
+                            socketController.sendTo(SocketActions.LOG_OUT, {}, userId)
+                        ))
+                        .then(() => {
+                            // Удаляем session-cookie (sid)
+                            return res.clearCookie(COOKIE_NAME).json({ success: true });
+                        })
+                        .catch((error: Error) => {
+                            throw error;
+                        });
                 });
             });
         } catch (error) {

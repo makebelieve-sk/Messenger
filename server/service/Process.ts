@@ -39,7 +39,7 @@ export default class ProcessWorks {
 
         // Обрабатываем пробрасываемые исключения синхронного кода
         process.on("uncaughtException", (error: Error) => {
-            this._handleError(t("error.unhandled_sync", { errorMessage: error.message }), "exception");
+            this._handleError(t("error.unhandled_sync", { errorMessage: error.toString() }), "exception");
         });
 
         // Обрабатываем пробрасываемые исключения асинхронного кода

@@ -58,5 +58,20 @@ export default class UsersController extends EventEmitter {
             
             this.emit(SocketEvents.SEND_ACK, validateData, callback);
         });
+
+        // Пользователь отключился
+        this._socket.on(SocketActions.LOG_OUT, (_, callback) => {
+            const validateData = validateHandleEvent(SocketActions.LOG_OUT);
+
+            if (validateData.success) {
+                logger.debug(i18next.t("core.socket.user_disconnected"));
+                this.emit(SocketEvents.LOG_OUT);
+            }
+
+            this.emit(SocketEvents.SEND_ACK, validateData, callback, () => {
+                // Закрываем сокет-соединение, если валидация прошла успешно
+                if (validateData.success) this._socket.disconnect();
+            });
+        });
     }
 }

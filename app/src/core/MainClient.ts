@@ -91,6 +91,14 @@ export default class MainClient extends EventEmitter {
             logger.debug(`MainClientEvents.ERROR: [error=${error}]`);
             this.catchErrors(error);
         });
+
+        this._socket.on(MainClientEvents.LOG_OUT, () => {
+            logger.debug("MainClientEvents.LOG_OUT");
+
+            this.emit(MainClientEvents.REDIRECT, Pages.signIn);
+            this._dispatch(setAuth(false));
+            this._profilesController.removeProfile();
+        });
     }
 
     // Слушатели событый класса MainApi
@@ -106,15 +114,6 @@ export default class MainClient extends EventEmitter {
             myProfile
                 ? myProfile.user.updateMe()
                 : this._profilesController.addProfile();
-        });
-
-        this._mainApi.on(MainClientEvents.LOG_OUT, () => {
-            logger.debug("MainClientEvents.LOG_OUT");
-
-            this.emit(MainClientEvents.REDIRECT, Pages.signIn);
-            this._dispatch(setAuth(false));
-            this._socket.disconnect();
-            this._profilesController.removeProfile();
         });
     }
 
