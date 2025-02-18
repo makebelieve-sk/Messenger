@@ -12,14 +12,4 @@ if (process.env.NODE_ENV === "production") {
         "@custom-types": path.resolve(__dirname, "../types"),
         "@utils": path.resolve(__dirname, "../utils")
     });
-} else {
-    moduleAlias.addAliases({
-        "@core": path.resolve(__dirname, "../core"),
-        "@database": path.resolve(__dirname, "../database"),
-        "@errors": path.resolve(__dirname, "../errors"),
-        "@locales": path.resolve(__dirname, "../locales"),
-        "@service": path.resolve(__dirname, "../service"),
-        "@custom-types": path.resolve(__dirname, "../types"),
-        "@utils": path.resolve(__dirname, "../utils")
-    });
 }
