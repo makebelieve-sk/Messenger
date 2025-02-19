@@ -1,10 +1,5 @@
 @use "../abstract/colors.scss" as *;
 
-/* Обертка блока */
-.paper-block {
-    padding: 10px 20px;
-}
-
 /* Для заголовка блока */
 .block-title {
     color: $black;

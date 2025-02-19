@@ -85,7 +85,7 @@ export default class Middleware {
         logger.debug("sharpAvatar [req.file=%j]", req.file);
 
         try {
-            // Сживаем переданный аватар пользователя и дублируем его на диск в раздел "Фотографии"
+            // Сжимаем переданный аватар пользователя и дублируем его на диск в раздел "Фотографии"
             const { folderPath, outputFile } = await createSharpedImage({ ...req.file!, fieldname: "photo" });
             (req as IRequestWithSharpedAvatar).sharpedPhotoUrl = path.join(folderPath, outputFile);
 

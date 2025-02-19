@@ -43,6 +43,7 @@ export default memo(({ data }: { data: ICarouselData; }) => {
 
                     {images.length > 1
                         ? <MobileStepper
+                            className="carousel__photo__stepper"
                             position="static"
                             steps={images.length}
                             activeStep={activeKey}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Dialog from "@mui/material/Dialog";
-
+// import Dialog from "@mui/material/Dialog";
+import CarouselModal from "../carousel-modal";
 import CarouselModule, { ICarouselImage } from "@modules/carousel";
 import eventBus from "@utils/event-bus";
 import { GlobalEvents } from "@custom-types/events";
@@ -43,7 +43,9 @@ export default function ModalWithImagesCarousel() {
         return null;
     }
 
-    return <Dialog maxWidth="lg" fullWidth open={open} onClose={onClose} aria-labelledby={modalTitle} aria-describedby={modalDescription}>
-        <CarouselModule data={modalData} />
-    </Dialog>
+    return (
+        <CarouselModal isOpen={open} onClose={onClose} title={modalTitle} description={modalDescription}>
+            <CarouselModule data={modalData} />
+        </CarouselModal>
+    )
 };
