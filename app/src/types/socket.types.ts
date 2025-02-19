@@ -25,9 +25,10 @@ interface ServerToClientEvents {
     [SocketActions.GET_ALL_USERS]: ({ users }: { users: IUser[]; }, callback: CallbackAckType) => void;
     [SocketActions.GET_NEW_USER]: ({ user }: { user: IUser; }, callback: CallbackAckType) => void;
     [SocketActions.USER_DISCONNECT]: ({ userId }: { userId: string; }, callback: CallbackAckType) => void;
+    [SocketActions.LOG_OUT]: (data: undefined, callback: CallbackAckType) => void;
 
-    [SocketActions.ADD_TO_FRIENDS]: (callback: CallbackAckType) => void;
-    [SocketActions.UNSUBSCRIBE]: (callback: CallbackAckType) => void;
+    [SocketActions.ADD_TO_FRIENDS]: (data: undefined, callback: CallbackAckType) => void;
+    [SocketActions.UNSUBSCRIBE]: (data: undefined, callback: CallbackAckType) => void;
     [SocketActions.ACCEPT_FRIEND]: ({ user }: { user: IUser; }, callback: CallbackAckType) => void;
     [SocketActions.BLOCK_FRIEND]: ({ userId }: { userId: string; }, callback: CallbackAckType) => void;
 

@@ -38,7 +38,7 @@ export default class MessagesController extends EventEmitter {
                 };
     
                 logger.debug("SocketActions.MESSAGE [usersInChat=%j, type=%s, data=%j]", usersInChat, SocketActions.SEND_MESSAGE, newMessage);
-                this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, usersInChat, SocketActions.SEND_MESSAGE, { message: newMessage });
+                this.emit(SocketEvents.NOTIFY_FEW_ANOTHER_USERS, usersInChat, SocketActions.SEND_MESSAGE, { message: newMessage });
             }
 
             this._sendAck(validateData, callback);
@@ -50,7 +50,7 @@ export default class MessagesController extends EventEmitter {
 
             if (validateData.success) {
                 logger.debug("SocketActions.DELETE_MESSAGE [companionId=%s, type=%s, data=%j]", companionId, SocketActions.DELETE_MESSAGE, { messageId });
-                this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, companionId, SocketActions.DELETE_MESSAGE, { messageId });
+                this.emit(SocketEvents.NOTIFY_ANOTHER_USER, companionId, SocketActions.DELETE_MESSAGE, { messageId });
             }
 
             this._sendAck(validateData, callback);
@@ -62,7 +62,7 @@ export default class MessagesController extends EventEmitter {
 
             if (validateData.success) {
                 logger.debug("SocketActions.DELETE_CHAT [companionId=%s, type=%s, data=%j]", companionId, SocketActions.DELETE_CHAT, { chatId });
-                this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, companionId, SocketActions.DELETE_CHAT, { chatId });
+                this.emit(SocketEvents.NOTIFY_ANOTHER_USER, companionId, SocketActions.DELETE_CHAT, { chatId });
             }
 
             this._sendAck(validateData, callback);
@@ -74,7 +74,7 @@ export default class MessagesController extends EventEmitter {
 
             if (validateData.success) {
                 logger.debug("SocketActions.EDIT_MESSAGE [usersInChat=%j, type=%s, data=%j]", usersInChat, SocketActions.EDIT_MESSAGE, { data });
-                this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, usersInChat, SocketActions.EDIT_MESSAGE, { data });
+                this.emit(SocketEvents.NOTIFY_FEW_ANOTHER_USERS, usersInChat, SocketActions.EDIT_MESSAGE, { data });
             }
             
             this._sendAck(validateData, callback);
@@ -88,7 +88,7 @@ export default class MessagesController extends EventEmitter {
                 logger.debug("SocketActions.CHANGE_READ_STATUS [isRead=%s, type=%s, messages=%j]", isRead, SocketActions.ACCEPT_CHANGE_READ_STATUS, messages);
 
                 for (const message of messages) {
-                    this.emit(SocketEvents.NOTIFY_ALL_ANOTHER_USERS, message.userId, SocketActions.ACCEPT_CHANGE_READ_STATUS, { ...message, isRead });
+                    this.emit(SocketEvents.NOTIFY_ANOTHER_USER, message.userId, SocketActions.ACCEPT_CHANGE_READ_STATUS, { ...message, isRead });
                 }
             }
             
@@ -108,7 +108,7 @@ export default class MessagesController extends EventEmitter {
     
                 logger.debug("SocketActions.NOTIFY_WRITE [usersInChat=%j, type=%s, data=%j]", usersInChat, SocketActions.NOTIFY_WRITE, data);
                 this.emit(
-                    SocketEvents.NOTIFY_ALL_ANOTHER_USERS, 
+                    SocketEvents.NOTIFY_FEW_ANOTHER_USERS, 
                     usersInChat, 
                     SocketActions.NOTIFY_WRITE, 
                     data

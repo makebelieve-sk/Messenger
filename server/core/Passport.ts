@@ -13,7 +13,6 @@ import { PassportError } from "@errors/index";
 import { UsersType } from "@custom-types/index";
 import { HTTPStatuses } from "@custom-types/enums";
 import { ISafeUser } from "@custom-types/user.types";
-import { ISocketUser } from "@custom-types/socket.types";
 
 const logger = Logger("Passport");
 
@@ -52,7 +51,10 @@ export default class PassportWorks {
 
             process.nextTick(() => {
                 if (!this._users.has(me.id)) {
-                    this._users.set(me.id, me as ISocketUser);
+                    this._users.set(me.id, {
+                        ...me,
+                        sockets: new Map()
+                    });
                 }
                 
                 done(null, me.id);
@@ -80,9 +82,9 @@ export default class PassportWorks {
                                 // В запросах (express) мы не должны использовать идентификатор сокет соединения (он там попросту не нужен).
                                 // В обработчиках событий сокет соединения нам необходимо использовать идентификатор сокет соединения.
                                 // Поэтому здесь (сериализация устанавливает объект пользователя в объект запроса req.user) мы устанавливаем поле
-                                // socketId = null, потому что вскоре после этого действия произойдет установка сокет соединения на клиенте с сервером
-                                // и в этот момент произойдет установка socketId на нужный.
-                                this._users.set(user.id, { ...user, socketId: null as never });
+                                // sockets = new Map(), потому что вскоре после этого действия произойдет установка сокет соединения на клиенте с сервером
+                                // и в этот момент произойдет установка sockets на нужный (добавятся сокет-соединения конкретного пользователя).
+                                this._users.set(user.id, { ...user, sockets: new Map() });
 
                                 done(null, user);
                             } else {

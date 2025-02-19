@@ -21,8 +21,8 @@ export default class FriendsController extends EventEmitter {
 
     private _init() {
         // Подписываемся на пользователя
-        this._socket.on(SocketActions.ADD_TO_FRIENDS, (callback) => {
-            const validateData = validateHandleEvent(SocketActions.ADD_TO_FRIENDS, {});
+        this._socket.on(SocketActions.ADD_TO_FRIENDS, (_, callback) => {
+            const validateData = validateHandleEvent(SocketActions.ADD_TO_FRIENDS);
             
             if (validateData.success) {
                 logger.debug("SocketActions.ADD_TO_FRIENDS");
@@ -45,8 +45,8 @@ export default class FriendsController extends EventEmitter {
         });
 
         // Отписываемся от пользователя
-        this._socket.on(SocketActions.UNSUBSCRIBE, (callback) => {
-            const validateData = validateHandleEvent(SocketActions.UNSUBSCRIBE, {});
+        this._socket.on(SocketActions.UNSUBSCRIBE, (_, callback) => {
+            const validateData = validateHandleEvent(SocketActions.UNSUBSCRIBE);
 
             if (validateData.success) {
                 logger.debug("SocketActions.UNSUBSCRIBE");
