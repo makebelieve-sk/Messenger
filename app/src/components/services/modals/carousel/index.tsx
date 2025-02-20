@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// import Dialog from "@mui/material/Dialog";
 import CarouselModal from "../carousel-modal";
 import CarouselModule, { ICarouselImage } from "@modules/carousel";
 import eventBus from "@utils/event-bus";

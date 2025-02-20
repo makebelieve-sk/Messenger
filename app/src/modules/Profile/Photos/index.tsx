@@ -90,8 +90,7 @@ export default function Photos() {
 						: photos && photos.length 
 							? <div className="photo-container__photos">
 								{photos.slice(0, 3).map((photo, index) => {
-									return( 
-									<div key={photo.id} className="photoComponentWrapper">
+									return <div key={photo.id} className="photo-container__photo-wrapper">
 									<PhotoComponent
 										key={photo.id}
 										src={photo.path}
@@ -100,8 +99,8 @@ export default function Photos() {
 										deleteHandler={() => deleteOnePhoto(photo.path)}
 									/>
 									</div>
-								)})}
-							</div>
+								})}
+								</div>
 							: <NoDataComponent text={t("profile-module.no_photos")} />
 				}
 

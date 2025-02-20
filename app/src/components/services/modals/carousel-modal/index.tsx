@@ -1,4 +1,4 @@
-import { JSX } from "react"
+import { JSX } from "react";
 import CommonModal from "../common-modal";
 
 interface CarouselModalProps  {
@@ -9,8 +9,6 @@ interface CarouselModalProps  {
     description: string;
 }
 
-const CarouselModal = ({ isOpen, onClose, children, title, description }: CarouselModalProps ) => {
+export default function CarouselModal ({ isOpen, onClose, children, title, description }: CarouselModalProps ) {
     return <CommonModal isOpen={isOpen} onClose={onClose} children={children} title={title} description={description}></CommonModal>
 }
-
-export default CarouselModal
