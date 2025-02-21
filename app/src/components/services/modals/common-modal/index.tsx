@@ -11,7 +11,7 @@ interface ModalProps {
   title: string;
   description: string;
 }
-
+//  Основной компонент модального окна
 const CommonModal = ({
   isOpen,
   onClose,
@@ -22,7 +22,6 @@ const CommonModal = ({
 }: ModalProps) => {
   if (!isOpen) return null;
 
-  // This component is made so that when we have a lot of modals we will have the main component of the modal and This is him
   return createPortal(
     <div className={`modal-overlay ${className}`} onClick={onClose} role="dialog"
       aria-labelledby={title} aria-describedby={description}

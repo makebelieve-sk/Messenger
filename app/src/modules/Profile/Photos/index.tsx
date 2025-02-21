@@ -89,17 +89,17 @@ export default function Photos() {
 				    	? <SpinnerComponent />
 						: photos && photos.length 
 							? <div className="photo-container__photos">
-								{photos.slice(0, 3).map((photo, index) => {
-									return <div key={photo.id} className="photo-container__photo-wrapper">
-									<PhotoComponent
-										key={photo.id}
-										src={photo.path}
-										alt={profile.user.fullName + " " + index}
-										clickHandler={() => onClickPhoto(index)}
-										deleteHandler={() => deleteOnePhoto(photo.path)}
-									/>
-									</div>
-								})}
+									{photos.slice(0, 3).map((photo, index) => {
+										return <div key={photo.id} className="photo-container__photo-wrapper">
+											<PhotoComponent
+												key={photo.id}
+												src={photo.path}
+												alt={profile.user.fullName + " " + index}
+												clickHandler={() => onClickPhoto(index)}
+												deleteHandler={() => deleteOnePhoto(photo.path)}
+											/>
+										</div>
+									})}
 								</div>
 							: <NoDataComponent text={t("profile-module.no_photos")} />
 				}
