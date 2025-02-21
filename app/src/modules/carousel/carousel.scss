@@ -1,27 +1,28 @@
-@use "@styles/abstract/colors.scss" as *;
-
 .carousel {
+    width: 100%;
+    height: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    min-width: 400px;
-    max-height: max-content;
-    background: $light-grey;
-
-    &__info {
-        position: absolute;
-        top: 10px;
-        left: 0;
-        width: max-content;
-    }
+    justify-content: space-between;
 
     &__photo {
         width: 100%;
+        flex-grow: 1;
+        overflow: hidden;
+        align-content: center;
+        padding-bottom: 20px;
 
-        .photo {
-            max-width: 100%;
-            height: auto;
-            margin: 0 auto;
+        &__stepper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            flex-shrink: 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
         }
     }
+
 }

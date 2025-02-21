@@ -4,11 +4,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     position: relative;
     min-height: 100px;
     gap: 10px;
-    
+
     &__title {
         width: 100%;
         display: flex;
@@ -18,31 +18,42 @@
         &__text {
             display: flex;
         }
+
         &__link {
             width: max-content;
             color: $dark-blue;
-            
+
             &:hover {
                 cursor: pointer;
             }
         }
     }
+
     &__button-container {
         padding: 0;
         width: 100%;
         text-align: center;
     }
+
     &__photos {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: stretch;
         width: 100%;
         gap: 5px;
 
+        .photo-container__photo-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            position: relative;
+        }
+
         .photo {
-            max-width: fit-content;
+            display: flex;
+            min-height: 150px;
             max-height: 200px;
-            overflow: hidden;
         }
     }
 }
