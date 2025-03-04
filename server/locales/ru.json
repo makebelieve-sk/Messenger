@@ -91,8 +91,13 @@
 
 	"database.start": "Соединение с базой данных успешно установлено.",
 	"database.close": "Соединение с бд успешно закрыто.",
+	"database.up_migrations.success": "Запуск миграций успешно завершен.",
+	"database.down_migrations.success": "Откат миграций успешно завершен.",
+
 	"database.error.close": "Закрытие соединения с базой данных завершилось не удачно.",
 	"database.error.connect": "Соединение с базой данных завершилось с ошибкой.",
+	"database.error.up_migrations": "Запуск миграций завершился с ошибкой",
+	"database.error.down_migrations": "Запуск откатов миграций завершился с ошибкой",
 
     "redis.connection_successfull": "Соединение с клиентом Redis успешно установлено.",
     "redis.start_to_work": "Клиент Redis готов к работе.",

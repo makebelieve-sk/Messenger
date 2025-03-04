@@ -5,9 +5,11 @@ import Models from "@database/models/Models";
 import { DatabaseError } from "@errors/index";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
+import Migrations from "@database/Migrations";
 
 const logger = Logger("Database");
 
+const DATEBASE_DOWN_MIGRATIONS = JSON.parse(process.env.DATEBASE_DOWN_MIGRATIONS as string);
 const DATEBASE_NAME = process.env.DATEBASE_NAME as string;
 const DATEBASE_USERNAME = process.env.DATEBASE_USERNAME as string;
 const DATEBASE_PASSWORD = process.env.DATEBASE_PASSWORD as string;
@@ -19,6 +21,7 @@ const DATEBASE_PORT = parseInt(process.env.DATEBASE_PORT as string);
 export default class Database {
     private _sequelize!: Sequelize;
     private _models!: Models;
+    private _migrations!: Migrations;
 
     constructor() {
         this._init();
@@ -66,12 +69,37 @@ export default class Database {
         this._sequelize.authenticate()
             .then(() => {
                 logger.info(t("database.start"));
-                // Инициализируем модели базы данных
-                this._useModels();
-                // Инициализируем ассоциации (отношения) между таблицами в базе данных
-                this._useRelations();
+
+                // Запускаем все миграции
+                this._runMigrations();
             })
             .catch((error: Error) => new DatabaseError(`${t("database.error.connect")}: ${error.message}`));
+    }
+
+    // Запуск всех миграций для синхронизации базы данных
+    private async _runMigrations() {
+        this._migrations = new Migrations(this._sequelize);
+
+        // Запуск откатов миграций при установке env переменной
+        if (DATEBASE_DOWN_MIGRATIONS) {
+            const isSuccess = await this._migrations.down();
+            
+            if (!isSuccess) {
+                this.close();
+                return;
+            }
+        }
+
+        const isSuccess = await this._migrations.up();
+
+        if (isSuccess) {
+            // Инициализируем модели базы данных
+            this._useModels();
+            // Инициализируем ассоциации (отношения) между таблицами в базе данных
+            this._useRelations();
+        } else {
+            this.close();
+        }
     }
 
     // Инициализация ассоциаций (отношений) между таблицами в базе данных
