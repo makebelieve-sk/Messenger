@@ -78,27 +78,31 @@ export default class Database {
 
     // Запуск всех миграций для синхронизации базы данных
     private async _runMigrations() {
-        this._migrations = new Migrations(this._sequelize);
+        try {
+            this._migrations = new Migrations(this._sequelize);
 
-        // Запуск откатов миграций при установке env переменной
-        if (DATEBASE_DOWN_MIGRATIONS) {
-            const isSuccess = await this._migrations.down();
-            
-            if (!isSuccess) {
-                this.close();
-                return;
+            // Запуск откатов миграций при установке env переменной
+            if (DATEBASE_DOWN_MIGRATIONS) {
+                const isSuccess = await this._migrations.down();
+                
+                if (!isSuccess) {
+                    this.close();
+                    return;
+                }
             }
-        }
 
-        const isSuccess = await this._migrations.up();
+            const isSuccess = await this._migrations.up();
 
-        if (isSuccess) {
-            // Инициализируем модели базы данных
-            this._useModels();
-            // Инициализируем ассоциации (отношения) между таблицами в базе данных
-            this._useRelations();
-        } else {
-            this.close();
+            if (isSuccess) {
+                // Инициализируем модели базы данных
+                this._useModels();
+                // Инициализируем ассоциации (отношения) между таблицами в базе данных
+                this._useRelations();
+            } else {
+                this.close();
+            }
+        } catch (error) {
+            new DatabaseError(`${t("database.error.migrations")}: ${(error as Error).message}`)
         }
     }
 
