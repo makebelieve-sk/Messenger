@@ -91,8 +91,14 @@
 
 	"database.start": "The connection to the database has been successfully established.",
 	"database.close": "The database connection has been successfully closed.",
+	"database.up_migrations.success": "Migrations launch completed successfully.",
+	"database.down_migrations.success": "Migrations rollback completed successfully.",
+
 	"database.error.close": "Closing the database connection failed.",
 	"database.error.connect": "The connection to the database failed with an error.",
+	"database.error.migrations": "A transaction error occurred while performing migrations",
+	"database.error.up_migrations": "The migrations launch failed with error",
+	"database.error.down_migrations": "The migrations rollback failed with error",
 
     "redis.connection_successfull": "The connection to the Redis client has been successfully established.",
     "redis.start_to_work": "The Redis client is ready to work.",

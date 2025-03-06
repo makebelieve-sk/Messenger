@@ -23,6 +23,7 @@
       "@database/*": ["./database/*"],        // Короткий путь для папки database
       "@errors/*": ["./errors/*"],            // Короткий путь для папки errors
       "@locales/*": ["./locales/*"],          // Короткий путь для папки locales
+      "@migrations/*": ["./migrations/*"],    // Короткий путь для папки migrations
       "@service/*": ["./service/*"],          // Короткий путь для папки service
       "@custom-types/*": ["./types/*"],       // Короткий путь для папки types
       "@utils/*": ["./utils/*"]               // Короткий путь для папки utils
