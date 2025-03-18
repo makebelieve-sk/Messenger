@@ -1,4 +1,4 @@
-import "module-alias/register";
+// import "module-alias/register";
 import express from "express";
 import http from "http";
 

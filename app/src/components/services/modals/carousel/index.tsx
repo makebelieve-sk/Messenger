@@ -44,7 +44,7 @@ export default function ModalWithImagesCarousel() {
     }
 
     return (
-        <CommonModal isOpen={open} onClose={onClose} title={modalTitle} description={modalDescription}>
+        <CommonModal data={modalData} isOpen={open} onClose={onClose} title={modalTitle} description={modalDescription}>
             <CarouselModule data={modalData} />
         </CommonModal>
     )

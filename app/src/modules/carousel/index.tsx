@@ -30,9 +30,9 @@ export default memo(({ data }: { data: ICarouselData; }) => {
     return <div className="carousel">
         {images && images.length
             ? <>
-                <div className="carousel__info">
+                {/* <div className="carousel__info">
                     <Info activeImage={images[activeKey]} />
-                </div>
+                </div> */}
 
                 <div className="carousel__photo">
                     <PhotoComponent

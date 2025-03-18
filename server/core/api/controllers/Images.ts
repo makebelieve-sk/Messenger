@@ -234,8 +234,10 @@ export default class ImagesController {
 
         try {
             const { imageUrl, isAvatar = true }: { imageUrl: string; isAvatar: boolean; } = req.body;
-
-            const filePath = path.join(__dirname, ASSETS_PATH, imageUrl);
+            
+            const filePath = path.join(__dirname, "../../", ASSETS_PATH, imageUrl);
+           console.log(filePath);
+           
             const userId = (req.user as ISafeUser).id;
 
             if (!imageUrl) {

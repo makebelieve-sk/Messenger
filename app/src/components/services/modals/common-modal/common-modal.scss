@@ -1,6 +1,10 @@
 @use "@styles/abstract/colors.scss" as colors;
 @use "@styles/abstract/variables.scss" as vars;
 
+.modal-open {
+  overflow: hidden;
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;
