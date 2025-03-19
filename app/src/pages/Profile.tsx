@@ -19,7 +19,7 @@ export default function Profile() {
         navigate(pathname);
     };
 
-    return <Grid container spacing={2}>
+    return <Grid container spacing={2} sx={{ flexWrap: "nowrap" }} >
         <Grid item container xs={4} spacing={2} direction="column">
             {/* Блок моей фотографии */}
             <MainPhoto />
