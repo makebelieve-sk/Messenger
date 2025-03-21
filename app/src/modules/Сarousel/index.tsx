@@ -3,8 +3,8 @@ import MobileStepper from "@mui/material/MobileStepper";
 
 import { ICarouselData } from "@components/services/modals/carousel";
 import PhotoComponent from "@components/ui/photo";
-import Info from "@modules/carousel/info";
-import CarouselButton from "@modules/carousel/button";
+// import Info from "@modules/Сarousel/info";
+import CarouselButton from "@modules/Сarousel/button";
 
 import "./carousel.scss";
 
@@ -30,10 +30,6 @@ export default memo(({ data }: { data: ICarouselData; }) => {
     return <div className="carousel">
         {images && images.length
             ? <>
-                {/* <div className="carousel__info">
-                    <Info activeImage={images[activeKey]} />
-                </div> */}
-
                 <div className="carousel__photo">
                     <PhotoComponent
                         src={images[activeKey].src}

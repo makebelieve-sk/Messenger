@@ -10,15 +10,17 @@ interface IModalProps {
   className?: string;
   title: string;
   description: string;
+  extraContent?: JSX.Element
 }
 //  Основной компонент модального окна
-export default function CommonModal ({
+export default function CommonModal({
   isOpen,
   onClose,
   children,
   className = "",
   title,
-  description
+  description,
+  extraContent
 }: IModalProps) {
   if (!isOpen) return null;
 
@@ -26,6 +28,8 @@ export default function CommonModal ({
     <div className={`modal-overlay ${className}`} onClick={onClose} role="dialog"
       aria-labelledby={title} aria-describedby={description}
     >
+      {extraContent && <div className="modal-extra">{extraContent}</div>}
+
       <div className="modal-content" onClick={(e) => e.stopPropagation()}
       >
         <button className="modal-close" onClick={onClose}>×</button>
