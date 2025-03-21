@@ -1,5 +1,6 @@
 import Logger from "@service/logger";
 import { HTTPStatuses } from "@custom-types/enums";
+import { SOCKET_MIDDLEWARE_ERROR } from "@utils/index";
 
 const logger = Logger("BaseError");
 
@@ -51,5 +52,8 @@ export class SocketError extends BaseError {
         super(message);
 
         this.name = "Socket error";
+    }
+    setMiddlewareError() {
+        return new Error(SOCKET_MIDDLEWARE_ERROR);
     }
 }

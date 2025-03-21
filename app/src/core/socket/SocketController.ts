@@ -15,6 +15,7 @@ import { IMessage, IUser } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
 import { CallbackAckType, SocketType } from "@custom-types/socket.types";
 import { MainClientEvents, SocketEvents } from "@custom-types/events";
+import { SOCKET_MIDDLEWARE_ERROR } from "@utils/index";
 
 const logger = Logger.init("SocketController");
 const SERVER_DISCONNECT = "io server disconnect";
@@ -60,7 +61,7 @@ export default class SocketController extends EventEmitter {
             logger.error(i18next.t("core.socket.error.connect_error", { isSocketActive, message: error.message }));
 
             // Означает, что соединение было отклонено сервером и не равно авторизационной ошибке мидлвара сервера
-            if (!isSocketActive && error.message !== i18next.t("core.socket.error.user_not_exists_on_server")) {
+            if (!isSocketActive && error.message !== SOCKET_MIDDLEWARE_ERROR) {
                 this.emit(SocketEvents.RECONNECT);
                 return;
             }

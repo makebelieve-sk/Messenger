@@ -29,3 +29,6 @@ export const setFocusOnEndNodeElement = (node: HTMLElement, pos = node.childNode
     selection.removeAllRanges();
     selection.addRange(range);
 };
+
+// Тип ошибки, отправляемой по сокету, в момент неуспешной валидации токена сессии
+export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";
