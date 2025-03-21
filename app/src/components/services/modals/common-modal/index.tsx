@@ -1,11 +1,12 @@
 import { createPortal } from "react-dom";
 import { JSX, useEffect, useState } from "react";
 
-import "./common-modal.scss"
 import Info from "@modules/carousel/info";
-import { ICarouselData } from "../carousel";
+import { ICarouselData } from "@components/services/modals/carousel/index";
 
-interface ModalProps {
+import "./common-modal.scss"
+
+interface IModalProps {
   data: ICarouselData
   isOpen: boolean
   onClose: () => void
@@ -23,30 +24,31 @@ const CommonModal = ({
   className = "",
   title,
   description
-}: ModalProps) => {
+}: IModalProps) => {
   if (!isOpen) return null;
 
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("modal-open");
-  } else {
+    } else {
       document.body.classList.remove("modal-open");
-  }
+    }
     return () => {
       document.body.classList.remove("modal-open");
     };
   }, []);
 
-    const [activeKey, setActiveKey] = useState(data.index);
+  const [activeKey, setActiveKey] = useState(data.index);
 
-    const images = data.images;
+  const images = data.images;
+  
   return createPortal(
     <div className={`modal-overlay ${className}`} onClick={onClose} role="dialog"
       aria-labelledby={title} aria-describedby={description}
     >
-        <div className="carousel__info">
-                          <Info activeImage={images[activeKey]} />
-                      </div>
+      <div className="carousel__info">
+        <Info activeImage={images[activeKey]} />
+      </div>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}
       >
         <button className="modal-close" onClick={onClose}>×</button>

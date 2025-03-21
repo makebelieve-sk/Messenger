@@ -26,7 +26,7 @@ export default class ImagesController {
     // Хранение буфера данных файла в оперативной памяти - может вызвать переполнение - поэтому используется только для изображений + ограничение по размеру и кол-ву изображений
     private readonly _uploader = multer({
         storage: multer.memoryStorage(), // Хранилище файлов
-        limits: { 
+        limits: {
             fileSize: MB_1 * MULTER_MAX_FILE_SIZE,  // Ограничение на размер одного файла в 10 МБ
             files: MULTER_MAX_FILEX_COUNT           // Ограничение на количество файлов за один запрос
         }
@@ -81,7 +81,7 @@ export default class ImagesController {
 
             // Добавляем аватар в таблицу Users
             await this._database.models.users.update(
-                { avatarUrl }, 
+                { avatarUrl },
                 { where: { id: userId }, transaction }
             );
 
@@ -94,7 +94,7 @@ export default class ImagesController {
             }, { transaction });
 
             await transaction.commit();
-    
+
             res.json({ success: true });
         } catch (error) {
             await transaction.rollback();
@@ -144,7 +144,7 @@ export default class ImagesController {
 
             // Обновляем аватар в таблице Users
             await this._database.models.users.update(
-                { avatarUrl: sharpedAvatarUrl }, 
+                { avatarUrl: sharpedAvatarUrl },
                 { where: { id: userId }, transaction }
             );
 
@@ -209,8 +209,8 @@ export default class ImagesController {
 
             await this._database.models.photos.bulkCreate(photos);
 
-            res.json({ 
-                success: true, 
+            res.json({
+                success: true,
                 photos: photos.map(photo => ({
                     ...photo,
                     User: {
@@ -219,7 +219,7 @@ export default class ImagesController {
                         thirdName,
                         avatarUrl
                     }
-                })) 
+                }))
             });
         } catch (error) {
             next(error);
@@ -234,10 +234,9 @@ export default class ImagesController {
 
         try {
             const { imageUrl, isAvatar = true }: { imageUrl: string; isAvatar: boolean; } = req.body;
-            
+
             const filePath = path.join(__dirname, "../../", ASSETS_PATH, imageUrl);
-           console.log(filePath);
-           
+
             const userId = (req.user as ISafeUser).id;
 
             if (!imageUrl) {
