@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
-import CommonModal from "@components/services/modals/common-modal";
-import CarouselModule, { ICarouselImage } from "@modules/carousel";
+import CommonModal from "@components/ui/Modal";
+import CarouselModule, { ICarouselImage } from "@modules/Сarousel";
 import eventBus from "@utils/event-bus";
 import { GlobalEvents } from "@custom-types/events";
 
