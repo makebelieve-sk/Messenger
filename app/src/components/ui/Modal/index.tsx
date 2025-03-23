@@ -1,5 +1,5 @@
-import { createPortal } from "react-dom";
 import { JSX } from "react";
+import Portal from "../Portal";
 
 import "./common-modal.scss"
 
@@ -24,19 +24,19 @@ export default function CommonModal({
 }: IModalProps) {
   if (!isOpen) return null;
 
-  return createPortal(
-    <div className={`modal-overlay ${className}`} onClick={onClose} role="dialog"
-      aria-labelledby={title} aria-describedby={description}
-    >
-      {extraContent && <div className="modal-extra">{extraContent}</div>}
-
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}
+  return (
+    <Portal containerId="modal-root">
+      <div className={`modal-overlay ${className}`} onClick={onClose} role="dialog"
+        aria-labelledby={title} aria-describedby={description}
       >
-        <button className="modal-close" onClick={onClose}>×</button>
-        {children}
+        {extraContent && <div className="modal-extra">{extraContent}</div>}
+
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}
+        >
+          <button className="modal-close" onClick={onClose}>×</button>
+          {children}
+        </div>
       </div>
-    </div>
-    ,
-    document.body
+    </Portal>
   )
 }
