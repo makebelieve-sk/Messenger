@@ -9,6 +9,7 @@
 	"auth.error.user_with_email_already_exists": "A user with a postal address {{email}} already exists.",
 	"auth.error.user_with_phone_already_exists": "The user with the phone number {{phone}} already exists.",
 	"auth.error.session_id_not_exists_on_deleted_session": "The user's session ID is missing (session={{session}}).",
+	"auth.error.user_not_exists": "The user does not exist.",
 
 	"photos.error.user_not_found": "User not exists.",
 	"photos.error.sharp_avatar_path_not_found": "The path to the compressed avatar was not transmitted.",
@@ -77,7 +78,7 @@
     "socket.error.not_correct_friends_action_type": "Incorrect type of action when working with friends.",
     "socket.error.cannot_find_call": "It is impossible to end the call because it has not been found. It may have already been completed.",
     "socket.error.not_correct_user_id_in_socket": "The user ID={{user To}} is not suitable. You must use the notify Me method.",
-    "socket.error.update_last_seen": "An error occurred when updating the time of the user's last login: {{message}}.",
+    "socket.error.disconnect": "An error occurred when disconnecting the user: {{message}}.",
     "socket.error.socket_work": "An error occurred while working with the socket",
 	"socket.error.emit_with_ack": "An error occurred while trying to send an event {{type}}: {{message}}",
 	"socket.error.emit_broadcast_with_ack": "An error occurred when trying to send an event to all users except myself {{type}}: {{message}}",
@@ -90,8 +91,14 @@
 
 	"database.start": "The connection to the database has been successfully established.",
 	"database.close": "The database connection has been successfully closed.",
+	"database.up_migrations.success": "Migrations launch completed successfully.",
+	"database.down_migrations.success": "Migrations rollback completed successfully.",
+
 	"database.error.close": "Closing the database connection failed.",
 	"database.error.connect": "The connection to the database failed with an error.",
+	"database.error.migrations": "A transaction error occurred while performing migrations",
+	"database.error.up_migrations": "The migrations launch failed with error",
+	"database.error.down_migrations": "The migrations rollback failed with error",
 
     "redis.connection_successfull": "The connection to the Redis client has been successfully established.",
     "redis.start_to_work": "The Redis client is ready to work.",
@@ -131,7 +138,6 @@
 	"validation.schema.error.incorrect_email": "The email address is filled in incorrectly.",
 	"validation.schema.error.required_email": "The email address must be filled in.",
 	"validation.schema.error.required_phone": "The phone number must be filled in.",
-	"validation.schema.error.required_socket_id": "The unique identifier of the socket connection must be filled in.",
 	"validation.schema.error.required_message_type": "The message type must be filled in.",
 	"validation.schema.error.required_message_create_date": "The date of the message creation must be filled in correctly.",
 	"validation.schema.error.required_message": "The message body must be filled in.",

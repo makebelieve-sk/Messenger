@@ -118,6 +118,7 @@ enum SocketActions {
     GET_ALL_USERS = "GET_ALL_USERS",
     GET_NEW_USER = "GET_NEW_USER",
     USER_DISCONNECT = "USER_DISCONNECT",
+    LOG_OUT = "LOG_OUT",
     //----------------FRIENDS----------------
     ADD_TO_FRIENDS = "ADD_TO_FRIENDS",
     ACCEPT_FRIEND = "ACCEPT_FRIEND",

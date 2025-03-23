@@ -99,5 +99,10 @@ export default class Socket extends EventEmitter {
             logger.debug("SocketEvents.RECONNECT");
             this._connect();
         });
+
+        this._socketController.on(MainClientEvents.LOG_OUT, () => {
+            logger.debug("MainClientEvents.LOG_OUT");
+            this.emit(MainClientEvents.LOG_OUT);
+        });
     }
 }

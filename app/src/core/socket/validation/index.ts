@@ -64,7 +64,7 @@ export type ValidateHandleReturnType = { success: true; } | { success: false; me
 
 type ValidateHandleEventType = (
     type: HandleEventSchemasType,
-    data: HandleArgsType<ServerToClientEvents[HandleEventSchemasType]>
+    data?: HandleArgsType<ServerToClientEvents[HandleEventSchemasType]>
 ) => ValidateHandleReturnType;
 
 // Функция валидации при попытке обработки приходящего события

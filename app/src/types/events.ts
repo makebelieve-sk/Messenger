@@ -12,7 +12,8 @@ enum SocketEvents {
     RECONNECT = "reconnect",
     SEND_ACK = "sendAck",
     SET_ONLINE_USER = "setOnlineUser",
-    ADD_MESSAGE = "addMessange"
+    ADD_MESSAGE = "addMessage",
+    LOG_OUT = "logout"
 };
 
 // Список событий, отправляемых в рамках сущности "Пользователь"

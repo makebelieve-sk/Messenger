@@ -1,6 +1,8 @@
 import express from "express";
 import http from "http";
 
+// Необходимо подключить alias для всего приложения
+import "./service/aliases";
 import "@service/env";
 import ProcessWorks from "@service/Process";
 import Logger from "@service/logger";

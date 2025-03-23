@@ -104,7 +104,7 @@ export default class MessangesController extends EventEmitter {
 
         // Отрисовываем блок о том, что собеседник набирает сообщение
         this._socket.on(SocketActions.NOTIFY_WRITE, ({ isWrite, chatId, userName }, callback) => {
-            const validateData = validateHandleEvent(SocketActions.NOTIFY_WRITE, { isWrite, chatId, userName });
+            const validateData = validateHandleEvent(SocketActions.NOTIFY_WRITE, { isWrite, chatId, userName } as { isWrite: boolean; chatId: string; userName: string; });
 
             if (validateData.success) {
                 logger.debug(`SocketActions.NOTIFY_WRITE [isWrite=${isWrite}, chatId=${chatId}, userName=${userName}]`);

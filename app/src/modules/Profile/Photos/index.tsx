@@ -103,7 +103,6 @@ export default function Photos() {
               </div>
               : <NoDataComponent text={t("profile-module.no_photos")} />
         }
-
         <InputImageComponent
           id="add-new-photos"
           text={t("profile-module.add_more")}

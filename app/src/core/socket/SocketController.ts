@@ -116,6 +116,9 @@ export default class SocketController extends EventEmitter {
                 this._dispatch(setOnlineUsers(onlineUser));
             }
         });
+        this._usersController.on(SocketEvents.LOG_OUT, () => {
+            this.emit(MainClientEvents.LOG_OUT);
+        });
 
         this._usersController.on(SocketEvents.SEND_ACK, this._handleAck.bind(this));
         this._friendsController.on(SocketEvents.SEND_ACK, this._handleAck.bind(this));
@@ -132,11 +135,13 @@ export default class SocketController extends EventEmitter {
         });
     }
 
-    private _handleAck(validateData: ValidateHandleReturnType, cb: CallbackAckType) {
+    private _handleAck(validateData: ValidateHandleReturnType, cb: CallbackAckType, extraCb?: Function) {
         const ackData = validateData.success
             ? { success: true, timestamp: Date.now() }
             : { success: false, message: validateData.message };
 
         cb(ackData);
+
+        if (extraCb) extraCb();
     }
 }

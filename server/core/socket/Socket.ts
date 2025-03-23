@@ -64,8 +64,8 @@ export default class SocketWorks extends EventEmitter {
             upgradeTimeout: SOCKET_UPGRADE_TIMEOUT,  // Время, которое будет ожидать сервер до обновления 1-ого запроса (handshake) до указанного транспорта websocket
             connectionStateRecovery: {
                 maxDisconnectionDuration: SOCKET_MAX_DISCONNECTION_DURATION, // Указывает время, в течении которого клиент может переподключиться 
-                skipMiddlewares: false          // При разрыве соединении пропускаем мидлвары socket.io
-            }                                   // Опция для восстановления соединения клиента из-за временного разрыва (например, спящий режим или потеря сети)
+                skipMiddlewares: false      // При разрыве соединении пропускаем мидлвары socket.io
+            }                               // Опция для восстановления соединения клиента из-за временного разрыва (например, спящий режим или потеря сети)
         });
 
         this._useMiddlewares();
@@ -103,12 +103,6 @@ export default class SocketWorks extends EventEmitter {
                 return this._handleMiddlewareError("socket.error.user_not_found", next);
             }
 
-            // Обновляем объект подключившегося пользователя
-            this._users.set(userId, {
-                ...findUser,
-                socketId: socket.id
-            });
-
             (socket as SocketWithUser).user = findUser;
             next();
         });
@@ -116,7 +110,7 @@ export default class SocketWorks extends EventEmitter {
 
     private _onConnection() {
         this._io.on("connection", socket => {
-            new SocketController(this._users, this._database, socket as SocketWithUser);
+            new SocketController(this._users, this._database, socket as SocketWithUser, this._io);
         });
     }
 

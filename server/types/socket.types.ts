@@ -1,12 +1,13 @@
 import { Socket, Server } from "socket.io";
 
+import SocketController from "@core/socket/SocketController";
 import { SocketActions, MessageReadStatus } from "@custom-types/enums";
 import { IMessage } from "@custom-types/models.types";
 import { ISafeUser, UserPartial } from "@custom-types/user.types";
 import { IEditMessage } from "@custom-types/message.types";
 
 interface ISocketUser extends ISafeUser {
-    socketId: string;
+    sockets: Map<string, SocketController>;
 };
 
 type SocketType = Server<ClientToServerEvents, ServerToClientEvents>;
@@ -35,6 +36,7 @@ interface ServerToClientEvents {
     [SocketActions.GET_ALL_USERS]: ({ users }: { users: ISocketUser[]; }) => void;
     [SocketActions.GET_NEW_USER]: ({ user }: { user: ISocketUser; }) => void;
     [SocketActions.USER_DISCONNECT]: ({ userId }: { userId: string; }) => void;
+    [SocketActions.LOG_OUT]: () => void;
 
     [SocketActions.ADD_TO_FRIENDS]: () => void;
     [SocketActions.UNSUBSCRIBE]: () => void;

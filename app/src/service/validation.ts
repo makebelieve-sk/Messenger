@@ -21,11 +21,7 @@ export const PartialUserSchema = UserSchema.pick({
 });
 
 // Общая схема объекта пользователя в контексте сокет-соединения
-export const SocketUserSchema = UserSchema.merge(
-    z.object({
-        socketId: z.string().min(1, i18next.t("validation.schema.error.required_socket_id"))
-    })
-);
+export const SocketUserSchema = UserSchema;
 
 // Общая схема объекта сообщения
 export const MessageSchema = z.object({
@@ -54,6 +50,7 @@ export const NotifyWriteSchema = z.object({
     userName: z.string().min(1, i18next.t("validation.schema.error.required_write_username")),
 });
 
+// Общая схема объекта пользователя в разделе "Друзья"
 export const FriendSchema = z.object({
     type: z.string().min(1, i18next.t("validation.schema.error.required_friend_type")),
     payload: z.object({
