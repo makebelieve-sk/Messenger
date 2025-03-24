@@ -13,7 +13,7 @@ export default function Portal({ children, containerId }: IPortal) {
             container.id = containerId
             document.body.appendChild(container)
         }
-    }, [])
+    }, []);
 
     return createPortal(
         children,

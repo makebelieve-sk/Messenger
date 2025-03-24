@@ -1,4 +1,6 @@
 import { JSX } from "react";
+
+import CloseIcon from "@mui/icons-material/Close";
 import Portal from "@components/ui/Portal";
 
 import "./common-modal.scss"
@@ -27,13 +29,19 @@ export default function CommonModal({
 
   return (
     <Portal containerId="modal-root">
-      <div className={`modal-overlay ${className}`} onClick={onClose} role="dialog"
-        aria-labelledby={title} aria-describedby={description}
+      <div
+        className={`modal-overlay ${className}`}
+        onClick={onClose}
+        role="dialog"
+        aria-labelledby={title}
+        aria-describedby={description}
       >
         {extraContent && <div className="modal-extra">{extraContent}</div>}
 
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <button className="modal-close" onClick={onClose}>×</button>
+          <button className="modal-close" onClick={onClose}>
+            <CloseIcon fontSize="small" />
+          </button>
           {children}
         </div>
       </div>
