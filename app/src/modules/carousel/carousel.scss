@@ -6,12 +6,28 @@
     align-items: center;
     justify-content: space-between;
 
+    &__info {
+        position: absolute;
+        top: 20%;
+        right: 80%;
+        width: max-content;
+    }
+
     &__photo {
         width: 100%;
         flex-grow: 1;
-        overflow: hidden;
+        margin-top: 10px;
         align-content: center;
         padding-bottom: 20px;
+        overflow-y: auto;
+
+        .photo {
+            img {
+                max-width: 100%;
+                height: auto;
+                object-fit: contain;
+            }
+        }
 
         &__stepper {
             width: 100%;

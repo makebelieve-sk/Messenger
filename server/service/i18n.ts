@@ -31,6 +31,6 @@ function initI18n(cb: Function) {
     });
 }
 
-const t = (key: string, options: { [key: string]: string; } = {}) => i18next.t(key, options);
+const t = (key: string, options: Record<string, string> = {}) => i18next.t(key, options);
 
 export { initI18n, t };
