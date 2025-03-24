@@ -3,7 +3,7 @@ import { JSX } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import Portal from "@components/ui/Portal";
 
-import "./common-modal.scss"
+import "./common-modal.scss";
 
 interface IModalProps {
   isOpen: boolean
@@ -13,7 +13,7 @@ interface IModalProps {
   title: string;
   description: string;
   extraContent?: JSX.Element
-}
+};
 
 //  Основной компонент модального окна
 export default function CommonModal({
