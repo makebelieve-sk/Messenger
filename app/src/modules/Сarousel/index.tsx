@@ -3,8 +3,7 @@ import MobileStepper from "@mui/material/MobileStepper";
 
 import { ICarouselData } from "@components/services/modals/carousel";
 import PhotoComponent from "@components/ui/photo";
-// import Info from "@modules/Сarousel/info";
-import CarouselButton from "@modules/Сarousel/button";
+import CarouselButton from "@modules/carousel/button";
 
 import "./carousel.scss";
 

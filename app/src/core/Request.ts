@@ -21,7 +21,7 @@ interface IPostRequest {
     successCb?: ((result: any) => any);
     failedText?: string;
     finallyCb?: () => any;
-    config?: { headers?: { [key: string]: string; }; };
+    config?: { headers?: Record<string, string> };
     failedCb?: (error: CatchType) => any;
 };
 

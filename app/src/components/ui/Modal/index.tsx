@@ -1,5 +1,5 @@
 import { JSX } from "react";
-import Portal from "../Portal";
+import Portal from "@components/ui/Portal";
 
 import "./common-modal.scss"
 
@@ -12,6 +12,7 @@ interface IModalProps {
   description: string;
   extraContent?: JSX.Element
 }
+
 //  Основной компонент модального окна
 export default function CommonModal({
   isOpen,
@@ -31,8 +32,7 @@ export default function CommonModal({
       >
         {extraContent && <div className="modal-extra">{extraContent}</div>}
 
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}
-        >
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <button className="modal-close" onClick={onClose}>×</button>
           {children}
         </div>

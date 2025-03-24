@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
 import CommonModal from "@components/ui/Modal";
-import Info from "@modules/Сarousel/info";
-import CarouselModule, { ICarouselImage } from "@modules/Сarousel";
+import Info from "@modules/carousel/info";
+import CarouselModule, { ICarouselImage } from "@modules/carousel";
 import eventBus from "@utils/event-bus";
 import { GlobalEvents } from "@custom-types/events";
 
@@ -46,12 +46,12 @@ export default function ModalWithImagesCarousel() {
 
     return (
         <CommonModal
-         isOpen={open}
-         onClose={onClose}
-         title={modalTitle}
-         description={modalDescription}
-         extraContent={<Info activeImage={ modalData.images[modalData.index] } />}
-         >
+            isOpen={open}
+            onClose={onClose}
+            title={modalTitle}
+            description={modalDescription}
+            extraContent={<Info activeImage={modalData.images[modalData.index]} />}
+        >
             <CarouselModule data={modalData} />
         </CommonModal>
     )
