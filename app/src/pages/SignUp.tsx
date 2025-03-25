@@ -7,7 +7,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+import TypographyComponent from "@components/ui/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
@@ -221,13 +221,13 @@ export default function SignUp() {
 						<LockOutlinedIcon />
 					</Avatar>
 
-					<Typography
+					<TypographyComponent
 						className={styles.title}
 						component="h1"
 						variant="h5"
 					>
-						{ t("sign-up.sign_up") }
-					</Typography>
+						{t("sign-up.sign_up")}
+					</TypographyComponent>
 
 					<Grid
 						container
@@ -241,7 +241,7 @@ export default function SignUp() {
 								onClick={() => navigate(Pages.signIn)}
 								component="p"
 							>
-								{ t("sign-up.enter") }
+								{t("sign-up.enter")}
 							</LinkComponent>
 						</Grid>
 					</Grid>
@@ -253,7 +253,7 @@ export default function SignUp() {
 						)}
 					</Stepper>
 
-					{ getStepContent(activeStep) }
+					{getStepContent(activeStep)}
 
 					<Box className={styles.footerButtonArea}>
 						<Button
@@ -262,7 +262,7 @@ export default function SignUp() {
 							disabled={activeStep === 0}
 							onClick={handleBack}
 						>
-							{ t("sign-up.back") }
+							{t("sign-up.back")}
 						</Button>
 
 						<LoadingButton

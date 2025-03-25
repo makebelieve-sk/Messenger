@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
+import TypographyComponent from "@components/ui/Typography";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -112,9 +112,9 @@ export default function SignIn() {
 						<LockOutlinedIcon />
 					</Avatar>
 
-					<Typography component="h1" variant="h5">
-						{ t("sign-in.sign_in") }
-					</Typography>
+					<TypographyComponent component="h1" variant="h5">
+						{t("sign-in.sign_in")}
+					</TypographyComponent>
 
 					<Box
 						noValidate
@@ -177,7 +177,7 @@ export default function SignIn() {
 							loading={loading}
 							disabled={saveDisabled}
 						>
-							{ t("sign-in.enter") }
+							{t("sign-in.enter")}
 						</LoadingButton>
 
 						<Grid container>
@@ -188,7 +188,7 @@ export default function SignIn() {
 									className={styles.secondaryButton}
 									onClick={() => navigate(Pages.resetPassword)}
 								>
-									{ t("sign-in.forgot_password") }
+									{t("sign-in.forgot_password")}
 								</LinkComponent>
 							</Grid>
 
@@ -199,7 +199,7 @@ export default function SignIn() {
 									className={styles.secondaryButton}
 									onClick={() => navigate(Pages.signUp)}
 								>
-									{ t("sign-in.register") }
+									{t("sign-in.register")}
 								</LinkComponent>
 							</Grid>
 						</Grid>

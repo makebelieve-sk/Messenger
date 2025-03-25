@@ -2,7 +2,7 @@ import { useState, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+import TypographyComponent from "@components/ui/Typography";
 import Skeleton from "@mui/material/Skeleton";
 
 import ChangeAvatarComponent from "@components/ui/change-avatar";
@@ -43,9 +43,9 @@ export default memo(function ChooseAvatar({ username, avatarUrl, onChange }: ICh
         <Box className="choose-avatar">
             <Grid container spacing={2} className="choose-avatar__container">
                 <Grid item xs={8}>
-                    <Typography className="choose-avatar__container__main-text">
-                        {username}, { t("profile-module.how_like_avatar") }
-                    </Typography>
+                    <TypographyComponent className="choose-avatar__container__main-text">
+                        {username}, {t("profile-module.how_like_avatar")}
+                    </TypographyComponent>
                 </Grid>
 
                 <Grid item xs={8} className="choose-avatar__container__avatar-wrapper">
@@ -64,7 +64,7 @@ export default memo(function ChooseAvatar({ username, avatarUrl, onChange }: ICh
                 </Grid>
 
                 <Grid item xs={8} className="choose-avatar__container__change-photo">
-                    <ChangeAvatarComponent 
+                    <ChangeAvatarComponent
                         labelText={t("profile-module.choose_another_photo")}
                         loading={loading}
                         onChange={onChangeAvatar}

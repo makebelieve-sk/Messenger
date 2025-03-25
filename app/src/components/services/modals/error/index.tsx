@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Alert from "@mui/material/Alert";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import TypographyComponent from "@components/ui/Typography";
 import Button from "@mui/material/Button";
 import DownloadIcon from "@mui/icons-material/Download";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -69,33 +69,33 @@ export default function ModalWithError() {
     return <>
         <SnackBarComponent anchor={{ vertical: "top", horizontal: "center" }} open={visible} handleClose={() => setVisible(false)}>
             <Alert className="alert-error-container" onClose={() => setVisible(false)} severity="success">
-                { t("modals.copy_successfull") }
+                {t("modals.copy_successfull")}
             </Alert>
         </SnackBarComponent>
 
-        <Modal 
-            open={open} 
-            onClose={onClose} 
-            aria-labelledby={modalTitle} 
+        <Modal
+            open={open}
+            onClose={onClose}
+            aria-labelledby={modalTitle}
             aria-describedby={modalDescription}
             disableEscapeKeyDown
         >
             <Box className="modal-error-container">
-                <Typography variant="h6" component="h2">
-                    { t("modals.error.server") }
-                </Typography>
+                <TypographyComponent variant="h6" component="h2">
+                    {t("modals.error.server")}
+                </TypographyComponent>
 
-                <Typography className="modal-error-container__text">
-                    { t("modals.copy_the_message_and_send_to_email", { email: MAIL_FEEDBACK }) }
-                </Typography>
+                <TypographyComponent className="modal-error-container__text">
+                    {t("modals.copy_the_message_and_send_to_email", { email: MAIL_FEEDBACK })}
+                </TypographyComponent>
 
                 <div className="modal-error-container__error" onClick={onCopy}>
                     {error}
                 </div>
 
                 <div className="modal-error-container__buttons">
-                    <Button variant="contained" startIcon={<DownloadIcon />} onClick={onDownload}>{ t("modals.download") }</Button>
-                    <Button variant="outlined" startIcon={<RefreshIcon />} onClick={onReload}>{ t("modals.reset_page") }</Button>
+                    <Button variant="contained" startIcon={<DownloadIcon />} onClick={onDownload}>{t("modals.download")}</Button>
+                    <Button variant="outlined" startIcon={<RefreshIcon />} onClick={onReload}>{t("modals.reset_page")}</Button>
                 </div>
             </Box>
         </Modal>

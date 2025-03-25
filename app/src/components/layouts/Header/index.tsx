@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
+import TypographyComponent from "@components/ui/Typography";
 
 import AvatarComponent from "@components/ui/avatar";
 import Logo from "@components/layouts/header/logo";
@@ -11,7 +11,7 @@ import useMainClient from "@hooks/useMainClient";
 import useProfile from "@hooks/useProfile";
 import { BASE_URL } from "@utils/constants";
 import { AVATAR_URL } from "@utils/files";
-import {  Pages } from "@custom-types/enums";
+import { Pages } from "@custom-types/enums";
 import { UserEvents } from "@custom-types/events";
 
 import "./header.scss";
@@ -84,22 +84,22 @@ export default function HeaderComponent() {
                         autoFocus={false}
                         onClose={() => setAnchorElUser(null)}
                     >
-                        <MenuItem onClick={() => goTo(Pages.settings) }>
-                            <Typography variant="body2">
-                                { t("header.settings") }
-                            </Typography>
+                        <MenuItem onClick={() => goTo(Pages.settings)}>
+                            <TypographyComponent variant="body2">
+                                {t("header.settings")}
+                            </TypographyComponent>
                         </MenuItem>
 
                         <MenuItem onClick={() => goTo(Pages.help)}>
-                            <Typography variant="body2">
-                                { t("header.help") }
-                            </Typography>
+                            <TypographyComponent variant="body2">
+                                {t("header.help")}
+                            </TypographyComponent>
                         </MenuItem>
 
                         <MenuItem onClick={logout}>
-                            <Typography variant="body2">
-                                { t("header.logout") }
-                            </Typography>
+                            <TypographyComponent variant="body2">
+                                {t("header.logout")}
+                            </TypographyComponent>
                         </MenuItem>
                     </Menu>
                 </div>
