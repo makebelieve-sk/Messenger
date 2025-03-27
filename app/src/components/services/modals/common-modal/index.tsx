@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom";
 import { JSX } from "react";
+import ButtonComponent from "@components/ui/Button";
 
 import "./common-modal.scss"
 
@@ -28,7 +29,7 @@ const CommonModal = ({
     >
       <div className="modal-content" onClick={(e) => e.stopPropagation()}
       >
-        <button className="modal-close" onClick={onClose}>×</button>
+        <ButtonComponent className="modal-close" onClick={onClose}>×</ButtonComponent>
         {children}
       </div>
     </div>

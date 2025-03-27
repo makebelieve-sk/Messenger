@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
+
+import CommonModal from "@components/ui/Modal";
 import TypographyComponent from "@components/ui/Typography";
-import Button from "@mui/material/Button";
+import ButtonComponent from "@components/ui/Button";
+import BoxComponent from "@components/ui/Box";
 
 import eventBus from "@utils/event-bus";
 import { GlobalEvents } from "@custom-types/events";
@@ -62,16 +63,16 @@ export default function ModalWithConfirm() {
         setModalData(initialModalData);
     };
 
-    return <Modal open={open} onClose={onClose} aria-labelledby={modalTitle} aria-describedby={modalDescription}>
-        <Box className="modal-confirm-container">
+    return <CommonModal isOpen={open} onClose={onClose} title={modalTitle} description={modalDescription}>
+        <BoxComponent className="modal-confirm-container">
             <TypographyComponent id={modalTitle} variant="subtitle1" component="h2">
                 {modalData.text}
             </TypographyComponent>
 
             <TypographyComponent id={modalDescription} className="modal-confirm-container__buttons">
-                <Button size="small" variant="outlined" color="primary" onClick={onAction}>{modalData.btnActionTitle}</Button>
-                <Button size="small" variant="outlined" color="error" onClick={onClose}>{t("modals.cancel")}</Button>
+                <ButtonComponent size="small" variant="outlined" color="primary" onClick={onAction}>{modalData.btnActionTitle}</ButtonComponent>
+                <ButtonComponent size="small" variant="outlined" color="error" onClick={onClose}>{t("modals.cancel")}</ButtonComponent>
             </TypographyComponent>
-        </Box>
-    </Modal>
+        </BoxComponent>
+    </CommonModal>
 };

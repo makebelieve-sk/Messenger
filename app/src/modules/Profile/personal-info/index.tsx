@@ -1,8 +1,6 @@
 import { useState, useEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 
 import useUser from "@hooks/useUser";
 import useUserDetails from "@hooks/useUserDetails";
@@ -10,9 +8,12 @@ import { useAppSelector } from "@hooks/useGlobalState";
 import { selectFriendState } from "@store/friend/slice";
 import { selectUserState } from "@store/user/slice";
 import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
+
 import { onClickBlockType } from "@modules/profile/friends";
+import GridComponent from "@components/ui/Grid";
 import SpinnerComponent from "@components/ui/spinner";
 import { UserDetailsEvents } from "@custom-types/events";
+import PaperComponent from "@components/ui/Paper";
 
 import "./personal-info.scss";
 
@@ -43,8 +44,8 @@ export default memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
 		};
 	}, []);
 
-	return <Grid item>
-		<Paper className="info-container paper-block">
+	return <GridComponent className="info-container__grid">
+		<PaperComponent className="info-container paper-block">
 			<div className="info-container__main-info">
 				<div className="info-container__username">{fullName}</div>
 			</div>
@@ -126,6 +127,6 @@ export default memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
 					<span>0</span> {userDetails.getVideosText(0)}
 				</div>
 			</div>
-		</Paper>
-	</Grid>
+		</PaperComponent>
+	</GridComponent>
 });

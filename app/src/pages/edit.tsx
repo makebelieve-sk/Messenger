@@ -1,14 +1,15 @@
 import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Paper from "@mui/material/Paper";
+
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import { LoadingButton } from "@mui/lab";
 
 import EditTabsModule from "@modules/edit";
+import BoxComponent from "@components/ui/Box";
 import AlertComponent from "@components/ui/alert";
+import ButtonComponent from "@components/ui/Button";
 import SpinnerComponent from "@components/ui/spinner";
+import PaperComponent from "@components/ui/Paper";
 import useMainClient from "@hooks/useMainClient";
 import useUserDetails from "@hooks/useUserDetails";
 import useProfile from "@hooks/useProfile";
@@ -149,7 +150,7 @@ export default function Edit() {
 		}
 	};
 
-	return <Paper className={"edit-container"}>
+	return <PaperComponent className={"edit-container"}>
 		<Tabs
 			orientation="vertical"
 			value={tab}
@@ -174,7 +175,7 @@ export default function Edit() {
 		</Tabs>
 
 		<div className={"edit-container__module"}>
-			<Box component="form" noValidate onSubmit={onSubmit}>
+			<BoxComponent component="form" noValidate onSubmit={onSubmit}>
 				{loading
 				 	? <SpinnerComponent />
 					: <EditTabsModule
@@ -185,7 +186,7 @@ export default function Edit() {
 					/>
 				}
 
-				<LoadingButton
+				<ButtonComponent
 					fullWidth
 					type="submit"
 					variant="contained"
@@ -194,7 +195,7 @@ export default function Edit() {
 					disabled={saveDisabled}
 				>
 					Сохранить
-				</LoadingButton>
+				</ButtonComponent>
 
 				{showAlert 
 					? <AlertComponent show={showAlert}>
@@ -204,7 +205,7 @@ export default function Edit() {
 						</AlertComponent>
 					: null
 				}
-			</Box>
+			</BoxComponent>
 		</div>
-	</Paper>
+	</PaperComponent>
 }

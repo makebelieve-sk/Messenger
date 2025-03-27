@@ -13,6 +13,7 @@
 		&.light {
 			background-color: $background-light;
 		}
+
 		&.dark {
 			background-color: $background-dark;
 		}
@@ -36,6 +37,13 @@
 		.loadingButton {
 			margin-top: $signMarginMedium;
 			margin-bottom: $signMarginSmall;
+		}
+
+		.signInHelp__grid,
+		.signInForget__grid,
+		.signInNoAccount__grid {
+			padding-left: 16px;
+			max-width: none;
 		}
 
 		.secondaryButton {

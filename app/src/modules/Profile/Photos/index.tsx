@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 
+import { useAppSelector } from "@hooks/useGlobalState";
+import useProfile from "@hooks/useProfile";
+import { selectUserState } from "@store/user/slice";
+import { Pages } from "@custom-types/enums";
+
+import GridComponent from "@components/ui/Grid";
+import PaperComponent from "@components/ui/Paper";
 import PhotoComponent from "@components/ui/photo";
 import InputImageComponent from "@components/ui/input-image";
 import NoDataComponent from "@components/ui/no-data";
 import SpinnerComponent from "@components/ui/spinner";
 import LinkComponent from "@components/ui/link";
-import { useAppSelector } from "@hooks/useGlobalState";
-import useProfile from "@hooks/useProfile";
-import { selectUserState } from "@store/user/slice";
-import { Pages } from "@custom-types/enums";
 
 import "./photos.scss";
 
@@ -66,8 +67,8 @@ export default function Photos() {
   };
 
   return (
-    <Grid item>
-      <Paper className="photo-container paper-block">
+    <GridComponent className="photo-container__grid">
+      <PaperComponent className="photo-container paper-block">
         <div className="photo-container__title">
           <div className="block-title photo-container__title__text">
             {t("profile-module.my_photos")}
@@ -111,7 +112,7 @@ export default function Photos() {
           multiple
           onChange={addPhotosHandler}
         />
-      </Paper>
-    </Grid>
+      </PaperComponent>
+    </GridComponent>
   );
 };

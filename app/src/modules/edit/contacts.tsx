@@ -1,8 +1,8 @@
 import { memo, ChangeEvent } from "react";
-import TextField from "@mui/material/TextField";
 import { useTranslation } from "react-i18next";
 
 import { ITabModule } from "@modules/edit";
+import TextFieldComponent from "@components/ui/TextField";
 
 export default memo(function Contacts({ formValues, formErrors, onChange }: ITabModule) {
 	const { t } = useTranslation();
@@ -11,7 +11,7 @@ export default memo(function Contacts({ formValues, formErrors, onChange }: ITab
 	const onChangeField = (field: string, value: string) => onChange(field, value);
 
 	return <>
-		<TextField
+		<TextFieldComponent
 			id="city"
 			name="city"
 			margin="normal"
@@ -24,7 +24,7 @@ export default memo(function Contacts({ formValues, formErrors, onChange }: ITab
 			onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChangeField("city", e.target.value)}
 		/>
 
-		<TextField
+		<TextFieldComponent
 			id="phone"
 			name="phone"
 			margin="normal"
@@ -43,7 +43,7 @@ export default memo(function Contacts({ formValues, formErrors, onChange }: ITab
 			onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChangeField("phone", e.target.value)}
 		/>
 
-		<TextField
+		<TextFieldComponent
 			id="email"
 			name="email"
 			margin="normal"

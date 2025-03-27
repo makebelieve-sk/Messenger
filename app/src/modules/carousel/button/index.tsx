@@ -1,9 +1,9 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
-import Button from "@mui/material/Button";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import ButtonComponent from "@components/ui/Button";
 
 interface ICarouselButton {
     next?: boolean;
@@ -20,10 +20,10 @@ export default memo(function CarouselButton({ next, isDisabled, handleClick }: I
         handleClick(next ? 1 : -1);
     }
 
-    return <Button size="small" onClick={onClick} disabled={isDisabled}>
+    return <ButtonComponent size="small" onClick={onClick} disabled={isDisabled}>
         {next
             ? <>{ t("images-carousel-module.further") } <KeyboardArrowRight /></>
             : <><KeyboardArrowLeft /> { t("images-carousel-module.back") }</>
         }
-    </Button>
+    </ButtonComponent>
 });

@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { LoadingButton } from "@mui/lab";
-import Avatar from "@mui/material/Avatar";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import TypographyComponent from "@components/ui/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
 
 import i18next from "@service/i18n";
+import AvatarComponent from "@components/ui/avatar";
+import CssBaselineComponent from "@components/ui/CssBaseline";
+import GridComponent from "@components/ui/Grid";
+import BoxComponent from "@components/ui/Box";
+import TypographyComponent from "@components/ui/Typography";
 import LinkComponent from "@components/ui/link";
+import ButtonComponent from "@components/ui/Button";
 import SignUpForm from "@modules/sign-up/Form";
 import ChooseAvatar from "@modules/sign-up/ChooseAvatar";
 import CopyrightComponent from "@components/ui/copyright";
@@ -215,11 +215,11 @@ export default function SignUp() {
 	return (
 		<ThemeProvider theme={THEME}>
 			<Container component="main" maxWidth="xs">
-				<CssBaseline />
-				<Box component="form" noValidate className={styles.signUpForm}>
-					<Avatar className={styles.avatar}>
+				<CssBaselineComponent />
+				<BoxComponent component="form" noValidate className={styles.signUpForm}>
+					<AvatarComponent avatarClassName={styles.avatar}>
 						<LockOutlinedIcon />
-					</Avatar>
+					</AvatarComponent>
 
 					<TypographyComponent
 						className={styles.title}
@@ -229,12 +229,11 @@ export default function SignUp() {
 						{t("sign-up.sign_up")}
 					</TypographyComponent>
 
-					<Grid
+					<GridComponent
 						container
-						justifyContent="center"
 						className={styles.signInArea}
 					>
-						<Grid item>
+						<GridComponent className="toSignIn">
 							<LinkComponent
 								variant="body2"
 								className={styles.secondaryButton}
@@ -243,8 +242,8 @@ export default function SignUp() {
 							>
 								{t("sign-up.enter")}
 							</LinkComponent>
-						</Grid>
-					</Grid>
+						</GridComponent>
+					</GridComponent>
 
 					<Stepper activeStep={activeStep}>
 						{steps.map(label => <Step key={label}>
@@ -255,17 +254,17 @@ export default function SignUp() {
 
 					{getStepContent(activeStep)}
 
-					<Box className={styles.footerButtonArea}>
-						<Button
+					<BoxComponent className={styles.footerButtonArea}>
+						<ButtonComponent
 							fullWidth
 							className={styles.backButton}
 							disabled={activeStep === 0}
 							onClick={handleBack}
 						>
 							{t("sign-up.back")}
-						</Button>
+						</ButtonComponent>
 
-						<LoadingButton
+						<ButtonComponent
 							fullWidth
 							variant="contained"
 							className={styles.loadingButton}
@@ -277,9 +276,9 @@ export default function SignUp() {
 							{activeStep === steps.length - 1
 								? t("sign-up.register")
 								: t("sign-up.further")}
-						</LoadingButton>
-					</Box>
-				</Box>
+						</ButtonComponent>
+					</BoxComponent>
+				</BoxComponent>
 
 				<CopyrightComponent />
 			</Container>

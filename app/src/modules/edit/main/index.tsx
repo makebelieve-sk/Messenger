@@ -1,11 +1,12 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import TextField from "@mui/material/TextField";
+
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
+import MenuItemComponent from "@components/ui/MenuItem";
+import TextFieldComponent from "@components/ui/TextField";
 import DatePickerComponent from "@modules/edit/date-picker";
 import { ITabModule } from "@modules/edit";
 
@@ -20,7 +21,7 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 
 	return (
 		<>
-			<TextField
+			<TextFieldComponent
 				id="name"
 				name="name"
 				margin="normal"
@@ -40,7 +41,7 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 				onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeField("name", e.target.value)}
 			/>
 
-			<TextField
+			<TextFieldComponent
 				id="surName"
 				name="surName"
 				margin="normal"
@@ -68,15 +69,15 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 					label={t("edit_tabs.sex")}
 					onChange={(e: SelectChangeEvent<string>) => onChangeField("sex", e.target.value)}
 				>
-					<MenuItem value="">
+					<MenuItemComponent value="">
 						{t("edit_tabs.sex_not_specified")}
-					</MenuItem>
-					<MenuItem value={t("edit_tabs.sex_male")}>
+					</MenuItemComponent>
+					<MenuItemComponent value={t("edit_tabs.sex_male")}>
 						{t("edit_tabs.sex_male")}
-					</MenuItem>
-					<MenuItem value={t("edit_tabs.sex_female")}>
+					</MenuItemComponent>
+					<MenuItemComponent value={t("edit_tabs.sex_female")}>
 						{t("edit_tabs.sex_female")}
-					</MenuItem>
+					</MenuItemComponent>
 				</Select>
 			</FormControl>
 
@@ -85,7 +86,7 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 				onChangeField={onChangeField}
 			/>
 
-			<TextField
+			<TextFieldComponent
 				id="work"
 				name="work"
 				margin="normal"

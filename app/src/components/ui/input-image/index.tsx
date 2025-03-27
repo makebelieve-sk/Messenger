@@ -1,6 +1,7 @@
 import { memo } from "react";
+
 import TypographyComponent from "../Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
+import ButtonComponent from "../Button";
 
 import "./input-image.scss";
 
@@ -14,12 +15,12 @@ interface IInputImageComponent {
 
 // Базовый компонент прикрепления изображения
 export default memo(function InputImageComponent({ id, text, loading, multiple = false, onChange }: IInputImageComponent) {
-    return <LoadingButton variant="outlined" size="small" className="input-image" loading={loading} disabled={loading}>
+    return <ButtonComponent variant="outlined" size="small" className="input-image" loading={loading} disabled={loading}>
         <label htmlFor={id} className="input-image__label">
             <TypographyComponent variant="caption" className="input-image__label__text">
                 {text}
             </TypographyComponent>
             <input id={id} type="file" accept="image/*" hidden multiple={multiple} onChange={onChange} />
         </label>
-    </LoadingButton>
+    </ButtonComponent>
 });

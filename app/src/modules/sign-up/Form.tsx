@@ -1,10 +1,10 @@
 import { memo, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import type { CountryData } from "react-phone-input-2";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 
+import GridComponent from "@components/ui/Grid";
+import TextFieldComponent from "@components/ui/TextField";
+import BoxComponent from "@components/ui/Box";
 import SpinnerComponent from "@components/ui/spinner";
 import { emailCheck } from "@utils/email-check";
 import { REQUIRED_FIELD } from "@utils/constants";
@@ -102,10 +102,10 @@ export default memo(function SignUpForm({
 	};
 
 	return (
-		<Box className="sign-up-form">
-			<Grid container spacing={2}>
-				<Grid item xs={12} sm={6}>
-					<TextField
+		<BoxComponent className="sign-up-form">
+			<GridComponent container spacing={2} className="grid_form">
+				<GridComponent xs={12} sm={6}>
+					<TextFieldComponent
 						id="firstName"
 						name="firstName"
 						margin="normal"
@@ -127,10 +127,10 @@ export default memo(function SignUpForm({
 							validateFullName
 						)}
 					/>
-				</Grid>
+				</GridComponent>
 
-				<Grid item xs={12} sm={6}>
-					<TextField
+				<GridComponent xs={12} sm={6}>
+					<TextFieldComponent
 						id="thirdName"
 						name="thirdName"
 						margin="normal"
@@ -151,10 +151,10 @@ export default memo(function SignUpForm({
 							validateFullName
 						)}
 					/>
-				</Grid>
+				</GridComponent>
 
-				<Grid item xs={12}>
-					<TextField
+				<GridComponent xs={12}>
+					<TextFieldComponent
 						id="email"
 						name="email"
 						margin="normal"
@@ -172,9 +172,9 @@ export default memo(function SignUpForm({
 						value={formValues.values.email}
 						onChange={e => onChange("email", e.target.value, validateEmail)}
 					/>
-				</Grid>
+				</GridComponent>
 
-				<Grid item xs={12}>
+				<GridComponent xs={12}>
 					<Suspense fallback={<div className="phone-input__loading"><SpinnerComponent /></div>}>
 						<PhoneInput
 							country="ru"
@@ -200,10 +200,10 @@ export default memo(function SignUpForm({
 							? formValues.errors.phone
 							: null}
 					</div>
-				</Grid>
+				</GridComponent>
 
-				<Grid item xs={12}>
-					<TextField
+				<GridComponent xs={12}>
+					<TextFieldComponent
 						id="password"
 						name="password"
 						margin="normal"
@@ -226,10 +226,10 @@ export default memo(function SignUpForm({
 							"passwordConfirm"
 						)}
 					/>
-				</Grid>
+				</GridComponent>
 
-				<Grid item xs={12}>
-					<TextField
+				<GridComponent xs={12}>
+					<TextFieldComponent
 						id="passwordConfirm"
 						name="passwordConfirm"
 						margin="normal"
@@ -247,8 +247,8 @@ export default memo(function SignUpForm({
 						value={formValues.values.passwordConfirm}
 						onChange={checkPassword}
 					/>
-				</Grid>
-			</Grid>
-		</Box>
+				</GridComponent>
+			</GridComponent>
+		</BoxComponent>
 	);
 });

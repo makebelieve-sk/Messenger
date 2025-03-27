@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
 
+import GridComponent from "@components/ui/Grid";
 import { Pages } from "@custom-types/enums";
 import MainPhoto from "@modules/profile/main-photo";
 import Friends from "@modules/profile/friends";
@@ -19,8 +19,8 @@ export default function Profile() {
         navigate(pathname);
     };
 
-    return <Grid className="profile-container__grid" container spacing={2}>
-        <Grid item container xs={4} spacing={2} direction="column">
+    return <GridComponent container className="profile-container__grid" spacing={2}>
+        <GridComponent container xs={4} spacing={2} className="column__grid" >
             {/* Блок моей фотографии */}
             <MainPhoto />
 
@@ -29,14 +29,14 @@ export default function Profile() {
 
             {/* Блок друзей онлайн */}
             <Friends onClickBlock={onClickBlock} onlineFriends />
-        </Grid>
+        </GridComponent>
 
-        <Grid item container xs={8} spacing={2} direction="column">
+        <GridComponent container xs={8} spacing={2} className="column__grid">
             {/* Блок личной информации */}
             <PersonalInfo onClickBlock={onClickBlock} />
 
             {/* Блок фотографий */}
             <Photos />
-        </Grid>
-    </Grid>
+        </GridComponent>
+    </GridComponent>
 };
