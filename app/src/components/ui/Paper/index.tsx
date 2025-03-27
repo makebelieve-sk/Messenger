@@ -7,6 +7,6 @@ interface IPaperComponent {
     square?: boolean;
 };
 
-export default function PaperComponent({ children, className,  elevation, square }: IPaperComponent) {
+export default function PaperComponent({ children, className, elevation, square }: IPaperComponent) {
     return <Paper className={className} elevation={elevation} square={square} >{children}</Paper>
 }

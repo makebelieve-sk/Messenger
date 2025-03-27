@@ -4,12 +4,12 @@ import { useTranslation } from "react-i18next";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-import EditTabsModule from "@modules/edit";
 import BoxComponent from "@components/ui/Box";
 import AlertComponent from "@components/ui/alert";
 import ButtonComponent from "@components/ui/Button";
 import SpinnerComponent from "@components/ui/spinner";
 import PaperComponent from "@components/ui/Paper";
+import EditTabsModule from "@modules/edit";
 import useMainClient from "@hooks/useMainClient";
 import useUserDetails from "@hooks/useUserDetails";
 import useProfile from "@hooks/useProfile";
@@ -28,14 +28,14 @@ export interface IFormValues {
 	city: string;
 	phone: string;
 	email: string;
-}
+};
 
 export interface IFormErrors {
 	name?: string;
 	surName?: string;
 	phone?: string;
 	email?: string;
-}
+};
 
 export default function Edit() {
 	const [tab, setTab] = useState(0);

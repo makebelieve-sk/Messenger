@@ -28,7 +28,7 @@ interface ISignUpForm {
 		validateCallback?: (value: string) => string,
 		anotherField?: string
 	) => void;
-}
+};
 
 export default memo(function SignUpForm({
 	formValues,

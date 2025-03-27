@@ -22,6 +22,6 @@ interface ITypographyComponent {
     component?: ElementType;
 };
 
-export default function TypographyComponent({ children,variant, className, id, component }: ITypographyComponent) {
+export default function TypographyComponent({ children, variant, className, id, component }: ITypographyComponent) {
     return <Typography variant={variant || "body1"} className={className} id={id} component={component || "p"} >{children}</Typography>
 }

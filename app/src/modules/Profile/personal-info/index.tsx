@@ -2,24 +2,24 @@ import { useState, useEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import GridComponent from "@components/ui/Grid";
+import SpinnerComponent from "@components/ui/spinner";
+import PaperComponent from "@components/ui/Paper";
+
+import { onClickBlockType } from "@modules/profile/friends";
 import useUser from "@hooks/useUser";
 import useUserDetails from "@hooks/useUserDetails";
 import { useAppSelector } from "@hooks/useGlobalState";
 import { selectFriendState } from "@store/friend/slice";
 import { selectUserState } from "@store/user/slice";
 import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
-
-import { onClickBlockType } from "@modules/profile/friends";
-import GridComponent from "@components/ui/Grid";
-import SpinnerComponent from "@components/ui/spinner";
 import { UserDetailsEvents } from "@custom-types/events";
-import PaperComponent from "@components/ui/Paper";
 
 import "./personal-info.scss";
 
 interface IPersonalInfo {
 	onClickBlock: onClickBlockType;
-}
+};
 
 export default memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
 	const [loading, setLoading] = useState(false);

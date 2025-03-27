@@ -9,7 +9,6 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 
-import i18next from "@service/i18n";
 import AvatarComponent from "@components/ui/avatar";
 import CssBaselineComponent from "@components/ui/CssBaseline";
 import GridComponent from "@components/ui/Grid";
@@ -17,12 +16,13 @@ import BoxComponent from "@components/ui/Box";
 import TypographyComponent from "@components/ui/Typography";
 import LinkComponent from "@components/ui/link";
 import ButtonComponent from "@components/ui/Button";
+import CopyrightComponent from "@components/ui/copyright";
 import SignUpForm from "@modules/sign-up/Form";
 import ChooseAvatar from "@modules/sign-up/ChooseAvatar";
-import CopyrightComponent from "@components/ui/copyright";
 import useMainClient from "@hooks/useMainClient";
 import { Pages } from "@custom-types/enums";
 import { IUser } from "@custom-types/models.types";
+import i18next from "@service/i18n";
 
 import styles from "@styles/pages/sign-up.module.scss";
 
