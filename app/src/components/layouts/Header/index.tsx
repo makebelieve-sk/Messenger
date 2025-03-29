@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import AvatarComponent from "@components/ui/avatar";
-import TypographyComponent from "@components/ui/Typography";
-import MenuComponent from "@components/ui/Menu";
-import MenuItemComponent from "@components/ui/MenuItem";
-import Logo from "@components/layouts/header/logo";
+import TypographyComponent from "@components/ui/typography";
+import MenuComponent from "@components/ui/menu";
+import MenuItemComponent from "@components/ui/menuItem";
+import Logo from "@components/layouts/Header/logo";
 import useMainClient from "@hooks/useMainClient";
 import useProfile from "@hooks/useProfile";
 import { BASE_URL } from "@utils/constants";

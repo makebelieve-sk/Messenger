@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
 import Stack from "@mui/material/Stack";
 import MenuList from "@mui/material/MenuList";
 import Badge from "@mui/material/Badge";
@@ -9,7 +8,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 
-import MenuItemComponent from "@components/ui/MenuItem";
+import MenuItemComponent from "@components/ui/menuItem";
 import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
 import { selectMainState, setMessageNotification } from "@store/main/slice";

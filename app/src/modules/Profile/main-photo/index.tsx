@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import useProfile from "@hooks/useProfile";
 import ChangeAvatarComponent from "@components/ui/change-avatar";
 import PhotoComponent from "@components/ui/photo";
-import PaperComponent from "@components/ui/Paper";
-import GridComponent from "@components/ui/Grid";
+import PaperComponent from "@components/ui/paper";
+import GridComponent from "@components/ui/grid";
 
 import "./main-photo.scss";
 

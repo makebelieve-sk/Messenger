@@ -2,7 +2,7 @@ import { memo, ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ITabModule } from "@modules/edit";
-import TextFieldComponent from "@components/ui/TextField";
+import TextFieldComponent from "@components/ui/textField";
 
 export default memo(function Contacts({ formValues, formErrors, onChange }: ITabModule) {
 	const { t } = useTranslation();

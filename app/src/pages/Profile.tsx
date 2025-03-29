@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import GridComponent from "@components/ui/Grid";
+import GridComponent from "@components/ui/grid";
 import { Pages } from "@custom-types/enums";
 import MainPhoto from "@modules/profile/main-photo";
 import Friends from "@modules/profile/friends";

@@ -1,13 +1,12 @@
 import { JSX, useEffect } from "react";
-
 import CloseIcon from "@mui/icons-material/Close";
-import Portal from "@components/ui/Portal";
+import Portal from "@components/ui/portal";
 
 import "./common-modal.scss";
 
 interface IModalProps {
   isOpen?: boolean
-  onClose?: () => void
+  onClose?: (event?: Object, reason?: string) => void
   children?: JSX.Element;
   className?: string;
   title?: string;
@@ -16,8 +15,8 @@ interface IModalProps {
   disableEscapeKeyDown?: boolean;
 };
 
-//  Основной компонент модального окна
-export default function CommonModal({
+// Базовый компонент модального окна
+export default function ModalComponent({
   isOpen,
   onClose,
   children,
@@ -29,18 +28,16 @@ export default function CommonModal({
 }: IModalProps) {
   if (!isOpen) return null;
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      onClose?.();
+    }
+  };
+
   useEffect(() => {
-    if (!isOpen || disableEscapeKeyDown) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose?.(); 
-      }
-    };
-
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, disableEscapeKeyDown, onClose]);
+  }, [isOpen, disableEscapeKeyDown]);
 
   return (
     <Portal containerId="modal-root">

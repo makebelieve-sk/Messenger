@@ -13,6 +13,15 @@ interface IMenuComponent {
     onClose: () => void;
 };
 
+// Базовый компонент меню
 export default function MenuComponent({ children, id, anchorEl, anchorOrigin, open, autoFocus, onClose }: IMenuComponent) {
-    return <Menu id={id} anchorEl={anchorEl} anchorOrigin={anchorOrigin} open={open} autoFocus={autoFocus} onClose={onClose}>{children}</Menu>;
+    return <Menu
+        id={id}
+        anchorEl={anchorEl}
+        anchorOrigin={anchorOrigin}
+        open={open}
+        autoFocus={autoFocus}
+        onClose={onClose}>
+        {children}
+    </Menu>;
 }

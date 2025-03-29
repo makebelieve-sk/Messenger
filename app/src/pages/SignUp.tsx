@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -10,12 +9,12 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 
 import AvatarComponent from "@components/ui/avatar";
-import CssBaselineComponent from "@components/ui/CssBaseline";
-import GridComponent from "@components/ui/Grid";
-import BoxComponent from "@components/ui/Box";
-import TypographyComponent from "@components/ui/Typography";
+import CssBaselineComponent from "@components/ui/cssBaseline";
+import GridComponent from "@components/ui/grid";
+import BoxComponent from "@components/ui/box";
+import TypographyComponent from "@components/ui/typography";
 import LinkComponent from "@components/ui/link";
-import ButtonComponent from "@components/ui/Button";
+import ButtonComponent from "@components/ui/button";
 import CopyrightComponent from "@components/ui/copyright";
 import SignUpForm from "@modules/sign-up/Form";
 import ChooseAvatar from "@modules/sign-up/ChooseAvatar";

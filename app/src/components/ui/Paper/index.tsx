@@ -7,6 +7,7 @@ interface IPaperComponent {
     square?: boolean;
 };
 
+// Базовый компонент пейпера
 export default function PaperComponent({ children, className, elevation, square }: IPaperComponent) {
-    return <Paper className={className} elevation={elevation} square={square} >{children}</Paper>
+    return <Paper className={className} elevation={elevation} square={square}>{children}</Paper>
 }

@@ -2,10 +2,9 @@ import { useState, useEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import GridComponent from "@components/ui/Grid";
+import GridComponent from "@components/ui/grid";
 import SpinnerComponent from "@components/ui/spinner";
-import PaperComponent from "@components/ui/Paper";
-
+import PaperComponent from "@components/ui/paper";
 import { onClickBlockType } from "@modules/profile/friends";
 import useUser from "@hooks/useUser";
 import useUserDetails from "@hooks/useUserDetails";

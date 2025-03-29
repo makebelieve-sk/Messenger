@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import AlertComponent from "@components/ui/alert";
 import SnackBarComponent from "@components/ui/snackbar";
 import { useAppSelector } from "@hooks/useGlobalState";

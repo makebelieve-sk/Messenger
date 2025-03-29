@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-import CommonModal from "@components/ui/Modal";
+import CommonModal from "@components/ui/modal";
 import SpinnerComponent from "@components/ui/spinner";
-import BoxComponent from "@components/ui/Box";
+import BoxComponent from "@components/ui/box";
 import { ICarouselImage } from "@modules/carousel";
 import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";

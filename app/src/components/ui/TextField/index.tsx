@@ -18,6 +18,23 @@ interface ITextFieldComponent {
     className?: string
 };
 
+// Базовый компонент текстфилда
 export default function TextFieldComponent({ id, name, type, margin, variant, label, autoComplete, required, fullWidth, value, autoFocus, error, helperText, onChange, className }: ITextFieldComponent) {
-    return <TextField id={id} name={name} type={type} margin={margin} variant={variant} label={label} autoComplete={autoComplete} required={required} fullWidth={fullWidth} value={value} autoFocus={autoFocus} error={error} helperText={helperText} onChange={onChange} className={className} />;
+    return <TextField
+        id={id}
+        name={name}
+        type={type}
+        margin={margin}
+        variant={variant}
+        label={label}
+        autoComplete={autoComplete}
+        required={required}
+        fullWidth={fullWidth}
+        value={value}
+        autoFocus={autoFocus}
+        error={error}
+        helperText={helperText}
+        onChange={onChange}
+        className={className}
+    />;
 }

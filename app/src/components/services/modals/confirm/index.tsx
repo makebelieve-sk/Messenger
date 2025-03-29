@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
-import CommonModal from "@components/ui/Modal";
-import TypographyComponent from "@components/ui/Typography";
-import ButtonComponent from "@components/ui/Button";
-import BoxComponent from "@components/ui/Box";
+import CommonModal from "@components/ui/modal";
+import TypographyComponent from "@components/ui/typography";
+import ButtonComponent from "@components/ui/button";
+import BoxComponent from "@components/ui/box";
 
 import eventBus from "@utils/event-bus";
 import { GlobalEvents } from "@custom-types/events";

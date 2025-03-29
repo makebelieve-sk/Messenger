@@ -7,6 +7,7 @@ interface IMenuItemComponent {
     className?: string
 };
 
+// Базовый компонент элемента меню
 export default function MenuItemComponent({ children, onClick, value, className }: IMenuItemComponent) {
     return <MenuItem onClick={onClick} value={value} className={className}>{children}</MenuItem>
 }

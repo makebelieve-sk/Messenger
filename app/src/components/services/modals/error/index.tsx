@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
 import DownloadIcon from "@mui/icons-material/Download";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 import AlertComponent from "@components/ui/alert";
-import CommonModal from "@components/ui/Modal";
-import BoxComponent from "@components/ui/Box";
+import CommonModal from "@components/ui/modal";
+import BoxComponent from "@components/ui/box";
 import SnackBarComponent from "@components/ui/snackbar";
-import TypographyComponent from "@components/ui/Typography";
-import ButtonComponent from "@components/ui/Button";
+import TypographyComponent from "@components/ui/typography";
+import ButtonComponent from "@components/ui/button";
 import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
 import { selectErrorState, setError } from "@store/error/slice";
@@ -50,14 +49,13 @@ export default function ModalWithError() {
     };
 
     // Закрытие модального окна
-    const onCloseModal = () => {
-        const onClose = (_: Object, reason: string) => {
+        const onClose = (_?: Object, reason?: string) => {
             if (reason !== BACKDROP_CLICK) {
                 setOpen(false);
                 dispatch(setError(null));
             }
         };
-    }
+
     // Скачать файл с логами
     const onDownload = () => {
         mainClient.downloadLogFile();
@@ -77,7 +75,7 @@ export default function ModalWithError() {
 
         <CommonModal
             isOpen={open}
-            onClose={onCloseModal}
+            onClose={onClose}
             title={modalTitle}
             description={modalDescription}
             disableEscapeKeyDown

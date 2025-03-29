@@ -1,9 +1,8 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import ButtonComponent from "@components/ui/Button";
+import ButtonComponent from "@components/ui/button";
 
 interface ICarouselButton {
     next?: boolean;

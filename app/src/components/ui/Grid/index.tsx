@@ -16,6 +16,16 @@ interface IGridComponent {
     square?: boolean
 };
 
-export default function GridComponent({ children, container, spacing, xs, sm, md, className, component, elevation, square }: IGridComponent) {
-    return <Grid container={container} spacing={spacing || 2} size={{ xs, sm, md }} className={className || "gridItemStyle"} component={component || "div"} elevation={elevation} square={square}>{children}</Grid>
+// Базовый компонент грида
+export default function GridComponent({ children, container, spacing = 2, xs, sm, md, className = "grid-item-style", component = "div", elevation, square }: IGridComponent) {
+    return <Grid
+        container={container}
+        spacing={spacing}
+        size={{ xs, sm, md }}
+        className={className}
+        component={component}
+        elevation={elevation}
+        square={square}>
+        {children}
+    </Grid>
 }

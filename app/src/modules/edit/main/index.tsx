@@ -1,12 +1,11 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
-import MenuItemComponent from "@components/ui/MenuItem";
-import TextFieldComponent from "@components/ui/TextField";
+import MenuItemComponent from "@components/ui/menuItem";
+import TextFieldComponent from "@components/ui/textField";
 import DatePickerComponent from "@modules/edit/date-picker";
 import { ITabModule } from "@modules/edit";
 

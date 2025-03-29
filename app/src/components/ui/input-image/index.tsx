@@ -1,7 +1,7 @@
 import { memo } from "react";
 
-import TypographyComponent from "../Typography";
-import ButtonComponent from "../Button";
+import TypographyComponent from "../typography";
+import ButtonComponent from "@components/ui/button";
 
 import "./input-image.scss";
 

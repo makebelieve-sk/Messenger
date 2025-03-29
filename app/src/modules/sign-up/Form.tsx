@@ -2,9 +2,9 @@ import { memo, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import type { CountryData } from "react-phone-input-2";
 
-import GridComponent from "@components/ui/Grid";
-import TextFieldComponent from "@components/ui/TextField";
-import BoxComponent from "@components/ui/Box";
+import GridComponent from "@components/ui/grid";
+import TextFieldComponent from "@components/ui/textField";
+import BoxComponent from "@components/ui/box";
 import SpinnerComponent from "@components/ui/spinner";
 import { emailCheck } from "@utils/email-check";
 import { REQUIRED_FIELD } from "@utils/constants";

@@ -1,4 +1,4 @@
-import { JSX, memo } from "react";
+import { memo } from "react";
 import { Slide, Alert } from "@mui/material";
 
 import "./alert.scss";
@@ -12,6 +12,7 @@ interface IAlertComponent {
 	severity?: "success" | "info" | "warning" | "error";
 }
 
+// Базовый компонент алерта
 export default memo(function AlertComponent({
 	show,
 	children,

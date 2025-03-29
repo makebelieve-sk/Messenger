@@ -1,24 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 import useMainClient from "@hooks/useMainClient";
 import { Pages } from "@custom-types/enums";
-
 import AvatarComponent from "@components/ui/avatar";
-import TextFieldComponent from "@components/ui/TextField";
-import CssBaselineComponent from "@components/ui/CssBaseline";
-import BoxComponent from "@components/ui/Box";
-import ButtonComponent from "@components/ui/Button";
-import TypographyComponent from "@components/ui/Typography";
-import GridComponent from "@components/ui/Grid";
+import TextFieldComponent from "@components/ui/textField";
+import CssBaselineComponent from "@components/ui/cssBaseline";
+import BoxComponent from "@components/ui/box";
+import ButtonComponent from "@components/ui/button";
+import TypographyComponent from "@components/ui/typography";
+import GridComponent from "@components/ui/grid";
 import CopyrightComponent from "@components/ui/copyright";
 import LinkComponent from "@components/ui/link";
-import PaperComponent from "@components/ui/Paper";
+import PaperComponent from "@components/ui/paper";
 import { REQUIRED_FIELD } from "@utils/constants";
 
 import styles from "@styles/pages/sign-in.module.scss";

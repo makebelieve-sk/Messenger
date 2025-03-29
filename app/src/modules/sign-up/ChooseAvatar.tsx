@@ -1,10 +1,10 @@
 import { useState, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
-
 import Skeleton from "@mui/material/Skeleton";
-import BoxComponent from "@components/ui/Box";
-import GridComponent from "@components/ui/Grid";
-import TypographyComponent from "@components/ui/Typography";
+
+import BoxComponent from "@components/ui/box";
+import GridComponent from "@components/ui/grid";
+import TypographyComponent from "@components/ui/typography";
 import ChangeAvatarComponent from "@components/ui/change-avatar";
 import PhotoComponent from "@components/ui/photo";
 import { AVATAR_URL } from "@utils/files";

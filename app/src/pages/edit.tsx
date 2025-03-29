@@ -1,14 +1,13 @@
 import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-import BoxComponent from "@components/ui/Box";
+import BoxComponent from "@components/ui/box";
 import AlertComponent from "@components/ui/alert";
-import ButtonComponent from "@components/ui/Button";
+import ButtonComponent from "@components/ui/button";
 import SpinnerComponent from "@components/ui/spinner";
-import PaperComponent from "@components/ui/Paper";
+import PaperComponent from "@components/ui/paper";
 import EditTabsModule from "@modules/edit";
 import useMainClient from "@hooks/useMainClient";
 import useUserDetails from "@hooks/useUserDetails";
@@ -88,7 +87,7 @@ export default function Edit() {
 	// Установка disabled кнопке "Сохранить"
 	useEffect(() => {
 		setSaveDisabled(
-			loadingSaveBtn || 
+			loadingSaveBtn ||
 			Boolean(formErrors && Object.values(formErrors).some(Boolean))
 		);
 	}, [loadingSaveBtn, formValues]);
@@ -150,7 +149,7 @@ export default function Edit() {
 		}
 	};
 
-	return <PaperComponent className={"edit-container"}>
+	return <PaperComponent className="edit-container">
 		<Tabs
 			orientation="vertical"
 			value={tab}
@@ -177,7 +176,7 @@ export default function Edit() {
 		<div className={"edit-container__module"}>
 			<BoxComponent component="form" noValidate onSubmit={onSubmit}>
 				{loading
-				 	? <SpinnerComponent />
+					? <SpinnerComponent />
 					: <EditTabsModule
 						tab={tab}
 						formValues={formValues}
@@ -197,12 +196,12 @@ export default function Edit() {
 					Сохранить
 				</ButtonComponent>
 
-				{showAlert 
+				{showAlert
 					? <AlertComponent show={showAlert}>
-							<>
-								<b>{t("edit.save")}</b> - {t("edit.show_data")}
-							</>
-						</AlertComponent>
+						<>
+							<b>{t("edit.save")}</b> - {t("edit.show_data")}
+						</>
+					</AlertComponent>
 					: null
 				}
 			</BoxComponent>

@@ -1,12 +1,11 @@
 import { useState, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
-
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 
-import GridComponent from "@components/ui/Grid";
-import PaperComponent from "@components/ui/Paper";
+import GridComponent from "@components/ui/grid";
+import PaperComponent from "@components/ui/paper";
 import AvatarComponent from "@components/ui/avatar";
 import NoDataComponent from "@components/ui/no-data";
 import SpinnerComponent from "@components/ui/spinner";

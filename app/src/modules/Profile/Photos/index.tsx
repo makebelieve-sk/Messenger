@@ -6,9 +6,8 @@ import { useAppSelector } from "@hooks/useGlobalState";
 import useProfile from "@hooks/useProfile";
 import { selectUserState } from "@store/user/slice";
 import { Pages } from "@custom-types/enums";
-
-import GridComponent from "@components/ui/Grid";
-import PaperComponent from "@components/ui/Paper";
+import GridComponent from "@components/ui/grid";
+import PaperComponent from "@components/ui/paper";
 import PhotoComponent from "@components/ui/photo";
 import InputImageComponent from "@components/ui/input-image";
 import NoDataComponent from "@components/ui/no-data";
