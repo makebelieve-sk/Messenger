@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import Modal from "@mui/material/Modal";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
+import CommonModal from "@components/ui/modal";
 import SpinnerComponent from "@components/ui/spinner";
+import BoxComponent from "@components/ui/box";
 import { ICarouselImage } from "@modules/carousel";
 import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
@@ -99,13 +99,13 @@ export default function ModalWithAttachments() {
     };
 
     return <>
-        <Modal 
-            open={open} 
+        <CommonModal 
+            isOpen={open} 
             onClose={onClose} 
-            aria-labelledby={modalTitle} 
-            aria-describedby={modalDescription}
+            title={modalTitle} 
+            description={modalDescription}
         >
-            <Box className="modal-attachments-container">
+            <BoxComponent className="modal-attachments-container">
                 <Tabs value={value} onChange={onChange}>
                     <Tab id="images" label={t("modals.photos")} />
                     <Tab id="files" label={t("modals.files")} />
@@ -166,7 +166,7 @@ export default function ModalWithAttachments() {
                         : t("modals.files_not_yet")
                     }
                 </div>
-            </Box>
-        </Modal>
+            </BoxComponent>
+        </CommonModal>
     </>
 };

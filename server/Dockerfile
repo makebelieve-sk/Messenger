@@ -8,7 +8,7 @@ WORKDIR /server
 COPY package*.json ./
 
 # Устанавливаем зависимости
-RUN npm install
+RUN npm install --omit=dev
 
 # Копируем серверный код
 COPY . .

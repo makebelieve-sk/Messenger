@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 
 import useProfile from "@hooks/useProfile";
 import ChangeAvatarComponent from "@components/ui/change-avatar";
 import PhotoComponent from "@components/ui/photo";
+import PaperComponent from "@components/ui/paper";
+import GridComponent from "@components/ui/grid";
 
 import "./main-photo.scss";
 
@@ -30,8 +30,8 @@ export default function MainPhoto() {
         profile.onDeleteAvatar(setLoading);
     };
 
-    return <Grid item>
-        <Paper className="main-photo paper-block">
+    return <GridComponent className="main-photo__grid">
+        <PaperComponent className="main-photo paper-block">
             <PhotoComponent
                 src={profile.user.avatarUrl}
                 alt="user-avatar"
@@ -48,6 +48,6 @@ export default function MainPhoto() {
                     setLoading={setLoading}
                 />
             </div>
-        </Paper>
-    </Grid>
+        </PaperComponent>
+    </GridComponent>;
 };

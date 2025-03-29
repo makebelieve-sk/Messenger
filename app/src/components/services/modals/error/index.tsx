@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Alert from "@mui/material/Alert";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import DownloadIcon from "@mui/icons-material/Download";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
+import AlertComponent from "@components/ui/alert";
+import CommonModal from "@components/ui/modal";
+import BoxComponent from "@components/ui/box";
 import SnackBarComponent from "@components/ui/snackbar";
+import TypographyComponent from "@components/ui/typography";
+import ButtonComponent from "@components/ui/button";
 import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
 import { selectErrorState, setError } from "@store/error/slice";
@@ -49,12 +49,12 @@ export default function ModalWithError() {
     };
 
     // Закрытие модального окна
-    const onClose = (_: Object, reason: string) => {
-        if (reason !== BACKDROP_CLICK) {
-            setOpen(false);
-            dispatch(setError(null));
-        }
-    };
+        const onClose = (_?: Object, reason?: string) => {
+            if (reason !== BACKDROP_CLICK) {
+                setOpen(false);
+                dispatch(setError(null));
+            }
+        };
 
     // Скачать файл с логами
     const onDownload = () => {
@@ -68,36 +68,36 @@ export default function ModalWithError() {
 
     return <>
         <SnackBarComponent anchor={{ vertical: "top", horizontal: "center" }} open={visible} handleClose={() => setVisible(false)}>
-            <Alert className="alert-error-container" onClose={() => setVisible(false)} severity="success">
-                { t("modals.copy_successfull") }
-            </Alert>
+            <AlertComponent className="alert-error-container" onClose={() => setVisible(false)} severity="success">
+                {t("modals.copy_successfull")}
+            </AlertComponent>
         </SnackBarComponent>
 
-        <Modal 
-            open={open} 
-            onClose={onClose} 
-            aria-labelledby={modalTitle} 
-            aria-describedby={modalDescription}
+        <CommonModal
+            isOpen={open}
+            onClose={onClose}
+            title={modalTitle}
+            description={modalDescription}
             disableEscapeKeyDown
         >
-            <Box className="modal-error-container">
-                <Typography variant="h6" component="h2">
-                    { t("modals.error.server") }
-                </Typography>
+            <BoxComponent className="modal-error-container">
+                <TypographyComponent variant="h6" component="h2">
+                    {t("modals.error.server")}
+                </TypographyComponent>
 
-                <Typography className="modal-error-container__text">
-                    { t("modals.copy_the_message_and_send_to_email", { email: MAIL_FEEDBACK }) }
-                </Typography>
+                <TypographyComponent className="modal-error-container__text">
+                    {t("modals.copy_the_message_and_send_to_email", { email: MAIL_FEEDBACK })}
+                </TypographyComponent>
 
                 <div className="modal-error-container__error" onClick={onCopy}>
                     {error}
                 </div>
 
                 <div className="modal-error-container__buttons">
-                    <Button variant="contained" startIcon={<DownloadIcon />} onClick={onDownload}>{ t("modals.download") }</Button>
-                    <Button variant="outlined" startIcon={<RefreshIcon />} onClick={onReload}>{ t("modals.reset_page") }</Button>
+                    <ButtonComponent variant="contained" startIcon={<DownloadIcon />} onClick={onDownload}>{t("modals.download")}</ButtonComponent>
+                    <ButtonComponent variant="outlined" startIcon={<RefreshIcon />} onClick={onReload}>{t("modals.reset_page")}</ButtonComponent>
                 </div>
-            </Box>
-        </Modal>
+            </BoxComponent>
+        </CommonModal>
     </>
 };

@@ -15,12 +15,13 @@ interface IAvatarComponent {
     avatarClassName?: string;
     size?: number;
     pushLeft?: boolean;
+    children?: React.ReactNode;
 };
 
 const anchorOrigin = { vertical: "bottom", horizontal: "right" } as const;
 
 // Базовый компонент круглого маленького аватара
-export default memo(function AvatarComponent({ src, alt, isOnline = false, avatarClassName, size = 46, pushLeft = false }: IAvatarComponent) {
+export default memo(function AvatarComponent({ children, src, alt, isOnline = false, avatarClassName, size = 46, pushLeft = false }: IAvatarComponent) {
     const srcImage = useImage(src);
     const navigate = useNavigate();
 
@@ -31,14 +32,20 @@ export default memo(function AvatarComponent({ src, alt, isOnline = false, avata
         overlap="circular"
         anchorOrigin={anchorOrigin}
         variant="dot"
-        sx={{ marginLeft: pushLeft ? "auto" : "50%", transform: pushLeft ? "none" : "translateX(-50%)" }}
+        sx={{
+            marginLeft: children ? "auto" : pushLeft ? "auto" : "50%",
+            marginRight: children ? "auto" : undefined,
+            transform: children ? "none" : pushLeft ? "none" : "translateX(-50%)"
+        }}
     >
-        <AvatarMUI 
-            src={srcImage} 
+        <AvatarMUI
+            src={children ? undefined : srcImage}
             alt={alt}
-            className={`avatar-badge__avatar ${avatarClassName ? avatarClassName : ""}`} 
+            className={`avatar-badge__avatar ${avatarClassName ? avatarClassName : ""}`}
             sx={{ width: size, height: size }}
-            onClick={onClick} 
-        />
+            onClick={onClick}
+        >
+            {children}
+        </AvatarMUI>
     </Badge>
 });

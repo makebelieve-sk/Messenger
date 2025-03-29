@@ -76,5 +76,15 @@ export default defineConfig({
             "@styles": path.resolve(__dirname, "src/styles"),          // Короткий путь для папки styles
             "@utils": path.resolve(__dirname, "src/utils")             // Короткий путь для папки utils
         }                   // Добавление коротких путей
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: `
+                    @use "@styles/abstract/colors.scss" as *;
+                    @use "@styles/abstract/variables.scss" as *;
+                `
+            }
+        }
     }
 });
