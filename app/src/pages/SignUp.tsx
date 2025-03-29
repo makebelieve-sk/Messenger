@@ -9,7 +9,6 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 
 import AvatarComponent from "@components/ui/avatar";
-import CssBaselineComponent from "@components/ui/cssBaseline";
 import GridComponent from "@components/ui/grid";
 import BoxComponent from "@components/ui/box";
 import TypographyComponent from "@components/ui/typography";
@@ -214,7 +213,6 @@ export default function SignUp() {
 	return (
 		<ThemeProvider theme={THEME}>
 			<Container component="main" maxWidth="xs">
-				<CssBaselineComponent />
 				<BoxComponent component="form" noValidate className={styles.signUpForm}>
 					<AvatarComponent avatarClassName={styles.avatar}>
 						<LockOutlinedIcon />

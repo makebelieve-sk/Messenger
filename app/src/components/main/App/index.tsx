@@ -1,6 +1,6 @@
 import Router from "@components/main/Router";
 import ServiceComponents from "@components/main/ServiceComponents";
-import HeaderComponent from "@components/layouts/header";
+import HeaderComponent from "@components/layouts/temp-header";
 import MenuComponent from "@components/layouts/menu";
 import SpinnerComponent from "@components/ui/spinner";
 import { selectMainState } from "@store/main/slice";

@@ -9,7 +9,6 @@ import useMainClient from "@hooks/useMainClient";
 import { Pages } from "@custom-types/enums";
 import AvatarComponent from "@components/ui/avatar";
 import TextFieldComponent from "@components/ui/textField";
-import CssBaselineComponent from "@components/ui/cssBaseline";
 import BoxComponent from "@components/ui/box";
 import ButtonComponent from "@components/ui/button";
 import TypographyComponent from "@components/ui/typography";
@@ -95,7 +94,6 @@ export default function SignIn() {
 
 	return (
 		<GridComponent container component="main" className={styles.mainGrid}>
-			<CssBaselineComponent />
 			<GridComponent className={styles.background} xs={0} sm={4} md={7} />
 
 			<GridComponent
