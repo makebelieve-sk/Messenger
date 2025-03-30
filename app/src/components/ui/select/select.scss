@@ -1,0 +1,26 @@
+.select {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+}
+
+.select>.select__label {
+    position: absolute;
+    -webkit-transform: translate(14px, -9px) scale(0.75);
+    -moz-transform: translate(14px, -9px) scale(0.75);
+    -ms-transform: translate(14px, -9px) scale(0.75);
+    transform: translate(14px, -9px) scale(0.75);
+    background: white;
+    padding: 0 4px;
+    z-index: 1;
+}
+
+.select:has(.Mui-focused)>.select__label {
+    color: #1976d2;
+}

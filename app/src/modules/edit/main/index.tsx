@@ -1,12 +1,11 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import MenuItemComponent from "@components/ui/menuItem";
+import BoxComponent from "@components/ui/box";
 import TextFieldComponent from "@components/ui/textField";
 import DatePickerComponent from "@modules/edit/date-picker";
+import SelectComponent from "@components/ui/select";
 import { ITabModule } from "@modules/edit";
 
 import "./main.scss";
@@ -33,8 +32,8 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 				autoFocus
 				error={Boolean(formErrors && formErrors.name)}
 				helperText={
-					formErrors && formErrors.name 
-						? formErrors.name 
+					formErrors && formErrors.name
+						? formErrors.name
 						: null
 				}
 				onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeField("name", e.target.value)}
@@ -59,14 +58,14 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 				onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeField("surName", e.target.value)}
 			/>
 
-			<FormControl fullWidth className={"edit-container__sex-select"}>
-				<InputLabel id="sex-input">Пол</InputLabel>
-				<Select
+			<BoxComponent className="edit-container__sex-select">
+				<SelectComponent
+					text="Пол"
+					label={t("edit_tabs.sex")}
 					labelId="sex-input"
 					id="sex-select"
 					value={formValues.sex}
-					label={t("edit_tabs.sex")}
-					onChange={(e: SelectChangeEvent<string>) => onChangeField("sex", e.target.value)}
+					onChange={(e) => onChangeField("sex", e.target.value)}
 				>
 					<MenuItemComponent value="">
 						{t("edit_tabs.sex_not_specified")}
@@ -77,8 +76,8 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 					<MenuItemComponent value={t("edit_tabs.sex_female")}>
 						{t("edit_tabs.sex_female")}
 					</MenuItemComponent>
-				</Select>
-			</FormControl>
+				</SelectComponent>
+			</BoxComponent>
 
 			<DatePickerComponent
 				formValues={formValues}

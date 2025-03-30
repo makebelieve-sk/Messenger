@@ -6,7 +6,7 @@ import AvatarComponent from "@components/ui/avatar";
 import TypographyComponent from "@components/ui/typography";
 import MenuComponent from "@components/ui/menu";
 import MenuItemComponent from "@components/ui/menuItem";
-import Logo from "@components/layouts/temp-header/Logo";
+import Logo from "@components/layouts/header/Logo";
 import useMainClient from "@hooks/useMainClient";
 import useProfile from "@hooks/useProfile";
 import { BASE_URL } from "@utils/constants";

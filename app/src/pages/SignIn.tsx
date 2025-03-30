@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 import useMainClient from "@hooks/useMainClient";
 import { Pages } from "@custom-types/enums";
+import CheckboxComponent from "@components/ui/checkbox";
 import AvatarComponent from "@components/ui/avatar";
 import TextFieldComponent from "@components/ui/textField";
 import BoxComponent from "@components/ui/box";
+import LockIconComponent from "@components/ui/lockIcon";
 import ButtonComponent from "@components/ui/button";
 import TypographyComponent from "@components/ui/typography";
 import GridComponent from "@components/ui/grid";
@@ -106,7 +105,7 @@ export default function SignIn() {
 			>
 				<BoxComponent className={styles.signInForm}>
 					<AvatarComponent avatarClassName={styles.avatar}>
-						<LockOutlinedIcon />
+						<LockIconComponent size={25} />
 					</AvatarComponent>
 
 					<TypographyComponent component="h1" variant="h5">
@@ -155,16 +154,14 @@ export default function SignIn() {
 							onChange={e => onChange("password", e.target.value)}
 						/>
 
-						<FormControlLabel
-							label={t("sign-in.remember_me")}
-							control={
-								<Checkbox
-									value={false}
-									color="primary"
-									onChange={e => onChange("rememberMe", e.target.checked)}
-								/>
-							}
-						/>
+						<BoxComponent className={styles.signInForm__checkbox}>
+							<CheckboxComponent
+								value={false}
+								id="rememberMe"
+								color="primary"
+								onChange={e => onChange("rememberMe", e.target.checked)} />
+							<label className={styles.signInForm__checkbox__label} htmlFor="rememberMe">{t("sign-in.remember_me")}</label>
+						</BoxComponent>
 
 						<ButtonComponent
 							fullWidth

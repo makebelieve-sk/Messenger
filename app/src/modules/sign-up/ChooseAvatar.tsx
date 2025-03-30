@@ -1,9 +1,9 @@
 import { useState, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
-import Skeleton from "@mui/material/Skeleton";
 
 import BoxComponent from "@components/ui/box";
 import GridComponent from "@components/ui/grid";
+import SpinnerComponent from "@components/ui/spinner";
 import TypographyComponent from "@components/ui/typography";
 import ChangeAvatarComponent from "@components/ui/change-avatar";
 import PhotoComponent from "@components/ui/photo";
@@ -50,7 +50,7 @@ export default memo(function ChooseAvatar({ username, avatarUrl, onChange }: ICh
 
                 <GridComponent xs={8} className="choose-avatar__container__avatar-wrapper">
                     {loading
-                        ? <Skeleton variant="rectangular" className="choose-avatar__container__avatar-loading" />
+                        ? <SpinnerComponent />
                         : avatarUrl
                             ? <div className="choose-avatar__container__avatar">
                                 <PhotoComponent

@@ -1,6 +1,6 @@
 import { JSX, useEffect } from "react";
-import CloseIcon from "@mui/icons-material/Close";
 import Portal from "@components/ui/portal";
+import CloseIconComponent from "@components/ui/closeIcon";
 
 import "./common-modal.scss";
 
@@ -51,7 +51,7 @@ export default function ModalComponent({
         {extraContent && <div className="modal-extra">{extraContent}</div>}
 
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <CloseIcon className="modal-close" onClick={onClose} />
+          <CloseIconComponent className="modal-close" onClick={onClose} size="24" />
           {children}
         </div>
       </div>

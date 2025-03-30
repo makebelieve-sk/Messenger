@@ -34,6 +34,21 @@
 	.layoutInput {
 		margin-top: $signMarginXSmall;
 
+		.signInForm__checkbox {
+			cursor: pointer;
+			margin-left: -11px;
+
+			.signInForm__checkbox__label {
+				cursor: pointer;
+				margin: 0;
+				font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+				font-weight: 400;
+				font-size: 1rem;
+				line-height: 1.5;
+				letter-spacing: 0.00938em;
+			}
+		}
+
 		.loadingButton {
 			margin-top: $signMarginMedium;
 			margin-bottom: $signMarginSmall;

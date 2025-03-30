@@ -1,8 +1,11 @@
-import { memo, ChangeEvent } from "react";
+import { memo, ChangeEvent, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ITabModule } from "@modules/edit";
-import TextFieldComponent from "@components/ui/textField";
+import Spinner from "@components/ui/spinner";
+
+// Лениво подгружаем компонент и его стили (так как пакет имеет большой вес)
+const TextFieldComponent = lazy(() => import("@components/ui/textField"));
 
 export default memo(function Contacts({ formValues, formErrors, onChange }: ITabModule) {
 	const { t } = useTranslation();
@@ -10,7 +13,7 @@ export default memo(function Contacts({ formValues, formErrors, onChange }: ITab
 	// Обработка изменения поля
 	const onChangeField = (field: string, value: string) => onChange(field, value);
 
-	return <>
+	return <Suspense fallback={<Spinner />}>
 		<TextFieldComponent
 			id="city"
 			name="city"
@@ -61,5 +64,5 @@ export default memo(function Contacts({ formValues, formErrors, onChange }: ITab
 			}
 			onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChangeField("email", e.target.value)}
 		/>
-	</>
+	</Suspense >
 });
