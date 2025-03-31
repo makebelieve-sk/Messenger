@@ -22,17 +22,18 @@ export default function App() {
 
 				<div className="root__wrapper">
 					<div
-						className={`root__wrapper__container ${
-							isAuth
-								? ""
-								: "root__wrapper__container__no-auth"
-						}`}
+						className={`root__wrapper__container ${isAuth
+							? ""
+							: "root__wrapper__container__no-auth"
+							}`}
 					>
 						{isAuth ? <MenuComponent /> : null}
 
-						<div className="root__wrapper__container__content">
-							<Router />
-						</div>
+						<ContentLayout>
+							<div className="root__wrapper__container__content">
+								<Router />
+							</div>
+						</ContentLayout>
 					</div>
 				</div>
 			</>
