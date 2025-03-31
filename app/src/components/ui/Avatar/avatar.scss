@@ -24,6 +24,17 @@
         }
     }
 
+    &__children {
+        margin-left: auto;
+        margin-right: auto;
+        transform: none;
+    }
+
+    &__children-none {
+        margin-left: 50%;
+        transform: translateX(-50%);
+    }
+
     &__avatar {
         &:hover {
             cursor: pointer;

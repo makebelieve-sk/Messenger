@@ -14,30 +14,34 @@ interface IAvatarComponent {
     isOnline?: boolean;
     avatarClassName?: string;
     size?: number;
-    pushLeft?: boolean;
+    children?: React.ReactNode;
 };
 
 const anchorOrigin = { vertical: "bottom", horizontal: "right" } as const;
 
 // Базовый компонент круглого маленького аватара
-export default memo(function AvatarComponent({ src, alt, isOnline = false, avatarClassName, size = 46, pushLeft = false }: IAvatarComponent) {
+export default memo(function AvatarComponent({ children, src, alt, isOnline = false, avatarClassName, size = 46 }: IAvatarComponent) {
     const srcImage = useImage(src);
     const navigate = useNavigate();
 
     const onClick = () => navigate(Pages.profile);
 
+    const avatarStyle = {
+        width: `${size}px`,
+        height: `${size}px`,
+    };
+
     return <Badge
-        className={`avatar-badge ${isOnline ? "avatar-badge__active" : ""}`}
+        className={`avatar-badge ${isOnline ? "avatar-badge__active" : ""} ${children ? "avatar-badge__children" : "avatar-badge__children-none"}`}
         overlap="circular"
         anchorOrigin={anchorOrigin}
         variant="dot"
-        sx={{ marginLeft: pushLeft ? "auto" : "50%", transform: pushLeft ? "none" : "translateX(-50%)" }}
     >
         <AvatarMUI 
             src={srcImage} 
             alt={alt}
             className={`avatar-badge__avatar ${avatarClassName ? avatarClassName : ""}`} 
-            sx={{ width: size, height: size }}
+            style={avatarStyle}
             onClick={onClick} 
         />
     </Badge>

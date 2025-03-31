@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 
+
+import { SmallButtonComponent } from "@components/ui/button/smallbutton";
 import eventBus from "@utils/event-bus";
 import { GlobalEvents } from "@custom-types/events";
 
@@ -69,8 +70,8 @@ export default function ModalWithConfirm() {
             </Typography>
 
             <Typography id={modalDescription} className="modal-confirm-container__buttons">
-                <Button size="small" variant="outlined" color="primary" onClick={onAction}>{modalData.btnActionTitle}</Button>
-                <Button size="small" variant="outlined" color="error" onClick={onClose}>{ t("modals.cancel") }</Button>
+                <SmallButtonComponent variant="outlined" color="primary" onClick={onAction}>{modalData.btnActionTitle}</SmallButtonComponent>
+                <SmallButtonComponent variant="outlined" color="error" onClick={onClose}>{ t("modals.cancel") }</SmallButtonComponent>
             </Typography>
         </Box>
     </Modal>
