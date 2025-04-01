@@ -1,32 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { LoadingButton } from "@mui/lab";
-import Avatar from "@mui/material/Avatar";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
 
-import i18next from "@service/i18n";
+import AvatarComponent from "@components/ui/avatar";
+import StepperComponent from "@components/ui/stepper";
+import GridComponent from "@components/ui/grid";
+import BoxComponent from "@components/ui/box";
+import TypographyComponent from "@components/ui/typography";
 import LinkComponent from "@components/ui/link";
+import ButtonComponent from "@components/ui/button";
+import LockIconComponent from "@components/icons/lockIcon";
+import CopyrightComponent from "@components/ui/copyright";
 import SignUpForm from "@modules/sign-up/Form";
 import ChooseAvatar from "@modules/sign-up/ChooseAvatar";
-import CopyrightComponent from "@components/ui/copyright";
 import useMainClient from "@hooks/useMainClient";
 import { Pages } from "@custom-types/enums";
 import { IUser } from "@custom-types/models.types";
+import i18next from "@service/i18n";
 
 import styles from "@styles/pages/sign-up.module.scss";
 
-const THEME = createTheme();
 const steps = [i18next.t("sign-up.main_step"), i18next.t("sign-up.choose_avatar_step")];
 
 const initialValues = {
@@ -213,59 +206,51 @@ export default function SignUp() {
 	};
 
 	return (
-		<ThemeProvider theme={THEME}>
-			<Container component="main" maxWidth="xs">
-				<CssBaseline />
-				<Box component="form" noValidate className={styles.signUpForm}>
-					<Avatar className={styles.avatar}>
-						<LockOutlinedIcon />
-					</Avatar>
+			<BoxComponent className={styles.signUpArea}> 
+				<BoxComponent component="form" noValidate className={styles.signUpForm}>
+					<AvatarComponent avatarClassName={styles.avatar}>
+						<LockIconComponent size={25} />
+					</AvatarComponent>
 
-					<Typography
+					<TypographyComponent
 						className={styles.title}
 						component="h1"
 						variant="h5"
 					>
-						{ t("sign-up.sign_up") }
-					</Typography>
+						{t("sign-up.sign_up")}
+					</TypographyComponent>
 
-					<Grid
+					<GridComponent
 						container
-						justifyContent="center"
 						className={styles.signInArea}
 					>
-						<Grid item>
+						<GridComponent className="toSignIn">
 							<LinkComponent
 								variant="body2"
 								className={styles.secondaryButton}
 								onClick={() => navigate(Pages.signIn)}
 								component="p"
 							>
-								{ t("sign-up.enter") }
+								{t("sign-up.enter")}
 							</LinkComponent>
-						</Grid>
-					</Grid>
+						</GridComponent>
+					</GridComponent>
 
-					<Stepper activeStep={activeStep}>
-						{steps.map(label => <Step key={label}>
-							<StepLabel>{label}</StepLabel>
-						</Step>
-						)}
-					</Stepper>
+					<StepperComponent steps={steps} activeStep={activeStep} />
 
-					{ getStepContent(activeStep) }
+					{getStepContent(activeStep)}
 
-					<Box className={styles.footerButtonArea}>
-						<Button
+					<BoxComponent className={styles.footerButtonArea}>
+						<ButtonComponent
 							fullWidth
 							className={styles.backButton}
 							disabled={activeStep === 0}
 							onClick={handleBack}
 						>
-							{ t("sign-up.back") }
-						</Button>
+							{t("sign-up.back")}
+						</ButtonComponent>
 
-						<LoadingButton
+						<ButtonComponent
 							fullWidth
 							variant="contained"
 							className={styles.loadingButton}
@@ -277,12 +262,11 @@ export default function SignUp() {
 							{activeStep === steps.length - 1
 								? t("sign-up.register")
 								: t("sign-up.further")}
-						</LoadingButton>
-					</Box>
-				</Box>
+						</ButtonComponent>
+					</BoxComponent>
+				</BoxComponent>
 
 				<CopyrightComponent />
-			</Container>
-		</ThemeProvider>
+			</BoxComponent>
 	);
 }

@@ -37,8 +37,8 @@ export default memo(function AvatarComponent({ children, src, alt, isOnline = fa
         anchorOrigin={anchorOrigin}
         variant="dot"
     >
-        <AvatarMUI 
-            src={srcImage} 
+        <AvatarMUI
+            src={children ? undefined : srcImage}
             alt={alt}
             className={`avatar-badge__avatar ${avatarClassName ? avatarClassName : ""}`} 
             style={avatarStyle}

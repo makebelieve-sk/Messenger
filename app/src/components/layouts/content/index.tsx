@@ -1,5 +1,7 @@
 import BoxComponent from "@components/ui/box";
 
+import "./content.scss";
+
 interface IContentLayoutProps {
     children: React.ReactNode;
 };

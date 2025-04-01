@@ -1,11 +1,11 @@
 import { useState, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Paper from "@mui/material/Paper";
 
+import GridComponent from "@components/ui/grid";
+import PaperComponent from "@components/ui/paper";
 import AvatarComponent from "@components/ui/avatar";
 import NoDataComponent from "@components/ui/no-data";
 import SpinnerComponent from "@components/ui/spinner";
@@ -20,10 +20,10 @@ import { getFullName } from "@utils/index";
 import "./friends.scss";
 
 export type onClickBlockType = (
-    pathname: Pages, 
+    pathname: Pages,
     query: {
-      mainTab: MainFriendTabs;
-      tab?: FriendsTab;
+        mainTab: MainFriendTabs;
+        tab?: FriendsTab;
     }
 ) => void;
 
@@ -60,7 +60,7 @@ export default memo(function Friends({ onlineFriends = false, onClickBlock }: IF
             count: onlineFriends ? onlineUsers.length : friendsCount,
             users: onlineFriends ? onlineUsers.slice(0, 6) : topFriends
         };
-        
+
         setFriendsState(state);
     }, [onlineFriends, onlineUsers, topFriends, friendsCount]);
 
@@ -84,8 +84,8 @@ export default memo(function Friends({ onlineFriends = false, onClickBlock }: IF
 
     const { title, count, users } = friendsState;
 
-    return <Grid item>
-        <Paper className="friends-container paper-block">
+    return <GridComponent className="friends-container__grid">
+        <PaperComponent className="friends-container paper-block">
             <div className="block-title" onClick={blockHandler}>
                 {title} <span className="counter">{count}</span>
             </div>
@@ -113,6 +113,6 @@ export default memo(function Friends({ onlineFriends = false, onClickBlock }: IF
                     </List>
                     : <NoDataComponent text={t("profile-module.no_data", { isOnline: onlineFriends ? t("profile-module.online") : "" })} />
             }
-        </Paper>
-    </Grid>
+        </PaperComponent>
+    </GridComponent>
 });

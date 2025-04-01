@@ -5,6 +5,7 @@ import MenuComponent from "@components/layouts/menu";
 import SpinnerComponent from "@components/ui/spinner";
 import { selectMainState } from "@store/main/slice";
 import { useAppSelector } from "@hooks/useGlobalState";
+import ContentLayout from "@components/layouts/content";
 
 import "./app.scss";
 

@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Stack from "@mui/material/Stack";
 import MenuList from "@mui/material/MenuList";
-import MenuItem from "@mui/material/MenuItem";
 import Badge from "@mui/material/Badge";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 
+import MenuItemComponent from "@components/ui/menuItem";
 import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
 import { selectMainState, setMessageNotification } from "@store/main/slice";
@@ -51,12 +51,12 @@ export default function MenuComponent() {
         <Stack direction="column" spacing={2}>
             <nav>
                 <MenuList id="list" className="menu__list">
-                    <MenuItem onClick={() => navigate(Pages.profile)} className="menu__list__item">
+                    <MenuItemComponent onClick={() => navigate(Pages.profile)} className="menu__list__item">
                         <AccountCircleOutlinedIcon color="primary" />
                         <div>{ t("menu.profile") }</div>
-                    </MenuItem>
+                    </MenuItemComponent>
 
-                    <MenuItem onClick={() => navigate(Pages.messages)} className="menu__list__item">
+                    <MenuItemComponent onClick={() => navigate(Pages.messages)} className="menu__list__item">
                         <MessageOutlinedIcon color="primary" />
                         <div>{ t("menu.messanger") }</div>
                         <Badge
@@ -64,9 +64,9 @@ export default function MenuComponent() {
                             badgeContent={messageNotification || null}
                             className="menu__list__item__badge"
                         />
-                    </MenuItem>
+                    </MenuItemComponent>
 
-                    <MenuItem onClick={() => navigate(Pages.friends)} className="menu__list__item">
+                    <MenuItemComponent onClick={() => navigate(Pages.friends)} className="menu__list__item">
                         <PeopleOutlinedIcon color="primary" />
                         <div>{ t("menu.friends") }</div>
                         <Badge 
@@ -74,7 +74,7 @@ export default function MenuComponent() {
                             badgeContent={friendNotification || null} 
                             className="menu__list__item__badge" 
                         />
-                    </MenuItem>
+                    </MenuItemComponent>
                 </MenuList>
             </nav>
 

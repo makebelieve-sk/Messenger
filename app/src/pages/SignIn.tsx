@@ -1,22 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { LoadingButton } from "@mui/lab";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 import useMainClient from "@hooks/useMainClient";
+import { Pages } from "@custom-types/enums";
+import CheckboxComponent from "@components/ui/checkbox";
+import AvatarComponent from "@components/ui/avatar";
+import TextFieldComponent from "@components/ui/textField";
+import BoxComponent from "@components/ui/box";
+import LockIconComponent from "@components/icons/lockIcon";
+import ButtonComponent from "@components/ui/button";
+import TypographyComponent from "@components/ui/typography";
+import GridComponent from "@components/ui/grid";
 import CopyrightComponent from "@components/ui/copyright";
 import LinkComponent from "@components/ui/link";
-import { Pages } from "@custom-types/enums";
+import PaperComponent from "@components/ui/paper";
 import { REQUIRED_FIELD } from "@utils/constants";
 
 import styles from "@styles/pages/sign-in.module.scss";
@@ -94,35 +92,33 @@ export default function SignIn() {
 	};
 
 	return (
-		<Grid container component="main" className={styles.mainGrid}>
-			<CssBaseline />
-			<Grid className={styles.background} item xs={false} sm={4} md={7} />
+		<GridComponent container component="main" className={styles.mainGrid}>
+			<GridComponent className={styles.background} xs={0} sm={4} md={7} />
 
-			<Grid
-				item
+			<GridComponent
 				xs={12}
 				sm={8}
 				md={5}
-				component={Paper}
+				component={PaperComponent}
 				elevation={6}
 				square
 			>
-				<Box className={styles.signInForm}>
-					<Avatar className={styles.avatar}>
-						<LockOutlinedIcon />
-					</Avatar>
+				<BoxComponent className={styles.signInForm}>
+					<AvatarComponent avatarClassName={styles.avatar}>
+						<LockIconComponent size={25} />
+					</AvatarComponent>
 
-					<Typography component="h1" variant="h5">
-						{ t("sign-in.sign_in") }
-					</Typography>
+					<TypographyComponent component="h1" variant="h5">
+						{t("sign-in.sign_in")}
+					</TypographyComponent>
 
-					<Box
+					<BoxComponent
 						noValidate
 						component="form"
 						onSubmit={handleSubmit}
 						className={styles.layoutInput}
 					>
-						<TextField
+						<TextFieldComponent
 							id="login"
 							name="login"
 							margin="normal"
@@ -140,7 +136,7 @@ export default function SignIn() {
 							onChange={e => onChange("login", e.target.value)}
 						/>
 
-						<TextField
+						<TextFieldComponent
 							id="password"
 							name="password"
 							type="password"
@@ -158,18 +154,16 @@ export default function SignIn() {
 							onChange={e => onChange("password", e.target.value)}
 						/>
 
-						<FormControlLabel
-							label={t("sign-in.remember_me")}
-							control={
-								<Checkbox
-									value={false}
-									color="primary"
-									onChange={e => onChange("rememberMe", e.target.checked)}
-								/>
-							}
-						/>
+						<BoxComponent className={styles.signInForm__checkbox}>
+							<CheckboxComponent
+								value={false}
+								id="rememberMe"
+								color="primary"
+								onChange={e => onChange("rememberMe", e.target.checked)} />
+							<label className={styles.signInForm__checkbox__label} htmlFor="rememberMe">{t("sign-in.remember_me")}</label>
+						</BoxComponent>
 
-						<LoadingButton
+						<ButtonComponent
 							fullWidth
 							type="submit"
 							variant="contained"
@@ -177,37 +171,37 @@ export default function SignIn() {
 							loading={loading}
 							disabled={saveDisabled}
 						>
-							{ t("sign-in.enter") }
-						</LoadingButton>
+							{t("sign-in.enter")}
+						</ButtonComponent>
 
-						<Grid container>
-							<Grid item xs>
+						<GridComponent container className={styles.signInHelp__grid}>
+							<GridComponent className={styles.signInForget__grid}>
 								<LinkComponent
 									component="p"
 									variant="body2"
 									className={styles.secondaryButton}
 									onClick={() => navigate(Pages.resetPassword)}
 								>
-									{ t("sign-in.forgot_password") }
+									{t("sign-in.forgot_password")}
 								</LinkComponent>
-							</Grid>
+							</GridComponent>
 
-							<Grid item>
+							<GridComponent className={styles.signInNoAccount__grid}>
 								<LinkComponent
 									component="p"
 									variant="body2"
 									className={styles.secondaryButton}
 									onClick={() => navigate(Pages.signUp)}
 								>
-									{ t("sign-in.register") }
+									{t("sign-in.register")}
 								</LinkComponent>
-							</Grid>
-						</Grid>
-					</Box>
+							</GridComponent>
+						</GridComponent>
+					</BoxComponent>
 
 					<CopyrightComponent />
-				</Box>
-			</Grid>
-		</Grid>
+				</BoxComponent>
+			</GridComponent>
+		</GridComponent>
 	);
 }
