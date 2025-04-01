@@ -16,9 +16,7 @@ interface ILazyDatePicker {
 
 // Динамически подгружаем компонент и его локализацию (так как пакет имеет большой вес)
 const LazyLoadedProvider = lazy(async (): Promise<LazyLoadedProviderType> => {
-    for (let i = 0; i < 1000000000; i++) {
 
-    }
     // Динамически загружаем пакеты @mui/x-date-pickers и @mui/x-date-pickers/AdapterDayjs
     const [{ DatePicker, LocalizationProvider }, AdapterDayjs] = await Promise.all([
         import("@mui/x-date-pickers"),
