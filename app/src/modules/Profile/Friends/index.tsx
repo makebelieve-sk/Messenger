@@ -6,7 +6,7 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 
 import GridComponent from "@components/ui/grid";
 import PaperComponent from "@components/ui/paper";
-import AvatarComponent from "@components/ui/avatar";
+import UserAvatarComponent from "@components/ui/avatar/user-avatar";
 import NoDataComponent from "@components/ui/no-data";
 import SpinnerComponent from "@components/ui/spinner";
 import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
@@ -99,11 +99,10 @@ export default memo(function Friends({ onlineFriends = false, onClickBlock }: IF
 
                             return <ListItem className="friends-container__top-friends__item" key={user.id}>
                                 <ListItemAvatar className="friends-container__top-friends__item__avatar-block">
-                                    <AvatarComponent
+                                    <UserAvatarComponent
                                         src={user.avatarUrl}
                                         alt={userName}
                                         isOnline={Boolean(onlineUsers.find(onlineUser => onlineUser.id === user.id))}
-                                        size={50}
                                     />
                                 </ListItemAvatar>
 

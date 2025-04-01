@@ -1,9 +1,9 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
-import MenuItemComponent from "@components/ui/menuItem";
+import MenuItemComponent from "@components/ui/menu-item";
 import BoxComponent from "@components/ui/box";
-import TextFieldComponent from "@components/ui/textField";
+import TextFieldComponent from "@components/ui/text-field";
 import DatePickerComponent from "@modules/edit/date-picker";
 import SelectComponent from "@components/ui/select";
 import { ITabModule } from "@modules/edit";

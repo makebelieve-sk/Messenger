@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import AvatarComponent from "@components/ui/avatar";
+import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
 import StepperComponent from "@components/ui/stepper";
 import GridComponent from "@components/ui/grid";
 import BoxComponent from "@components/ui/box";
@@ -208,9 +208,9 @@ export default function SignUp() {
 	return (
 			<BoxComponent className={styles.signUpArea}> 
 				<BoxComponent component="form" noValidate className={styles.signUpForm}>
-					<AvatarComponent avatarClassName={styles.avatar}>
+					<SystemAvatarComponent>
 						<LockIconComponent size={25} />
-					</AvatarComponent>
+					</SystemAvatarComponent>
 
 					<TypographyComponent
 						className={styles.title}

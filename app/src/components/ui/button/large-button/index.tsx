@@ -1,5 +1,5 @@
 import ButtonComponent, { IButtonComponent } from "@components/ui/button";
 
-export function MediumButtonComponent(props: Omit<IButtonComponent, "size">) {
+export function LargeButtonComponent(props: Omit<IButtonComponent, "size">) {
     return <ButtonComponent {...props} size="large" />;
 }

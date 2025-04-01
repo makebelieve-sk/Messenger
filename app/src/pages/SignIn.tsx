@@ -2,11 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import useMainClient from "@hooks/useMainClient";
-import { Pages } from "@custom-types/enums";
 import CheckboxComponent from "@components/ui/checkbox";
-import AvatarComponent from "@components/ui/avatar";
-import TextFieldComponent from "@components/ui/textField";
+import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
+import TextFieldComponent from "@components/ui/text-field";
 import BoxComponent from "@components/ui/box";
 import LockIconComponent from "@components/icons/lockIcon";
 import ButtonComponent from "@components/ui/button";
@@ -16,6 +14,8 @@ import CopyrightComponent from "@components/ui/copyright";
 import LinkComponent from "@components/ui/link";
 import PaperComponent from "@components/ui/paper";
 import { REQUIRED_FIELD } from "@utils/constants";
+import useMainClient from "@hooks/useMainClient";
+import { Pages } from "@custom-types/enums";
 
 import styles from "@styles/pages/sign-in.module.scss";
 
@@ -104,9 +104,9 @@ export default function SignIn() {
 				square
 			>
 				<BoxComponent className={styles.signInForm}>
-					<AvatarComponent avatarClassName={styles.avatar}>
+					<SystemAvatarComponent>
 						<LockIconComponent size={25} />
-					</AvatarComponent>
+					</SystemAvatarComponent>
 
 					<TypographyComponent component="h1" variant="h5">
 						{t("sign-in.sign_in")}

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { CountryData } from "react-phone-input-2";
 
 import GridComponent from "@components/ui/grid";
-import TextFieldComponent from "@components/ui/textField";
+import TextFieldComponent from "@components/ui/text-field";
 import BoxComponent from "@components/ui/box";
 import SpinnerComponent from "@components/ui/spinner";
 import { emailCheck } from "@utils/email-check";

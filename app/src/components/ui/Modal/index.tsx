@@ -2,7 +2,7 @@ import { JSX, useEffect } from "react";
 import Portal from "@components/ui/portal";
 import CloseIconComponent from "@components/icons/closeIcon";
 
-import "./common-modal.scss";
+import "./modal.scss";
 
 interface IModalProps {
   isOpen?: boolean
