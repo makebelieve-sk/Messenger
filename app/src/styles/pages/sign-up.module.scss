@@ -1,6 +1,11 @@
 @use "@styles/abstract/colors.scss" as *;
 @use "@styles/abstract/variables.scss" as *;
 
+.signUpArea {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
 .signUpForm {
 	display: flex;
 	flex-direction: column;

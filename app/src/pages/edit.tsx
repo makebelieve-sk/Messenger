@@ -1,14 +1,14 @@
 import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import { LoadingButton } from "@mui/lab";
 
-import EditTabsModule from "@modules/edit";
+import BoxComponent from "@components/ui/box";
 import AlertComponent from "@components/ui/alert";
+import ButtonComponent from "@components/ui/button";
 import SpinnerComponent from "@components/ui/spinner";
+import PaperComponent from "@components/ui/paper";
+import EditTabsModule from "@modules/edit";
 import useMainClient from "@hooks/useMainClient";
 import useUserDetails from "@hooks/useUserDetails";
 import useProfile from "@hooks/useProfile";
@@ -27,14 +27,14 @@ export interface IFormValues {
 	city: string;
 	phone: string;
 	email: string;
-}
+};
 
 export interface IFormErrors {
 	name?: string;
 	surName?: string;
 	phone?: string;
 	email?: string;
-}
+};
 
 export default function Edit() {
 	const [tab, setTab] = useState(0);
@@ -87,7 +87,7 @@ export default function Edit() {
 	// Установка disabled кнопке "Сохранить"
 	useEffect(() => {
 		setSaveDisabled(
-			loadingSaveBtn || 
+			loadingSaveBtn ||
 			Boolean(formErrors && Object.values(formErrors).some(Boolean))
 		);
 	}, [loadingSaveBtn, formValues]);
@@ -149,7 +149,7 @@ export default function Edit() {
 		}
 	};
 
-	return <Paper className={"edit-container"}>
+	return <PaperComponent className="edit-container">
 		<Tabs
 			orientation="vertical"
 			value={tab}
@@ -174,9 +174,9 @@ export default function Edit() {
 		</Tabs>
 
 		<div className={"edit-container__module"}>
-			<Box component="form" noValidate onSubmit={onSubmit}>
+			<BoxComponent component="form" noValidate onSubmit={onSubmit}>
 				{loading
-				 	? <SpinnerComponent />
+					? <SpinnerComponent />
 					: <EditTabsModule
 						tab={tab}
 						formValues={formValues}
@@ -185,7 +185,7 @@ export default function Edit() {
 					/>
 				}
 
-				<LoadingButton
+				<ButtonComponent
 					fullWidth
 					type="submit"
 					variant="contained"
@@ -194,17 +194,17 @@ export default function Edit() {
 					disabled={saveDisabled}
 				>
 					Сохранить
-				</LoadingButton>
+				</ButtonComponent>
 
-				{showAlert 
+				{showAlert
 					? <AlertComponent show={showAlert}>
-							<>
-								<b>{t("edit.save")}</b> - {t("edit.show_data")}
-							</>
-						</AlertComponent>
+						<>
+							<b>{t("edit.save")}</b> - {t("edit.show_data")}
+						</>
+					</AlertComponent>
 					: null
 				}
-			</Box>
+			</BoxComponent>
 		</div>
-	</Paper>
+	</PaperComponent>
 }

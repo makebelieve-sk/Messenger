@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 
+import CommonModal from "@components/ui/modal";
+import TypographyComponent from "@components/ui/typography";
+import ButtonComponent from "@components/ui/button";
+import BoxComponent from "@components/ui/box";
 import eventBus from "@utils/event-bus";
 import { GlobalEvents } from "@custom-types/events";
 
@@ -30,7 +30,7 @@ export interface IModalConfirmData {
 export default function ModalWithConfirm() {
     const [open, setOpen] = useState(false);
     const [modalData, setModalData] = useState(initialModalData);
-    
+
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -62,16 +62,16 @@ export default function ModalWithConfirm() {
         setModalData(initialModalData);
     };
 
-    return <Modal open={open} onClose={onClose} aria-labelledby={modalTitle} aria-describedby={modalDescription}>
-        <Box className="modal-confirm-container">
-            <Typography id={modalTitle} variant="subtitle1" component="h2">
+    return <CommonModal isOpen={open} onClose={onClose} title={modalTitle} description={modalDescription}>
+        <BoxComponent className="modal-confirm-container">
+            <TypographyComponent id={modalTitle} variant="subtitle1" component="h2">
                 {modalData.text}
-            </Typography>
+            </TypographyComponent>
 
-            <Typography id={modalDescription} className="modal-confirm-container__buttons">
-                <Button size="small" variant="outlined" color="primary" onClick={onAction}>{modalData.btnActionTitle}</Button>
-                <Button size="small" variant="outlined" color="error" onClick={onClose}>{ t("modals.cancel") }</Button>
-            </Typography>
-        </Box>
-    </Modal>
+            <TypographyComponent id={modalDescription} className="modal-confirm-container__buttons">
+                <ButtonComponent size="small" variant="outlined" color="primary" onClick={onAction}>{modalData.btnActionTitle}</ButtonComponent>
+                <ButtonComponent size="small" variant="outlined" color="error" onClick={onClose}>{t("modals.cancel")}</ButtonComponent>
+            </TypographyComponent>
+        </BoxComponent>
+    </CommonModal>
 };

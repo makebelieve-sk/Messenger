@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import Alert from "@mui/material/Alert";
-
+import AlertComponent from "@components/ui/alert";
 import SnackBarComponent from "@components/ui/snackbar";
 import { useAppSelector } from "@hooks/useGlobalState";
 import { selectErrorState } from "@store/error/slice";
@@ -22,8 +21,8 @@ export default function SnackBarWithSocketError() {
     };
 
     return <SnackBarComponent anchor={{ vertical: "bottom", horizontal: "left" }} open={openSnack} handleClose={onCloseSnack}>
-        <Alert onClose={onCloseSnack} severity="error">
+        <AlertComponent onClose={onCloseSnack} severity="error">
             {systemError}
-        </Alert>
+        </AlertComponent>
     </SnackBarComponent>
 };

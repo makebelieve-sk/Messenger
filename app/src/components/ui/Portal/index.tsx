@@ -6,6 +6,7 @@ interface IPortal {
     containerId?: string
 };
 
+// Базовый компонент портала
 export default function Portal({ children, containerId }: IPortal) {
     useEffect(() => {
         if (containerId && !document.getElementById(containerId)) {

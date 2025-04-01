@@ -7,13 +7,13 @@ import { EditTabs } from "@custom-types/enums";
 
 interface IEditTabsModule extends ITabModule {
 	tab: number;
-}
+};
 
 export interface ITabModule {
 	formValues: IFormValues;
 	formErrors: IFormErrors | null;
 	onChange: (field: string, value: string | null) => void;
-}
+};
 
 const TabComponents = {
 	[EditTabs.MAIN]: Main,

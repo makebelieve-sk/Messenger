@@ -22,11 +22,10 @@ export default function App() {
 
 				<div className="root__wrapper">
 					<div
-						className={`root__wrapper__container ${
-							isAuth
+						className={`root__wrapper__container ${isAuth
 								? ""
 								: "root__wrapper__container__no-auth"
-						}`}
+							}`}
 					>
 						{isAuth ? <MenuComponent /> : null}
 

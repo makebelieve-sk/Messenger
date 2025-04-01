@@ -1,17 +1,17 @@
 import { useState, useEffect, MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
 
 import AvatarComponent from "@components/ui/avatar";
-import Logo from "@components/layouts/header/logo";
+import TypographyComponent from "@components/ui/typography";
+import MenuComponent from "@components/ui/menu";
+import MenuItemComponent from "@components/ui/menuItem";
+import Logo from "@components/layouts/header/Logo";
 import useMainClient from "@hooks/useMainClient";
 import useProfile from "@hooks/useProfile";
 import { BASE_URL } from "@utils/constants";
 import { AVATAR_URL } from "@utils/files";
-import {  Pages } from "@custom-types/enums";
+import { Pages } from "@custom-types/enums";
 import { UserEvents } from "@custom-types/events";
 
 import "./header.scss";
@@ -76,7 +76,7 @@ export default function HeaderComponent() {
                         <AvatarComponent src={avatarUrl} alt={profile.user.fullName} />
                     </div>
 
-                    <Menu
+                    <MenuComponent
                         id="menu-header"
                         anchorEl={anchorElUser}
                         anchorOrigin={anchorOrigin}
@@ -84,24 +84,24 @@ export default function HeaderComponent() {
                         autoFocus={false}
                         onClose={() => setAnchorElUser(null)}
                     >
-                        <MenuItem onClick={() => goTo(Pages.settings) }>
-                            <Typography variant="body2">
-                                { t("header.settings") }
-                            </Typography>
-                        </MenuItem>
+                        <MenuItemComponent onClick={() => goTo(Pages.settings)}>
+                            <TypographyComponent variant="body2">
+                                {t("header.settings")}
+                            </TypographyComponent>
+                        </MenuItemComponent>
 
-                        <MenuItem onClick={() => goTo(Pages.help)}>
-                            <Typography variant="body2">
-                                { t("header.help") }
-                            </Typography>
-                        </MenuItem>
+                        <MenuItemComponent onClick={() => goTo(Pages.help)}>
+                            <TypographyComponent variant="body2">
+                                {t("header.help")}
+                            </TypographyComponent>
+                        </MenuItemComponent>
 
-                        <MenuItem onClick={logout}>
-                            <Typography variant="body2">
-                                { t("header.logout") }
-                            </Typography>
-                        </MenuItem>
-                    </Menu>
+                        <MenuItemComponent onClick={logout}>
+                            <TypographyComponent variant="body2">
+                                {t("header.logout")}
+                            </TypographyComponent>
+                        </MenuItemComponent>
+                    </MenuComponent>
                 </div>
             </div>
         </div>
