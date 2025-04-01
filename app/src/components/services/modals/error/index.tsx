@@ -5,7 +5,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 import AlertComponent from "@components/ui/alert";
-import CommonModal from "@components/ui/modal";
+import ModalComponent from "@components/ui/modal";
 import BoxComponent from "@components/ui/box";
 import SnackBarComponent from "@components/ui/snackbar";
 import TypographyComponent from "@components/ui/typography";
@@ -73,7 +73,7 @@ export default function ModalWithError() {
             </AlertComponent>
         </SnackBarComponent>
 
-        <CommonModal
+        <ModalComponent
             isOpen={open}
             onClose={onClose}
             title={modalTitle}
@@ -98,6 +98,6 @@ export default function ModalWithError() {
                     <ButtonComponent variant="outlined" startIcon={<RefreshIcon />} onClick={onReload}>{t("modals.reset_page")}</ButtonComponent>
                 </div>
             </BoxComponent>
-        </CommonModal>
+        </ModalComponent>
     </>
 };

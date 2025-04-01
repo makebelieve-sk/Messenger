@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import CommonModal from "@components/ui/modal";
+import ModalComponent from "@components/ui/modal";
 import Info from "@modules/carousel/info";
 import CarouselModule, { ICarouselImage } from "@modules/carousel";
 import eventBus from "@utils/event-bus";
@@ -45,7 +45,7 @@ export default function ModalWithImagesCarousel() {
     }
 
     return (
-        <CommonModal
+        <ModalComponent
             isOpen={open}
             onClose={onClose}
             title={modalTitle}
@@ -53,6 +53,6 @@ export default function ModalWithImagesCarousel() {
             extraContent={<Info activeImage={modalData.images[modalData.index]} />}
         >
             <CarouselModule data={modalData} />
-        </CommonModal>
+        </ModalComponent>
     )
 };

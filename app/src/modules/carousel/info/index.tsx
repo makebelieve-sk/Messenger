@@ -1,7 +1,7 @@
 import { useState, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
 
-import AvatarComponent from "@components/ui/avatar";
+import UserAvatarComponent from "@components/ui/avatar/user-avatar";
 import { ICarouselImage } from "@modules/carousel/index";
 import useUser from "@hooks/useUser";
 import { transformDate } from "@utils/date";
@@ -30,7 +30,7 @@ export default memo(function Info({ activeImage }: { activeImage: ICarouselImage
     }, [activeImage.dateTime]);
 
     return <div className="info">
-        <AvatarComponent src={activeImage.authorAvatarUrl} alt={activeImage.alt} />
+        <UserAvatarComponent src={activeImage.authorAvatarUrl} alt={activeImage.alt} />
 
         <div className="info__container">
             <div className="info__container__user-name">

@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import { JSX } from "react";
 
-interface IButtonComponent {
+export interface IButtonComponent {
     children: React.ReactNode;
     className?: string;
     variant?: "text" | "outlined" | "contained";
@@ -26,7 +26,7 @@ export default function ButtonComponent({ children, className, variant, disabled
         color={color}
         onClick={onClick}
         type={type}
-        sx={{ fontSize: size }}
+        size={size}
         fullWidth={fullWidth}
         startIcon={startIcon}>
         {children}

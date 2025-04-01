@@ -5,7 +5,7 @@ import { ITabModule } from "@modules/edit";
 import Spinner from "@components/ui/spinner";
 
 // Лениво подгружаем компонент и его стили (так как пакет имеет большой вес)
-const TextFieldComponent = lazy(() => import("@components/ui/textField"));
+const TextFieldComponent = lazy(() => import("@components/ui/text-field"));
 
 export default memo(function Contacts({ formValues, formErrors, onChange }: ITabModule) {
 	const { t } = useTranslation();

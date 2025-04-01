@@ -8,7 +8,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 
-import MenuItemComponent from "@components/ui/menuItem";
+import MenuItemComponent from "@components/ui/menu-item";
 import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
 import { selectMainState, setMessageNotification } from "@store/main/slice";

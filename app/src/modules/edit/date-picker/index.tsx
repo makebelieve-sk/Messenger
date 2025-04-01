@@ -2,7 +2,7 @@ import { memo } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { useTranslation } from "react-i18next";
 
-import LazyDatePicker from "@components/ui/datePicker";
+import LazyDatePicker from "@components/ui/date-picker";
 import { IFormValues } from "@pages/Edit";
 import { formattedValue } from "@utils/date";
 

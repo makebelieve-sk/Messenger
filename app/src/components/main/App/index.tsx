@@ -5,6 +5,7 @@ import MenuComponent from "@components/layouts/menu";
 import SpinnerComponent from "@components/ui/spinner";
 import { selectMainState } from "@store/main/slice";
 import { useAppSelector } from "@hooks/useGlobalState";
+import ContentLayout from "@components/layouts/content";
 
 import "./app.scss";
 
@@ -23,15 +24,17 @@ export default function App() {
 				<div className="root__wrapper">
 					<div
 						className={`root__wrapper__container ${isAuth
-								? ""
-								: "root__wrapper__container__no-auth"
+							? ""
+							: "root__wrapper__container__no-auth"
 							}`}
 					>
 						{isAuth ? <MenuComponent /> : null}
 
-						<div className="root__wrapper__container__content">
-							<Router />
-						</div>
+						<ContentLayout>
+							<div className="root__wrapper__container__content">
+								<Router />
+							</div>
+						</ContentLayout>
 					</div>
 				</div>
 			</>

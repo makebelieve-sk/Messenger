@@ -8,21 +8,19 @@ import { Pages } from "@custom-types/enums";
 
 import "./avatar.scss";
 
-interface IAvatarComponent {
+export interface IAvatarComponent {
     src?: string;
     alt?: string;
     isOnline?: boolean;
-    avatarClassName?: string;
-    size?: number;
-    pushLeft?: boolean;
     children?: React.ReactNode;
+    className?: "user-avatar" | "system-avatar";
 };
 
 const anchorOrigin = { vertical: "bottom", horizontal: "right" } as const;
 
 // Базовый компонент круглого маленького аватара
-export default memo(function AvatarComponent({ children, src, alt, isOnline = false, avatarClassName, size = 46, pushLeft = false }: IAvatarComponent) {
-    const srcImage = useImage(src);
+export default memo(function AvatarComponent({ children, src, alt, isOnline = false, className }: IAvatarComponent) {
+    const srcImage = children ? undefined : useImage(src);
     const navigate = useNavigate();
 
     const onClick = () => navigate(Pages.profile);
@@ -32,20 +30,16 @@ export default memo(function AvatarComponent({ children, src, alt, isOnline = fa
         overlap="circular"
         anchorOrigin={anchorOrigin}
         variant="dot"
-        sx={{
-            marginLeft: children ? "auto" : pushLeft ? "auto" : "50%",
-            marginRight: children ? "auto" : undefined,
-            transform: children ? "none" : pushLeft ? "none" : "translateX(-50%)"
-        }}
     >
         <AvatarMUI
-            src={children ? undefined : srcImage}
+            src={srcImage}
             alt={alt}
-            className={`avatar-badge__avatar ${avatarClassName ? avatarClassName : ""}`}
-            sx={{ width: size, height: size }}
+            className={`avatar-badge__avatar ${className}`}
             onClick={onClick}
         >
             {children}
         </AvatarMUI>
     </Badge>
 });
+
+

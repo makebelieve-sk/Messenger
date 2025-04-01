@@ -5,7 +5,7 @@ import Tab from "@mui/material/Tab";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-import CommonModal from "@components/ui/modal";
+import ModalComponent from "@components/ui/modal";
 import SpinnerComponent from "@components/ui/spinner";
 import BoxComponent from "@components/ui/box";
 import { ICarouselImage } from "@modules/carousel";
@@ -99,7 +99,7 @@ export default function ModalWithAttachments() {
     };
 
     return <>
-        <CommonModal 
+        <ModalComponent 
             isOpen={open} 
             onClose={onClose} 
             title={modalTitle} 
@@ -167,6 +167,6 @@ export default function ModalWithAttachments() {
                     }
                 </div>
             </BoxComponent>
-        </CommonModal>
+        </ModalComponent>
     </>
 };

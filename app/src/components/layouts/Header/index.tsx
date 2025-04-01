@@ -2,10 +2,10 @@ import { useState, useEffect, MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import AvatarComponent from "@components/ui/avatar";
+import UserAvatarComponent from "@components/ui/avatar/user-avatar";
 import TypographyComponent from "@components/ui/typography";
 import MenuComponent from "@components/ui/menu";
-import MenuItemComponent from "@components/ui/menuItem";
+import MenuItemComponent from "@components/ui/menu-item";
 import Logo from "@components/layouts/header/Logo";
 import useMainClient from "@hooks/useMainClient";
 import useProfile from "@hooks/useProfile";
@@ -73,7 +73,7 @@ export default function HeaderComponent() {
 
                 <div className="header-container__toolbar__avatar">
                     <div onClick={event => setAnchorElUser(event.currentTarget)}>
-                        <AvatarComponent src={avatarUrl} alt={profile.user.fullName} />
+                        <UserAvatarComponent src={avatarUrl} alt={profile.user.fullName} />
                     </div>
 
                     <MenuComponent

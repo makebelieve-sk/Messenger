@@ -24,11 +24,6 @@
 		flex-direction: column;
 		align-items: center;
 		margin: $signMarginXLarge $signMarginLarge;
-
-		.avatar {
-			margin: $signMarginXSmall;
-			background-color: $avatar-color;
-		}
 	}
 
 	.layoutInput {
