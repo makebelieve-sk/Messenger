@@ -1,6 +1,6 @@
 import { JSX, useEffect } from "react";
 import Portal from "@components/ui/portal";
-import CloseIconComponent from "@components/ui/closeIcon";
+import CloseIconComponent from "@components/icons/closeIcon";
 
 import "./common-modal.scss";
 

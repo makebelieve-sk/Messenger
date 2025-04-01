@@ -11,7 +11,7 @@ import "./app.scss";
 // Главный компонент, который отрисовывает основную верстку проекта
 export default function App() {
 	const { isAuth, loading } = useAppSelector(selectMainState);
-	
+
 	return <div className="root">
 		<ServiceComponents />
 
@@ -21,13 +21,11 @@ export default function App() {
 				{isAuth ? <HeaderComponent /> : null}
 
 				<div className="root__wrapper">
-					{/* <button onClick={() => setIsDarkMode((prev: boolean) => !prev)}>Toggle Theme</button> */}
 					<div
-						className={`root__wrapper__container ${
-							isAuth
+						className={`root__wrapper__container ${isAuth
 								? ""
 								: "root__wrapper__container__no-auth"
-						}`}
+							}`}
 					>
 						{isAuth ? <MenuComponent /> : null}
 

@@ -8,7 +8,7 @@ import CheckboxComponent from "@components/ui/checkbox";
 import AvatarComponent from "@components/ui/avatar";
 import TextFieldComponent from "@components/ui/textField";
 import BoxComponent from "@components/ui/box";
-import LockIconComponent from "@components/ui/lockIcon";
+import LockIconComponent from "@components/icons/lockIcon";
 import ButtonComponent from "@components/ui/button";
 import TypographyComponent from "@components/ui/typography";
 import GridComponent from "@components/ui/grid";

@@ -14,7 +14,8 @@ export default function BoxComponent({ children, className, component = "div", n
         className={className}
         component={component}
         noValidate={noValidate}
-        onSubmit={onSubmit}>
+        onSubmit={onSubmit}
+    >
         {children}
     </Box>;
 }

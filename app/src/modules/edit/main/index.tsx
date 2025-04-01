@@ -60,8 +60,7 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 
 			<BoxComponent className="edit-container__sex-select">
 				<SelectComponent
-					text="Пол"
-					label={t("edit_tabs.sex")}
+					text={t("edit_tabs.sex")}
 					labelId="sex-input"
 					id="sex-select"
 					value={formValues.sex}

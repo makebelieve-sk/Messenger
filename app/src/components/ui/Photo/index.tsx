@@ -2,7 +2,7 @@ import { useState, memo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { IModalConfirmData } from "@components/services/modals/confirm";
-import CloseIconComponent from "@components/ui/closeIcon";
+import CloseIconComponent from "@components/icons/closeIcon";
 import useImage from "@hooks/useImage";
 import { NO_PHOTO } from "@utils/constants";
 import eventBus from "@utils/event-bus";

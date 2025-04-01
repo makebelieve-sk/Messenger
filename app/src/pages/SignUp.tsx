@@ -9,7 +9,7 @@ import BoxComponent from "@components/ui/box";
 import TypographyComponent from "@components/ui/typography";
 import LinkComponent from "@components/ui/link";
 import ButtonComponent from "@components/ui/button";
-import LockIconComponent from "@components/ui/lockIcon";
+import LockIconComponent from "@components/icons/lockIcon";
 import CopyrightComponent from "@components/ui/copyright";
 import SignUpForm from "@modules/sign-up/Form";
 import ChooseAvatar from "@modules/sign-up/ChooseAvatar";

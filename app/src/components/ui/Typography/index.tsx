@@ -15,7 +15,8 @@ export default function TypographyComponent({ children, variant = "body1", class
         variant={variant}
         className={className}
         id={id}
-        component={component}>
+        component={component}
+    >
         {children}
     </Typography>
 }

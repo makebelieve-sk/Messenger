@@ -25,7 +25,8 @@ export default function GridComponent({ children, container, spacing = 2, xs, sm
         className={className}
         component={component}
         elevation={elevation}
-        square={square}>
+        square={square}
+    >
         {children}
     </Grid>
 }

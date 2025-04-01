@@ -2,7 +2,6 @@ import SpinnerComponent from "../spinner";
 import { lazy, Suspense, JSX } from "react";
 import dayjs, { Dayjs } from "dayjs";
 
-
 // Типизация возвращаемых значений для динамической загрузки
 type LazyLoadedProviderType = {
     default: ({ label, value, placeholder, onChange }: ILazyDatePicker) => JSX.Element;

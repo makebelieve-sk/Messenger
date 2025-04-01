@@ -2,8 +2,8 @@ import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
 import ButtonComponent from "@components/ui/button";
-import ArrowRightIconComponent from "@components/ui/arrowRightIcon";
-import ArrowLeftIconComponent from "@components/ui/arrowLeftIcon";
+import ArrowRightIconComponent from "@components/icons/arrowRightIcon";
+import ArrowLeftIconComponent from "@components/icons/arrowLeftIcon";
 
 interface ICarouselButton {
     next?: boolean;

@@ -1,3 +1,5 @@
+@use "@styles/abstract/colors.scss" as *; 
+
 .select {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
@@ -16,11 +18,11 @@
     -moz-transform: translate(14px, -9px) scale(0.75);
     -ms-transform: translate(14px, -9px) scale(0.75);
     transform: translate(14px, -9px) scale(0.75);
-    background: white;
+    background: $white;
     padding: 0 4px;
     z-index: 1;
 }
 
 .select:has(.Mui-focused)>.select__label {
-    color: #1976d2;
+    color: $selected-select-label;
 }

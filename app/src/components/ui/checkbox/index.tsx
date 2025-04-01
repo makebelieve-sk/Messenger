@@ -7,7 +7,7 @@ interface ICheckboxComponent {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 };
 
-export default function CheckboxComponent({value, id, color, onChange}: ICheckboxComponent) {
+export default function CheckboxComponent({ value, id, color, onChange }: ICheckboxComponent) {
     return <Checkbox
         value={value}
         color={color}
