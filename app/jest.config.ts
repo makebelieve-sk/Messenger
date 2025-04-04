@@ -22,6 +22,7 @@ const config: Config = {
 
   // Настройки для покрытия (coverage) кода
   collectCoverage: true,
+  coverageReporters: ["text-summary"],
   collectCoverageFrom: ["src/components/**/*.{ts,tsx}", "!src/**/*.d.ts"], // собираем покрытие только для исходных файлов
 
   // Игнорируем папки и файлы, которые не должны попадать в coverage
