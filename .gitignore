@@ -36,3 +36,4 @@ nginx/tmp/
 
 #jest coverage
 app/coverage
+*storybook.log
