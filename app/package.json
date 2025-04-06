@@ -11,7 +11,12 @@
     "preview": "vite preview",
     "build": "tsc && vite build",
     "prepare": "cd .. && husky",
-    "lint": "eslint \"**/*.{ts,tsx}\""
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -37,8 +42,19 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.6",
     "@emotion/babel-plugin": "^11.13.5",
+    "@storybook/addon-essentials": "^8.6.12",
+    "@storybook/addon-onboarding": "^8.6.12",
+    "@storybook/blocks": "^8.6.12",
+    "@storybook/experimental-addon-test": "^8.6.12",
+    "@storybook/react": "^8.6.12",
+    "@storybook/react-vite": "^8.6.12",
+    "@storybook/test": "^8.6.12",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
     "@types/debug": "^4.1.12",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.10.10",
     "@types/react": "^19.0.4",
     "@types/react-dom": "^19.0.2",
@@ -46,13 +62,29 @@
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/browser": "^3.1.1",
+    "@vitest/coverage-v8": "^3.1.1",
     "eslint": "^9.18.0",
+    "eslint-plugin-storybook": "^0.12.0",
     "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-scss-transform": "^1.0.4",
     "jiti": "^2.4.2",
+    "playwright": "^1.51.1",
     "rollup-plugin-visualizer": "^5.14.0",
-    "sass": "^1.83.1",
+    "sass": "^1.86.1",
+    "storybook": "^8.6.12",
+    "ts-jest": "^29.3.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "vite": "^6.0.7",
-    "vite-plugin-eslint": "^1.8.1"
+    "vite-plugin-eslint": "^1.8.1",
+    "vitest": "^3.1.1"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
   }
 }
