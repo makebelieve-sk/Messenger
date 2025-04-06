@@ -15,9 +15,10 @@ const config: Config = {
     "^@components/(.*)$": "<rootDir>/src/components/$1",
   },
 
+  // Трансформаторы для обработки файлов
   transform: {
     "^.+\\.tsx?$": "ts-jest", // Обрабатываем TypeScript файлы через ts-jest
-    "^.+\\.scss$": "jest-scss-transform",
+    "^.+\\.scss$": "jest-scss-transform", // Преобразуем SCSS файлы через jest-scss-transform для корректной обработки стилей
   },
 
   // Настройки для покрытия (coverage) кода

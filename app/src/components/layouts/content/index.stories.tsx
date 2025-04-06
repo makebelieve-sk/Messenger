@@ -1,7 +1,5 @@
-// src/components/layouts/content/index.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react";
 import ContentLayout from "@components/layouts/content";
-import React from "react";
 
 const meta: Meta<typeof ContentLayout> = {
   title: "Layouts/ContentLayout",

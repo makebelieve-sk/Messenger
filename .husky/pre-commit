@@ -3,7 +3,7 @@ echo "Running pre-commit hook"
 # Заходим в папку app из корневой папки проекта
 cd app
 
-#Проверка тестов с покрытием
+# Проверка тестов с покрытием
 echo "Running tests with coverage..."
 if npm run test:coverage; then
   echo "✅ Tests passed with coverage!"
