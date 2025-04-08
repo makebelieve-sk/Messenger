@@ -10,9 +10,9 @@ const dirname =
 
 // Более подробная информация по адресу: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineWorkspace([
-  "vite.config.ts",
+  "vitest.config.ts",
   {
-    extends: "vite.config.ts",
+    extends: "vitest.config.ts",
     plugins: [
       // Плагин будет запускать тесты для историй, определенных в конфигурации Storybook
       // Смотрите параметры по адресу: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
