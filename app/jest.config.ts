@@ -27,6 +27,9 @@ const config: Config = {
 
   // Игнорируем папки и файлы, которые не должны попадать в coverage
   coveragePathIgnorePatterns: ["/node_modules/", "/dist/", "/build/"],
+
+   // Добавляем игнорирование файлов, связанных с Vitest
+   testPathIgnorePatterns: ["/node_modules/", "/dist/", "/build/",  "\\.vitest\\.",], // Игнорировать файлы, связанные с Vitest
 };
 
 export default config;
