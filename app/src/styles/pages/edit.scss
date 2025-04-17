@@ -2,45 +2,45 @@
 @use "@styles/abstract/colors.scss" as *;
 
 .edit-container {
-    display: flex;
-    flex-grow: 1;
-    width: 100%;
+	display: flex;
+	flex-grow: 1;
+	width: 100%;
 
-    &__tabs {
-        border-right: 1px solid $edit-page-tab-border-color;
-        width: 15%;
-    }
+	&__tabs {
+		border-right: 1px solid $edit-page-tab-border-color;
+		width: 15%;
+	}
 
-    &__tab-name {
-        font-size: 12px;
-    }
+	&__tab-name {
+		font-size: 12px;
+	}
 
-    &__module {
-        width: 85%;
-        padding: 0 20px;
+	&__module {
+		width: 85%;
+		padding: 0 20px;
 
-        &__loading-button {
-            margin-top: 12px;
-            margin-bottom: 12px;
-            font-size: 12px;
-        }
+		&__loading-button {
+			margin-top: 12px;
+			margin-bottom: 12px;
+			font-size: 12px;
+		}
 
-        &__spinner {
-            margin-top: 10px;
-        }
+		&__spinner {
+			margin-top: 10px;
+		}
 
-        &__slide {
-            margin-bottom: 10px;
-        }
+		&__slide {
+			margin-bottom: 10px;
+		}
 
-        &__alert {
-            font-size: 15px;
-            line-height: math.div(22, 14) * 100%;
-            color: $black;
+		&__alert {
+			font-size: 15px;
+			line-height: math.div(22, 14) * 100%;
+			color: $black;
 
-            svg {
-                font-size: 20px;
-            } 
-        }
-    }
+			svg {
+				font-size: 20px;
+			}
+		}
+	}
 }

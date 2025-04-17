@@ -12,6 +12,8 @@ else
   exit 1
 fi
 
+echo "✅ All pre-commit checks passed. Proceeding with commit!"
+
 # Выходим из папки app и заходим в папку server
 cd ../server
 
@@ -24,4 +26,4 @@ else
   exit 1
 fi
 
-echo "✅ All lint checks passed. Proceeding with commit!"
+echo "✅ All pre-commit checks passed. Proceeding with commit!"

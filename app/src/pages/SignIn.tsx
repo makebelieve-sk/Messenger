@@ -1,24 +1,24 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { LoadingButton } from "@mui/lab";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { LoadingButton } from "@mui/lab";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import CssBaseline from "@mui/material/CssBaseline";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 
-import useMainClient from "@hooks/useMainClient";
 import CopyrightComponent from "@components/ui/copyright";
 import LinkComponent from "@components/ui/link";
+import useMainClient from "@hooks/useMainClient";
+import i18next from "@service/i18n";
+import useAuthStore from "@store/auth";
 import { Pages } from "@custom-types/enums";
 import { REQUIRED_FIELD } from "@utils/constants";
-
 import styles from "@styles/pages/sign-in.module.scss";
 
 const initialValues = {
@@ -34,28 +34,45 @@ const initialValues = {
 	},
 };
 
+// Страница входа
 export default function SignIn() {
-	const [saveDisabled, setSaveDisabled] = useState(true);
-	const [loading, setLoading] = useState(false);
-	const [errorFromServer, setErrorFromServer] = useState(false);
-	const [formValues, setFormValues] = useState(initialValues);
+	const [ saveDisabled, setSaveDisabled ] = useState(true);
+	const [ errorFromServer, setErrorFromServer ] = useState(false);
+	const [ formValues, setFormValues ] = useState(initialValues);
+
+	const signInErrors = useAuthStore(state => state.signInErrors);
+	const loading = useAuthStore(state => state.signInLoading);
 
 	const { mainApi } = useMainClient();
 
-	const { t } = useTranslation();
 	const navigate = useNavigate();
+
+	// Подписка на событие ошибок, возникающих при входе
+	useEffect(() => {
+		if (signInErrors) {
+			onSetSignInErrors();
+		}
+	}, [ signInErrors ]);
 
 	useEffect(() => {
 		setSaveDisabled(disableSave());
-	}, [loading, formValues]);
+	}, [ loading, formValues ]);
+
+	// Обработка ошибок, которые возвращаются с API
+	const onSetSignInErrors = () => {
+		setErrorFromServer(true);
+		setFormValues({
+			...formValues,
+			errors: {
+				...formValues.errors,
+				login: i18next.t("sign-in.error.incorrect_login_or_password"),
+				password: i18next.t("sign-in.error.incorrect_login_or_password"),
+			},
+		});
+	};
 
 	const disableSave = () => {
-		return (
-			loading ||
-			!formValues.values.login ||
-			!formValues.values.password ||
-			Object.values(formValues.errors).some(Boolean)
-		);
+		return loading || !formValues.values.login || !formValues.values.password || Object.values(formValues.errors).some(Boolean);
 	};
 
 	// Изменение поля
@@ -69,6 +86,7 @@ export default function SignIn() {
 					[field]: value ? "" : REQUIRED_FIELD,
 				},
 		});
+		useAuthStore.getState().setSignInErrors(false);
 		setErrorFromServer(false);
 	};
 
@@ -77,137 +95,81 @@ export default function SignIn() {
 		event.preventDefault();
 
 		if (!saveDisabled) {
-			mainApi.signIn(formValues.values, setLoading, (error) => {
-				if (error && typeof error === "object" && error.message) {
-					setErrorFromServer(true);
-					setFormValues({
-						...formValues,
-						errors: {
-							...formValues.errors,
-							login: error.message,
-							password: error.message,
-						},
-					});
-				}
-			});
+			mainApi.signIn(formValues.values);
 		}
 	};
 
-	return (
-		<Grid container component="main" className={styles.mainGrid}>
-			<CssBaseline />
-			<Grid className={styles.background} item xs={false} sm={4} md={7} />
+	return <Grid container component="main" className={styles.mainGrid}>
+		<CssBaseline />
+		<Grid className={styles.background} item xs={false} sm={4} md={7} />
 
-			<Grid
-				item
-				xs={12}
-				sm={8}
-				md={5}
-				component={Paper}
-				elevation={6}
-				square
-			>
-				<Box className={styles.signInForm}>
-					<Avatar className={styles.avatar}>
-						<LockOutlinedIcon />
-					</Avatar>
+		<Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+			<Box className={styles.signInForm}>
+				<Avatar className={styles.avatar}>
+					<LockOutlinedIcon />
+				</Avatar>
 
-					<Typography component="h1" variant="h5">
-						{ t("sign-in.sign_in") }
-					</Typography>
+				<Typography component="h1" variant="h5">
+					{i18next.t("sign-in.sign_in")}
+				</Typography>
 
-					<Box
-						noValidate
-						component="form"
-						onSubmit={handleSubmit}
-						className={styles.layoutInput}
-					>
-						<TextField
-							id="login"
-							name="login"
-							margin="normal"
-							variant="outlined"
-							label={t("sign-in.login")}
-							autoComplete={t("sign-in.login")}
-							required
-							fullWidth
-							autoFocus
-							error={Boolean(formValues.errors.login)}
-							helperText={formValues.errors.login
-								? formValues.errors.login
-								: null
-							}
-							onChange={e => onChange("login", e.target.value)}
-						/>
+				<Box noValidate component="form" onSubmit={handleSubmit} className={styles.layoutInput}>
+					<TextField
+						id="login"
+						name="login"
+						margin="normal"
+						variant="outlined"
+						label={i18next.t("sign-in.login")}
+						autoComplete={i18next.t("sign-in.login")}
+						required
+						fullWidth
+						autoFocus
+						error={Boolean(formValues.errors.login)}
+						helperText={formValues.errors.login ? formValues.errors.login : null}
+						onChange={(e) => onChange("login", e.target.value)}
+					/>
 
-						<TextField
-							id="password"
-							name="password"
-							type="password"
-							margin="normal"
-							variant="outlined"
-							label={t("sign-in.password")}
-							autoComplete={t("sign-in.password")}
-							required
-							fullWidth
-							error={Boolean(formValues.errors.password)}
-							helperText={formValues.errors.password
-								? formValues.errors.password
-								: null
-							}
-							onChange={e => onChange("password", e.target.value)}
-						/>
+					<TextField
+						id="password"
+						name="password"
+						type="password"
+						margin="normal"
+						variant="outlined"
+						label={i18next.t("sign-in.password")}
+						autoComplete={i18next.t("sign-in.password")}
+						required
+						fullWidth
+						error={Boolean(formValues.errors.password)}
+						helperText={formValues.errors.password ? formValues.errors.password : null}
+						onChange={(e) => onChange("password", e.target.value)}
+					/>
 
-						<FormControlLabel
-							label={t("sign-in.remember_me")}
-							control={
-								<Checkbox
-									value={false}
-									color="primary"
-									onChange={e => onChange("rememberMe", e.target.checked)}
-								/>
-							}
-						/>
+					<FormControlLabel
+						label={i18next.t("sign-in.remember_me")}
+						control={<Checkbox value={false} color="primary" onChange={(e) => onChange("rememberMe", e.target.checked)} />}
+					/>
 
-						<LoadingButton
-							fullWidth
-							type="submit"
-							variant="contained"
-							className={styles.loadingButton}
-							loading={loading}
-							disabled={saveDisabled}
-						>
-							{ t("sign-in.enter") }
-						</LoadingButton>
+					<LoadingButton fullWidth type="submit" variant="contained" className={styles.loadingButton} loading={loading} disabled={saveDisabled}>
+						{i18next.t("sign-in.enter")}
+					</LoadingButton>
 
-						<Grid container>
-							<Grid item xs>
-								<LinkComponent
-									component="p"
-									variant="body2"
-									className={styles.secondaryButton}
-									onClick={() => navigate(Pages.resetPassword)}
-								>
-									{ t("sign-in.forgot_password") }
-								</LinkComponent>
-							</Grid>
-
-							<Grid item>
-								<LinkComponent
-									component="p"
-									variant="body2"
-									className={styles.secondaryButton}
-									onClick={() => navigate(Pages.signUp)}
-								>
-									{ t("sign-in.register") }
-								</LinkComponent>
-							</Grid>
+					<Grid container>
+						<Grid item xs>
+							<LinkComponent component="p" variant="body2" className={styles.secondaryButton} onClick={() => navigate(Pages.resetPassword)}>
+								{i18next.t("sign-in.forgot_password")}
+							</LinkComponent>
 						</Grid>
-					</Box>
 
-					<CopyrightComponent />
+						<Grid item>
+							<LinkComponent component="p" variant="body2" className={styles.secondaryButton} onClick={() => navigate(Pages.signUp)}>
+								{i18next.t("sign-in.register")}
+							</LinkComponent>
+						</Grid>
+					</Grid>
 				</Box>
-			</Grid>
+
+				<CopyrightComponent />
+			</Box>
 		</Grid>
-	);
+	</Grid>;
 }

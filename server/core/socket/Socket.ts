@@ -1,178 +1,163 @@
-import { RequestHandler } from "express";
-import { Server } from "socket.io";
 import EventEmitter from "events";
-import { IncomingMessage } from "http";
+import { type RequestHandler } from "express";
+import { type IncomingMessage } from "http";
+import { Server } from "socket.io";
 
-import Database from "@core/Database";
+import socketIoConfig from "@config/socket.io.config";
+import UsersController from "@core/controllers/UsersController";
+import Database from "@core/database/Database";
 import RedisWorks from "@core/Redis";
 import SocketController from "@core/socket/SocketController";
-import Logger from "@service/logger";
 import { t } from "@service/i18n";
-import { SocketType, SocketWithUser } from "@custom-types/socket.types";
-import { ServerType, UsersType } from "@custom-types/index";
-import { RedisKeys } from "@custom-types/enums";
+import Logger from "@service/logger";
 import { SocketError } from "@errors/index";
-
-declare module "http" {
-    interface IncomingMessage {
-      sessionID: string; // Здесь мы добавляем свойство sessionID
-    }
-}
+import { RedisKeys } from "@custom-types/enums";
+import { type ServerType } from "@custom-types/index";
+import { type SocketType } from "@custom-types/socket.types";
 
 const logger = Logger("Socket");
 const COOKIE_HEADER_NAME = "Set-Cookie";
 
-const CLIENT_URL = process.env.CLIENT_URL as string;
-const SOCKET_METHOD = process.env.SOCKET_METHOD as string;
-const SOCKET_PING_INTARVAL = parseInt(process.env.SOCKET_PING_INTARVAL as string);
-const SOCKET_PING_TIMEOUT = parseInt(process.env.SOCKET_PING_TIMEOUT as string);
-const SOCKET_UPGRADE_TIMEOUT = parseInt(process.env.SOCKET_UPGRADE_TIMEOUT as string);
-const SOCKET_MAX_DISCONNECTION_DURATION = parseInt(process.env.SOCKET_MAX_DISCONNECTION_DURATION as string);
-
-// Класс, отвечает за установку сокет соединения с клиентом по транспорту websocket
+// Класс, отвечает за установку сокет соединения с клиентом по транспорту "websocket"
 export default class SocketWorks extends EventEmitter {
-    private _io!: SocketType;
+	private _io!: SocketType;
 
-    constructor(
-        private readonly _server: ServerType, 
-        private readonly _users: UsersType, 
-        private readonly _database: Database,
-        private readonly _redisWork: RedisWorks,
-        private readonly _expressSession: RequestHandler
-    ) {
-        super();
+	constructor(
+		private readonly _server: ServerType,
+		private readonly _users: UsersController,
+		private readonly _database: Database,
+		private readonly _redisWork: RedisWorks,
+		private readonly _expressSession: RequestHandler,
+	) {
+		super();
 
-        this._init();
-    }
+		this._init();
+	}
 
-    get io() {
-        return this._io;
-    }
+	get io() {
+		return this._io;
+	}
 
-    private _init() {
-        logger.debug("init");
+	private _init() {
+		logger.debug("init");
 
-        this._io = new Server(this._server, {
-            transports: ["websocket"],      // Транспорт для соединений
-            cors: {
-                origin: CLIENT_URL,         // Список разрешенных доменов
-                methods: [SOCKET_METHOD],   // Список разрешенных методов запроса (разрешен только самый первый запрос для установки соединения между сервером и клиентом)
-                credentials: true           // Разрешает отправку cookie и других авторизационных данных
-            },
-            pingInterval: SOCKET_PING_INTARVAL,      // Указываем с какой частотой идет heartbeat на клиент
-            pingTimeout: SOCKET_PING_TIMEOUT,        // Указываем сколько может ожидать ответ от клиента сервер перед тем, как посчитает соединение закрытым (если клиент все равно не ответит)
-            upgradeTimeout: SOCKET_UPGRADE_TIMEOUT,  // Время, которое будет ожидать сервер до обновления 1-ого запроса (handshake) до указанного транспорта websocket
-            connectionStateRecovery: {
-                maxDisconnectionDuration: SOCKET_MAX_DISCONNECTION_DURATION, // Указывает время, в течении которого клиент может переподключиться 
-                skipMiddlewares: false      // При разрыве соединении пропускаем мидлвары socket.io
-            }                               // Опция для восстановления соединения клиента из-за временного разрыва (например, спящий режим или потеря сети)
-        });
+		this._io = new Server(this._server, socketIoConfig);
 
-        this._useMiddlewares();
-        this._onConnection();
-        this._useEngineHandlers();
-    }
+		this._useMiddlewares();
+		this._onConnection();
+		this._useEngineHandlers();
+	}
 
-    private _useMiddlewares() {
-        // Милдвар сокета - добавление сессии express-session в соединение socket.io
-        this._io.engine.use(this._expressSession);
+	private _useMiddlewares() {
+		// Милдвар сокета - добавление сессии express-session в соединение socket.io
+		this._io.engine.use(this._expressSession);
 
-        // Мидлвар сокета - проверка сессии запроса сокет-соединения в Redis
-        this._io.use(async (socket, next) => {
-            const isRedisSessionExists = await this._checkRedisSession(socket.request.sessionID);
+		// Мидлвар сокета - проверка сессии запроса сокет-соединения в Redis
+		this._io.use(async (socket, next) => {
+			const isRedisSessionExists = await this._checkRedisSession(socket.request.sessionID);
 
-            if (!isRedisSessionExists) {
-                return next(new SocketError(t("socket.error.sessions_not_match_or_exists")));
-            }
+			if (!isRedisSessionExists) {
+				return next(new SocketError(t("socket.error.sessions_not_match_or_exists")));
+			}
 
-            logger.info(t("socket.session_done"));
-            next();
-        });
+			logger.info(t("socket.session_done"));
+			next();
+		});
 
-        // Милдвар сокета - проверка пользователя в сокете
-        this._io.use((socket, next) => {
-            const userId: string | undefined = socket.handshake.auth.userId;
-    
-            if (!userId) {
-                return next(new SocketError(t("socket.error.user_id_not_found")));
-            }
+		// Милдвар сокета - проверка пользователя в сокете
+		this._io.use((socket, next) => {
+			const userId: string | undefined = socket.handshake.auth.userId;
 
-            const findUser = this._users.get(userId);
+			if (!userId) {
+				return next(new SocketError(t("socket.error.user_id_not_found")));
+			}
 
-            if (!findUser) {
-                return next(new SocketError(t("socket.error.user_not_found")));
-            }
+			const findUser = this._users.get(userId);
 
-            (socket as SocketWithUser).user = findUser;
-            next();
-        });
-    }
+			if (!findUser) {
+				return next(new SocketError(t("socket.error.user_not_found")));
+			}
 
-    private _onConnection() {
-        this._io.on("connection", socket => {
-            new SocketController(this._users, this._database, socket as SocketWithUser, this._io);
-        });
-    }
+			socket.user = findUser;
+			next();
+		});
+	}
 
-    private _useEngineHandlers() {
-        logger.debug("_useEngineHandlers");
+	private _onConnection() {
+		this._io.on("connection", socket => {
+			new SocketController(this._users, this._database, socket, this._io);
+		});
+	}
 
-        /**
-         * Проверка первичного handshake запроса перед установкой сокет-соединения
-         * Проверка происходит в 3 этапа:
-         *   - проверка сессии в заголовках запроса
-         *   - проверка сессии в объекте запроса
-         *   - проверка сессии в Redis хранилище (RedisStore)
-         */
-        this._io.engine.on("initial_headers", async (headers: { [key: string]: string; }, req: IncomingMessage) => {
-            // Удостоверимся, что заголовки содержат заголовок с куки
-            if (headers.hasOwnProperty(COOKIE_HEADER_NAME) && headers[COOKIE_HEADER_NAME][0]) {
-                const sessionHeader = headers[COOKIE_HEADER_NAME][0];
+	private _useEngineHandlers() {
+		logger.debug("_useEngineHandlers");
 
-                // Удостоверимся, что куки с id сессии в заголовках совпадает с id сессии в объекте запроса
-                if (sessionHeader.includes(req.sessionID)) {
-                    const isRedisSessionExists = await this._checkRedisSession(req.sessionID);
+		/**
+		 * Проверка первичного handshake запроса перед установкой сокет-соединения
+		 * Проверка происходит в 3 этапа:
+		 *   - проверка сессии в заголовках запроса
+		 *   - проверка сессии в объекте запроса
+		 *   - проверка сессии в Redis хранилище (RedisStore)
+		 */
+		this._io.engine.on("initial_headers", async (headers: { [key: string]: string }, req: IncomingMessage) => {
+			// Удостоверимся, что заголовки содержат заголовок с куки
+			if (headers.hasOwnProperty(COOKIE_HEADER_NAME) && headers[COOKIE_HEADER_NAME][0]) {
+				const sessionHeader = headers[COOKIE_HEADER_NAME][0];
 
-                    if (isRedisSessionExists) {
-                        logger.info(t("socket.handshake_connection_successful"));
-                        return;
-                    }
-                }
-            }
+				// Удостоверимся, что куки с id сессии в заголовках совпадает с id сессии в объекте запроса
+				if (sessionHeader.includes(req.sessionID)) {
+					const isRedisSessionExists = await this._checkRedisSession(req.sessionID);
 
-            new SocketError(t("socket.error.sessions_not_match_or_exists", { sessionId: req.sessionID }));
-        });
+					if (isRedisSessionExists) {
+						logger.info(t("socket.handshake_connection_successful"));
+						return;
+					}
+				}
+			}
 
-        // Не нормальное отключение io
-        this._io.engine.on("connection_error", (error: { _: IncomingMessage; code: number; message: string; context: { name: string; }; }) => {
-            const { code, message, context } = error;
-            new SocketError(t("socket.error.engine_socket", { code: code.toString(), message, context: context.name }));
-        });
-    }
+			new SocketError(
+				t("socket.error.sessions_not_match_or_exists", {
+					sessionId: req.sessionID,
+				}),
+			);
+		});
 
-    // Проверка сессии в RedisStore
-    private async _checkRedisSession(sessionId: string) {
-        return Boolean(await this._redisWork.get(RedisKeys.SESS, sessionId));
-    }
+		// Не нормальное отключение io
+		this._io.engine.on("connection_error", (error: { code: number; message: string; context: { name: string; }; }) => {
+			const { code, message, context } = error;
+			new SocketError(
+				t("socket.error.engine_socket", {
+					code: code.toString(),
+					message,
+					context: context.name,
+				}),
+			);
+		});
+	}
 
-    close() {
-        logger.debug("close");
+	// Проверка сессии в RedisStore
+	private async _checkRedisSession(sessionId: string) {
+		return Boolean(await this._redisWork.get(RedisKeys.SESS, sessionId));
+	}
 
-        // Берем все сокеты главного неймспейса и возвращаем их
-        const sockets = Array.from(this._io.sockets.sockets.values());
+	close() {
+		logger.debug("close");
 
-        for (let i = 0; i < sockets.length; i++) {
-            const socket = sockets[i];
+		// Берем все сокеты главного неймспейса и возвращаем их
+		const sockets = Array.from(this._io.sockets.sockets.values());
 
-            // Получаем список всех событий для каждого сокета
-            const socketEvents = socket.eventNames();
+		for (let i = 0; i < sockets.length; i++) {
+			const socket = sockets[i];
 
-            for (let j = 0; j < socketEvents.length; j++) {
-                // Удаляем все слушатели каждого события сокета для предотвращения утечки памяти
-                socket.removeAllListeners(socketEvents[j]);
-            }
-        }
+			// Получаем список всех событий для каждого сокета
+			const socketEvents = socket.eventNames();
 
-        this._io.close();
-    }
+			for (let j = 0; j < socketEvents.length; j++) {
+				// Удаляем все слушатели каждого события сокета для предотвращения утечки памяти
+				socket.removeAllListeners(socketEvents[j]);
+			}
+		}
+
+		this._io.close();
+	}
 }

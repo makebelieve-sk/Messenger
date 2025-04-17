@@ -1,17 +1,16 @@
 .info {
-    width: max-content;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    
+	width: max-content;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
 
-    &__container {
-        min-width: max-content;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-    }
+	&__container {
+		min-width: max-content;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: flex-start;
+	}
 }

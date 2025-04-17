@@ -1,13 +1,13 @@
 @use "@styles/abstract/colors.scss" as *;
 
 .spinner {
-    width: 100%;
-    min-height: inherit;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    left: 0;
-    top: 0;
-    background-color: $spinner-background;
+	width: 100%;
+	min-height: inherit;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background-color: $spinner-background;
 }

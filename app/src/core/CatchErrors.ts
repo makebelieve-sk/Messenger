@@ -1,15 +1,12 @@
-import EventEmitter from "eventemitter3";
-import { AxiosError } from "axios";
-
-import Logger from "@service/Logger";
 import i18next from "@service/i18n";
-import { setError } from "@store/error/slice";
-import { ErrorCodes, HTTPStatuses, Pages } from "@custom-types/enums";
-import { AppDispatch } from "@custom-types/redux.types";
-import { MainClientEvents } from "@custom-types/events";
-
-type BadRequestType = { success: boolean; message: string; field?: string; } | string | null;
-export type CatchType = BadRequestType | string | null;
+import Logger from "@service/Logger";
+import useAuthStore from "@store/auth";
+import useGlobalStore from "@store/global";
+import resetAllStores from "@store/index";
+import useProfileStore from "@store/profile";
+import useUIStore from "@store/ui";
+import { AxiosErrorType, AxiosResponseType } from "@custom-types/axios.types";
+import { ErrorCodes, HTTPErrorTypes, HTTPStatuses, Pages } from "@custom-types/enums";
 
 const logger = Logger.init("CatchErrors");
 
@@ -20,119 +17,204 @@ const ERROR_BAD_REQUEST = i18next.t("core.catch-errors.error.bad_request");
 const ERROR_CANCELED = i18next.t("core.catch-errors.error.canceled");
 const ERROR_UNKNOWN = i18next.t("core.catch-errors.error.unknown");
 
-// Класс, отвечающий за обработку ошибок. Обрабатывает как ошибки по HTTP API, так и прочие ошибки, возникающие на стороне клиента
-export default class CatchErrors extends EventEmitter {
-    private _errorText: string = "";
-    private _axiosError: AxiosError | undefined = undefined;
+// Класс, отвечающий за обработку ошибок по HTTP API
+export default class CatchErrors {
+	private _errorText!: string;
+	private _axiosError!: AxiosErrorType;
+	private _response!: AxiosResponseType;
 
-    constructor(private readonly _dispatch: AppDispatch) {
-        super();
-    }
+	constructor() {
+		logger.debug("init");
+	}
 
-    get error() {
-        return this._axiosError
-            ? this._axiosError.message
-            : this._errorText || ERROR_MESSAGE;
-    }
+	// Обработка ошибки по API (вызывается только из класса Request)
+	catchAxios(axiosError: AxiosErrorType) {
+		this._axiosError = axiosError;
 
-    catch(errorText: string, axiosError?: AxiosError): CatchType {
-        this._errorText = errorText;
-        this._axiosError = axiosError;
+		const { response, code, message = ERROR_MESSAGE } = this._axiosError;
 
-        logger.error(this.error);
+		// Сначала проверяем ответ от сервера с объектом ошибки (в объекте ответа присутствует статус ошибки)
+		if (response) {
+			this._response = response;
+			this._errorText = response.data.message || ERROR_MESSAGE;
 
-        if (this._axiosError) {
-            // Сервер вернул ответ с ошибкой (в объекте ответа присутствует статус ошибки)
-            if (this._axiosError.response) {
-                const { status } = this._axiosError.response;
+			switch (response.status) {
+			case HTTPStatuses.PermanentRedirect: {
+				this._permanentRedirect();
+				break;
+			}
+			case HTTPStatuses.BadRequest: {
+				this._badRequest();
+				break;
+			}
+			case HTTPStatuses.Unauthorized: {
+				this._unAuthorized();
+				break;
+			}
+			case HTTPStatuses.Forbidden: {
+				this._forbidden();
+				break;
+			}
+			case HTTPStatuses.NotFound: {
+				this._notFound();
+				break;
+			}
+			case HTTPStatuses.Conflict: {
+				this._conflict();
+				break;
+			}
+			case HTTPStatuses.PayloadTooLarge: {
+				this._payloadTooLarge();
+				break;
+			}
+			case HTTPStatuses.TooManyRequests: {
+				this._tooManyRequests();
+				break;
+			}
+			case HTTPStatuses.ServerError:
+			default:
+				this._serverError();
+			}
 
-                switch (status) {
-                    case HTTPStatuses.PermanentRedirect: return this._permanentRedirect();
-                    case HTTPStatuses.BadRequest: return this._badRequest();
-                    case HTTPStatuses.Unauthorized: return this._unauthorized();
-                    case HTTPStatuses.Forbidden: return this._forbidden();
-                    case HTTPStatuses.NotFound: return this._notFound();
-                    case HTTPStatuses.ServerError:
-                    default: 
-                        return this._serverError();
-                };
-            }
-            
-            // Сервер не вернул объект ошибки (статуса ошибки нет)
-            if (this._axiosError.code) {
-                return this._errorHandler(this._axiosError);
-            }
-        }
+			return;
+		}
 
-        return this._serverError();
-    };
+		// Сервер не вернул объект ошибки (то есть, статуса ошибки нет). Значит нужно проверить по возвращаемому статусу
+		if (code) {
+			this._errorHandler();
+			return;
+		}
 
-    private _errorHandler(error: AxiosError) {
-        const { code, message } = error;
+		// Если в ответе axios нет вообще ничего, возвращает простую ошибку
+		this._errorText = message;
+		this._handleError();
+	}
 
-        let errorText: string;
+	private _errorHandler() {
+		const { code, message } = this._axiosError;
 
-        switch (code) {
-            case ErrorCodes.ERR_NETWORK: {
-                errorText = ERROR_NETWORK;
-                break;
-            }
-            case ErrorCodes.ERR_TIMEOUT: {
-                errorText = ERROR_TIMEOUT;
-                break;
-            }
-            case ErrorCodes.ERR_BAD_REQUEST: {
-                errorText = ERROR_BAD_REQUEST;
-                break;
-            }
-            case ErrorCodes.ERR_CANCELED: {
-                errorText = ERROR_CANCELED;
-                break;
-            } 
-            default:
-                errorText = ERROR_UNKNOWN + message;
-        }
+		let errorText: string;
 
-        this._dispatch(setError(errorText));
-        return null;
-    }
+		switch (code) {
+		case ErrorCodes.ERR_NETWORK: {
+			errorText = ERROR_NETWORK;
+			break;
+		}
+		case ErrorCodes.ERR_TIMEOUT: {
+			errorText = ERROR_TIMEOUT;
+			break;
+		}
+		case ErrorCodes.ERR_BAD_REQUEST: {
+			errorText = ERROR_BAD_REQUEST;
+			break;
+		}
+		case ErrorCodes.ERR_CANCELED: {
+			errorText = ERROR_CANCELED;
+			break;
+		}
+		default:
+			errorText = ERROR_UNKNOWN + message;
+		}
 
-    // Статус 308
-    private _permanentRedirect(): null {
-        this.emit(MainClientEvents.REDIRECT, Pages.profile);
-        return null;
-    };
+		this._errorText = errorText;
+		this._handleError();
+	}
 
-    // Статус 400
-    private _badRequest(): BadRequestType | string {
-        return this._axiosError
-            ? this._axiosError.response
-                ? this._axiosError.response.data as BadRequestType
-                : this._axiosError.message
-            : this._errorText || ERROR_MESSAGE;
-    };
+	// Статус 308
+	private _permanentRedirect() {
+		useGlobalStore.getState().setRedirectTo(Pages.profile);
+	}
 
-    // Статус 401
-    private _unauthorized(): null {
-        this.emit(MainClientEvents.REDIRECT, window.location.pathname !== Pages.signUp ? Pages.signIn : Pages.signUp);
-        return null;
-    };
+	// Статус 400
+	private _badRequest() {
+		const { type, fields, field } = this._response.data.options;
 
-    // Статус 403
-    private _forbidden(): null {
-        this.emit(MainClientEvents.REDIRECT, Pages.signIn);
-        return null;
-    };
+		switch (type) {
+		// Уведомляем компонент страницы регистрации о том, что пользователь пропустил обязательные поля (подчеркиваем пропущенные поля)
+		case HTTPErrorTypes.SIGN_UP: {
+			useAuthStore.getState().setSignUpErrors({ status: this._response.status, fields });
+			break;
+		}
+		/**
+		 * Уведомляем компонент страницы редактирования информации профиля о том,
+		 * что пользователь ввел не правильные поля (подчеркиваем оба поля: "логин" и "пароль").
+		 */
+		case HTTPErrorTypes.EDIT_INFO: {
+			useProfileStore.getState().setEditErrors({ field, fields });
+			break;
+		}
+		default:
+			this._handleError();
+		}
+	}
 
-    // Статус 404
-    private _notFound(): null {
-        this._dispatch(setError(this.error));
-        return null;
-    };
+	// Статус 401
+	private _unAuthorized() {
+		switch (this._response.data.options.type) {
+		// Уведомляем компонент страницы входа о том, что пользователь ввел не правильные поля (подчеркиваем оба поля: "логин" и "пароль")
+		case HTTPErrorTypes.SIGN_IN: {
+			useAuthStore.getState().setSignInErrors(true);
+			break;
+		}
+		default:
+			this._redirect();
+		}
+	}
 
-    // Статус 500
-    private _serverError(): null {
-        this._dispatch(setError(this.error));
-        return null;
-    };
-};
+	// Статус 403
+	private _forbidden() {
+		this._redirect();
+	}
+
+	// Статус 404
+	private _notFound() {
+		this._handleError();
+	}
+
+	// Статус 409 (конфликт в данных, то есть пытаемся перезаписать уже существующие записи)
+	private _conflict() {
+		const { message = ERROR_MESSAGE, options } = this._response.data;
+		const { type, field } = options;
+
+		switch (type) {
+		// Уведомляем компонент страницы регистрации о том, что пользователь ввел существующие (конфликтующие) поля (подчеркиваем конфликтующие поля)
+		case HTTPErrorTypes.SIGN_UP: {
+			useAuthStore.getState().setSignUpErrors({ status: this._response.status, field, message });
+			break;
+		}
+		default:
+			this._handleError();
+		}
+	}
+
+	// Статус 413 (в запросе были обнаружены большие данные, как пример: добавление фотографий)
+	private _payloadTooLarge() {
+		this._systemError();
+	}
+
+	// Статус 429 (превышен лимит запросов к ендпоинту от пользователя - см. server/config/rate-limiter.config.ts)
+	private _tooManyRequests() {
+		this._systemError();
+	}
+
+	// Статус 500
+	private _serverError() {
+		this._handleError();
+	}
+
+	// Редирект из-за отсутствия аутентификации (вернее сначала мы обнуляем пользователя, далее происходит редирект)
+	private _redirect() {
+		resetAllStores();
+	}
+
+	// Обработка системной ошибки (её вывод в SnackbarComponent)
+	private _systemError() {
+		useUIStore.getState().setSnackbarError(this._response.data.message);
+	}
+
+	// Общая обработка ошибки API на клиенте
+	private _handleError() {
+		logger.error(this._errorText);
+		useUIStore.getState().setError(this._errorText);
+	}
+}

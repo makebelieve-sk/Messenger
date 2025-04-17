@@ -10,8 +10,8 @@ BEGIN
         third_name NVARCHAR(100) NOT NULL,
         email NVARCHAR(255) NOT NULL,
         phone NVARCHAR(20) NOT NULL,
-        password NVARCHAR(255) NOT NULL,
-        salt NVARCHAR(255) NOT NULL,
+        password NVARCHAR(MAX) NOT NULL,
+        salt NVARCHAR(MAX) NOT NULL,
 
         CONSTRAINT UQ_Users_Email UNIQUE (email),
         CONSTRAINT UQ_Users_Phone UNIQUE (phone),
@@ -30,10 +30,10 @@ BEGIN
         user_id UNIQUEIDENTIFIER NOT NULL,
         path NVARCHAR(255) NOT NULL,
         size BIGINT NOT NULL CHECK (size > 0),
-        extension NVARCHAR(50) NOT NULL CHECK (extension IN ('jpg', 'png', 'gif', 'bmp', 'webp')),
+        extension NVARCHAR(50) NOT NULL CHECK (extension IN ('jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp')),
         created_at DATETIME2(3) DEFAULT SYSDATETIME(),
 
-        CONSTRAINT FK_Photos_Users FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+        CONSTRAINT FK_Photos_Users FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE NO ACTION ON DELETE NO ACTION
     );
 
     CREATE INDEX IDX_Photos_UserId ON Photos(user_id);
@@ -43,7 +43,7 @@ END;
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE name = 'avatar_id' AND object_id = OBJECT_ID('Users'))
 BEGIN
     ALTER TABLE Users ADD avatar_id UNIQUEIDENTIFIER NULL;
-    ALTER TABLE Users ADD CONSTRAINT FK_Users_Photos_avatarId FOREIGN KEY (avatar_id) REFERENCES Photos(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+    ALTER TABLE Users ADD CONSTRAINT FK_Users_Photos_avatarId FOREIGN KEY (avatar_id) REFERENCES Photos(id) ON DELETE SET NULL;
 END;
 
 -- Создаем таблицу User_Details
@@ -79,19 +79,19 @@ BEGIN
     CREATE INDEX IDX_User_Photos_UserId ON User_Photos(user_id);
 END;
 
--- Создаем таблицу Notification_Settings
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Notification_Settings')
+-- Создаем таблицу Notifications_Settings
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Notifications_Settings')
 BEGIN
-    CREATE TABLE Notification_Settings (
+    CREATE TABLE Notifications_Settings (
         user_id UNIQUEIDENTIFIER PRIMARY KEY,
         sound_enabled BIT NOT NULL DEFAULT 1,
         message_sound BIT NOT NULL DEFAULT 1,
         friend_request_sound BIT NOT NULL DEFAULT 1,
 
-        CONSTRAINT FK_Notification_Settings_Users FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+        CONSTRAINT FK_Notifications_Settings_Users FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
     );
 
-    CREATE INDEX IDX_Notification_Settings_UserId ON Notification_Settings(user_id);
+    CREATE INDEX IDX_Notifications_Settings_UserId ON Notifications_Settings(user_id);
 END;
 
 -- Создаем таблицу Friend_Actions
@@ -129,13 +129,13 @@ BEGIN
     CREATE INDEX IDX_Friend_Actions_Log_TargetUserId ON Friend_Actions_Log(target_user_id);
 END;
 
--- Создаем таблицу Chats с avatar_id
+-- Создаем таблицу Chats
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Chats')
 BEGIN
     CREATE TABLE Chats (
         id UNIQUEIDENTIFIER PRIMARY KEY,
         avatar_id UNIQUEIDENTIFIER NULL,
-        name NVARCHAR(255) NOT NULL,
+        name NVARCHAR(255) NULL,
 
         CONSTRAINT FK_Chats_Photos_avatarId FOREIGN KEY (avatar_id) REFERENCES Photos(id) ON DELETE SET NULL
     );
@@ -143,20 +143,20 @@ BEGIN
     CREATE INDEX IDX_Chats_Name ON Chats(name);
 END;
 
--- Создаем таблицу Disabled_Chat_Sound
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Disabled_Chat_Sound')
+-- Создаем таблицу Disabled_Chats_Sound
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Disabled_Chats_Sound')
 BEGIN
-    CREATE TABLE Disabled_Chat_Sound (
+    CREATE TABLE Disabled_Chats_Sound (
         user_id UNIQUEIDENTIFIER,
         chat_id UNIQUEIDENTIFIER,
 
         PRIMARY KEY (user_id, chat_id),
-        CONSTRAINT FK_Disabled_Chat_Sound_Users FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
-        CONSTRAINT FK_Disabled_Chat_Sound_Chats FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+        CONSTRAINT FK_Disabled_Chats_Sound_Users FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+        CONSTRAINT FK_Disabled_Chats_Sound_Chats FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
     );
 
-    CREATE INDEX IDX_Disabled_Chat_Sound_UserId ON Disabled_Chat_Sound(user_id);
-    CREATE INDEX IDX_Disabled_Chat_Sound_ChatId ON Disabled_Chat_Sound(chat_id);
+    CREATE INDEX IDX_Disabled_Chats_Sound_UserId ON Disabled_Chats_Sound(user_id);
+    CREATE INDEX IDX_Disabled_Chats_Sound_ChatId ON Disabled_Chats_Sound(chat_id);
 END;
 
 -- Создаем таблицу Users_in_Chat
@@ -234,6 +234,7 @@ BEGIN
     CREATE TABLE Files (
         id UNIQUEIDENTIFIER PRIMARY KEY,
         user_id UNIQUEIDENTIFIER NOT NULL,
+        name NVARCHAR(255) NOT NULL,
         path NVARCHAR(255) NOT NULL,
         size BIGINT NOT NULL CHECK (size > 0),
         extension NVARCHAR(50) NOT NULL,

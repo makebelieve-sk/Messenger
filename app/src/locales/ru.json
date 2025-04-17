@@ -7,6 +7,8 @@
 	"sign-in.forgot_password": "Забыли пароль?",
 	"sign-in.register": "Нет аккаунта? Зарегистрируйтесь!",
 
+	"sign-in.error.incorrect_login_or_password": "Не верно указан логин или пароль.",
+
 	"sign-up.sign_up": "Регистрация",
 	"sign-up.enter": "Уже есть аккаунт? Войдите",
 	"sign-up.back": "Назад",
@@ -15,7 +17,7 @@
 	"sign-up.main_step": "Основные данные",
 	"sign-up.choose_avatar_step": "Выбор аватара",
 
-	"sign-up.error.step_unknowed": "Возникла ошибка при генерации контента для шага {{step}}",
+	"sign-up.error.step_unknowed": "Возникла ошибка при генерации контента для шага {{step}}.",
 
 	"images-carousel-module.you": "Вы",
 	"images-carousel-module.further": "Далее",
@@ -24,7 +26,8 @@
 	"profile-module.friends": "Друзья",
 	"profile-module.friends_online": "Друзья онлайн",
 	"profile-module.online": " онлайн",
-	"profile-module.no_data": "На данный момент список друзей{{isOnline}} пуст",
+	"profile-module.no_online_friends": "На данный момент список онлайн друзей пуст.",
+	"profile-module.no_friends": "На данный момент список друзей пуст.",
 	"profile-module.change": "Изменить",
 	"profile-module.edit": "Редактировать",
 	"profile-module.birthday": "День рождения",
@@ -67,14 +70,18 @@
 	"sign-up-module.password": "Пароль",
 	"sign-up-module.repeat_password": "Повторите пароль",
 
+	"core.profiles-controller.error.profile_exists": "Профиль с id: {{id}} уже существует.",
 	"core.profiles-controller.error.profile_not_exists": "Профиля с id: {{id}} не существует.",
+	"core.profiles-controller.error.my_profile_not_exists": "Мой профиль не существует.",
 
 	"core.socket.error.user_not_exists_on_server": "Пользователь не существует.",
 	"core.socket.error.user_not_exists": "Объект пользователя не существует.",
-	"core.socket.error.connect_error": "Ошибка сокет-соединения [isSocketActive={{isSocketActive}}]: {{message}}",
+	"core.socket.error.connect_error": "Ошибка сокет-соединения [isSocketActive={{isSocketActive}}]: {{message}}.",
 	"core.socket.error.reconnect_failed": "Не удалось переподключиться к серверу.",
-	"core.socket.error.emit": "Ошибка при обработке события на сервере [type: {{type}}]: {{message}}",
-	"core.socket.error.emit_event_on_the_server": "[{{timestamp}}] | При обработке данного события на сервере возникла ошибка: {{message}}",
+	"core.socket.error.emit": "Ошибка при обработке события на сервере [type: {{type}}]: {{message}}.",
+	"core.socket.error.emit_event_on_the_server": "[{{timestamp}}] | При обработке данного события на сервере возникла ошибка: {{message}}.",
+
+	"core.request.unknown_status": "Неизвестный статус запроса: {{status}}.",
 
 	"core.catch-errors.error": "Ошибка",
 	"core.catch-errors.error.network": "Ошибка при получении ответа от сервера. Скорее всего сервер недоступен в данный момент. Проверьте интернет соединение.",
@@ -83,8 +90,8 @@
 	"core.catch-errors.error.canceled": "Запрос был отменен.",
 	"core.catch-errors.error.unknown": "Неизвестная ошибка.",
 
-	"core.socket.connection_established": "Сокет-соединение с сервером установлено [socket.id={{socketId}}]",
-	"core.socket.connection_successfully_recovered": "Сокет-соединение с сервером успешно восстановлено [socket.id={{socketId}}]",
+	"core.socket.connection_established": "Сокет-соединение с сервером установлено [socket.id={{socketId}}].",
+	"core.socket.connection_successfully_recovered": "Сокет-соединение с сервером успешно восстановлено [socket.id={{socketId}}].",
 	"core.socket.online_users": "Пользователи онлайн: ",
 	"core.socket.new_user_connected": "Новый пользователь подключился: ",
 	"core.socket.user_disconnected": "Пользователь отключился: ",
@@ -100,28 +107,28 @@
 	"menu.friends": "Друзья",
 	"menu.to-developers": "Разработчикам",
 
-    "modals.photos": "Фотографии",
-    "modals.files": "Файлы",
-    "modals.images_not_yet": "Фотографий пока нет.",
-    "modals.files_not_yet": "Файлов пока нет.",
-    "modals.cancel": "Отмена",
-    "modals.copy_successfull": "Текст успешно скопирован в буфер обмена!",
-    "modals.copy_the_message_and_send_to_email": "Пожалуйста, скопируйте текст ошибки и отправьте её на почту разработчикам: {{email}}",
-    "modals.download": "Скачать лог файл",
-    "modals.reset_page": "Обновить страницу",
+	"modals.photos": "Фотографии",
+	"modals.files": "Файлы",
+	"modals.images_not_yet": "Фотографий пока нет.",
+	"modals.files_not_yet": "Файлов пока нет.",
+	"modals.cancel": "Отмена",
+	"modals.copy_successfull": "Текст успешно скопирован в буфер обмена!",
+	"modals.copy_the_message_and_send_to_email": "Пожалуйста, скопируйте текст ошибки и отправьте её на почту разработчикам: {{email}}.",
+	"modals.download": "Скачать лог файл",
+	"modals.reset_page": "Обновить страницу",
 
 	"modals.error.copy": "Ошибка при копировании текста в буфер обмена: ",
-	"modals.error.server": "Упс! Возникла ошибка в работе сервера",
+	"modals.error.server": "Упс! Возникла ошибка в работе сервера.",
 
 	"ui.copyright": "Copyright ©",
-	"ui.product_name": "ВК-КЛОН",
-
+	"ui.product_name": "ВК-КЛОН ",
 	"ui.sure_delete_photo": "Вы действительно хотите удалить эту фотографию?",
 	"ui.delete": "Удалить",
 
-	"redux.error.unknowed_type_if_unread_messages": "Неизвестный тип непрочитанных сообщений: {{type}}",
+	"redux.error.unknowed_type_if_unread_messages": "Неизвестный тип непрочитанных сообщений: {{type}}.",
 
 	"utils.required_field": "Заполните поле",
+	"utils.not_correct_format": "Неверный формат",
 	"utils.byte": "байт",
 
 	"utils.months.jan": "янв",
@@ -149,19 +156,18 @@
 
 	"utils.yesterday": "вчера ",
 
-	"edit.error.no_user": "Нет пользователя",
-	"edit.error.change_user_info": "Произошла ошибка при изменении информации о пользователе:",
 	"edit.main": "Основное",
 	"edit.contacts": "Контакты",
-	"edit.save": "Изменения сохранены",
+	"edit.changes_save": "Изменения сохранены",
 	"edit.show_data": "новые данные будут отражены на Вашей странице.",
+	"edit.save": "Сохранить",
 
 	"edit_tabs.name": "Имя",
 	"edit_tabs.surname": "Фамилия",
 	"edit_tabs.sex": "Пол",
-	"edit_tabs.sex_not_specified": "не указано",
-	"edit_tabs.sex_male": "Мужской",
-	"edit_tabs.sex_female": "Женский",
+	"edit_tabs.select_sex.label_not_specified": "Не указано",
+	"edit_tabs.select_sex.label_male": "Мужской",
+	"edit_tabs.select_sex.label_female": "Женский",
 	"edit_tabs.work": "Место работы",
 	"edit_tabs.birthday": "День рождения",
 	"edit_tabs.birthday_date": "Укажите дату",

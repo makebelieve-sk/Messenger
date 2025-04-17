@@ -1,29 +1,31 @@
 import { memo } from "react";
-import { useTranslation } from "react-i18next";
-
-import Button from "@mui/material/Button";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import Button from "@mui/material/Button";
+
+import i18next from "@service/i18n";
+import useImagesCarouselStore from "@store/images-carousel";
 
 interface ICarouselButton {
-    next?: boolean;
-    isDisabled: boolean;
-    handleClick: (dir: number) => void;
+	next?: boolean;
+	isDisabled: boolean;
 };
 
 // Компонент, отвечающий за кнопки "Назад" и "Вперед" в карусели картинок
-export default memo(function CarouselButton({ next, isDisabled, handleClick }: ICarouselButton) {
-    const { t } = useTranslation();
+export default memo(function CarouselButton({ next, isDisabled }: ICarouselButton) {
+	// Обработка кнопкок "Назад"/"Вперед"
+	const onClick = () => {
+		useImagesCarouselStore.getState().changeIndex(next ? 1 : -1);
+	};
 
-    // Обработка кнопкок "Назад"/"Вперед"
-    const onClick = () => {
-        handleClick(next ? 1 : -1);
-    }
-
-    return <Button size="small" onClick={onClick} disabled={isDisabled}>
-        {next
-            ? <>{ t("images-carousel-module.further") } <KeyboardArrowRight /></>
-            : <><KeyboardArrowLeft /> { t("images-carousel-module.back") }</>
-        }
-    </Button>
+	return <Button size="small" onClick={onClick} disabled={isDisabled}>
+		{next 
+			? <>
+				{i18next.t("images-carousel-module.further")} <KeyboardArrowRight />
+			</> 
+			: <>
+				<KeyboardArrowLeft /> {i18next.t("images-carousel-module.back")}
+			</>
+		}
+	</Button>;
 });

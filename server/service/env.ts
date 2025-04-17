@@ -1,11 +1,44 @@
 import dotenv from "dotenv";
 
-// Данная переменная устанавливается (прописывается) в команде запуска сервера, так что она уже инициализирована.
-// Так что нет нужны ее прописывать в .env файлах.
+/**
+ * Данная переменная устанавливается (прописывается) в команде запуска сервера, так что она уже инициализирована.
+ * Так что нет нужны ее прописывать в .env файлах.
+ */
 const MODE = process.env.NODE_ENV as string;
 
-// Загружаем .env.<mode> в зависимости от значения NODE_ENV
-// Это делается для того, чтобы был резервный файл по умолчанию .env, из которого подтягивались переменные,
-// которые мы забыли указать/не указали в файлах вида .env.<mode>
+/**
+ * Загружаем .env.<mode> в зависимости от значения NODE_ENV.
+ * Это делается для того, чтобы был резервный файл по умолчанию .env, из которого подтягивались переменные,
+ * которые мы забыли указать/не указали в файлах вида .env.<mode>
+ */
 dotenv.config({ path: `.env.${MODE}` });
 dotenv.config();
+
+// Список обязательных env переменных
+const requiredEnv = [
+	"PORT",
+	"NODE_ENV",
+	"CLIENT_URL",
+	"COOKIE_NAME",
+	"SECRET_KEY",
+	"DATEBASE_NAME",
+	"DATEBASE_USERNAME",
+	"DATEBASE_PASSWORD",
+	"DATEBASE_DIALECT",
+	"DATEBASE_HOST",
+	"DATABASE_PORT",
+	"REDIS_CONNECTION_URL",
+	"REDIS_PREFIX",
+	"SOCKET_METHOD",
+	"EXPRESS_SESSION_DOMAIN",
+	"LOGS_DIR",
+	"ASSETS_DIR",
+	"REPORTS_DIR",
+];
+
+// Проверяем наличие обязательных env переменных
+const missingEnv = requiredEnv.filter(key => !process.env[key]);
+
+if (missingEnv.length) {
+	throw new Error(`Missing required environment variables: ${missingEnv.join(", ")}`);
+}

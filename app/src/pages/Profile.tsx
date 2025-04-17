@@ -1,42 +1,33 @@
-import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 
-import { Pages } from "@custom-types/enums";
 import MainPhoto from "@modules/profile/main-photo";
-import Friends from "@modules/profile/friends";
 import PersonalInfo from "@modules/profile/personal-info";
 import Photos from "@modules/profile/photos";
+import Friends from "@modules/profile/top-friends/friends";
+import OnlineFriends from "@modules/profile/top-friends/online-friends";
 
 import "@styles/pages/profile.scss";
 
+// Страница профиля
 export default function Profile() {
-    const navigate = useNavigate();
+	return <Grid container spacing={2}>
+		<Grid item container xs={4} spacing={2} direction="column">
+			{/* Блок моей фотографии */}
+			<MainPhoto />
 
-    // Клик по названию блока
-    const onClickBlock = (pathname: Pages) => {
-        // второй параметр query: { mainTab: MainFriendTabs, tab?: FriendsTab }
-        // navigate({ pathname, query });
-        navigate(pathname);
-    };
+			{/* Блок друзей */}
+			<Friends />
 
-    return <Grid container spacing={2}>
-        <Grid item container xs={4} spacing={2} direction="column">
-            {/* Блок моей фотографии */}
-            <MainPhoto />
+			{/* Блок друзей онлайн */}
+			<OnlineFriends />
+		</Grid>
 
-            {/* Блок друзей */}
-            <Friends onClickBlock={onClickBlock} />
+		<Grid item container xs={8} spacing={2} direction="column">
+			{/* Блок личной информации */}
+			<PersonalInfo />
 
-            {/* Блок друзей онлайн */}
-            <Friends onClickBlock={onClickBlock} onlineFriends />
-        </Grid>
-
-        <Grid item container xs={8} spacing={2} direction="column">
-            {/* Блок личной информации */}
-            <PersonalInfo onClickBlock={onClickBlock} />
-
-            {/* Блок фотографий */}
-            <Photos />
-        </Grid>
-    </Grid>
-};
+			{/* Блок фотографий */}
+			<Photos />
+		</Grid>
+	</Grid>;
+}

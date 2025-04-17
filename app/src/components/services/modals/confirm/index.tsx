@@ -1,77 +1,55 @@
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 
-import eventBus from "@utils/event-bus";
-import { GlobalEvents } from "@custom-types/events";
+import i18next from "@service/i18n";
+import useUIStore from "@store/ui";
 
 import "./confirm.scss";
 
-const modalTitle = "modal-confirm-title";
-const modalDescription = "modal-confirm-description";
+const MODAL_TITLE = "modal-confirm-title";
+const MODAL_DESCRIPTION = "modal-confirm-description";
 
-// Начальное состояние модального окна с подтверждением
-const initialModalData: IModalConfirmData = {
-    text: "",
-    btnActionTitle: "",
-    cb: undefined
-};
-
-export interface IModalConfirmData {
-    text: string;
-    btnActionTitle: string;
-    cb?: () => void;
+export interface IConfirmModalData {
+	text: string;
+	btnActionTitle: string;
+	cb?: () => void;
 };
 
 // Модальное окно с подтверждением операции (например, удаление фотографии/аватара)
 export default function ModalWithConfirm() {
-    const [open, setOpen] = useState(false);
-    const [modalData, setModalData] = useState(initialModalData);
-    
-    const { t } = useTranslation();
+	const confirmModal = useUIStore((state) => state.confirmModal);
 
-    useEffect(() => {
-        // После установки данных модального окна необходимо обновить состояние для корректного отображения
-        eventBus.on(GlobalEvents.SET_MODAL_CONFIRM, onSetModalData);
+	// Выполнение действия
+	const onAction = () => {
+		if (confirmModal && confirmModal.cb) confirmModal.cb();
 
-        // Отписываемся от данного события при размонтировании, чтобы избежать утечки памяти
-        return () => {
-            eventBus.off(GlobalEvents.SET_MODAL_CONFIRM, onSetModalData);
-        }
-    }, []);
+		onClose();
+	};
 
-    // Обработчик события SET_MODAL_CONFIRM
-    const onSetModalData = (data: IModalConfirmData) => {
-        setOpen(Boolean(data));
-        setModalData(data);
-    }
+	// Закрытие модального окна
+	const onClose = () => {
+		useUIStore.getState().setConfirmModal(null);
+	};
 
-    // Выполнение действия
-    const onAction = () => {
-        if (modalData.cb) modalData.cb();
+	if (!confirmModal) return null;
 
-        onClose();
-    };
+	return <Modal open onClose={onClose} aria-labelledby={MODAL_TITLE} aria-describedby={MODAL_DESCRIPTION}>
+		<Box className="modal-confirm-container">
+			<Typography id={MODAL_TITLE} variant="subtitle1" component="h2">
+				{confirmModal.text}
+			</Typography>
 
-    // Закрытие модального окна
-    const onClose = () => {
-        setOpen(false);
-        setModalData(initialModalData);
-    };
+			<Typography id={MODAL_DESCRIPTION} className="modal-confirm-container__buttons">
+				<Button size="small" variant="outlined" color="primary" onClick={onAction}>
+					{confirmModal.btnActionTitle}
+				</Button>
 
-    return <Modal open={open} onClose={onClose} aria-labelledby={modalTitle} aria-describedby={modalDescription}>
-        <Box className="modal-confirm-container">
-            <Typography id={modalTitle} variant="subtitle1" component="h2">
-                {modalData.text}
-            </Typography>
-
-            <Typography id={modalDescription} className="modal-confirm-container__buttons">
-                <Button size="small" variant="outlined" color="primary" onClick={onAction}>{modalData.btnActionTitle}</Button>
-                <Button size="small" variant="outlined" color="error" onClick={onClose}>{ t("modals.cancel") }</Button>
-            </Typography>
-        </Box>
-    </Modal>
-};
+				<Button size="small" variant="outlined" color="error" onClick={onClose}>
+					{i18next.t("modals.cancel")}
+				</Button>
+			</Typography>
+		</Box>
+	</Modal>;
+}

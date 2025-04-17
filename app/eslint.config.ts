@@ -1,44 +1,89 @@
 import ts from "@typescript-eslint/eslint-plugin";
 import parser from "@typescript-eslint/parser";
+import path from "path";
+import importPlugin from "eslint-plugin-import";
+import simpleImportSortPlugin from "eslint-plugin-simple-import-sort";
+import storybookPlugin from "eslint-plugin-storybook";
+
+const eslintConfig = require(path.resolve(__dirname, "../.eslint.config.ts")).default;
 
 export default [
-    // Общая конфигурация для всех файлов
-    {
-        files: ["**/*.{ts,tsx}"],           // Проверяем только нужные файлы
-        languageOptions: {
-            ecmaVersion: "latest",          // Последняя версия ECMAScript
-            sourceType: "module",           // Поддержка модулей ES
-            parser,                         // Используем TypeScript-парсер
-            parserOptions: {
-                    ecmaFeatures: {
-                    jsx: true               // Поддержка JSX
-                }
-            }                               // Добавляем поддержку браузерных глобальных объектов
-        },
-        plugins: {
-            "@typescript-eslint": ts,       // Подключаем плагин для TypeScript
-        },
-        rules: {
-            // Ваши кастомные правила
-            "@typescript-eslint/no-unused-vars": ["warn"],                  // Предупреждать о неиспользуемых переменных
-            "@typescript-eslint/explicit-function-return-type": "off",      // Не требовать явного указания возвращаемого типа
-            "@typescript-eslint/no-explicit-any": "off",                    // Предупреждать об использовании "any" (в будущем можно пометить как ignore - "warn")
-            "@typescript-eslint/ban-ts-comment": "warn",                    // Предупреждать о лишних комментариях "@ts-ignore"
-            "no-console": "off",                                            // Предупреждать об использовании "console.log" (в будущем после логгера можно использовать - "warn")
-            "quotes": ["error", "double"],                                  // Использовать двойные кавычки
-        }
+	{
+        // Глобальные игноры (должны быть в первом конфиге)
+        ignores: ["**/dist/**", "**/node_modules/**"]
     },
-    // Дополнительная конфигурация для конфигурационных файлов
-    {
-        files: ["vite.config.ts"],
-        languageOptions: {
-            parserOptions: {
-                ecmaVersion: "latest",
-                sourceType: "module"
-            }
-        },
-        rules: {
-            "no-console": "off"           // Разрешаем консоль в конфигурациях
-        }
-    }
+	eslintConfig, // Абсолютный путь к общему конфигу
+	// Общая конфигурация для файлов Storybook
+	{
+		files: ["**/*.stories.@(js|jsx|ts|tsx)"],
+		...storybookPlugin.configs.recommended,
+	},
+	// Общая конфигурация для всех файлов
+	{
+		files: ["**/*.{ts,tsx}"], // Проверяем только нужные файлы
+		languageOptions: {
+			globals: {
+				browser: true,
+				es2021: true,
+				node: true,
+			},
+			parser, // Используем TypeScript-парсер
+			parserOptions: {
+				ecmaFeatures: {
+					jsx: true, // Поддержка JSX
+				},
+			}, // Добавляем поддержку браузерных глобальных объектов
+		},
+		plugins: {
+			"@typescript-eslint": ts, // Подключаем плагин для TypeScript
+			import: importPlugin, // Подключение плагина для корректных импортов
+			"simple-import-sort": simpleImportSortPlugin, // Подключение дополнительного плагина для управления импортами
+		},
+		rules: {
+			"@typescript-eslint/no-unused-vars": [ 
+				"warn", 
+				{ 
+					"argsIgnorePattern": "_",                           // Игнорировать аргументы, начинающиеся с _
+					"varsIgnorePattern": "_",                           // Игнорировать переменные, начинающиеся с _
+				},      
+			],                                                          // Предупреждать о неиспользуемых переменных
+			"@typescript-eslint/no-explicit-any": "warn",               // Предупреждать об использовании "any"
+			"@typescript-eslint/ban-ts-comment": "warn",                // Предупреждать о лишних комментариях "@ts-ignore"
+			"@typescript-eslint/explicit-function-return-type": "off", // Не требовать явного указания возвращаемого типа
+			"import/newline-after-import": [ "warn", { count: 1 } ],   // Обязательная пустая строка после импорта
+        	"import/first": "warn",                                    // Вынос строк импортов в начало файла
+			"simple-import-sort/imports": [
+				"warn",
+				{
+					groups: [
+						// 1. Встроенные модули и зависимости из node_modules
+						["^[a-z0-9]", "^@?\\w"], // node:fs, react, lodash и т.д.
+						// 2. Алиасы всех указанных файлов. Также, относительные импорты (../components, ./utils)
+						[
+							"^@components", 
+							"^@core", 
+							"^@hooks", 
+							"^@locales", 
+							"^@modules", 
+							"^@pages", 
+							"^@service", 
+							"^@store", 
+							"^@custom-types", 
+							"^@utils", 
+							"^\\.\\.?/",
+							"^@styles", 
+						],
+					],
+				},
+			],
+		},
+	},
+	// Дополнительная конфигурация для конфигурационных файлов
+	{
+		files: ["vite.config.ts"],
+		rules: {
+			"no-console": "warn", // Разрешаем консоль в конфигурациях
+		},
+		ignores: ["node_modules", "dist"],
+	},
 ];

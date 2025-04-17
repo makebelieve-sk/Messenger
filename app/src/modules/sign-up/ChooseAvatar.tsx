@@ -1,77 +1,79 @@
-import { useState, useEffect, memo } from "react";
-import { useTranslation } from "react-i18next";
+import { memo, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
+import Typography from "@mui/material/Typography";
 
-import ChangeAvatarComponent from "@components/ui/change-avatar";
+import ChangeAvatarComponent, { type IUpdatedAvatar } from "@components/ui/change-avatar";
 import PhotoComponent from "@components/ui/photo";
-import { AVATAR_URL } from "@utils/files";
+import i18next from "@service/i18n";
+import useAuthStore from "@store/auth";
+import { AVATAR_URL } from "@utils/constants";
 
 import "./sign-up.scss";
 
 interface IChooseAvatar {
-    username: string;
-    avatarUrl: string;
-    onChange: (field: string, value: string, validateCallback?: (value: string) => string, anotherField?: string) => void;
+	username: string;
+	avatarUrl: string;
+	onChange: (field: string, value: string, validateCallback?: (value: string) => string, anotherField?: string) => void;
+	onChangeAvatar: (field: string, updatedAvatar: IUpdatedAvatar) => void;
 };
 
-export default memo(function ChooseAvatar({ username, avatarUrl, onChange }: IChooseAvatar) {
-    const [avatarLetters, setAvatarLetters] = useState("");
-    const [loading, setLoading] = useState(false);
+// Компонент, отвечающий за выбор аватара на странице регистрации
+export default memo(function ChooseAvatar({ username, avatarUrl, onChange, onChangeAvatar }: IChooseAvatar) {
+	const [ avatarLetters, setAvatarLetters ] = useState("");
 
-    const { t } = useTranslation();
+	const loading = useAuthStore(state => state.chooseAvatarLoading);
 
-    useEffect(() => {
-        if (username) {
-            setAvatarLetters(username.split(" ").map(str => str[0]).join(""));
-        }
-    }, [username]);
+	useEffect(() => {
+		if (username) {
+			setAvatarLetters(username.split(" ").map((str) => str[0]).join(""));
+		}
+	}, [ username ]);
 
-    // Удаление аватара
-    const deleteAvatar = () => {
-        onChange(AVATAR_URL, "");
-    };
+	// Удаление аватара
+	const deleteAvatar = () => {
+		onChange(AVATAR_URL, "");
+	};
 
-    // Изменение своей аватарки
-    const onChangeAvatar = ({ newAvatarUrl }: { newAvatarUrl: string; }) => {
-        onChange(AVATAR_URL, newAvatarUrl);        // Обновляем поле avatarUrl в объекте пользователя
-    };
+	// Изменение своей аватарки
+	const changeAvatar = (updatedAvatar: IUpdatedAvatar) => {
+		onChangeAvatar(AVATAR_URL, updatedAvatar);
+	};
 
-    return (
-        <Box className="choose-avatar">
-            <Grid container spacing={2} className="choose-avatar__container">
-                <Grid item xs={8}>
-                    <Typography className="choose-avatar__container__main-text">
-                        {username}, { t("profile-module.how_like_avatar") }
-                    </Typography>
-                </Grid>
+	const setLoading = (isLoading: boolean) => {
+		useAuthStore.getState().setChooseAvatarLoading(isLoading);
+	};
 
-                <Grid item xs={8} className="choose-avatar__container__avatar-wrapper">
-                    {loading
-                        ? <Skeleton variant="rectangular" className="choose-avatar__container__avatar-loading" />
-                        : avatarUrl
-                            ? <div className="choose-avatar__container__avatar">
-                                <PhotoComponent
-                                    src={avatarUrl}
-                                    alt="user-avatar"
-                                    deleteHandler={deleteAvatar}
-                                />
-                            </div>
-                            : <div className="choose-avatar__container__avatar-without-user">{avatarLetters}</div>
-                    }
-                </Grid>
+	return <Box className="choose-avatar">
+		<Grid container spacing={2} className="choose-avatar__container">
+			<Grid item xs={8}>
+				<Typography className="choose-avatar__container__main-text">
+					{username}, {i18next.t("profile-module.how_like_avatar")}
+				</Typography>
+			</Grid>
 
-                <Grid item xs={8} className="choose-avatar__container__change-photo">
-                    <ChangeAvatarComponent 
-                        labelText={t("profile-module.choose_another_photo")}
-                        loading={loading}
-                        onChange={onChangeAvatar}
-                        setLoading={setLoading}
-                    />
-                </Grid>
-            </Grid>
-        </Box>
-    );
+			<Grid item xs={8} className="choose-avatar__container__avatar-wrapper">
+				{loading 
+					? <Skeleton variant="rectangular" className="choose-avatar__container__avatar-loading" />
+					: avatarUrl 
+						? <div className="choose-avatar__container__avatar">
+							<PhotoComponent src={avatarUrl} alt="user-avatar" deleteHandler={deleteAvatar} />
+						</div>
+						: <div className="choose-avatar__container__avatar-without-user">
+							{avatarLetters}
+						</div>
+				}
+			</Grid>
+
+			<Grid item xs={8} className="choose-avatar__container__change-photo">
+				<ChangeAvatarComponent 
+					labelText={i18next.t("profile-module.choose_another_photo")} 
+					loading={loading} 
+					onChange={changeAvatar}
+					setLoading={setLoading}
+				/>
+			</Grid>
+		</Grid>
+	</Box>;
 });

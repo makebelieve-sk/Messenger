@@ -12,7 +12,7 @@
 // export interface IEditMessage {
 //     id: string;
 //     type: MessageTypes;
-//     message: string; 
+//     message: string;
 //     files: IFile[];
 // };
 
@@ -102,9 +102,9 @@
 //     updateMessageInDB(filesIds?: string[]) {
 //         // Request.post(
 //         //     ApiRoutes.updateMessage,
-//         //     { 
+//         //     {
 //         //         ...this._editMessage,
-//         //         files: filesIds ? filesIds : null 
+//         //         files: filesIds ? filesIds : null
 //         //     },
 //         //     undefined,
 //         //     undefined,

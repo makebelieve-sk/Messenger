@@ -1,4 +1,5 @@
-import { Link as MuiLink, LinkProps } from "@mui/material";
+import LinkMUI from "@mui/material/Link";
+import { type LinkProps } from "@mui/material/Link";
 
 interface ILinkComponent extends LinkProps {
 	href?: string;
@@ -10,10 +11,11 @@ interface ILinkComponent extends LinkProps {
 export default function LinkComponent({ href, children, onClick, ...props }: ILinkComponent) {
 	const onEvent = (event: React.MouseEvent<HTMLAnchorElement>) => {
 		event.preventDefault();
+
 		if (onClick) onClick();
 	};
 
-	return <MuiLink href={href} onClick={onEvent} {...props}>
+	return <LinkMUI href={href} onClick={onEvent} {...props}>
 		{children}
-	</MuiLink>
+	</LinkMUI>;
 }

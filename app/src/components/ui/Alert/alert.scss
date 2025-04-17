@@ -3,14 +3,14 @@
 
 .slide {
 	margin-bottom: 10px;
-}
 
-.alert {
-	font-size: 15px;
-	line-height: math.div(22, 14) * 100%;
-	color: $black;
-
-	svg {
-		font-size: 20px;
+	&__alert {
+		font-size: 15px;
+		line-height: math.div(22, 14) * 100%;
+		color: $black;
+	
+		svg {
+			font-size: 20px;
+		}
 	}
 }

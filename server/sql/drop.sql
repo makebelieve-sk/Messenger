@@ -5,11 +5,11 @@ DROP TABLE IF EXISTS Photos_in_Message;
 DROP TABLE IF EXISTS User_Message_Statuses;
 DROP TABLE IF EXISTS Messages;
 DROP TABLE IF EXISTS Users_in_Chat;
-DROP TABLE IF EXISTS Disabled_Chat_Sound;
+DROP TABLE IF EXISTS Disabled_Chats_Sound;
 DROP TABLE IF EXISTS Chats;
 DROP TABLE IF EXISTS Friend_Actions_Log;
 DROP TABLE IF EXISTS Friend_Actions;
-DROP TABLE IF EXISTS Notification_Settings;
+DROP TABLE IF EXISTS Notifications_Settings;
 DROP TABLE IF EXISTS User_Photos;
 DROP TABLE IF EXISTS User_Details;
 

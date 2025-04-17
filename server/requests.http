@@ -1,0 +1,129 @@
+### Данный файл служит для информации об API сервера. 
+### При добавлении нового ендпоинта необходимо указать его здесь.
+### Важный момент! Запросы с файлами не поддерживаются расширением Rest Client и их необходимо выполнять в Postman.
+### Перед отправкой запроса необходимо изменить переменные @host и @auth_cookie.
+
+@host = http://localhost:3000
+@auth_cookie = sid=your-session-id-here
+
+### ===============================================================================================
+### AuthController
+### ===============================================================================================
+### 1. Регистрация (Sign Up)
+POST {{host}}/sign-up
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "thirdName": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "+79991234567",
+  "password": "securePassword123",
+  "avatarUrl": "/avatars/avatar-test.jpg"
+}
+
+### 2. Вход (Sign In)
+POST {{host}}/sign-in
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "securePassword123",
+  "rememberMe": true
+}
+
+### 3. Выход (Logout)
+GET {{host}}/logout
+Cookie: {{auth_cookie}}
+### ===============================================================================================
+### UserController
+### ===============================================================================================
+### 1. Получить свои данные
+GET {{host}}/get-me
+Cookie: {{auth_cookie}}
+
+### 2. Получить данные пользователя (через параметр)
+POST {{host}}/get-user
+Content-Type: application/json
+
+{
+    "id": "user-id-here"
+}
+
+### 3. Изменить информацию
+PUT {{host}}/edit-info
+Content-Type: application/json
+
+{
+  "name": "John",
+  "surName": "Doe",
+  "sex": "male",
+  "birthday": "1990-01-01",
+  "work": "Developer",
+  "city": "Moscow",
+  "phone": "+79991234567",
+  "email": "john.doe@example.com"
+}
+### ===============================================================================================
+### ImagesController
+### ===============================================================================================
+### 1. Загрузка аватара при регистрации (без аутентификации)
+POST {{host}}/upload-avatar
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="avatar.jpg"
+Content-Type: image/jpeg
+
+< ./test-avatar.jpg
+--boundary--
+
+### 2. Смена аватара (требует аутентификации)
+POST {{host}}/change-avatar
+Content-Type: multipart/form-data; boundary=boundary
+Cookie: {{auth_cookie}}
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="new-avatar.jpg"
+Content-Type: image/jpeg
+
+< ./new-avatar.jpg
+--boundary--
+
+### 3. Получение фотографий пользователя
+POST {{host}}/get-photos
+Content-Type: application/json
+Cookie: {{auth_cookie}}
+
+{
+  "userId": "user-id-here",
+  "limit": 10,
+  "offset": 0
+}
+
+### 4. Загрузка фотографий в профиль
+POST {{host}}/save-photos
+Content-Type: multipart/form-data; boundary=boundary
+Cookie: {{auth_cookie}}
+
+--boundary
+Content-Disposition: form-data; name="photo"; filename="photo1.jpg"
+Content-Type: image/jpeg
+
+< ./photo1.jpg
+--boundary
+Content-Disposition: form-data; name="photo"; filename="photo2.jpg"
+Content-Type: image/jpeg
+
+< ./photo2.jpg
+--boundary--
+
+### 5. Удаление фото/аватара
+POST {{host}}/delete-photo
+Content-Type: application/json
+Cookie: {{auth_cookie}}
+
+{
+  "imageUrl": "/uploads/avatars/abc123.jpg",
+  "isAvatar": false
+}

@@ -33,3 +33,17 @@ server/logs
 nginx/logs/
 nginx/cache/
 nginx/tmp/
+
+# Пример запросов HTTP к серверу
+/server/requests.http
+
+# Файлы линтеров клиента и сервера
+.eslint.config.ts
+/app/eslint.config.ts
+/server/eslint.config.ts
+
+# Файл единой конфигурации для разных IDE
+.editorconfig
+
+# Файл глобального описания проекта
+README.md
