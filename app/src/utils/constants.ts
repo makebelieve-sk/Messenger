@@ -30,3 +30,5 @@ export const SNACKBAR_TIMEOUT = 10000;
 export const AVATAR_URL = "avatarUrl";
 // Лимит подгрузки количества фотографий на странице "Фотографии"
 export const PHOTOS_LIMIT = 25;
+// Тип ошибки, отправляемой по сокету, в момент неуспешной валидации токена сессии
+export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";

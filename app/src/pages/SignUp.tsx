@@ -1,22 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { LoadingButton } from "@mui/lab";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Stepper from "@mui/material/Stepper";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 
+import LockIconComponent from "@components/icons/lockIcon";
+import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
+import BoxComponent from "@components/ui/box";
+import ButtonComponent from "@components/ui/button";
 import { type IUpdatedAvatar } from "@components/ui/change-avatar";
 import CopyrightComponent from "@components/ui/copyright";
+import GridComponent from "@components/ui/grid";
 import LinkComponent from "@components/ui/link";
+import StepperComponent from "@components/ui/stepper";
+import TypographyComponent from "@components/ui/typography";
 import useMainClient from "@hooks/useMainClient";
 import ChooseAvatar from "@modules/sign-up/ChooseAvatar";
 import SignUpForm from "@modules/sign-up/Form";
@@ -25,9 +19,9 @@ import useAuthStore from "@store/auth";
 import useUIStore from "@store/ui";
 import { HTTPStatuses, Pages } from "@custom-types/enums";
 import { type IUser } from "@custom-types/models.types";
+
 import styles from "@styles/pages/sign-up.module.scss";
 
-const THEME = createTheme();
 const steps = [ i18next.t("sign-up.main_step"), i18next.t("sign-up.choose_avatar_step") ];
 
 const initialValues = {
@@ -248,61 +242,66 @@ export default function SignUp() {
 		}
 	};
 
-	return <ThemeProvider theme={THEME}>
-		<Container component="main" maxWidth="xs">
-			<CssBaseline />
-			<Box component="form" noValidate className={styles.signUpForm}>
-				<Avatar className={styles.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
+	return <BoxComponent className={styles.signUpArea}> 
+		<BoxComponent component="form" noValidate className={styles.signUpForm}>
+			<SystemAvatarComponent>
+				<LockIconComponent size={25} />
+			</SystemAvatarComponent>
 
-				<Typography className={styles.title} component="h1" variant="h5">
-					{i18next.t("sign-up.sign_up")}
-				</Typography>
+			<TypographyComponent
+				className={styles.title}
+				component="h1"
+				variant="h5"
+			>
+				{i18next.t("sign-up.sign_up")}
+			</TypographyComponent>
 
-				<Grid container justifyContent="center" className={styles.signInArea}>
-					<Grid item>
-						<LinkComponent 
-							variant="body2" 
-							className={styles.secondaryButton} 
-							onClick={() => navigate(Pages.signIn)} 
-							component="p"
-						>
-							{i18next.t("sign-up.enter")}
-						</LinkComponent>
-					</Grid>
-				</Grid>
-
-				<Stepper activeStep={activeStep}>
-					{steps.map(label => {
-						return <Step key={label}>
-							<StepLabel>{label}</StepLabel>
-						</Step>;
-					})}
-				</Stepper>
-
-				{getStepContent(activeStep)}
-
-				<Box className={styles.footerButtonArea}>
-					<Button fullWidth className={styles.backButton} disabled={activeStep === 0} onClick={handleBack}>
-						{i18next.t("sign-up.back")}
-					</Button>
-
-					<LoadingButton
-						fullWidth
-						variant="contained"
-						className={styles.loadingButton}
-						loading={loading}
-						color="primary"
-						disabled={checkValidation(activeStep)}
-						onClick={handleNext}
+			<GridComponent
+				container
+				className={styles.signInArea}
+			>
+				<GridComponent className="toSignIn">
+					<LinkComponent
+						variant="body2"
+						className={styles.secondaryButton}
+						onClick={() => navigate(Pages.signIn)}
+						component="p"
 					>
-						{activeStep === steps.length - 1 ? i18next.t("sign-up.register") : i18next.t("sign-up.further")}
-					</LoadingButton>
-				</Box>
-			</Box>
+						{i18next.t("sign-up.enter")}
+					</LinkComponent>
+				</GridComponent>
+			</GridComponent>
 
-			<CopyrightComponent />
-		</Container>
-	</ThemeProvider>;
+			<StepperComponent steps={steps} activeStep={activeStep} />
+
+			{getStepContent(activeStep)}
+
+			<BoxComponent className={styles.footerButtonArea}>
+				<ButtonComponent
+					fullWidth
+					className={styles.backButton}
+					disabled={activeStep === 0}
+					onClick={handleBack}
+				>
+					{i18next.t("sign-up.back")}
+				</ButtonComponent>
+
+				<ButtonComponent
+					fullWidth
+					variant="contained"
+					className={styles.loadingButton}
+					loading={loading}
+					color="primary"
+					disabled={checkValidation(activeStep)}
+					onClick={handleNext}
+				>
+					{activeStep === steps.length - 1
+						? i18next.t("sign-up.register")
+						: i18next.t("sign-up.further")}
+				</ButtonComponent>
+			</BoxComponent>
+		</BoxComponent>
+
+		<CopyrightComponent />
+	</BoxComponent>;
 }

@@ -1,11 +1,11 @@
 import { ChangeEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 
+import GridComponent from "@components/ui/grid";
 import InputImageComponent from "@components/ui/input-image";
 import LinkComponent from "@components/ui/link";
 import NoDataComponent from "@components/ui/no-data";
+import PaperComponent from "@components/ui/paper";
 import PhotoComponent from "@components/ui/photo";
 import SpinnerComponent from "@components/ui/spinner";
 import useProfile from "@hooks/useProfile";
@@ -57,8 +57,8 @@ export default function Photos() {
 		profile.photosService.deletePhoto({ photoId: photo.id, imageUrl: photo.path, isAvatar: false });
 	};
 
-	return <Grid item>
-		<Paper className="photo-container paper-block">
+	return <GridComponent>
+		<PaperComponent className="photo-container paper-block">
 			<div className="photo-container__title">
 				<div className="block-title photo-container__title__text">
 					{i18next.t("profile-module.my_photos")}
@@ -102,6 +102,6 @@ export default function Photos() {
 				multiple 
 				onChange={addPhotosHandler} 
 			/>
-		</Paper>
-	</Grid>;
+		</PaperComponent>
+	</GridComponent>;
 }

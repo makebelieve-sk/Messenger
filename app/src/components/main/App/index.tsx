@@ -1,3 +1,4 @@
+import ContentLayout from "@components/layouts/content";
 import HeaderComponent from "@components/layouts/header";
 import MenuComponent from "@components/layouts/menu";
 import Router from "@components/main/Router";
@@ -21,12 +22,14 @@ export default function App() {
 				{user ? <HeaderComponent /> : null}
 
 				<div className="root__wrapper">
-					<div className={`root__wrapper__container ${user ? "" : "root__wrapper__container__no-auth"}`}>
+					<div className={`root__wrapper__container ${user ? "" : "root__wrapper__container__no-auth" }`}>
 						{user ? <MenuComponent /> : null}
 
-						<div className="root__wrapper__container__content">
-							<Router isAuth={Boolean(user)} />
-						</div>
+						<ContentLayout>
+							<div className="root__wrapper__container__content">
+								<Router isAuth={Boolean(user)} />
+							</div>
+						</ContentLayout>
 					</div>
 				</div>
 			</>

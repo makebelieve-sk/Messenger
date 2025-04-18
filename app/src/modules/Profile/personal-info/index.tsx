@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 
+import GridComponent from "@components/ui/grid";
+import PaperComponent from "@components/ui/paper";
 import SpinnerComponent from "@components/ui/spinner";
 import useUserDetails from "@hooks/useUserDetails";
 import i18next from "@service/i18n";
@@ -37,8 +37,8 @@ export default function PersonalInfo() {
 		navigate(Pages.friends, { state: stateOptions });
 	};
 
-	return <Grid item>
-		<Paper className="info-container paper-block">
+	return <GridComponent>
+		<PaperComponent className="info-container paper-block">
 			<div className="info-container__main-info">
 				<div className="info-container__username">{fullName}</div>
 			</div>
@@ -96,6 +96,6 @@ export default function PersonalInfo() {
 					<span className="info-container__counts-block__count__value">0</span> {userDetails.getVideosText(0)}
 				</div>
 			</div>
-		</Paper>
-	</Grid>;
+		</PaperComponent>
+	</GridComponent>;
 };

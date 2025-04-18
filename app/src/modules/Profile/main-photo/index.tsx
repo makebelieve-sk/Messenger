@@ -1,7 +1,6 @@
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-
 import ChangeAvatarComponent, { type IUpdatedAvatar } from "@components/ui/change-avatar";
+import GridComponent from "@components/ui/grid";
+import PaperComponent from "@components/ui/paper";
 import PhotoComponent from "@components/ui/photo";
 import useProfile from "@hooks/useProfile";
 import i18next from "@service/i18n";
@@ -46,24 +45,24 @@ export default function MainPhoto() {
 		profile.onDeleteAvatar();
 	};
 
-	return <Grid item>
-		<Paper className="main-photo paper-block">
-			<PhotoComponent 
-				src={profile.userService.avatarUrl} 
-				alt="user-avatar" 
-				clickHandler={clickHandler} 
-				deleteHandler={deleteHandler} 
+	return <GridComponent className="main-photo__grid">
+		<PaperComponent className="main-photo paper-block">
+			<PhotoComponent
+				src={profile.userService.avatarUrl}
+				alt="user-avatar"
+				clickHandler={clickHandler}
+				deleteHandler={deleteHandler}
 			/>
 
 			<div className="main-photo__edit-button">
-				<ChangeAvatarComponent 
+				<ChangeAvatarComponent
+					labelText={i18next.t("profile-module.change")}
+					loading={loading}
 					mustAuth
-					labelText={i18next.t("profile-module.change")} 
-					loading={loading} 
-					onChange={changeHandler} 
-					setLoading={setLoading} 
+					onChange={changeHandler}
+					setLoading={setLoading}
 				/>
 			</div>
-		</Paper>
-	</Grid>;
+		</PaperComponent>
+	</GridComponent>;
 }

@@ -1,10 +1,10 @@
 import { ChangeEvent, Dispatch, lazy, memo, SetStateAction, Suspense } from "react";
 import { type CountryData } from "react-phone-input-2";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 
+import BoxComponent from "@components/ui/box";
+import GridComponent from "@components/ui/grid";
 import SpinnerComponent from "@components/ui/spinner";
+import TextFieldComponent from "@components/ui/text-field";
 import { type ISignUpState } from "@pages/SignUp";
 import i18next from "@service/i18n";
 import { REQUIRED_FIELD } from "@utils/constants";
@@ -81,10 +81,10 @@ export default memo(function SignUpForm({ formValues, setFormValues, onChange }:
 			: REQUIRED_FIELD;
 	};
 
-	return <Box className="sign-up-form">
-		<Grid container spacing={2}>
-			<Grid item xs={12} sm={6}>
-				<TextField
+	return <BoxComponent className="sign-up-form">
+		<GridComponent container spacing={2}>
+			<GridComponent xs={12} sm={6}>
+				<TextFieldComponent
 					id="firstName"
 					name="firstName"
 					margin="normal"
@@ -99,10 +99,10 @@ export default memo(function SignUpForm({ formValues, setFormValues, onChange }:
 					value={formValues.values.firstName}
 					onChange={(e) => onChange("firstName", e.target.value, validateFullName)}
 				/>
-			</Grid>
+			</GridComponent>
 
-			<Grid item xs={12} sm={6}>
-				<TextField
+			<GridComponent xs={12} sm={6}>
+				<TextFieldComponent
 					id="thirdName"
 					name="thirdName"
 					margin="normal"
@@ -116,10 +116,10 @@ export default memo(function SignUpForm({ formValues, setFormValues, onChange }:
 					value={formValues.values.thirdName}
 					onChange={(e) => onChange("thirdName", e.target.value, validateFullName)}
 				/>
-			</Grid>
+			</GridComponent>
 
-			<Grid item xs={12}>
-				<TextField
+			<GridComponent xs={12}>
+				<TextFieldComponent
 					id="email"
 					name="email"
 					margin="normal"
@@ -134,9 +134,9 @@ export default memo(function SignUpForm({ formValues, setFormValues, onChange }:
 					value={formValues.values.email}
 					onChange={(e) => onChange("email", e.target.value, validateEmail)}
 				/>
-			</Grid>
+			</GridComponent>
 
-			<Grid item xs={12}>
+			<GridComponent xs={12}>
 				<Suspense fallback={<div className="sign-up-form__phone-input__loading"><SpinnerComponent /></div>}>
 					<PhoneInput
 						country="ru"
@@ -159,10 +159,10 @@ export default memo(function SignUpForm({ formValues, setFormValues, onChange }:
 				<div className="sign-up-form__phone-error-text">
 					{formValues.errors.phone ? formValues.errors.phone : null}
 				</div>
-			</Grid>
+			</GridComponent>
 
-			<Grid item xs={12}>
-				<TextField
+			<GridComponent xs={12}>
+				<TextFieldComponent
 					id="password"
 					name="password"
 					margin="normal"
@@ -177,10 +177,10 @@ export default memo(function SignUpForm({ formValues, setFormValues, onChange }:
 					value={formValues.values.password}
 					onChange={(e) => onChange("password", e.target.value, validatePassword, "passwordConfirm")}
 				/>
-			</Grid>
+			</GridComponent>
 
-			<Grid item xs={12}>
-				<TextField
+			<GridComponent xs={12}>
+				<TextFieldComponent
 					id="passwordConfirm"
 					name="passwordConfirm"
 					margin="normal"
@@ -195,7 +195,7 @@ export default memo(function SignUpForm({ formValues, setFormValues, onChange }:
 					value={formValues.values.passwordConfirm}
 					onChange={checkPassword}
 				/>
-			</Grid>
-		</Grid>
-	</Box>;
+			</GridComponent>
+		</GridComponent>
+	</BoxComponent>;
 });

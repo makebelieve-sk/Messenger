@@ -1,23 +1,23 @@
 .main-photo {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
 
-	.photo {
-		max-width: fit-content;
-		max-height: 350px;
-		overflow: hidden;
-		margin: 0 auto;
-		padding: 10px 20px;
-	}
+    .photo {
+        max-width: fit-content;
+        max-height: 350px;
+        overflow: hidden;
+        margin: 0 auto;
+        min-height: auto;
+    }
 
-	&__edit-button {
-		width: 100%;
-		padding: 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		bottom: 10px;
-	}
+    &__edit-button {
+        width: 100%;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        bottom: 10px;
+    }
 }

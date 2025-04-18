@@ -1,9 +1,9 @@
 import { memo } from "react";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import Button from "@mui/material/Button";
 
-import i18next from "@service/i18n";
+import ArrowLeftIconComponent from "@components/icons/arrowLeftIcon";
+import ArrowRightIconComponent from "@components/icons/arrowRightIcon";
+import { SmallButtonComponent } from "@components/ui/button/small-button";
+import i18n from "@service/i18n";
 import useImagesCarouselStore from "@store/images-carousel";
 
 interface ICarouselButton {
@@ -13,19 +13,19 @@ interface ICarouselButton {
 
 // Компонент, отвечающий за кнопки "Назад" и "Вперед" в карусели картинок
 export default memo(function CarouselButton({ next, isDisabled }: ICarouselButton) {
-	// Обработка кнопкок "Назад"/"Вперед"
+	// Обработка кнопок "Назад"/"Вперед"
 	const onClick = () => {
 		useImagesCarouselStore.getState().changeIndex(next ? 1 : -1);
 	};
 
-	return <Button size="small" onClick={onClick} disabled={isDisabled}>
-		{next 
+	return <SmallButtonComponent onClick={onClick} disabled={isDisabled}>
+		{next
 			? <>
-				{i18next.t("images-carousel-module.further")} <KeyboardArrowRight />
-			</> 
+				{i18n.t("images-carousel-module.further")} <ArrowRightIconComponent />
+			</>
 			: <>
-				<KeyboardArrowLeft /> {i18next.t("images-carousel-module.back")}
+				<ArrowLeftIconComponent /> {i18n.t("images-carousel-module.back")}
 			</>
 		}
-	</Button>;
+	</SmallButtonComponent>;
 });

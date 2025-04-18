@@ -1,10 +1,10 @@
 import { ChangeEvent, memo } from "react";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { type SelectChangeEvent } from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
+import { type SelectChangeEvent } from "@mui/material/Select";
 
+import BoxComponent from "@components/ui/box";
+import MenuItemComponent from "@components/ui/menu-item";
+import SelectComponent from "@components/ui/select";
+import TextFieldComponent from "@components/ui/text-field";
 import { type ITabModule } from "@modules/edit";
 import DatePickerComponent from "@modules/edit/date-picker";
 import i18next from "@service/i18n";
@@ -20,7 +20,7 @@ enum SELECT_MALE {
 // Компонент основной главной вкладки раздела редактирования
 export default memo(function Main({ formValues, formErrors, onChange }: ITabModule) {
 	return <>
-		<TextField
+		<TextFieldComponent
 			id="name"
 			name="name"
 			margin="normal"
@@ -36,7 +36,7 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 			onChange={(e: ChangeEvent<HTMLInputElement>) => onChange("name", e.target.value)}
 		/>
 
-		<TextField
+		<TextFieldComponent
 			id="surName"
 			name="surName"
 			margin="normal"
@@ -51,33 +51,31 @@ export default memo(function Main({ formValues, formErrors, onChange }: ITabModu
 			onChange={(e: ChangeEvent<HTMLInputElement>) => onChange("surName", e.target.value)}
 		/>
 
-		<FormControl fullWidth className={"edit-container__sex-select"}>
-			<InputLabel id="sex-input">{i18next.t("edit_tabs.sex")}</InputLabel>
-
-			<Select
+		<BoxComponent className="edit-container__sex-select">
+			<SelectComponent
 				labelId="sex-input"
 				id="sex-select"
+				text={i18next.t("edit_tabs.sex")}
 				value={formValues.sex || SELECT_MALE.EMPTY}
-				label={i18next.t("edit_tabs.sex")}
 				onChange={(e: SelectChangeEvent<string>) => onChange("sex", e.target.value === SELECT_MALE.EMPTY ? null : e.target.value)}
 			>
-				<MenuItem value={SELECT_MALE.EMPTY}>
+				<MenuItemComponent value={SELECT_MALE.EMPTY}>
 					{i18next.t("edit_tabs.select_sex.label_not_specified")}
-				</MenuItem>
+				</MenuItemComponent>
 
-				<MenuItem value={SELECT_MALE.MALE}>
+				<MenuItemComponent value={SELECT_MALE.MALE}>
 					{i18next.t("edit_tabs.select_sex.label_male")}
-				</MenuItem>
+				</MenuItemComponent>
 
-				<MenuItem value={SELECT_MALE.FEMALE}>
+				<MenuItemComponent value={SELECT_MALE.FEMALE}>
 					{i18next.t("edit_tabs.select_sex.label_female")}
-				</MenuItem>
-			</Select>
-		</FormControl>
+				</MenuItemComponent>
+			</SelectComponent>
+		</BoxComponent>
 
 		<DatePickerComponent formValues={formValues} onChangeField={onChange} />
 
-		<TextField
+		<TextFieldComponent
 			id="work"
 			name="work"
 			margin="normal"

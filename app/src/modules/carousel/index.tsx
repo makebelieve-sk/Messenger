@@ -3,7 +3,6 @@ import MobileStepper from "@mui/material/MobileStepper";
 
 import PhotoComponent from "@components/ui/photo";
 import CarouselButton from "@modules/carousel/button";
-import Info from "@modules/carousel/info";
 import useImagesCarouselStore from "@store/images-carousel";
 
 import "./carousel.scss";
@@ -21,10 +20,6 @@ export default memo(({ images }: { images: ICarouselImage[]; }) => {
 	const activeKey = useImagesCarouselStore(state => state.index);
 
 	return <div className="carousel">
-		<div className="carousel__info">
-			<Info activeImage={images[activeKey]} />
-		</div>
-
 		<div className="carousel__photo">
 			<PhotoComponent src={images[activeKey].src} alt={images[activeKey].alt} showVisibleIcon={false} />
 

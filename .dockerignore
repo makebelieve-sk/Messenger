@@ -45,5 +45,9 @@ nginx/tmp/
 # Файл единой конфигурации для разных IDE
 .editorconfig
 
+#jest coverage
+app/coverage
+*storybook.log
+
 # Файл глобального описания проекта
 README.md

@@ -1,8 +1,7 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
-
+import BoxComponent from "@components/ui/box";
+import { SmallButtonComponent } from "@components/ui/button/small-button";
+import ModalComponent from "@components/ui/modal";
+import TypographyComponent from "@components/ui/typography";
 import i18next from "@service/i18n";
 import useUIStore from "@store/ui";
 
@@ -35,21 +34,21 @@ export default function ModalWithConfirm() {
 
 	if (!confirmModal) return null;
 
-	return <Modal open onClose={onClose} aria-labelledby={MODAL_TITLE} aria-describedby={MODAL_DESCRIPTION}>
-		<Box className="modal-confirm-container">
-			<Typography id={MODAL_TITLE} variant="subtitle1" component="h2">
+	return <ModalComponent open onClose={onClose} title={MODAL_TITLE} description={MODAL_DESCRIPTION}>
+		<BoxComponent className="modal-confirm-container">
+			<TypographyComponent id={MODAL_TITLE} variant="subtitle1" component="h2">
 				{confirmModal.text}
-			</Typography>
+			</TypographyComponent>
 
-			<Typography id={MODAL_DESCRIPTION} className="modal-confirm-container__buttons">
-				<Button size="small" variant="outlined" color="primary" onClick={onAction}>
+			<TypographyComponent id={MODAL_DESCRIPTION} className="modal-confirm-container__buttons">
+				<SmallButtonComponent variant="outlined" color="primary" onClick={onAction}>
 					{confirmModal.btnActionTitle}
-				</Button>
+				</SmallButtonComponent>
 
-				<Button size="small" variant="outlined" color="error" onClick={onClose}>
-					{i18next.t("modals.cancel")}
-				</Button>
-			</Typography>
-		</Box>
-	</Modal>;
+				<SmallButtonComponent variant="outlined" color="error" onClick={onClose}>
+					{ i18next.t("modals.cancel") }
+				</SmallButtonComponent>
+			</TypographyComponent>
+		</BoxComponent>
+	</ModalComponent>;
 }

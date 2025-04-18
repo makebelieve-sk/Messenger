@@ -54,4 +54,4 @@ export const IS_DEV = NODE_ENV === "development";
 
 export const MB_1 = 1024 * 1024;
 
-
+export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";

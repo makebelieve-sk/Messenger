@@ -1,11 +1,11 @@
 import { memo, useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 
+import BoxComponent from "@components/ui/box";
 import ChangeAvatarComponent, { type IUpdatedAvatar } from "@components/ui/change-avatar";
+import GridComponent from "@components/ui/grid";
 import PhotoComponent from "@components/ui/photo";
+import SpinnerComponent from "@components/ui/spinner";
 import i18next from "@service/i18n";
 import useAuthStore from "@store/auth";
 import { AVATAR_URL } from "@utils/constants";
@@ -45,17 +45,17 @@ export default memo(function ChooseAvatar({ username, avatarUrl, onChange, onCha
 		useAuthStore.getState().setChooseAvatarLoading(isLoading);
 	};
 
-	return <Box className="choose-avatar">
-		<Grid container spacing={2} className="choose-avatar__container">
-			<Grid item xs={8}>
+	return <BoxComponent className="choose-avatar">
+		<GridComponent container spacing={2} className="choose-avatar__container">
+			<GridComponent xs={8}>
 				<Typography className="choose-avatar__container__main-text">
 					{username}, {i18next.t("profile-module.how_like_avatar")}
 				</Typography>
-			</Grid>
+			</GridComponent>
 
-			<Grid item xs={8} className="choose-avatar__container__avatar-wrapper">
+			<GridComponent xs={8} className="choose-avatar__container__avatar-wrapper">
 				{loading 
-					? <Skeleton variant="rectangular" className="choose-avatar__container__avatar-loading" />
+					? <SpinnerComponent />
 					: avatarUrl 
 						? <div className="choose-avatar__container__avatar">
 							<PhotoComponent src={avatarUrl} alt="user-avatar" deleteHandler={deleteAvatar} />
@@ -64,16 +64,16 @@ export default memo(function ChooseAvatar({ username, avatarUrl, onChange, onCha
 							{avatarLetters}
 						</div>
 				}
-			</Grid>
+			</GridComponent>
 
-			<Grid item xs={8} className="choose-avatar__container__change-photo">
+			<GridComponent xs={8} className="choose-avatar__container__change-photo">
 				<ChangeAvatarComponent 
 					labelText={i18next.t("profile-module.choose_another_photo")} 
 					loading={loading} 
 					onChange={changeAvatar}
 					setLoading={setLoading}
 				/>
-			</Grid>
-		</Grid>
-	</Box>;
+			</GridComponent>
+		</GridComponent>
+	</BoxComponent>;
 });

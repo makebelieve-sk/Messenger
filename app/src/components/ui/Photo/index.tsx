@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
 
+import CloseIconComponent from "@components/icons/closeIcon";
 import useImage from "@hooks/useImage";
 import i18next from "@service/i18n";
 import useUIStore from "@store/ui";
@@ -54,7 +54,7 @@ export default memo(function PhotoComponent({ src, alt, showVisibleIcon = true, 
 	return <div className="photo" onClick={onClick} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut}>
 		{visibleCloseIcon 
 			? <div className="photo__close-icon" onClick={onDelete}>
-				<CloseIcon color="primary" fontSize="small" />
+				<CloseIconComponent size="16" />
 			</div>
 			: null
 		}

@@ -9,19 +9,18 @@ import { Pages } from "@custom-types/enums";
 
 import "./avatar.scss";
 
-interface IAvatarComponent {
+export interface IAvatarComponent {
 	src: string | null;
 	alt: string;
 	userId: string;
-	avatarClassName?: string;
-	size?: number;
-	pushLeft?: boolean;
+	className?: "user-avatar" | "system-avatar";
+	children?: React.ReactNode;
 };
 
 const anchorOrigin = { vertical: "bottom", horizontal: "right" } as const;
 
 // Базовый компонент круглого маленького аватара
-export default memo(function AvatarComponent({ src, alt, userId, avatarClassName, size = 46, pushLeft = false }: IAvatarComponent) {
+export default memo(function AvatarComponent({ src, alt, userId, className, children }: IAvatarComponent) {
 	const isOnline = useGlobalStore(state => state.onlineUsers.has(userId)); 
 	
 	const srcImage = useImage(src);
@@ -34,21 +33,19 @@ export default memo(function AvatarComponent({ src, alt, userId, avatarClassName
 		}
 	};
 
-	return (
-		<Badge
-			className={`avatar-badge ${isOnline ? "avatar-badge__active" : ""}`}
-			overlap="circular"
-			anchorOrigin={anchorOrigin}
-			variant="dot"
-			sx={{ marginLeft: pushLeft ? "auto" : "50%", transform: pushLeft ? "none" : "translateX(-50%)" }}
+	return <Badge
+		className={`avatar-badge ${isOnline ? "avatar-badge__active" : ""}`}
+		overlap="circular"
+		anchorOrigin={anchorOrigin}
+		variant="dot"
+	>
+		<AvatarMUI
+			src={srcImage}
+			alt={alt}
+			className={`avatar-badge__avatar ${className}`}
+			onClick={onClick}
 		>
-			<AvatarMUI
-				src={srcImage}
-				alt={alt}
-				className={`avatar-badge__avatar ${avatarClassName ? avatarClassName : ""}`}
-				sx={{ width: size, height: size }}
-				onClick={onClick}
-			/>
-		</Badge>
-	);
+			{children}
+		</AvatarMUI>
+	</Badge>;
 });

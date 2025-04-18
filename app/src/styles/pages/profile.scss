@@ -1,7 +1,7 @@
-@use "../abstract/colors.scss" as *;
+@use "@styles/abstract/colors.scss" as *;
 
 /* Для счетчика количества (друзей, фото и т.д.) */
 .counter {
-	color: $dark-blue;
-	padding-left: 5px;
+    color: $dark-blue;
+    padding-left: 5px;
 }

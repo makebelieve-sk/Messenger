@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { LoadingButton } from "@mui/lab";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
-import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 
+import LockIconComponent from "@components/icons/lockIcon";
+import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
+import BoxComponent from "@components/ui/box";
+import ButtonComponent from "@components/ui/button";
+import CheckboxComponent from "@components/ui/checkbox";
 import CopyrightComponent from "@components/ui/copyright";
+import GridComponent from "@components/ui/grid";
 import LinkComponent from "@components/ui/link";
+import PaperComponent from "@components/ui/paper";
+import TextFieldComponent from "@components/ui/text-field";
+import TypographyComponent from "@components/ui/typography";
 import useMainClient from "@hooks/useMainClient";
 import i18next from "@service/i18n";
 import useAuthStore from "@store/auth";
 import { Pages } from "@custom-types/enums";
 import { REQUIRED_FIELD } from "@utils/constants";
+
 import styles from "@styles/pages/sign-in.module.scss";
 
 const initialValues = {
@@ -99,22 +98,33 @@ export default function SignIn() {
 		}
 	};
 
-	return <Grid container component="main" className={styles.mainGrid}>
-		<CssBaseline />
-		<Grid className={styles.background} item xs={false} sm={4} md={7} />
+	return <GridComponent container component="main" className={styles.mainGrid}>
+		<GridComponent className={styles.background} xs={0} sm={4} md={7} />
 
-		<Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-			<Box className={styles.signInForm}>
-				<Avatar className={styles.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
+		<GridComponent
+			xs={12}
+			sm={8}
+			md={5}
+			component={PaperComponent}
+			elevation={6}
+			square
+		>
+			<BoxComponent className={styles.signInForm}>
+				<SystemAvatarComponent>
+					<LockIconComponent size={25} />
+				</SystemAvatarComponent>
 
-				<Typography component="h1" variant="h5">
+				<TypographyComponent component="h1" variant="h5">
 					{i18next.t("sign-in.sign_in")}
-				</Typography>
+				</TypographyComponent>
 
-				<Box noValidate component="form" onSubmit={handleSubmit} className={styles.layoutInput}>
-					<TextField
+				<BoxComponent
+					noValidate
+					component="form"
+					onSubmit={handleSubmit}
+					className={styles.layoutInput}
+				>
+					<TextFieldComponent
 						id="login"
 						name="login"
 						margin="normal"
@@ -125,11 +135,14 @@ export default function SignIn() {
 						fullWidth
 						autoFocus
 						error={Boolean(formValues.errors.login)}
-						helperText={formValues.errors.login ? formValues.errors.login : null}
-						onChange={(e) => onChange("login", e.target.value)}
+						helperText={formValues.errors.login
+							? formValues.errors.login
+							: null
+						}
+						onChange={e => onChange("login", e.target.value)}
 					/>
 
-					<TextField
+					<TextFieldComponent
 						id="password"
 						name="password"
 						type="password"
@@ -140,36 +153,60 @@ export default function SignIn() {
 						required
 						fullWidth
 						error={Boolean(formValues.errors.password)}
-						helperText={formValues.errors.password ? formValues.errors.password : null}
-						onChange={(e) => onChange("password", e.target.value)}
+						helperText={formValues.errors.password
+							? formValues.errors.password
+							: null
+						}
+						onChange={e => onChange("password", e.target.value)}
 					/>
 
-					<FormControlLabel
-						label={i18next.t("sign-in.remember_me")}
-						control={<Checkbox value={false} color="primary" onChange={(e) => onChange("rememberMe", e.target.checked)} />}
-					/>
+					<BoxComponent className={styles.signInForm__checkbox}>
+						<CheckboxComponent
+							value={false}
+							id="rememberMe"
+							color="primary"
+							onChange={e => onChange("rememberMe", e.target.checked)} />
+						<label className={styles.signInForm__checkbox__label} htmlFor="rememberMe">{i18next.t("sign-in.remember_me")}</label>
+					</BoxComponent>
 
-					<LoadingButton fullWidth type="submit" variant="contained" className={styles.loadingButton} loading={loading} disabled={saveDisabled}>
+					<ButtonComponent
+						fullWidth
+						type="submit"
+						variant="contained"
+						className={styles.loadingButton}
+						loading={loading}
+						disabled={saveDisabled}
+					>
 						{i18next.t("sign-in.enter")}
-					</LoadingButton>
+					</ButtonComponent>
 
-					<Grid container>
-						<Grid item xs>
-							<LinkComponent component="p" variant="body2" className={styles.secondaryButton} onClick={() => navigate(Pages.resetPassword)}>
+					<GridComponent container className={styles.signInHelp__grid}>
+						<GridComponent className={styles.signInForget__grid}>
+							<LinkComponent
+								component="p"
+								variant="body2"
+								className={styles.secondaryButton}
+								onClick={() => navigate(Pages.resetPassword)}
+							>
 								{i18next.t("sign-in.forgot_password")}
 							</LinkComponent>
-						</Grid>
+						</GridComponent>
 
-						<Grid item>
-							<LinkComponent component="p" variant="body2" className={styles.secondaryButton} onClick={() => navigate(Pages.signUp)}>
+						<GridComponent className={styles.signInNoAccount__grid}>
+							<LinkComponent
+								component="p"
+								variant="body2"
+								className={styles.secondaryButton}
+								onClick={() => navigate(Pages.signUp)}
+							>
 								{i18next.t("sign-in.register")}
 							</LinkComponent>
-						</Grid>
-					</Grid>
-				</Box>
+						</GridComponent>
+					</GridComponent>
+				</BoxComponent>
 
 				<CopyrightComponent />
-			</Box>
-		</Grid>
-	</Grid>;
+			</BoxComponent>
+		</GridComponent>
+	</GridComponent>;
 }

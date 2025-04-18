@@ -8,13 +8,15 @@ import "./alert.scss";
 
 interface IAlertComponent {
 	show: boolean;
-	children: JSX.Element;
+	children: JSX.Element | string;
 	status?: "error" | "success" | "warning" | "info";
+	className?: string;
+	severity?: "success" | "info" | "warning" | "error";
 	onExited?: () => void;
 };
 
 // Общий компонент Alert с анимацией появления/исчезновения
-export default memo(function AlertComponent({ show, children, status = "success", onExited }: IAlertComponent) {
+export default memo(function AlertComponent({ show, children, status = "success", className, severity, onExited }: IAlertComponent) {
 	const timeoutId = useRef<TimeoutType | null>(null);
 	
 	// Обрабатываем закрытие Alert (либо скрытие после таймаута, либо скрытие по принуждению)
@@ -53,7 +55,7 @@ export default memo(function AlertComponent({ show, children, status = "success"
 		timeout={{ enter: SLIDE_ALERT_TIMEOUT, exit: SLIDE_ALERT_TIMEOUT }} 
 		className="slide"
 	>
-		<Alert color={status} className="slide__alert">
+		<Alert color={status} className={className} severity={severity}>
 			{children}
 		</Alert>
 	</Slide>;

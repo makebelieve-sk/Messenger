@@ -1,6 +1,20 @@
 #mui-12-grid-label {
-	font-size: 15px;
+    font-size: 15px;
 }
+
+// Добавляем стиль для кнопок в календаре
 .MuiPickersFadeTransitionGroup-root button {
-	font-size: 15px;
+    font-size: 15px;
 }
+
+// =============================================================================
+// Добавляем стиль для контейнеров на странице профиля
+.profile-container__grid.MuiGrid2-container {
+    flex-wrap: nowrap;
+}
+
+// Добавляем стиль чтобы левая и права часть профиля были в колонку
+.MuiGrid2-container.column__grid {
+    flex-direction: column;
+}
+// =============================================================================

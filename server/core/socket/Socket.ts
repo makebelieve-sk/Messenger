@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import { type RequestHandler } from "express";
 import { type IncomingMessage } from "http";
-import { Server } from "socket.io";
+import { type ExtendedError, Server } from "socket.io";
 
 import socketIoConfig from "@config/socket.io.config";
 import UsersController from "@core/controllers/UsersController";
@@ -57,7 +57,7 @@ export default class SocketWorks extends EventEmitter {
 			const isRedisSessionExists = await this._checkRedisSession(socket.request.sessionID);
 
 			if (!isRedisSessionExists) {
-				return next(new SocketError(t("socket.error.sessions_not_match_or_exists")));
+				return this._handleMiddlewareError("socket.error.sessions_not_match_or_exists", next);
 			}
 
 			logger.info(t("socket.session_done"));
@@ -69,13 +69,13 @@ export default class SocketWorks extends EventEmitter {
 			const userId: string | undefined = socket.handshake.auth.userId;
 
 			if (!userId) {
-				return next(new SocketError(t("socket.error.user_id_not_found")));
+				return this._handleMiddlewareError("socket.error.user_id_not_found", next);
 			}
 
 			const findUser = this._users.get(userId);
 
 			if (!findUser) {
-				return next(new SocketError(t("socket.error.user_not_found")));
+				return this._handleMiddlewareError("socket.error.user_not_found", next);
 			}
 
 			socket.user = findUser;
@@ -99,7 +99,7 @@ export default class SocketWorks extends EventEmitter {
 		 *   - проверка сессии в объекте запроса
 		 *   - проверка сессии в Redis хранилище (RedisStore)
 		 */
-		this._io.engine.on("initial_headers", async (headers: { [key: string]: string }, req: IncomingMessage) => {
+		this._io.engine.on("initial_headers", async (headers: Record<string, string>, req: IncomingMessage) => {
 			// Удостоверимся, что заголовки содержат заголовок с куки
 			if (headers.hasOwnProperty(COOKIE_HEADER_NAME) && headers[COOKIE_HEADER_NAME][0]) {
 				const sessionHeader = headers[COOKIE_HEADER_NAME][0];
@@ -138,6 +138,12 @@ export default class SocketWorks extends EventEmitter {
 	// Проверка сессии в RedisStore
 	private async _checkRedisSession(sessionId: string) {
 		return Boolean(await this._redisWork.get(RedisKeys.SESS, sessionId));
+	}
+
+	// Обработчик ошибок в мидлваре сокет соединения (вывод ошибки в консоль, в логгер и возврат в "connect_error" на клиенте)
+	private _handleMiddlewareError(text: string, next: (err?: ExtendedError) => void) {
+		const socketError = new SocketError(t(text));
+		return next(socketError.setMiddlewareError());
 	}
 
 	close() {

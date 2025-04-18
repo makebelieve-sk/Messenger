@@ -1,5 +1,4 @@
-import Grid from "@mui/material/Grid";
-
+import GridComponent from "@components/ui/grid";
 import MainPhoto from "@modules/profile/main-photo";
 import PersonalInfo from "@modules/profile/personal-info";
 import Photos from "@modules/profile/photos";
@@ -10,8 +9,8 @@ import "@styles/pages/profile.scss";
 
 // Страница профиля
 export default function Profile() {
-	return <Grid container spacing={2}>
-		<Grid item container xs={4} spacing={2} direction="column">
+	return <GridComponent container spacing={2}>
+		<GridComponent container xs={4} spacing={2}>
 			{/* Блок моей фотографии */}
 			<MainPhoto />
 
@@ -20,14 +19,14 @@ export default function Profile() {
 
 			{/* Блок друзей онлайн */}
 			<OnlineFriends />
-		</Grid>
+		</GridComponent>
 
-		<Grid item container xs={8} spacing={2} direction="column">
+		<GridComponent container xs={8} spacing={2}>
 			{/* Блок личной информации */}
 			<PersonalInfo />
 
 			{/* Блок фотографий */}
 			<Photos />
-		</Grid>
-	</Grid>;
+		</GridComponent>
+	</GridComponent>;
 }

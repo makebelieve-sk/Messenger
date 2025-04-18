@@ -16,7 +16,9 @@ export default [
 	// Общая конфигурация для файлов Storybook
 	{
 		files: ["**/*.stories.@(js|jsx|ts|tsx)"],
-		...storybookPlugin.configs.recommended,
+		plugins: {
+			storybook: storybookPlugin
+		},
 	},
 	// Общая конфигурация для всех файлов
 	{
@@ -71,8 +73,9 @@ export default [
 							"^@custom-types", 
 							"^@utils", 
 							"^\\.\\.?/",
-							"^@styles", 
 						],
+						// 3. Стили
+						[ "^@styles" ],
 					],
 				},
 			],

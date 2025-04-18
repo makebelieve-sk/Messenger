@@ -33,3 +33,7 @@ server/logs
 nginx/logs/
 nginx/cache/
 nginx/tmp/
+
+#jest coverage
+app/coverage
+*storybook.log

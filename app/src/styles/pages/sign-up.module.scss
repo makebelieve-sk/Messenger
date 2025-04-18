@@ -1,6 +1,11 @@
 @use "@styles/abstract/colors.scss" as *;
 @use "@styles/abstract/variables.scss" as *;
 
+.signUpArea {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
 .signUpForm {
 	display: flex;
 	flex-direction: column;
@@ -9,15 +14,6 @@
 
 	@media (max-height: 700px) {
 		margin-top: 0;
-	}
-
-	.avatar {
-		margin: $signMarginXSmall;
-		background-color: $avatar-color;
-
-		@media (max-height: 700px) {
-			margin: 0;
-		}
 	}
 
 	.title {

@@ -1,32 +1,53 @@
 @use "@styles/abstract/colors.scss" as *;
 
 .avatar-badge {
-	span {
-		visibility: hidden;
-		box-shadow: 0 0 0 2px $white;
+    span {
+        visibility: hidden;
+        box-shadow: 0 0 0 2px $white;
 
-		&::after {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			border-radius: 50%;
-			content: "";
-		}
-	}
+        &::after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            content: "";
+        }
+    }
 
-	&__active {
-		span {
-			visibility: visible;
-			background-color: $online-green;
-			color: $online-green;
-		}
-	}
+    &__active {
+        span {
+            visibility: visible;
+            background-color: $online-green;
+            color: $online-green;
+        }
+    }
 
-	&__avatar {
-		&:hover {
-			cursor: pointer;
-		}
-	}
+    &__avatar {
+        &.user-avatar {
+            margin-left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+        }
+
+        &.system-avatar {
+            margin-left: auto;
+            margin-right: auto;
+            transform: none;
+            width: 46px;
+            height: 46px;
+            margin: $signMarginXSmall;
+            background-color: $avatar-color;
+
+            @media (max-height: 700px) {
+                margin: 0;
+            }
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }
