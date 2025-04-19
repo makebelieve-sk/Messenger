@@ -1,13 +1,16 @@
+import { memo, type MouseEvent, type ReactNode } from "react";
 import MenuItem from "@mui/material/MenuItem";
 
 interface IMenuItemComponent {
-    children: React.ReactNode;
-    onClick?: () => void;
+    children: ReactNode;
+    onClick?: (event: MouseEvent<HTMLLIElement, globalThis.MouseEvent>) => void;
     value?: string;
     className?: string
 };
 
 // Базовый компонент элемента меню
-export default function MenuItemComponent({ children, onClick, value, className }: IMenuItemComponent) {
-	return <MenuItem onClick={onClick} value={value} className={className}>{children}</MenuItem>;
-}
+export default memo(function MenuItemComponent({ children, onClick, value, className }: IMenuItemComponent) {
+	return <MenuItem className={className} value={value} onClick={onClick}>
+		{children}
+	</MenuItem>;
+});

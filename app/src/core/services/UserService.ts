@@ -2,7 +2,7 @@ import { type NotificationSettings } from "@core/models/NotificationSettings";
 import { type Photos } from "@core/models/Photos";
 import { type User } from "@core/models/User";
 import { type UserDetails } from "@core/models/UserDetails";
-import Request from "@core/Request";
+import type Request from "@core/Request";
 import NotificationSettingsService from "@core/services/NotificationSettingsService";
 import PhotosService from "@core/services/PhotosService";
 import UserDetailsService from "@core/services/UserDetailsService";
@@ -95,7 +95,10 @@ export default class UserService implements User {
 	updateUser({ user, userDetails }: { user: IApiUser; userDetails: IApiUserDetails; }) {
 		logger.debug("updateUser");
 
-		this._updateUser(user);
+		this._updateUser({
+			...this._user,
+			...user,
+		});
 		this._userDetails.updateDetails(userDetails);
 	}
 

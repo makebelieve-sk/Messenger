@@ -1,7 +1,7 @@
 import { validateHandleEvent } from "@core/socket/validation";
 import Logger from "@service/Logger";
 import { SocketActions } from "@custom-types/enums";
-import { SocketType } from "@custom-types/socket.types";
+import { type SocketType } from "@custom-types/socket.types";
 import toFormatAck from "@utils/to-format-socket-ack";
 
 const logger = Logger.init("Socket:FriendsController");

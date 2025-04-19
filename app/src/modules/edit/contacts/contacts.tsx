@@ -1,12 +1,13 @@
 import { ChangeEvent, memo } from "react";
-import TextField from "@mui/material/TextField";
 
+import TextFieldComponent from "@components/ui/text-field";
 import { type ITabModule } from "@modules/edit";
 import i18next from "@service/i18n";
 
+// Вкладка "Контакты" на странице редактирования
 export default memo(function Contacts({ formValues, formErrors, onChange }: ITabModule) {
 	return <>
-		<TextField
+		<TextFieldComponent
 			id="city"
 			name="city"
 			margin="normal"
@@ -19,7 +20,7 @@ export default memo(function Contacts({ formValues, formErrors, onChange }: ITab
 			onChange={(e: ChangeEvent<HTMLInputElement>) => onChange("city", e.target.value)}
 		/>
 
-		<TextField
+		<TextFieldComponent
 			id="phone"
 			name="phone"
 			margin="normal"
@@ -34,7 +35,7 @@ export default memo(function Contacts({ formValues, formErrors, onChange }: ITab
 			onChange={(e: ChangeEvent<HTMLInputElement>) => onChange("phone", e.target.value)}
 		/>
 
-		<TextField
+		<TextFieldComponent
 			id="email"
 			name="email"
 			margin="normal"

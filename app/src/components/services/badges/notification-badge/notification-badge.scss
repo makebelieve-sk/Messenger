@@ -1,0 +1,9 @@
+.notification-badge {
+    position: absolute;
+    right: -20px;
+
+    span {
+        background: $notice-grey;
+        color: $white;
+    }
+}

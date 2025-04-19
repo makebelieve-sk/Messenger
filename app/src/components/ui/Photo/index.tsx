@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
 
-import CloseIconComponent from "@components/icons/closeIcon";
+import CloseIconComponent from "@components/icons/close";
 import useImage from "@hooks/useImage";
 import i18next from "@service/i18n";
 import useUIStore from "@store/ui";

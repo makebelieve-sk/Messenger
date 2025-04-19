@@ -10,23 +10,27 @@ import "@styles/pages/profile.scss";
 // Страница профиля
 export default function Profile() {
 	return <GridComponent container spacing={2}>
-		<GridComponent container xs={4} spacing={2}>
-			{/* Блок моей фотографии */}
-			<MainPhoto />
+		<GridComponent xs={4}>
+			<GridComponent container spacing={2}>
+				{/* Блок моей фотографии */}
+				<MainPhoto />
 
-			{/* Блок друзей */}
-			<Friends />
+				{/* Блок друзей */}
+				<Friends />
 
-			{/* Блок друзей онлайн */}
-			<OnlineFriends />
+				{/* Блок друзей онлайн */}
+				<OnlineFriends />
+			</GridComponent>
 		</GridComponent>
 
-		<GridComponent container xs={8} spacing={2}>
-			{/* Блок личной информации */}
-			<PersonalInfo />
+		<GridComponent xs={8}>
+			<GridComponent container spacing={2}>
+				{/* Блок личной информации */}
+				<PersonalInfo />
 
-			{/* Блок фотографий */}
-			<Photos />
+				{/* Блок фотографий */}
+				<Photos />
+			</GridComponent>
 		</GridComponent>
 	</GridComponent>;
 }

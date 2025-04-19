@@ -20,9 +20,9 @@ export const NO_PHOTO = "/assets/images/noPhoto.jpg";
 export const REQUIRED_FIELD = i18next.t("utils.required_field");
 export const NOT_CORRECT_FORMAT = i18next.t("utils.not_correct_format");
 
-// Таймаут анимации появления/исчезновения компонента AlertComponent через Slide (MUI компонент) 
+// Таймаут анимации появления/исчезновения компонента AlertAnimationComponent через Slide (MUI компонент) 
 export const SLIDE_ALERT_TIMEOUT = 500;
-// Таумаут исчезновения AlertComponent
+// Таумаут исчезновения AlertAnimationComponent
 export const ALERT_TIMEOUT = 5000;
 // Таумаут исчезновения SnackbarComponent
 export const SNACKBAR_TIMEOUT = 10000;

@@ -1,8 +1,8 @@
 import { memo } from "react";
 
-import ArrowLeftIconComponent from "@components/icons/arrowLeftIcon";
-import ArrowRightIconComponent from "@components/icons/arrowRightIcon";
-import { SmallButtonComponent } from "@components/ui/button/small-button";
+import ArrowLeftIconComponent from "@components/icons/arrow-left";
+import ArrowRightIconComponent from "@components/icons/arrow-right";
+import { SmallButtonComponent } from "@components/services/buttons/small-button";
 import i18n from "@service/i18n";
 import useImagesCarouselStore from "@store/images-carousel";
 

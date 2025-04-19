@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import Badge from "@mui/material/Badge";
-import MenuList from "@mui/material/MenuList";
-import Stack from "@mui/material/Stack";
 
+import NotificationBadge from "@components/services/badges/notification-badge";
 import MenuItemComponent from "@components/ui/menu-item";
+import MenuListComponent from "@components/ui/menu-list";
 import useMainClient from "@hooks/useMainClient";
 import i18n from "@service/i18n";
 import { Pages } from "@custom-types/enums";
@@ -40,40 +39,41 @@ export default function MenuComponent() {
 	//     navigate({ pathname: Pages.friends, query: { mainTab: MainFriendTabs.allFriends, tab: FriendsTab.all } });
 	// };
 
-	return <div id="menu" className="menu">
-		<Stack direction="column" spacing={2}>
-			<nav>
-				<MenuList id="list" className="menu__list">
-					<MenuItemComponent onClick={() => navigate(Pages.profile)} className="menu__list__item">
-						<AccountCircleOutlinedIcon color="primary" />
-						<div>{ i18n.t("menu.profile") }</div>
-					</MenuItemComponent>
+	return <div className="menu">
+		<nav className="menu__nav">
+			<MenuListComponent>
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.profile)}>
+					<AccountCircleOutlinedIcon color="primary" />
 
-					<MenuItemComponent onClick={() => navigate(Pages.messages)} className="menu__list__item">
-						<MessageOutlinedIcon color="primary" />
-						<div>{ i18n.t("menu.messanger") }</div>
-						<Badge
-							color="default"
-							badgeContent={0 || null}
-							className="menu__list__item__badge"
-						/>
-					</MenuItemComponent>
+					<div className="menu__nav__item__title">
+						{i18n.t("menu.profile")}
+					</div>
+				</MenuItemComponent>
 
-					<MenuItemComponent onClick={() => navigate(Pages.friends)} className="menu__list__item">
-						<PeopleOutlinedIcon color="primary" />
-						<div>{ i18n.t("menu.friends") }</div>
-						<Badge 
-							color="default" 
-							badgeContent={0 || null} 
-							className="menu__list__item__badge" 
-						/>
-					</MenuItemComponent>
-				</MenuList>
-			</nav>
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.messages)}>
+					<MessageOutlinedIcon color="primary" />
 
-			<div className="menu__down-info">
-				{ i18n.t("menu.to-developers") }
-			</div>
-		</Stack>
+					<div className="menu__nav__item__title">
+						{i18n.t("menu.messanger")}
+					</div>
+
+					<NotificationBadge content={0} />
+				</MenuItemComponent>
+
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.friends)}>
+					<PeopleOutlinedIcon color="primary" />
+                    
+					<div className="menu__nav__item__title">
+						{i18n.t("menu.friends")}
+					</div>
+
+					<NotificationBadge content={0} />
+				</MenuItemComponent>
+			</MenuListComponent>
+		</nav>
+
+		<div className="menu__down-info">
+			{i18n.t("menu.to-developers")}
+		</div>
 	</div>;
 };

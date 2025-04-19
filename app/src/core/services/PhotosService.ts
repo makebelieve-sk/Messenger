@@ -1,5 +1,5 @@
-import { Photos } from "@core/models/Photos";
-import Request from "@core/Request";
+import { type Photos } from "@core/models/Photos";
+import type Request from "@core/Request";
 import Logger from "@service/Logger";
 import usePhotosStore from "@store/photos";
 import { ApiRoutes } from "@custom-types/enums";

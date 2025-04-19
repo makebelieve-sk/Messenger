@@ -1,4 +1,4 @@
-import { UserDetails } from "@core/models/UserDetails";
+import { type UserDetails } from "@core/models/UserDetails";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import useUserStore from "@store/user";
@@ -63,7 +63,10 @@ export default class UserDetailsService implements UserDetails {
 	updateDetails(newDetails: IApiUserDetails) {
 		logger.debug(`editDetails [detailsUserId=${newDetails.userId}]`);
 
-		this._updateDetails(newDetails);
+		this._updateDetails({
+			...this._details,
+			...newDetails,
+		});
 	}
 
 	// Получение текста для разного количества друзей

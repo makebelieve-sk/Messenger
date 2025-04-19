@@ -1,5 +1,4 @@
 @use "sass:math";
-@use "@styles/abstract/colors.scss" as *;
 
 .edit-container {
 	display: flex;
@@ -17,29 +16,35 @@
 
 	&__module {
 		width: 85%;
-		padding: 0 20px;
+		padding: 10px 20px;
 
-		&__loading-button {
-			margin-top: 12px;
-			margin-bottom: 12px;
-			font-size: 12px;
-		}
+		&__form {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
 
-		&__spinner {
-			margin-top: 10px;
-		}
-
-		&__slide {
-			margin-bottom: 10px;
-		}
-
-		&__alert {
-			font-size: 15px;
-			line-height: math.div(22, 14) * 100%;
-			color: $black;
-
-			svg {
-				font-size: 20px;
+			&__loading-button {
+				margin-top: 12px;
+				margin-bottom: 12px;
+				font-size: 12px;
+			}
+	
+			&__spinner {
+				margin-top: 10px;
+			}
+	
+			&__slide {
+				margin-bottom: 10px;
+			}
+	
+			&__alert {
+				font-size: 15px;
+				line-height: math.div(22, 14) * 100%;
+				color: $black;
+	
+				svg {
+					font-size: 20px;
+				}
 			}
 		}
 	}

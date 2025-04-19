@@ -1,4 +1,4 @@
-import { ChangeEvent, memo } from "react";
+import { type ChangeEvent, memo } from "react";
 import { type SelectChangeEvent } from "@mui/material/Select";
 
 import BoxComponent from "@components/ui/box";
@@ -17,7 +17,7 @@ enum SELECT_MALE {
 	FEMALE = "female",
 };
 
-// Компонент основной главной вкладки раздела редактирования
+// Вкладка "Основное" на странице редактирования
 export default memo(function Main({ formValues, formErrors, onChange }: ITabModule) {
 	return <>
 		<TextFieldComponent

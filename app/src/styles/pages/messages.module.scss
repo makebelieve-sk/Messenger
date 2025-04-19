@@ -1,6 +1,3 @@
-@use "@styles/abstract/colors.scss" as *;
-@use "@styles/abstract/variables.scss" as *;
-
 .messages-container {
 	width: 100%;
 	min-height: calc(100vh - $calcHeight);

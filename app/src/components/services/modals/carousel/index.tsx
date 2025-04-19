@@ -18,7 +18,7 @@ export default function ModalWithImagesCarousel() {
 	if (!images) return null;
 
 	return <ModalComponent
-		isOpen
+		open
 		onClose={onClose}
 		title={MODAL_TITLE}
 		description={MODAL_DESCRIPTION}

@@ -1,4 +1,4 @@
-import { Profile } from "@core/models/Profile";
+import { type Profile } from "@core/models/Profile";
 import Request from "@core/Request";
 import ProfileService from "@core/services/ProfileService";
 import i18next from "@service/i18n";

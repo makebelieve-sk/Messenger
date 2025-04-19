@@ -1,11 +1,11 @@
 import { memo, useEffect, useState } from "react";
-import Typography from "@mui/material/Typography";
 
 import BoxComponent from "@components/ui/box";
 import ChangeAvatarComponent, { type IUpdatedAvatar } from "@components/ui/change-avatar";
 import GridComponent from "@components/ui/grid";
 import PhotoComponent from "@components/ui/photo";
 import SpinnerComponent from "@components/ui/spinner";
+import TypographyComponent from "@components/ui/typography";
 import i18next from "@service/i18n";
 import useAuthStore from "@store/auth";
 import { AVATAR_URL } from "@utils/constants";
@@ -45,12 +45,12 @@ export default memo(function ChooseAvatar({ username, avatarUrl, onChange, onCha
 		useAuthStore.getState().setChooseAvatarLoading(isLoading);
 	};
 
-	return <BoxComponent className="choose-avatar">
+	return <BoxComponent id="choose-avatar" className="choose-avatar">
 		<GridComponent container spacing={2} className="choose-avatar__container">
 			<GridComponent xs={8}>
-				<Typography className="choose-avatar__container__main-text">
+				<TypographyComponent className="choose-avatar__container__main-text">
 					{username}, {i18next.t("profile-module.how_like_avatar")}
-				</Typography>
+				</TypographyComponent>
 			</GridComponent>
 
 			<GridComponent xs={8} className="choose-avatar__container__avatar-wrapper">
@@ -58,7 +58,12 @@ export default memo(function ChooseAvatar({ username, avatarUrl, onChange, onCha
 					? <SpinnerComponent />
 					: avatarUrl 
 						? <div className="choose-avatar__container__avatar">
-							<PhotoComponent src={avatarUrl} alt="user-avatar" deleteHandler={deleteAvatar} />
+							<PhotoComponent 
+								src={avatarUrl} 
+								alt="user-avatar" 
+								deleteHandler={deleteAvatar} 
+								showVisibleIcon={false}
+							/>
 						</div>
 						: <div className="choose-avatar__container__avatar-without-user">
 							{avatarLetters}

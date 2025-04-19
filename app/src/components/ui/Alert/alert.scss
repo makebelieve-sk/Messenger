@@ -1,16 +1,11 @@
 @use "sass:math";
-@use "@styles/abstract/colors.scss" as *;
 
-.slide {
-	margin-bottom: 10px;
+.alert {
+    font-size: 15px;
+    line-height: math.div(22, 14) * 100%;
+    color: $black;
 
-	&__alert {
-		font-size: 15px;
-		line-height: math.div(22, 14) * 100%;
-		color: $black;
-	
-		svg {
-			font-size: 20px;
-		}
-	}
+    svg {
+        font-size: 20px;
+    }
 }

@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect } from "react";
+import { type ChangeEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import GridComponent from "@components/ui/grid";
@@ -12,7 +12,7 @@ import useProfile from "@hooks/useProfile";
 import i18next from "@service/i18n";
 import usePhotosStore from "@store/photos";
 import { Pages } from "@custom-types/enums";
-import { IPhoto } from "@custom-types/models.types";
+import { type IPhoto } from "@custom-types/models.types";
 
 import "./photos.scss";
 

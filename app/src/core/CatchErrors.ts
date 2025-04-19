@@ -5,7 +5,7 @@ import useGlobalStore from "@store/global";
 import resetAllStores from "@store/index";
 import useProfileStore from "@store/profile";
 import useUIStore from "@store/ui";
-import { AxiosErrorType, AxiosResponseType } from "@custom-types/axios.types";
+import type { AxiosErrorType, AxiosResponseType } from "@custom-types/axios.types";
 import { ErrorCodes, HTTPErrorTypes, HTTPStatuses, Pages } from "@custom-types/enums";
 
 const logger = Logger.init("CatchErrors");

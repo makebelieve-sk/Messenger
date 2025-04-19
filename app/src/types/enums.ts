@@ -215,6 +215,11 @@ enum DebuggerType {
 	ERROR = "ERROR",
 };
 
+enum ThemeTypes {
+	LIGHT = "light",
+	DARK = "dark",
+};
+
 export {
 	TestMethods,
 	ApiRoutes,
@@ -234,4 +239,5 @@ export {
 	UnReadTypes,
 	ErrorCodes,
 	DebuggerType,
+	ThemeTypes,
 };

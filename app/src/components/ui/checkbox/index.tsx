@@ -1,17 +1,21 @@
+import { type ChangeEvent, memo } from "react";
 import Checkbox from "@mui/material/Checkbox";
 
 interface ICheckboxComponent {
     value?: boolean;
     color?: "primary";
     id?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+	className?: string;
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 };
 
-export default function CheckboxComponent({ value, id, color, onChange }: ICheckboxComponent) {
+// Базовый компонент чекбокса
+export default memo(function CheckboxComponent({ value, id, color, className = "", onChange }: ICheckboxComponent) {
 	return <Checkbox
 		value={value}
 		color={color}
 		id={id}
+		className={className}
 		onChange={onChange}
 	/>;
-}
+});

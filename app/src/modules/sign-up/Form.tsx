@@ -1,9 +1,9 @@
-import { ChangeEvent, Dispatch, lazy, memo, SetStateAction, Suspense } from "react";
+import { type ChangeEvent, type Dispatch, lazy, memo, type SetStateAction, Suspense } from "react";
 import { type CountryData } from "react-phone-input-2";
 
 import BoxComponent from "@components/ui/box";
 import GridComponent from "@components/ui/grid";
-import SpinnerComponent from "@components/ui/spinner";
+import SuspenseSpinner from "@components/ui/suspense-spinner";
 import TextFieldComponent from "@components/ui/text-field";
 import { type ISignUpState } from "@pages/SignUp";
 import i18next from "@service/i18n";
@@ -137,7 +137,7 @@ export default memo(function SignUpForm({ formValues, setFormValues, onChange }:
 			</GridComponent>
 
 			<GridComponent xs={12}>
-				<Suspense fallback={<div className="sign-up-form__phone-input__loading"><SpinnerComponent /></div>}>
+				<Suspense fallback={<SuspenseSpinner className="sign-up-form__phone-input__loading" />}>
 					<PhoneInput
 						country="ru"
 						inputProps={{

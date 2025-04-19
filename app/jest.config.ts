@@ -26,7 +26,7 @@ const config: Config = {
   collectCoverageFrom: ["src/components/**/*.{ts,tsx}", "!src/**/*.d.ts"], // собираем покрытие только для исходных файлов
 
   // Игнорируем папки и файлы, которые не должны попадать в coverage
-  coveragePathIgnorePatterns: ["/node_modules/", "/dist/", "/build/"],
+  coveragePathIgnorePatterns: ["/node_modules/", "/dist/"],
 };
 
 export default config;

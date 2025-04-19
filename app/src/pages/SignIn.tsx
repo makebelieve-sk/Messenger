@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LockIconComponent from "@components/icons/lockIcon";
-import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
+import LockIconComponent from "@components/icons/lock";
+import SystemAvatarComponent from "@components/services/avatars/system-avatar";
 import BoxComponent from "@components/ui/box";
 import ButtonComponent from "@components/ui/button";
 import CheckboxComponent from "@components/ui/checkbox";
@@ -82,7 +82,7 @@ export default function SignIn() {
 				? { ...initialValues.errors }
 				: {
 					...formValues.errors,
-					[field]: value ? "" : REQUIRED_FIELD,
+					[field]: value || field === "rememberMe" ? "" : REQUIRED_FIELD,
 				},
 		});
 		useAuthStore.getState().setSignInErrors(false);
@@ -181,7 +181,7 @@ export default function SignIn() {
 					</ButtonComponent>
 
 					<GridComponent container className={styles.signInHelp__grid}>
-						<GridComponent className={styles.signInForget__grid}>
+						<GridComponent xs={6} className={styles.signInForget__grid}>
 							<LinkComponent
 								component="p"
 								variant="body2"
@@ -192,11 +192,11 @@ export default function SignIn() {
 							</LinkComponent>
 						</GridComponent>
 
-						<GridComponent className={styles.signInNoAccount__grid}>
+						<GridComponent xs={6} className={styles.signInNoAccount__grid}>
 							<LinkComponent
 								component="p"
 								variant="body2"
-								className={styles.secondaryButton}
+								className={styles.register}
 								onClick={() => navigate(Pages.signUp)}
 							>
 								{i18next.t("sign-in.register")}

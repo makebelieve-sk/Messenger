@@ -1,8 +1,8 @@
-import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
+import { type FormEvent, type SyntheticEvent, useEffect, useState } from "react";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 
-import AlertComponent from "@components/ui/alert";
+import AlertAnimationComponent from "@components/ui/alert-animation";
 import BoxComponent from "@components/ui/box";
 import ButtonComponent from "@components/ui/button";
 import PaperComponent from "@components/ui/paper";
@@ -67,7 +67,7 @@ export default function Edit() {
 
 	const profile = useProfile();
 
-	// Закрываем AlertComponent (если вдруг был открыт)
+	// Закрываем AlertAnimationComponent (если вдруг был открыт)
 	useEffect(() => {
 		return () => {
 			if (showAlert) onCloseAlert();
@@ -146,7 +146,7 @@ export default function Edit() {
 		onCloseAlert();
 	};
 
-	// Закрытие AlertComponent
+	// Закрытие AlertAnimationComponent
 	const onCloseAlert = () => {
 		useProfileStore.getState().setShowEditAlert(false);
 	};
@@ -158,25 +158,25 @@ export default function Edit() {
 		</Tabs>
 
 		<div className="edit-container__module">
-			<BoxComponent component="form" noValidate onSubmit={onSubmit}>
+			<BoxComponent component="form" noValidate onSubmit={onSubmit} className="edit-container__module__form">
 				<EditTabsModule tab={tab} formValues={formValues} formErrors={formErrors} onChange={onChange} />
 
 				<ButtonComponent
 					fullWidth
 					type="submit"
 					variant="contained"
-					className="edit-container__module__loading-button"
+					className="edit-container__module__form__loading-button"
 					loading={saveLoading}
 					disabled={saveDisabled}
 				>
 					{i18next.t("edit.save")}
 				</ButtonComponent>
 
-				<AlertComponent show={showAlert} onExited={onCloseAlert}>
+				<AlertAnimationComponent show={showAlert} onExited={onCloseAlert}>
 					<>
 						<b>{i18next.t("edit.changes_save")}</b> - {i18next.t("edit.show_data")}
 					</>
-				</AlertComponent>
+				</AlertAnimationComponent>
 			</BoxComponent>
 		</div>
 	</PaperComponent>;

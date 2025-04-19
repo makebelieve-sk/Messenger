@@ -1,11 +1,16 @@
+import { type ReactNode } from "react";
+
 import BoxComponent from "@components/ui/box";
 
 import "./content.scss";
 
-interface IContentLayoutProps {
-    children: React.ReactNode;
+interface IContentLayout {
+    children: ReactNode;
 };
 
-export default function ContentLayout({ children }: IContentLayoutProps) {
-	return <BoxComponent className="content">{children}</BoxComponent>;
+// Общий компонент контента
+export default function ContentLayoutComponent({ children }: IContentLayout) {
+	return <BoxComponent className="content">
+		{children}
+	</BoxComponent>;
 }

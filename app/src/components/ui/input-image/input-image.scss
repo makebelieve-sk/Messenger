@@ -1,19 +1,8 @@
-.input-image {
+.input-label {
 	width: 100%;
-	height: 100%;
-	padding: 0;
 
-	&__label {
-		width: inherit;
-		height: inherit;
-
-		&__text {
-			padding: 3px 0;
-		}
-
-		&:hover {
-			cursor: pointer;
-		}
+	&__button {
+		width: 100%;
 	}
 
 	&:hover {

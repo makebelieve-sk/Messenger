@@ -1,7 +1,7 @@
 import { type IUpdatedAvatar } from "@components/ui/change-avatar";
-import { Profile } from "@core/models/Profile";
-import { User } from "@core/models/User";
-import Request from "@core/Request";
+import { type Profile } from "@core/models/Profile";
+import { type User } from "@core/models/User";
+import type Request from "@core/Request";
 import UserService from "@core/services/UserService";
 import { type IFormValues } from "@pages/Edit";
 import Logger from "@service/Logger";

@@ -1,12 +1,12 @@
 import { io } from "socket.io-client";
 
-import ProfilesController from "@core/controllers/ProfilesController";
+import type ProfilesController from "@core/controllers/ProfilesController";
 import SocketController from "@core/socket/SocketController";
 import { validateEmitEvent } from "@core/socket/validation";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import useUIStore from "@store/ui";
-import { ClientToServerEvents, SocketType } from "@custom-types/socket.types";
+import type { ClientToServerEvents, SocketType } from "@custom-types/socket.types";
 import { SOCKET_ACK_TIMEOUT, SOCKET_RECONECTION_ATTEMPTS, SOCKET_RECONNECTION_DELAY, SOCKET_URL } from "@utils/constants";
 
 const logger = Logger.init("Socket");

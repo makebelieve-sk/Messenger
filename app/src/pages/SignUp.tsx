@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LockIconComponent from "@components/icons/lockIcon";
-import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
+import LockIconComponent from "@components/icons/lock";
+import SystemAvatarComponent from "@components/services/avatars/system-avatar";
 import BoxComponent from "@components/ui/box";
 import ButtonComponent from "@components/ui/button";
 import { type IUpdatedAvatar } from "@components/ui/change-avatar";

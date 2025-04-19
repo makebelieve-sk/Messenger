@@ -15,7 +15,10 @@ export default memo(function Router({ isAuth }: { isAuth: boolean; }) {
 
 	// Перенаправляем пользователя
 	useEffect(() => {
-		if (redirectTo) {
+		const currentPath = window.location.pathname;
+		const isAlreadySignUpPage = redirectTo === Pages.signIn && currentPath === Pages.signUp;
+
+		if (redirectTo && !isAlreadySignUpPage && currentPath !== redirectTo) {
 			navigate(redirectTo);
 		}
 	}, [ redirectTo ]);

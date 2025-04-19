@@ -1,8 +1,8 @@
+import { memo, type ReactNode } from "react";
 import Menu from "@mui/material/Menu";
 
 interface IMenuComponent {
-    children: React.ReactNode;
-    id: string;
+    children: ReactNode;
     anchorEl: HTMLElement | null;
     anchorOrigin: {
         vertical: "top" | "bottom";
@@ -10,18 +10,18 @@ interface IMenuComponent {
     };
     open: boolean;
     autoFocus: boolean;
-    onClose: () => void;
+    onClose: (e: Object, reason: "backdropClick" | "escapeKeyDown") => void;
 };
 
 // Базовый компонент меню
-export default function MenuComponent({ children, id, anchorEl, anchorOrigin, open, autoFocus, onClose }: IMenuComponent) {
+export default memo(function MenuComponent({ children, anchorEl, anchorOrigin, open, autoFocus, onClose }: IMenuComponent) {
 	return <Menu
-		id={id}
 		anchorEl={anchorEl}
 		anchorOrigin={anchorOrigin}
 		open={open}
 		autoFocus={autoFocus}
-		onClose={onClose}>
+		onClose={onClose}
+	>
 		{children}
 	</Menu>;
-}
+});

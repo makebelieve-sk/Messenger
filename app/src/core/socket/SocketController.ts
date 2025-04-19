@@ -1,4 +1,4 @@
-import ProfilesController from "@core/controllers/ProfilesController";
+import type ProfilesController from "@core/controllers/ProfilesController";
 import FriendsController from "@core/socket/controllers/Friends";
 import MessangesController from "@core/socket/controllers/Messages";
 import UsersController from "@core/socket/controllers/Users";
@@ -6,7 +6,7 @@ import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import useUIStore from "@store/ui";
 import { SocketActions } from "@custom-types/enums";
-import { SocketType } from "@custom-types/socket.types";
+import { type SocketType } from "@custom-types/socket.types";
 
 const logger = Logger.init("SocketController");
 const SERVER_DISCONNECT = "io server disconnect";

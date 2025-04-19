@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 
-import UserAvatarComponent from "@components/ui/avatar/user-avatar";
-import type { ICarouselImage } from "@modules/carousel/index";
+import UserAvatarComponent from "@components/services/avatars/user-avatar";
+import { type ICarouselImage } from "@modules/carousel/index";
 import i18next from "@service/i18n";
 import useUserStore from "@store/user";
 import { transformDate } from "@utils/date";

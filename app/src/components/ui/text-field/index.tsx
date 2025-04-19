@@ -1,3 +1,4 @@
+import { type ChangeEvent, memo } from "react";
 import TextField from "@mui/material/TextField";
 
 interface ITextFieldComponent {
@@ -14,12 +15,12 @@ interface ITextFieldComponent {
     autoFocus?: boolean;
     error?: boolean;
     helperText?: string | null;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    className?: string
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    className?: string;
 };
 
-// Базовый компонент текстфилда
-export default function TextFieldComponent({ 
+// Базовый компонент текстового поля
+export default memo(function TextFieldComponent({ 
 	id, 
 	name, 
 	type, 
@@ -53,4 +54,4 @@ export default function TextFieldComponent({
 		onChange={onChange}
 		className={className}
 	/>;
-}
+});

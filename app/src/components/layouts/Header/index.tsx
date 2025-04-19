@@ -1,8 +1,8 @@
-import { MouseEvent, useState } from "react";
+import { type MouseEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Logo from "@components/layouts/header/logo";
-import UserAvatarComponent from "@components/ui/avatar/user-avatar";
+import MainLogoIconComponent from "@components/icons/main-logo";
+import UserAvatarComponent from "@components/services/avatars/user-avatar";
 import MenuComponent from "@components/ui/menu";
 import MenuItemComponent from "@components/ui/menu-item";
 import TypographyComponent from "@components/ui/typography";
@@ -15,6 +15,7 @@ import { BASE_URL } from "@utils/constants";
 import "./header.scss";
 
 const anchorOrigin = { vertical: "top", horizontal: "left" } as const;
+const WHEEL_CLICK_TYPE = 1;
 
 // Компонент верхушки приложения. Отрисовывается на каждой странице
 export default function HeaderComponent() {
@@ -35,7 +36,7 @@ export default function HeaderComponent() {
 
 	// Клик по лого колесиком мыши
 	const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
-		if (event.button === 1) {
+		if (event.button === WHEEL_CLICK_TYPE) {
 			window.open(BASE_URL);
 		}
 	};
@@ -50,7 +51,7 @@ export default function HeaderComponent() {
 		<div className="header-container">
 			<div className="header-container__toolbar">
 				<div className="header-container__toolbar__logo" onClick={() => goTo(Pages.profile)} onMouseDown={onMouseDown}>
-					<Logo />
+					<MainLogoIconComponent />
 				</div>
 
 				<div className="header-container__toolbar__avatar">
@@ -59,7 +60,6 @@ export default function HeaderComponent() {
 					</div>
 
 					<MenuComponent
-						id="menu-header"
 						anchorEl={anchorElUser}
 						anchorOrigin={anchorOrigin}
 						open={Boolean(anchorElUser)}

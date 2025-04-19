@@ -1,18 +1,21 @@
-import { JSX } from "react";
+import { memo, type ReactElement } from "react";
 import Snackbar from "@mui/material/Snackbar";
 
 import { SNACKBAR_TIMEOUT } from "@utils/constants";
 
 interface ISnackBarComponent {
-	anchor: { vertical: "top" | "bottom"; horizontal: "left" | "center" | "right" };
+	anchor: {
+		vertical: "top" | "bottom";
+		horizontal: "left" | "center" | "right";
+	};
 	message?: string;
 	open: boolean;
 	handleClose?: () => void;
-	children?: JSX.Element;
+	children?: ReactElement;
 };
 
 // Базовый компонент небольшого всплывающего окна
-export default function SnackbarComponent({ anchor, message, open, handleClose, children }: ISnackBarComponent) {
+export default memo(function SnackbarComponent({ anchor, message, open, handleClose, children }: ISnackBarComponent) {
 	return <Snackbar 
 		key={message + anchor.toString() + open} 
 		anchorOrigin={anchor} 
@@ -23,4 +26,4 @@ export default function SnackbarComponent({ anchor, message, open, handleClose, 
 	>
 		{children}
 	</Snackbar>;
-}
+});

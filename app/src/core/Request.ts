@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance } from "axios";
 
-import CatchErrors from "@core/CatchErrors";
+import type CatchErrors from "@core/CatchErrors";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import useUIStore from "@store/ui";

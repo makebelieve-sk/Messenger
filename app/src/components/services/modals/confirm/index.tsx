@@ -1,5 +1,5 @@
+import { SmallButtonComponent } from "@components/services/buttons/small-button";
 import BoxComponent from "@components/ui/box";
-import { SmallButtonComponent } from "@components/ui/button/small-button";
 import ModalComponent from "@components/ui/modal";
 import TypographyComponent from "@components/ui/typography";
 import i18next from "@service/i18n";

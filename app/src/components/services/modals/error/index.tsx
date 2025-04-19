@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/Download";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
-import AlertComponent from "@components/ui/alert";
 import BoxComponent from "@components/ui/box";
 import ButtonComponent from "@components/ui/button";
 import ModalComponent from "@components/ui/modal";
@@ -19,10 +18,7 @@ import "./error.scss";
 const MODAL_TITLE = "modal-error-title";
 const MODAL_DESCRIPTION = "modal-error-description";
 
-const snackBarAnchor = {
-	vertical: "top", 
-	horizontal: "center",
-} as const;
+const snackBarAnchor = { vertical: "bottom", horizontal: "left" } as const;
 
 // Модальное окно с текстом возникшей ошибки (обрабатывает любую ошибку, будь то в коде клиента, АПИ и тд.)
 export default function ModalWithError() {
@@ -62,11 +58,12 @@ export default function ModalWithError() {
 	if (!error) return null;
 
 	return <>
-		<SnackbarComponent anchor={snackBarAnchor} open={visibleSnackbar} handleClose={() => setVisibleSnackbar(false)}>
-			<AlertComponent show={visibleSnackbar} className="alert-error-container" severity="success">
-				{i18next.t("modals.copy_successfull")}
-			</AlertComponent>
-		</SnackbarComponent>
+		<SnackbarComponent 
+			anchor={snackBarAnchor} 
+			open={visibleSnackbar} 
+			message={i18next.t("modals.copy_successfull")}
+			handleClose={() => setVisibleSnackbar(false)}
+		/>
 
 		<ModalComponent
 			open

@@ -1,23 +1,22 @@
-import dayjs, { Dayjs } from "dayjs";
-import { JSX, lazy, Suspense } from "react";
+import { type Dayjs } from "dayjs";
+import { lazy, memo, type ReactNode, Suspense } from "react";
 
-import SpinnerComponent from "../spinner";
+import SuspenseSpinner from "@components/ui/suspense-spinner";
 
 // Типизация возвращаемых значений для динамической загрузки
-type LazyLoadedProviderType = {
-    default: ({ label, value, placeholder, onChange }: ILazyDatePicker) => JSX.Element;
+interface LazyLoadedProviderType {
+    default: ({ label, value, placeholder, onChange }: ILazyDatePicker) => ReactNode;
 };
 
 interface ILazyDatePicker {
     label: string;
-    value: dayjs.Dayjs;
+    value: Dayjs;
     placeholder: string;
     onChange: (value: Dayjs | null) => void;
 };
 
 // Динамически подгружаем компонент и его локализацию (так как пакет имеет большой вес)
 const LazyLoadedProvider = lazy(async (): Promise<LazyLoadedProviderType> => {
-
 	// Динамически загружаем пакеты @mui/x-date-pickers и @mui/x-date-pickers/AdapterDayjs
 	const [ { DatePicker, LocalizationProvider }, AdapterDayjs ] = await Promise.all([
 		import("@mui/x-date-pickers"),
@@ -48,8 +47,9 @@ const LazyLoadedProvider = lazy(async (): Promise<LazyLoadedProviderType> => {
 	};
 });
 
-export default function LazyDatePicker(props: ILazyDatePicker) {
-	return <Suspense fallback={<div className="date-picker__loading"><SpinnerComponent /></div>}>
+// Базовый компонент датапикеров. Лениво подгружаем компонент из большого пакета для увеличения скорости сборки
+export default memo(function LazyDatePicker(props: ILazyDatePicker) {
+	return <Suspense fallback={<SuspenseSpinner className="date-picker__loading" />}>
 		<LazyLoadedProvider {...props} />
 	</Suspense>;
-}
+});

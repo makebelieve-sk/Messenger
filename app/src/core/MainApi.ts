@@ -1,7 +1,7 @@
 import { type IUpdatedAvatar } from "@components/ui/change-avatar";
-import ProfilesController from "@core/controllers/ProfilesController";
-import Request from "@core/Request";
-import Socket from "@core/socket/Socket";
+import type ProfilesController from "@core/controllers/ProfilesController";
+import type Request from "@core/Request";
+import type Socket from "@core/socket/Socket";
 import Logger from "@service/Logger";
 import useAuthStore from "@store/auth";
 import useUserStore from "@store/user";

@@ -5,9 +5,11 @@ import { visualizer } from "rollup-plugin-visualizer";
 import browserslistToEsbuild from "browserslist-to-esbuild";
 import path from "path";
 
-// Vite автоматически поддерживает Typescript, поэтому дополнительных полей указывать не нужно.
-// Vite также автоматически загружает env переменные в зависимости от NODE_ENV переменной, которая устанавливается при запуске команды npm run start/build и тд.
-// В этих командах NODE_ENV устанавливается автоматически.
+/**
+ * Vite автоматически поддерживает Typescript, поэтому дополнительных полей указывать не нужно.
+ * Vite также автоматически загружает env переменные в зависимости от NODE_ENV переменной, которая устанавливается при запуске команды npm run start/build и тд.
+ * В этих командах NODE_ENV устанавливается автоматически.
+ */
 
 export default defineConfig({
     plugins: [

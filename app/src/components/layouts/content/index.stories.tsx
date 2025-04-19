@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import ContentLayout from "@components/layouts/content";
+import ContentLayoutComponent from "@components/layouts/content";
 
-const meta: Meta<typeof ContentLayout> = {
-	title: "Layouts/ContentLayout",
-	component: ContentLayout,
+const meta: Meta<typeof ContentLayoutComponent> = {
+	title: "Layouts/ContentLayoutComponent",
+	component: ContentLayoutComponent,
 	tags: [ "autodocs" ],
 };
 
 export default meta;
 
-type Story = StoryObj<typeof ContentLayout>;
+type Story = StoryObj<typeof ContentLayoutComponent>;
 
 export const Default: Story = {
 	args: {
@@ -24,8 +24,8 @@ export const WithLongContent: Story = {
 			<div>
 				<h3>Title</h3>
 				<p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.
-          Praesent libero. Sed cursus ante dapibus diam.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.
+					Praesent libero. Sed cursus ante dapibus diam.
 				</p>
 			</div>
 		),

@@ -1,12 +1,8 @@
-import Alert from "@mui/material/Alert";
-
+import AlertComponent from "@components/ui/alert";
 import SnackbarComponent from "@components/ui/snackbar";
 import useUIStore from "@store/ui";
 
-const snackBarAnchor = { 
-	vertical: "bottom", 
-	horizontal: "left",
-} as const;
+const snackBarAnchor = { vertical: "bottom", horizontal: "left" } as const;
 
 /**
  * Всплывающая подсказка с системной ошибкой. 
@@ -28,8 +24,8 @@ export default function SnackbarError() {
 	if (!snackbarError) return null;
 
 	return <SnackbarComponent anchor={snackBarAnchor} open handleClose={onCloseSnack}>
-		<Alert onClose={onCloseSnack} severity="error">
+		<AlertComponent severity="error">
 			{snackbarError}
-		</Alert>
+		</AlertComponent>
 	</SnackbarComponent>;
 }
