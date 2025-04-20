@@ -4,8 +4,8 @@
     transform: none;
     width: 46px;
     height: 46px;
-    margin: $signMarginXSmall;
-    background-color: $avatar-color;
+    margin: $sign-margin-x-small;
+    background-color: $system-avatar-color;
 
     @media (max-height: 700px) {
         margin: 0;

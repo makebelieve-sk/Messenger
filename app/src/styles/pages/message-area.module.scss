@@ -3,7 +3,7 @@
 	grid-row-start: 1;
 	overflow: hidden;
 	margin-bottom: 10px;
-	min-height: calc(100vh - $calcHeight);
+	min-height: calc(100vh - $messages-container-height);
 	display: flex;
 	flex-direction: column;
 	align-items: center;

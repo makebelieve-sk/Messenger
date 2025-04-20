@@ -3,7 +3,7 @@
 ### Важный момент! Запросы с файлами не поддерживаются расширением Rest Client и их необходимо выполнять в Postman.
 ### Перед отправкой запроса необходимо изменить переменные @host и @auth_cookie.
 
-@host = http://localhost:3000
+@host = http://localhost:8008
 @auth_cookie = sid=your-session-id-here
 
 ### ===============================================================================================
@@ -14,12 +14,12 @@ POST {{host}}/sign-up
 Content-Type: application/json
 
 {
-  "firstName": "John",
-  "thirdName": "Doe",
-  "email": "john.doe@example.com",
-  "phone": "+79991234567",
-  "password": "securePassword123",
-  "avatarUrl": "/avatars/avatar-test.jpg"
+    "firstName": "John",
+    "thirdName": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "+79991234567",
+    "password": "securePassword123",
+    "avatarUrl": "/avatars/avatar-test.jpg"
 }
 
 ### 2. Вход (Sign In)
@@ -27,9 +27,9 @@ POST {{host}}/sign-in
 Content-Type: application/json
 
 {
-  "email": "john.doe@example.com",
-  "password": "securePassword123",
-  "rememberMe": true
+    "email": "john.doe@example.com",
+    "password": "securePassword123",
+    "rememberMe": true
 }
 
 ### 3. Выход (Logout)
@@ -55,14 +55,14 @@ PUT {{host}}/edit-info
 Content-Type: application/json
 
 {
-  "name": "John",
-  "surName": "Doe",
-  "sex": "male",
-  "birthday": "1990-01-01",
-  "work": "Developer",
-  "city": "Moscow",
-  "phone": "+79991234567",
-  "email": "john.doe@example.com"
+    "name": "John",
+    "surName": "Doe",
+    "sex": "male",
+    "birthday": "1990-01-01",
+    "work": "Developer",
+    "city": "Moscow",
+    "phone": "+79991234567",
+    "email": "john.doe@example.com"
 }
 ### ===============================================================================================
 ### ImagesController
@@ -96,9 +96,9 @@ Content-Type: application/json
 Cookie: {{auth_cookie}}
 
 {
-  "userId": "user-id-here",
-  "limit": 10,
-  "offset": 0
+    "userId": "user-id-here",
+    "limit": 10,
+    "offset": 0
 }
 
 ### 4. Загрузка фотографий в профиль
@@ -124,6 +124,6 @@ Content-Type: application/json
 Cookie: {{auth_cookie}}
 
 {
-  "imageUrl": "/uploads/avatars/abc123.jpg",
-  "isAvatar": false
+    "imageUrl": "/uploads/avatars/abc123.jpg",
+    "isAvatar": false
 }

@@ -8,10 +8,6 @@ import storybookPlugin from "eslint-plugin-storybook";
 const eslintConfig = require(path.resolve(__dirname, "../.eslint.config.ts")).default;
 
 export default [
-	{
-        // Глобальные игноры (должны быть в первом конфиге)
-        ignores: ["**/dist/**", "**/node_modules/**"]
-    },
 	eslintConfig, // Абсолютный путь к общему конфигу
 	// Общая конфигурация для файлов Storybook
 	{
@@ -59,7 +55,7 @@ export default [
 				{
 					groups: [
 						// 1. Встроенные модули и зависимости из node_modules
-						["^[a-z0-9]", "^@?\\w"], // node:fs, react, lodash и т.д.
+						["^[a-z0-9]", "^@?\\w"], // react, zustand и т.д.
 						// 2. Алиасы всех указанных файлов. Также, относительные импорты (../components, ./utils)
 						[
 							"^@components", 
@@ -84,9 +80,5 @@ export default [
 	// Дополнительная конфигурация для конфигурационных файлов
 	{
 		files: ["vite.config.ts"],
-		rules: {
-			"no-console": "warn", // Разрешаем консоль в конфигурациях
-		},
-		ignores: ["node_modules", "dist"],
 	},
 ];

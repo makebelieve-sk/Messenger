@@ -1,13 +1,13 @@
 .header {
 	background: $white;
-	height: $headerHeight;
+	height: $header-height;
 
 	.header-container {
-		width: $contentWidth;
-		max-width: $contentWidth;
+		width: $content-width;
+		max-width: $content-width;
 		color: $black;
 		height: inherit;
-		line-height: $headerHeight;
+		line-height: $header-height;
 		margin: 0 auto;
 
 		&__toolbar {
@@ -28,7 +28,7 @@
 
 			&__avatar {
 				height: inherit;
-				line-height: $headerHeight;
+				line-height: $header-height;
 				display: flex;
 				align-items: center;
 

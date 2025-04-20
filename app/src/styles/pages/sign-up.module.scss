@@ -7,7 +7,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin-top: $signMarginXLarge;
+	margin-top: $sign-margin-x-large;
 
 	@media (max-height: 700px) {
 		margin-top: 0;
@@ -27,7 +27,7 @@
 		}
 
 		.secondaryButton {
-			color: $blue;
+			color: $auth-secondary-button-color;
 			text-decoration: none;
 
 			&:hover {
@@ -39,14 +39,14 @@
 	.footerButtonArea {
 		display: flex;
 		flex-direction: row;
-		padding-top: $signMarginMedium;
+		padding-top: $sign-margin-medium;
 
 		@media (max-height: 700px) {
 			padding-top: 0;
 		}
 
 		.loadingButton {
-			margin-left: $signMarginXSmall;
+			margin-left: $sign-margin-x-small;
 			width: 250%;
 		}
 	}

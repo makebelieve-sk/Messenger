@@ -1,12 +1,12 @@
 .messages-container {
 	width: 100%;
-	min-height: calc(100vh - $calcHeight);
+	min-height: calc(100vh - $messages-container-height);
 	overflow: hidden;
 	position: relative;
 
 	&__header {
 		padding: 5px;
-		border-bottom: 1px solid $light-grey;
+		border-bottom: 1px solid $messages-border;
 	}
 
 	&__skeleton-container {
@@ -51,7 +51,7 @@
 	&__list {
 		padding-left: 20px;
 		padding-right: 20px;
-		max-height: calc(100vh - $calcHeightDialogs);
+		max-height: calc(100vh - $messages-container-list);
 		overflow-y: auto;
 
 		&__is-more {

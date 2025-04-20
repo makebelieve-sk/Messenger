@@ -41,9 +41,9 @@ export default [
 				{
 					groups: [
 						// 1. Встроенные модули и зависимости из node_modules
-						[ "^node:", "^[a-z0-9]", "^@?\\w" ], // node:fs, react, lodash и т.д.
+						[ "^node:", "^[a-z0-9]", "^@?\\w" ], // fs, express и т.д.
 						// 2. Алиасы всех указанных файлов. Также, относительные импорты (../components, ./utils)
-						[ "^@config", "^@core", "^@service", "^@errors", "^@locales", "^@migrations", "^@custom-types", "^@utils", "^\\.\\.?/" ],
+						[ "^@config", "^@core", "^@service", "^@errors", "^@locales", "^@migrations", "^@custom-types", "^@utils" ],
 					],
 				},
 			],

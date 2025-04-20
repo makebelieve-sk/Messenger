@@ -17,8 +17,8 @@
     &__active {
         span {
             visibility: visible;
-            background-color: $online-green;
-            color: $online-green;
+            background-color: $is-online;
+            color: $is-online;
         }
     }
 }

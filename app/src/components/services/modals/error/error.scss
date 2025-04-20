@@ -12,7 +12,7 @@
 	gap: 15px;
 
 	&__error {
-		border: 1px solid $very-light-grey;
+		border: 1px solid $modal-error-border;
 		padding: 10px;
 
 		&:hover {
