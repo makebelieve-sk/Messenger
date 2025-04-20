@@ -1,10 +1,9 @@
 import { memo, type ReactNode, useEffect, useRef } from "react";
+import Alert from "@mui/material/Alert";
+import Slide from "@mui/material/Slide";
 
-import AlertComponent from "@components/ui/alert";
 import { type TimeoutType } from "@custom-types/index";
 import { ALERT_TIMEOUT, SLIDE_ALERT_TIMEOUT } from "@utils/constants";
-import Slide from "@mui/material/Slide";
-import Alert from "@mui/material/Alert";
 
 interface IAlertAnimationComponent {
 	show: boolean;
