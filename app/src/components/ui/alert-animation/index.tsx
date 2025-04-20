@@ -1,9 +1,10 @@
 import { memo, type ReactNode, useEffect, useRef } from "react";
-import { Slide } from "@mui/material";
 
 import AlertComponent from "@components/ui/alert";
 import { type TimeoutType } from "@custom-types/index";
 import { ALERT_TIMEOUT, SLIDE_ALERT_TIMEOUT } from "@utils/constants";
+import Slide from "@mui/material/Slide";
+import Alert from "@mui/material/Alert";
 
 interface IAlertAnimationComponent {
 	show: boolean;
@@ -58,11 +59,10 @@ export default memo(function AlertAnimationComponent({
 		in={show} 
 		mountOnEnter 
 		unmountOnExit 
-		timeout={{ enter: SLIDE_ALERT_TIMEOUT, exit: SLIDE_ALERT_TIMEOUT }} 
-		className="slide"
+		timeout={{ enter: SLIDE_ALERT_TIMEOUT, exit: SLIDE_ALERT_TIMEOUT }}
 	>
-		<AlertComponent color={status} className={className} severity={severity}>
+		<Alert color={status} className={className} severity={severity}>
 			{children}
-		</AlertComponent>
+		</Alert>
 	</Slide>;
 });

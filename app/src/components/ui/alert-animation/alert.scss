@@ -1,0 +1,12 @@
+@use "sass:math";
+
+// Приходится дублировать стил для компонента, потому что иначе не работает Alert
+.alert {
+    font-size: 15px;
+    line-height: math.div(22, 14) * 100%;
+    color: $black;
+
+    svg {
+        font-size: 20px;
+    }
+}

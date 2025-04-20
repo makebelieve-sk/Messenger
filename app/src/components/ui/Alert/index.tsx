@@ -11,12 +11,12 @@ interface IAlertComponent {
 };
 
 // Базовый компонент Alert
-export default memo(function AlertComponent({ children, color = "success", className = "", severity }: IAlertComponent) {
+export default function AlertComponent({ children, color = "success", className = "", severity }: IAlertComponent) {
 	return <Alert 
 		color={color} 
 		className={`alert ${className}`} 
 		severity={severity}
 	>
 		{children}
-	</Alert>;
-});
+	</Alert>
+};
