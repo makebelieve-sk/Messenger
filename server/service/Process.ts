@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 
+import type MainServer from "@core/MainServer";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { BaseError } from "@errors/index";
@@ -16,9 +17,17 @@ const REPORTS_PATH = path.join(__dirname, "../", REPORTS_DIR);
  * При этом, генерирует отчет о необработанных ошибках.
  */
 export default class ProcessWorks {
+	_mainServer!: MainServer;
+
 	constructor() {
 		if (!IS_DEV) this._configureReport();
 		this._init();
+	}
+
+	setServer(mainServer: MainServer) {
+		this._mainServer = mainServer;
+
+		this._handleGracefulyExit();
 	}
 
 	// Конфигурация Diagnostic Report - детальная информация об ошибке
@@ -57,8 +66,7 @@ export default class ProcessWorks {
 		// Генерируем отчет об необработанной ошибке
 		if (!IS_DEV) this._generateReport(reportReason);
 
-		// Завершаем выполнение процесса NodeJS
-		process.exit(1);
+		this.stopServerWithError();
 	}
 
 	// Генерация отчета с ошибкой, с учетом timestamp
@@ -68,5 +76,33 @@ export default class ProcessWorks {
 		const reportFilePath = `report-${reason}-${timestamp}.json`;
 
 		process.report.writeReport(reportFilePath);
+	}
+
+	// Обработка остановки сервера
+	private async _stopServer() {
+		logger.debug("_stopServer");
+
+		// Закрываем соединение с бд, сокетом и редисом
+		await this._mainServer.close();
+		// Завершаем выполнение процесса NodeJS
+		process.exit(0);
+	}
+
+	async stopServerWithError() {
+		logger.debug("_stopServerWithError");
+		// Закрываем соединение с бд, сокетом и редисом
+		await this._mainServer.close();
+		// Завершаем выполнение процесса NodeJS
+		process.exit(1);
+	}
+
+	// Ручное управление остановкой сервера
+	private _handleGracefulyExit() {
+		// Остановка сервера при ручном завершении (ctrl + c)
+		process.on("SIGINT", this._stopServer.bind(this));
+		// Остановка сервера при выполнении команды kill <pid>
+		process.on("SIGTERM", this._stopServer.bind(this));
+		// Остановка сервера при выполнении команды kill -s USR2 <pid> или nodemon restart
+		process.on("SIGUSR2", this._stopServer.bind(this));
 	}
 }

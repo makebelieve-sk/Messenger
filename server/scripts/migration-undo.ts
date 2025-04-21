@@ -1,14 +1,15 @@
+// eslint-disable-next-line simple-import-sort/imports
+import "@service/env";
+
 import path from "path";
 import { Sequelize } from "sequelize";
 
 import mssqlConfig from "@config/mssql.config";
 
-import "@service/env";
-
 /**
  * Скрипт, использующийся для запуска откатов конкретных миграций.
  * Его можно использовать как на проде, так и в режиме разработки.
- * В файле package.json есть специальная команда:
+ * В файле package.json есть специальные команды:
  *   - npm run migrate-dev:undo -- 04.03.2025-init-schema.ts
  *   - npm run migrate-prod:undo -- 04.03.2025-init-schema.js
  */

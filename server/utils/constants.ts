@@ -20,6 +20,8 @@ export const DATABASE_POOL_MAX = process.env.DATABASE_POOL_MAX ? Number(process.
 export const DATABASE_POOL_MIN = process.env.DATABASE_POOL_MIN ? Number(process.env.DATABASE_POOL_MIN) : 5;
 export const DATABASE_POOL_ACQUIRE = process.env.DATABASE_POOL_ACQUIRE ? Number(process.env.DATABASE_POOL_ACQUIRE) : 30000;
 export const DATABASE_POOL_IDLE = process.env.DATABASE_POOL_IDLE ? Number(process.env.DATABASE_POOL_IDLE) : 10000;
+export const DATABASE_MAX_BACKUPS = Number(process.env.DATABASE_MAX_BACKUPS);
+export const DATABASE_ENCRYPTION_PASSWORD = process.env.DATABASE_ENCRYPTION_PASSWORD as string;
 
 export const REDIS_CONNECTION_URL = process.env.REDIS_CONNECTION_URL as string;
 export const REDIS_PREFIX = process.env.REDIS_PREFIX as string;
@@ -51,7 +53,6 @@ export const RATE_LIMITER_ANON_COUNT = process.env.RATE_LIMITER_ANON_COUNT ? Num
 
 // Далее пошли обычные переменные, используемые в проекте
 export const IS_DEV = NODE_ENV === "development";
-
 export const MB_1 = 1024 * 1024;
-
 export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";
+export const BACKUP_ENCYPTED_FILE = "backup.enc";

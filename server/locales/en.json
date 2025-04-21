@@ -80,6 +80,7 @@
 	"socket.emit_handled": "[{{timestamp}}] | The event {{type}} has been processed on the client.",
 	"socket.handshake_connection_successful": "The socket connection is ready to establish a new connection.",
 	"socket.session_done": "The session verification in the Redis store has been completed successfully.",
+	"socket.stopped": "Socket.io server stopped.",
 
 	"socket.error.user_with_id_not_exists": "User with id={{userId}} not exists.",
 	"socket.error.user_id_not_found": "The user ID was not transmitted.",
@@ -161,5 +162,9 @@
 	"validation.schema.error.required_friend_id": "The friend's unique ID must be filled in.",
 
 	"config.rate-limiter.error.session_id": "There are too many requests for your session. Please try again later.",
-	"config.rate-limiter.error.ip": "There are too many requests from your IP address. Please try again later."
+	"config.rate-limiter.error.ip": "There are too many requests from your IP address. Please try again later.",
+
+	"backup_job_schedule.started": "Backup job schedule started.",
+	"backup_job_schedule.stopped": "Backup job schedule stopped.",
+	"backup_job_schedule.process_killed": "Backup process killed [pid={{pid}}]."
 }

@@ -146,7 +146,7 @@ export default class SocketWorks extends EventEmitter {
 		return next(socketError.setMiddlewareError());
 	}
 
-	close() {
+	async close() {
 		logger.debug("close");
 
 		// Берем все сокеты главного неймспейса и возвращаем их
@@ -164,6 +164,8 @@ export default class SocketWorks extends EventEmitter {
 			}
 		}
 
-		this._io.close();
+		await this._io.close();
+
+		logger.info(t("socket.stopped"));
 	}
 }

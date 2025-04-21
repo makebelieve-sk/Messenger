@@ -76,3 +76,13 @@ export async function getPhotoInfo(photo: string) {
 		extension: photoPath.split(".").pop() as string,
 	};
 }
+
+// Получение всех папок в директории с сортировкой по дате создания
+export function getAllSortedByTimestampFolders(dir: string) {
+	return fs.readdirSync(dir)
+		.filter(f => fs.statSync(path.join(dir, f)).isDirectory())
+		.sort((a, b) =>
+			fs.statSync(path.join(dir, a)).birthtime.getTime() -
+			fs.statSync(path.join(dir, b)).birthtime.getTime(),
+		);
+}

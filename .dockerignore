@@ -51,3 +51,6 @@ app/coverage
 
 # Файл глобального описания проекта
 README.md
+
+# Дампы базы данных MS SQL
+/server/dumps

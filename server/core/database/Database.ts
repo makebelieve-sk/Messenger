@@ -30,13 +30,14 @@ export default class Database {
 	}
 
 	// Закрытие базы данных
-	close() {
-		logger.debug("close");
-
-		this._sequelize
-			.close()
-			.then(() => logger.info(t("database.close")))
-			.catch((error: Error) => new DatabaseError(`${t("database.error.close")}: ${error.message}`));
+	async close() {
+		try {
+			logger.debug("close");
+			await this._sequelize.close();
+			logger.info(t("database.close"));
+		} catch (error) {
+			new DatabaseError(`${t("database.error.close")}: ${(error as Error).message}`);
+		};
 	}
 
 	// Соединение базы данных

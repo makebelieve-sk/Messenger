@@ -44,7 +44,7 @@ export default class RedisWorks {
 		this.redisClient.on("connect", this._connectHandler);
 		this.redisClient.on("ready", this._readyHandler);
 		this.redisClient.on("error", async (error: Error) => await this._connectErrorHandler(t("redis.error.client_work") + error.message));
-		this.redisClient.on("end", this._endHandler.bind(this));
+		this.redisClient.on("end", this._endHandler);
 	}
 
 	private _connectHandler() {
@@ -58,14 +58,6 @@ export default class RedisWorks {
 	private async _connectErrorHandler(errorText: string) {
 		this._errorHandler(errorText);
 		await this.close();
-	}
-
-	private _errorHandler(errorText: string) {
-		new RedisError(errorText);
-	}
-
-	private _endHandler() {
-		logger.info(t("redis.stopped"));
 
 		if (this._timeoutReconnect) {
 			clearTimeout(this._timeoutReconnect);
@@ -75,6 +67,14 @@ export default class RedisWorks {
 			logger.info(t("redis.reconnection"));
 			this._connectRedis();
 		}, REDIS_TIMEOUT_RECONNECTION);
+	}
+
+	private _errorHandler(errorText: string) {
+		new RedisError(errorText);
+	}
+
+	private _endHandler() {
+		logger.info(t("redis.stopped"));
 	}
 
 	async close() {

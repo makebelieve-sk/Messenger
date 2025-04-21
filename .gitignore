@@ -37,3 +37,6 @@ nginx/tmp/
 #jest coverage
 app/coverage
 *storybook.log
+
+# Дампы базы данных MS SQL
+server/dumps

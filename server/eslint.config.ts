@@ -9,7 +9,7 @@ const eslintConfig = require(path.resolve(__dirname, "../.eslint.config.ts")).de
 export default [
 	{
 		// Глобальные игноры (должны быть в первом конфиге)
-		ignores: [ "**/dist/**", "**/node_modules/**" ],
+		ignores: [ "**/dist/**", "**/node_modules/**", "**/dumps/**" ],
 	},
 	eslintConfig, // Абсолютный путь к общему конфигу
 	{

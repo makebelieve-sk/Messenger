@@ -67,11 +67,11 @@ export default class MainServer {
 	}
 
 	// Закрытие сервера
-	close() {
+	async close() {
 		logger.debug("close");
 
-		this._database.close();
-		this._redisWork.close();
-		this._socket.close();
+		await this._database.close();
+		await this._redisWork.close();
+		await this._socket.close();
 	}
 }
