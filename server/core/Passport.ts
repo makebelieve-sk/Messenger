@@ -173,7 +173,8 @@ export default class PassportWorks {
 
 			throw new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.Unauthorized, { type: HTTPErrorTypes.SIGN_IN });
 		} catch (error) {
-			throw new PassportError((error as Error).message);
+			const nextError = error instanceof PassportError ? error : new PassportError((error as Error).message);
+			throw nextError;
 		}
 	}
 }

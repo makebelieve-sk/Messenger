@@ -93,7 +93,7 @@ export default class Middleware {
 				options: errorMessage.options,
 			});
 
-			return res.status(nextError.status).send(errorMessage);
+			res.status(nextError.status).send(errorMessage);
 		});
 	}
 
