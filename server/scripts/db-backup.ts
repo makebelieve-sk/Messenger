@@ -74,7 +74,7 @@ const main = async () => {
 		);
 
 		// eslint-disable-next-line no-console
-		console.log("Backup completed successfully!");
+		console.log("File encryption has been successfully completed!");
 
 		// Удаление временного файла
 		await unlink(backupFile);

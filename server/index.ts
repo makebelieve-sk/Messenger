@@ -3,6 +3,7 @@
 import "./service/aliases";
 import "@service/env";
 import "@service/spawn-backup-process";
+import "@service/delete-unused-files";
 
 import express from "express";
 import http from "http";

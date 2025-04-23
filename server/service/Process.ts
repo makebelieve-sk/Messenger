@@ -24,10 +24,29 @@ export default class ProcessWorks {
 		this._init();
 	}
 
+	// Статичный метод для обработки сигналов процесса
+	static handleSignals(cb: () => void) {
+		// Остановка задания при ручном завершении сервера (ctrl + c)
+		process.on("SIGINT", cb);
+		// Остановка задания при выполнении команды kill <pid>
+		process.on("SIGTERM", cb);
+		// Остановка задания при выполнении команды kill -s USR2 <pid> или nodemon restart
+		process.on("SIGUSR2", cb);
+	}
+
 	setServer(mainServer: MainServer) {
 		this._mainServer = mainServer;
 
 		this._handleGracefulyExit();
+	}
+
+	// Остановка сервера с ошибкой
+	async stopServerWithError() {
+		logger.debug("_stopServerWithError");
+		// Закрываем соединение с бд, сокетом и редисом
+		await this._mainServer.close();
+		// Завершаем выполнение процесса NodeJS
+		process.exit(1);
 	}
 
 	// Конфигурация Diagnostic Report - детальная информация об ошибке
@@ -86,14 +105,6 @@ export default class ProcessWorks {
 		await this._mainServer.close();
 		// Завершаем выполнение процесса NodeJS
 		process.exit(0);
-	}
-
-	async stopServerWithError() {
-		logger.debug("_stopServerWithError");
-		// Закрываем соединение с бд, сокетом и редисом
-		await this._mainServer.close();
-		// Завершаем выполнение процесса NodeJS
-		process.exit(1);
 	}
 
 	// Ручное управление остановкой сервера

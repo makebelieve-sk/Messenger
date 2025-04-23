@@ -165,6 +165,14 @@
 	"config.rate-limiter.error.ip": "There are too many requests from your IP address. Please try again later.",
 
 	"backup_job_schedule.started": "Backup job schedule started.",
+	"backup_job_schedule.spawn_new_process": "Starting backup process...",
 	"backup_job_schedule.stopped": "Backup job schedule stopped.",
-	"backup_job_schedule.process_killed": "Backup process killed [pid={{pid}}]."
+	"backup_job_schedule.process_killed": "Backup process killed [pid={{pid}}].",
+	"delete_unused_files_job_schedule.started": "The task of deleting unused project files is running.",
+	"delete_unused_files_job_schedule.stopped": "The task of deleting unused project files has been stopped.",
+	"delete_unused_files_job_schedule.finished": "The task of deleting unused project files has been successfully completed. {{count}} files were deleted during execution.",
+	"delete_unused_files_job_schedule.terminate": "Worker [threadId={{threadId}}] of deleting unused project files has been terminated.",
+	"delete_unused_files_job_schedule.full_stop": "The worker [ThreadId={{ThreadId}}] for deleting unused project files was stopped with the error code {{code}}.",
+	"delete_unused_files_job_schedule.success_stopped": "The task of deleting unused project files has been successfully completed.",
+	"delete_unused_files_job_schedule.error": "An error occurred when deleting unused project files: {{error}}."
 }

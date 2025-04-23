@@ -36,6 +36,8 @@ const requiredEnv = [
 	"LOGS_DIR",
 	"ASSETS_DIR",
 	"REPORTS_DIR",
+	"DELETE_UNUSED_FILES_JOB_SCHEDULE",
+	"BACKUP_JOB_SCHEDULE",
 ];
 
 // Проверяем наличие обязательных env переменных

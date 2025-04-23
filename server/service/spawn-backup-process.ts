@@ -4,7 +4,8 @@ import type internal from "stream";
 
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
-import { IS_DEV } from "@utils/constants";
+import ProcessWorks from "@service/Process";
+import { BACKUP_JOB_SCHEDULE, IS_DEV } from "@utils/constants";
 
 const logger = Logger("spawn-backup-process");
 const BACKUP_RUN_COMMAND = IS_DEV ? "backup" : "backup:prod";
@@ -13,7 +14,7 @@ let backupProcess: ChildProcessByStdio<null, internal.Readable, internal.Readabl
 
 // Запуск скрипта резервного копирования
 function spawnProcess() {
-	logger.info("Starting backup process...");
+	logger.info(t("backup_job_schedule.spawn_new_process"));
 
 	// Запускаем скрипт резервного копирования в дочернем процессе
 	backupProcess = spawn("npm", [ "run", BACKUP_RUN_COMMAND ], {
@@ -49,15 +50,17 @@ function spawnProcess() {
  * * — любой месяц.
  * * — любой день недели.
  */
-const job = schedule.scheduleJob("0 0 0 1 * *", () => {
+const job = schedule.scheduleJob(BACKUP_JOB_SCHEDULE, () => {
 	logger.info(t("backup_job_schedule.started"));
 	spawnProcess();
 });
 
 // Функция для остановки задания
 function stopJob() {
-	logger.info(t("backup_job_schedule.stopped"));
-	job.cancel(); // Отменяем задание
+	if (job) {
+		logger.info(t("backup_job_schedule.stopped"));
+		job.cancel(); // Отменяем задание
+	}
 
 	// Если backupProcess существует, завершаем его
 	if (backupProcess && !backupProcess.killed) {
@@ -66,9 +69,5 @@ function stopJob() {
 	}
 }
 
-// Остановка задания при ручном завершении сервера (ctrl + c)
-process.on("SIGINT", stopJob);
-// Остановка задания при выполнении команды kill <pid>
-process.on("SIGTERM", stopJob);
-// Остановка задания при выполнении команды kill -s USR2 <pid> или nodemon restart
-process.on("SIGUSR2", stopJob);
+// Обработка сигналов главного процесса для остановки задания
+ProcessWorks.handleSignals(stopJob);

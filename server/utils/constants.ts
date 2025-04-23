@@ -51,6 +51,9 @@ export const RATE_LIMITER_ANON_TIME_MINUTES = process.env.RATE_LIMITER_ANON_TIME
 export const RATE_LIMITER_AUTH_COUNT = process.env.RATE_LIMITER_AUTH_COUNT ? Number(process.env.RATE_LIMITER_AUTH_COUNT) : 100;
 export const RATE_LIMITER_ANON_COUNT = process.env.RATE_LIMITER_ANON_COUNT ? Number(process.env.RATE_LIMITER_ANON_COUNT) : 20;
 
+export const DELETE_UNUSED_FILES_JOB_SCHEDULE = process.env.DELETE_UNUSED_FILES_JOB_SCHEDULE as string;
+export const BACKUP_JOB_SCHEDULE = process.env.BACKUP_JOB_SCHEDULE as string;
+
 // Далее пошли обычные переменные, используемые в проекте
 export const IS_DEV = NODE_ENV === "development";
 export const MB_1 = 1024 * 1024;
