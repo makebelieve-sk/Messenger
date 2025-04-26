@@ -3,6 +3,7 @@ import type { PassportStatic } from "passport";
 
 import AuthController from "@core/api/controllers/Auth";
 import ImagesController from "@core/api/controllers/Images";
+import MainController from "@core/api/controllers/Main";
 // import FilesController from "@core/api/controllers/Files";
 // import FriendsController from "@core/api/controllers/Friends";
 // import MessagesController from "@core/api/controllers/Messages";
@@ -38,6 +39,7 @@ export default class ApiServer {
 		// Общий мидлвар, добавляет ограничение на количество запросов для пользователя на всё API
 		this._middleware.rateLimiter();
 
+		new MainController(this._app);
 		new AuthController(this._app, this._middleware, this._database, this._redisWork, this._passport, this._users);
 		new ImagesController(this._app, this._middleware, this._database);
 		// new FilesController(this._app, this._middleware, this._database);

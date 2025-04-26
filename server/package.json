@@ -9,7 +9,7 @@
 	"scripts": {
 		"start": "cross-env NODE_ENV=development nodemon -r tsconfig-paths/register index.ts",
 		"start:production": "node -r module-alias/register dist/index.js",
-		"build": "npm run lint && tsc",
+		"build": "tsc && copyfiles -u 1 sql/**/*.sql dist/sql",
 		"build:local": "npm run build && cross-env NODE_ENV=production npm run start:production",
 		"test": "npm run test",
 		"lint": "eslint . --ext .ts",
@@ -61,6 +61,7 @@
 		"@types/uuid": "^10.0.0",
 		"@typescript-eslint/eslint-plugin": "^8.29.0",
 		"@typescript-eslint/parser": "^8.29.0",
+		"copyfiles": "^2.4.1",
 		"cross-env": "^7.0.3",
 		"eslint": "^9.23.0",
 		"eslint-plugin-import": "^2.31.0",

@@ -1,5 +1,7 @@
 // API маршруты
 enum ApiRoutes {
+	//----main-----------
+	checkHealth = "/check-health",
 	//----auth-----------
 	signUp = "/sign-up",
 	signIn = "/sign-in",

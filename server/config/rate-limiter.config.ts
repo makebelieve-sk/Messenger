@@ -8,7 +8,7 @@ import { RATE_LIMITER_ANON_COUNT, RATE_LIMITER_ANON_TIME_MINUTES, RATE_LIMITER_A
 import { oneMinute } from "@utils/datetime";
 import { getClientIp } from "@utils/get-client-ip";
 
-// Ограничитель числа запросов для авторизованных пользователей (по sessionID) - 100 запросов за 15 минут
+// Ограничитель числа запросов для авторизованных пользователей (по sessionID) - 100 запросов за 1 минуту
 export const sessionIdLimiter = rateLimit({
 	windowMs: RATE_LIMITER_AUTH_TIME_MINUTES * oneMinute, // в какое время разрешено использовать лимит запросов
 	max: RATE_LIMITER_AUTH_COUNT, // лимит запросов
@@ -26,7 +26,7 @@ export const sessionIdLimiter = rateLimit({
 	}, // Обработчик ошибки лимитера (передаем в общий обработчик ошибок express - см. Middleware.catch)
 });
 
-// Ограничитель числа запросов для неавторизованных пользователей (по IP) - 20 запросов за 15 минут
+// Ограничитель числа запросов для неавторизованных пользователей (по IP) - 100 запросов за 1 минуту
 export const ipLimiter = rateLimit({
 	windowMs: RATE_LIMITER_ANON_TIME_MINUTES * oneMinute, // в какое время разрешено использовать лимит запросов
 	max: RATE_LIMITER_ANON_COUNT, // жёстче лимит для неавторизованных пользователей

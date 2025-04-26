@@ -38,7 +38,7 @@ export const SOCKET_ACK_TIMEOUT = process.env.SOCKET_ACK_TIMEOUT ? Number(proces
 export const EXPRESS_SESSION_DOMAIN = process.env.EXPRESS_SESSION_DOMAIN as string;
 
 export const MULTER_MAX_FILE_SIZE = process.env.MULTER_MAX_FILE_SIZE ? Number(process.env.MULTER_MAX_FILE_SIZE) : 10;
-export const MULTER_MAX_FILEX_COUNT = process.env.MULTER_MAX_FILEX_COUNT ? Number(process.env.MULTER_MAX_FILEX_COUNT) : 10;
+export const MULTER_MAX_FILES_COUNT = process.env.MULTER_MAX_FILES_COUNT ? Number(process.env.MULTER_MAX_FILES_COUNT) : 10;
 
 export const SHARP_QUALITY = process.env.SHARP_QUALITY ? Number(process.env.SHARP_QUALITY) : 80;
 

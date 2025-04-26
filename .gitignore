@@ -40,3 +40,6 @@ app/coverage
 
 # Дампы базы данных MS SQL
 server/dumps
+
+# Файл с секретами Docker Secrets
+deploy/sa_password.txt

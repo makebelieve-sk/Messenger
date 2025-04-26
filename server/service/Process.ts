@@ -18,6 +18,7 @@ const REPORTS_PATH = path.join(__dirname, "../", REPORTS_DIR);
  */
 export default class ProcessWorks {
 	_mainServer!: MainServer;
+	static isHandled = false;
 
 	constructor() {
 		if (!IS_DEV) this._configureReport();
@@ -25,13 +26,28 @@ export default class ProcessWorks {
 	}
 
 	// Статичный метод для обработки сигналов процесса
-	static handleSignals(cb: () => void) {
-		// Остановка задания при ручном завершении сервера (ctrl + c)
-		process.on("SIGINT", cb);
-		// Остановка задания при выполнении команды kill <pid>
-		process.on("SIGTERM", cb);
-		// Остановка задания при выполнении команды kill -s USR2 <pid> или nodemon restart
-		process.on("SIGUSR2", cb);
+	static handleSignals(cb: (() => Promise<void>) | (() => void)) {
+		async function processHandler() {
+			await cb();
+			ProcessWorks.isHandled = true;
+		}
+
+		/**
+		 * Если обработчик уже был вызван, отписываемся от событий, так как все jobs node-schedule были остановлены
+		 * и теперь осталось лишь удалить обработчики системных событий (чтобы не было рекурсии)
+		 */
+		if (ProcessWorks.isHandled) {
+			process.removeListener("SIGINT", processHandler);
+			process.removeListener("SIGTERM", processHandler);
+			process.removeListener("SIGUSR2", processHandler);
+		}
+
+		// Вызов функции очистки (например, job из node-schedule) при ручном завершении сервера (ctrl + c)
+		process.on("SIGINT", processHandler);
+		// Вызов функции очистки (например, job из node-schedule) при выполнении команды kill <pid>
+		process.on("SIGTERM", processHandler);
+		// Вызов функции очистки (например, job из node-schedule) при выполнении команды kill -s USR2 <pid> или nodemon restart
+		process.on("SIGUSR2", processHandler);
 	}
 
 	setServer(mainServer: MainServer) {

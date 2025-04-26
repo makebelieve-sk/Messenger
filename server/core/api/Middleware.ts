@@ -8,7 +8,7 @@ import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { BaseError, MiddlewareError } from "@errors/index";
 import { HTTPStatuses, RedisKeys } from "@custom-types/enums";
-import { MB_1, MULTER_MAX_FILE_SIZE, MULTER_MAX_FILEX_COUNT } from "@utils/constants";
+import { MB_1, MULTER_MAX_FILE_SIZE, MULTER_MAX_FILES_COUNT } from "@utils/constants";
 import { createSharpedImage } from "@utils/files";
 import { updateSessionMaxAge } from "@utils/session";
 
@@ -169,7 +169,7 @@ export default class Middleware {
 		case LIMIT_FILE_COUNT:
 			return new BaseError(
 				t("middleware.error.limit_file_count", {
-					maxCount: MULTER_MAX_FILEX_COUNT.toString(),
+					maxCount: MULTER_MAX_FILES_COUNT.toString(),
 				}),
 				HTTPStatuses.PayloadTooLarge,
 			);

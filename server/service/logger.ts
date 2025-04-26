@@ -35,18 +35,18 @@ export default function Logger(prefix: string = "") {
 		format: getCommonFormat(prefix), // Используем общий формат
 	});
 
-	if (IS_DEV) {
-		// Логи в консоль
-		logger.add(
-			new transports.Console({
-				level: "info", // Уровень логирования для консоли
-				format: format.combine(
-					format.colorize(), // Добавляем цвета для консоли
-					getCommonFormat(prefix), // Используем общий формат
-				),
-			}),
-		);
-	} else {
+	// Логи в консоль
+	logger.add(
+		new transports.Console({
+			level: "info", // Уровень логирования для консоли
+			format: format.combine(
+				format.colorize(), // Добавляем цвета для консоли
+				getCommonFormat(prefix), // Используем общий формат
+			),
+		}),
+	);
+
+	if (!IS_DEV) {
 		// Добавляем файловые транспорты только для продакшена
 		logger.add(
 			new transports.File({

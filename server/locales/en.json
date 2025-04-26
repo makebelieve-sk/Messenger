@@ -107,7 +107,7 @@
 	"database.models.user.avatar_not_found": "Avatar's photo does not found.",
 
 	"database.error.close": "Closing the database connection failed.",
-	"database.error.connect": "The connection to the database failed with an error.",
+	"database.error.connect": "The connection to the database failed with an error",
 	"database.error.migrations": "A transaction error occurred while performing migrations",
 	"database.error.up_migrations": "The migrations launch failed with error",
 	"database.error.down_migrations": "The migrations rollback failed with error",

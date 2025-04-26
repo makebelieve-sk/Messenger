@@ -54,3 +54,6 @@ README.md
 
 # Дампы базы данных MS SQL
 /server/dumps
+
+# Файлы конфигурации nodemon
+/server/nodemon*.json

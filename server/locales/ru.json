@@ -107,7 +107,7 @@
 	"database.models.user.avatar_not_found": "Фотография аватара не найдена.",
 
 	"database.error.close": "Закрытие соединения с базой данных завершилось не удачно.",
-	"database.error.connect": "Соединение с базой данных завершилось с ошибкой.",
+	"database.error.connect": "Соединение с базой данных завершилось с ошибкой",
 	"database.error.migrations": "Возникла ошибка с транзакцией при выполнении миграций",
 	"database.error.up_migrations": "Запуск миграций завершился с ошибкой",
 	"database.error.down_migrations": "Запуск откатов миграций завершился с ошибкой",
