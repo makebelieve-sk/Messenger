@@ -1,0 +1,11 @@
+# Принудительно сохраняем LF в файлах .sh (по умолчанию git изменяет их на CRLF)
+# Чтобы вручную глобально не писать: git config --global core.autocrlf true
+*.sh text eol=lf
+
+# Бинарные файлы (для оптимизации работы git)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.svg binary 
