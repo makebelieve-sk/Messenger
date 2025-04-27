@@ -1,77 +1,54 @@
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-
+import { SmallButtonComponent } from "@components/services/buttons/small-button";
+import BoxComponent from "@components/ui/box";
 import ModalComponent from "@components/ui/modal";
 import TypographyComponent from "@components/ui/typography";
-import { SmallButtonComponent } from "@components/ui/button/small-button";
-import BoxComponent from "@components/ui/box";
-import eventBus from "@utils/event-bus";
-import { GlobalEvents } from "@custom-types/events";
+import i18next from "@service/i18n";
+import useUIStore from "@store/ui";
 
 import "./confirm.scss";
 
-const modalTitle = "modal-confirm-title";
-const modalDescription = "modal-confirm-description";
+const MODAL_TITLE = "modal-confirm-title";
+const MODAL_DESCRIPTION = "modal-confirm-description";
 
-// Начальное состояние модального окна с подтверждением
-const initialModalData: IModalConfirmData = {
-    text: "",
-    btnActionTitle: "",
-    cb: undefined
-};
-
-export interface IModalConfirmData {
-    text: string;
-    btnActionTitle: string;
-    cb?: () => void;
+export interface IConfirmModalData {
+	text: string;
+	btnActionTitle: string;
+	cb?: () => void;
 };
 
 // Модальное окно с подтверждением операции (например, удаление фотографии/аватара)
 export default function ModalWithConfirm() {
-    const [open, setOpen] = useState(false);
-    const [modalData, setModalData] = useState(initialModalData);
+	const confirmModal = useUIStore((state) => state.confirmModal);
 
-    const { t } = useTranslation();
+	// Выполнение действия
+	const onAction = () => {
+		if (confirmModal && confirmModal.cb) confirmModal.cb();
 
-    useEffect(() => {
-        // После установки данных модального окна необходимо обновить состояние для корректного отображения
-        eventBus.on(GlobalEvents.SET_MODAL_CONFIRM, onSetModalData);
+		onClose();
+	};
 
-        // Отписываемся от данного события при размонтировании, чтобы избежать утечки памяти
-        return () => {
-            eventBus.off(GlobalEvents.SET_MODAL_CONFIRM, onSetModalData);
-        }
-    }, []);
+	// Закрытие модального окна
+	const onClose = () => {
+		useUIStore.getState().setConfirmModal(null);
+	};
 
-    // Обработчик события SET_MODAL_CONFIRM
-    const onSetModalData = (data: IModalConfirmData) => {
-        setOpen(Boolean(data));
-        setModalData(data);
-    }
+	if (!confirmModal) return null;
 
-    // Выполнение действия
-    const onAction = () => {
-        if (modalData.cb) modalData.cb();
+	return <ModalComponent open onClose={onClose} title={MODAL_TITLE} description={MODAL_DESCRIPTION}>
+		<BoxComponent className="modal-confirm-container">
+			<TypographyComponent id={MODAL_TITLE} variant="subtitle1" component="h2">
+				{confirmModal.text}
+			</TypographyComponent>
 
-        onClose();
-    };
+			<TypographyComponent id={MODAL_DESCRIPTION} className="modal-confirm-container__buttons">
+				<SmallButtonComponent variant="outlined" color="primary" onClick={onAction}>
+					{confirmModal.btnActionTitle}
+				</SmallButtonComponent>
 
-    // Закрытие модального окна
-    const onClose = () => {
-        setOpen(false);
-        setModalData(initialModalData);
-    };
-
-    return <ModalComponent isOpen={open} onClose={onClose} title={modalTitle} description={modalDescription}>
-        <BoxComponent className="modal-confirm-container">
-            <TypographyComponent id={modalTitle} variant="subtitle1" component="h2">
-                {modalData.text}
-            </TypographyComponent>
-
-            <TypographyComponent id={modalDescription} className="modal-confirm-container__buttons">
-                <SmallButtonComponent variant="outlined" color="primary" onClick={onAction}>{modalData.btnActionTitle}</SmallButtonComponent>
-                <SmallButtonComponent variant="outlined" color="error" onClick={onClose}>{ t("modals.cancel") }</SmallButtonComponent>
-            </TypographyComponent>
-        </BoxComponent>
-    </ModalComponent>
-};
+				<SmallButtonComponent variant="outlined" color="error" onClick={onClose}>
+					{ i18next.t("modals.cancel") }
+				</SmallButtonComponent>
+			</TypographyComponent>
+		</BoxComponent>
+	</ModalComponent>;
+}

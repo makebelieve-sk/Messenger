@@ -1,10 +1,10 @@
-import { ElementType } from "react";
+import { type ElementType, memo, type ReactNode } from "react";
 import Grid from "@mui/material/Grid2";
 
 import "./grid.scss";
 
 interface IGridComponent {
-    children?: React.ReactNode;
+    children?: ReactNode;
     className?: string;
     container?: boolean;
     spacing?: number;
@@ -13,20 +13,31 @@ interface IGridComponent {
     md?: number;
     component?: ElementType;
     elevation?: number;
-    square?: boolean
+    square?: boolean;
 };
 
-// Базовый компонент грида
-export default function GridComponent({ children, container, spacing = 2, xs, sm, md, className = "grid-item-style", component = "div", elevation, square }: IGridComponent) {
-    return <Grid
-        container={container}
-        spacing={spacing}
-        size={{ xs, sm, md }}
-        className={className}
-        component={component}
-        elevation={elevation}
-        square={square}
-    >
-        {children}
-    </Grid>
-}
+// Базовый компонент сетки
+export default memo(function GridComponent({ 
+	children, 
+	container, 
+	spacing = 2, 
+	xs, 
+	sm, 
+	md, 
+	className = "grid-item-style", 
+	component = "div", 
+	elevation, 
+	square,
+}: IGridComponent) {
+	return <Grid
+		container={container}
+		spacing={spacing}
+		size={{ xs, sm, md }}
+		className={className}
+		component={component}
+		elevation={elevation}
+		square={square}
+	>
+		{children}
+	</Grid>;
+});

@@ -1,42 +1,36 @@
-import { useNavigate } from "react-router-dom";
-
 import GridComponent from "@components/ui/grid";
-import { Pages } from "@custom-types/enums";
 import MainPhoto from "@modules/profile/main-photo";
-import Friends from "@modules/profile/friends";
 import PersonalInfo from "@modules/profile/personal-info";
 import Photos from "@modules/profile/photos";
+import Friends from "@modules/profile/top-friends/friends";
+import OnlineFriends from "@modules/profile/top-friends/online-friends";
 
 import "@styles/pages/profile.scss";
 
+// Страница профиля
 export default function Profile() {
-    const navigate = useNavigate();
+	return <GridComponent container spacing={2}>
+		<GridComponent xs={4}>
+			<GridComponent container spacing={2}>
+				{/* Блок моей фотографии */}
+				<MainPhoto />
 
-    // Клик по названию блока
-    const onClickBlock = (pathname: Pages) => {
-        // второй параметр query: { mainTab: MainFriendTabs, tab?: FriendsTab }
-        // navigate({ pathname, query });
-        navigate(pathname);
-    };
+				{/* Блок друзей */}
+				<Friends />
 
-    return <GridComponent container className="profile-container__grid" spacing={2}>
-        <GridComponent container xs={4} spacing={2} className="column__grid" >
-            {/* Блок моей фотографии */}
-            <MainPhoto />
+				{/* Блок друзей онлайн */}
+				<OnlineFriends />
+			</GridComponent>
+		</GridComponent>
 
-            {/* Блок друзей */}
-            <Friends onClickBlock={onClickBlock} />
+		<GridComponent xs={8}>
+			<GridComponent container spacing={2}>
+				{/* Блок личной информации */}
+				<PersonalInfo />
 
-            {/* Блок друзей онлайн */}
-            <Friends onClickBlock={onClickBlock} onlineFriends />
-        </GridComponent>
-
-        <GridComponent container xs={8} spacing={2} className="column__grid">
-            {/* Блок личной информации */}
-            <PersonalInfo onClickBlock={onClickBlock} />
-
-            {/* Блок фотографий */}
-            <Photos />
-        </GridComponent>
-    </GridComponent>
-};
+				{/* Блок фотографий */}
+				<Photos />
+			</GridComponent>
+		</GridComponent>
+	</GridComponent>;
+}

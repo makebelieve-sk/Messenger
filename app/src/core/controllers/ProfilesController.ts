@@ -1,77 +1,103 @@
-import EventEmitter from "eventemitter3";
-
-import ProfileService from "@core/services/ProfileServices";
+import { type Profile } from "@core/models/Profile";
 import Request from "@core/Request";
-import { Profile } from "@core/models/Profile";
-import Logger from "@service/Logger";
+import ProfileService from "@core/services/ProfileService";
 import i18next from "@service/i18n";
-import { AppDispatch } from "@custom-types/redux.types";
-import { MainClientEvents } from "@custom-types/events";
-import { MY_ID } from "@utils/constants";
+import Logger from "@service/Logger";
+import useUIStore from "@store/ui";
+import { type IUserData } from "@custom-types/api.types";
 
 const logger = Logger.init("ProfilesController");
 
 // Класс, отвечающий за работу с коллекцией профилей пользователей
-export default class ProfilesController extends EventEmitter {
-    private _profiles: Map<string, Profile> = new Map();
+export default class ProfilesController {
+	private readonly _profiles: Map<string, Profile> = new Map();
 
-    constructor(private readonly _request: Request, private readonly _dispatch: AppDispatch) {
-        super();
+	constructor(private readonly _request: Request) {
+		logger.debug("init");
+	}
 
-        logger.debug("init");
-        this.addProfile(MY_ID);
-    }
+	get profiles() {
+		return this._profiles;
+	}
 
-    get profiles() {
-        return this._profiles;
-    }
+	// Получение объекта пользователя
+	getProfile(userId?: string) {
+		if (!userId) {
+			userId = this._getMyProfileId();
 
-    // Получение объекта пользователя
-    getProfile(userId: string = MY_ID, showError: boolean = true) {
-        const profile = this._profiles.get(userId);
+			if (!userId) {
+				/**
+				 * Помечаем тип как never потому, что при отправке ошибки выше, происходит блокировка действий пользователя,
+				 * путем открытия модального окна с ошибкой.
+				 */
+				return undefined as never;
+			}
+		}
 
-        if (!profile) {
-            if (showError) this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
-            return undefined;
-        }
+		const profile = this._checkProfile(userId);
 
-        return profile;
-    }
+		if (!profile) {
+			useUIStore.getState().setError(i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
+			/**
+			 * Помечаем тип как never потому, что при отправке ошибки выше, происходит блокировка действий пользователя,
+			 * путем открытия модального окна с ошибкой.
+			 */
+			return undefined as never;
+		}
 
-    // Добавление нового профиля пользователя
-    addProfile(userId: string = MY_ID) {
-        logger.debug(`addProfile [userId=${userId}]`);
+		return profile;
+	}
 
-        if (this._profiles.has(userId)) {
-            this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
-            return undefined;
-        }
+	// Создание нового профиля
+	createProfile(userData: IUserData) {
+		const userId = userData.user.id;
 
-        const newProfile = new ProfileService(userId, this._request, this._dispatch);
+		logger.debug(`createProfile [userId=${userId}]`);
 
-        this._profiles.set(userId, newProfile);
-        this._bindListeners(newProfile);
-    }
+		const profile = this._checkProfile(userId);
 
-    // Удаление профиля пользователя
-    removeProfile(userId: string = MY_ID) {
-        logger.debug(`removeProfile [userId=${userId}]`);
+		if (profile) {
+			useUIStore.getState().setError(i18next.t("core.profiles-controller.error.profile_exists", { id: userId }));
+			return;
+		}
 
-        const profile = this.getProfile(userId);
+		const newProfile = new ProfileService(this._request, userData);
 
-        if (!profile) {
-            this.emit(MainClientEvents.ERROR, i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
-            return;
-        }
+		this._profiles.set(userId, newProfile);
+	}
 
-        this._profiles.delete(userId);
-    }
+	// Удаление своего профиля (либо выход, либо полноценное удаление)
+	removeProfile() {
+		logger.debug("removeProfile");
 
-    // Слушатель события класса ProfileService
-    private _bindListeners(profile: Profile) {
-        profile.on(MainClientEvents.GET_ME, () => {
-            logger.debug("MainClientEvents.GET_ME");
-            this.emit(MainClientEvents.GET_ME);
-        });
-    }
+		const myProfileId = this._getMyProfileId();
+
+		if (myProfileId) {
+			this._profiles.delete(myProfileId);
+		}
+	}
+
+	// Получение id моего профиля среди всех остальных
+	private _getMyProfileId() {
+		let myProfileId: string | undefined;
+
+		for (const [ profileId, profile ] of this._profiles.entries()) {
+			if (profile.isMe) {
+				myProfileId = profileId;
+				break;
+			}
+		}
+
+		if (!myProfileId) {
+			useUIStore.getState().setError(i18next.t("core.profiles-controller.error.my_profile_not_exists"));
+			return;
+		}
+
+		return myProfileId;
+	}
+
+	// Проверка существования профиля пользователя
+	private _checkProfile(userId: string) {
+		return this._profiles.get(userId) || null;
+	}
 }

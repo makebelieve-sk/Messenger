@@ -1,34 +1,35 @@
 {
-  "compilerOptions": {
-    "target": "ES2021",                       // Выбор стандарта ES2016
-    "module": "NodeNext",                     // Тип модулей для Node.js
-    "esModuleInterop": true,                  // Устанавливается для совместимости с импортом ES6 модулей
-    "forceConsistentCasingInFileNames": true, // Предотвращает ошибки из-за регистра
-    "strict": true,                           // Включает все строгие проверки
-    "skipLibCheck": true,                     // Пропускает проверку типов библиотек
-    "outDir": "./dist",                       // Директория для скомпилированных файлов
-    "resolveJsonModule": true,                // Позволяет импортировать .json файлы
-    "sourceMap": true,                        // Генерация карт для отладки
-    "allowJs": false,                         // Не разрешаем использование js файлов
-    "noImplicitAny": false,                   // Пока что разрешаем использование any в типах (TODO удалим позднее, когда проект будет близок к завершению)
-    "noUnusedLocals": true,                   // Сообщает о неиспользуемых, но объявленных переменных
-    "noUnusedParameters": true,               // Сообщает о неиспользуемых параметрах функции
-    "noImplicitReturns": true,                // Предупреждение, если путь в функции не возвращает значение
-    "noFallthroughCasesInSwitch": true,       // Предупреждает о случаях fallthrough в switch
-    "moduleResolution": "nodenext",           // Использует резолвер модулей Node.js
-    "typeRoots": ["./node_modules/@types"],   // Указывает пути для типов
-    "incremental": true,                      // Включает инкрементальную сборку
-    "paths": {
-      "@core/*": ["./core/*"],                // Короткий путь для папки core
-      "@database/*": ["./database/*"],        // Короткий путь для папки database
-      "@errors/*": ["./errors/*"],            // Короткий путь для папки errors
-      "@locales/*": ["./locales/*"],          // Короткий путь для папки locales
-      "@migrations/*": ["./migrations/*"],    // Короткий путь для папки migrations
-      "@service/*": ["./service/*"],          // Короткий путь для папки service
-      "@custom-types/*": ["./types/*"],       // Короткий путь для папки types
-      "@utils/*": ["./utils/*"]               // Короткий путь для папки utils
-    }
-  },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist", "assets"]
+	"compilerOptions": {
+		"target": "ES2021", // Выбор стандарта ES2016
+		"module": "NodeNext", // Тип модулей для Node.js
+		"esModuleInterop": true, // Устанавливается для совместимости с импортом ES6 модулей
+		"forceConsistentCasingInFileNames": true, // Предотвращает ошибки из-за регистра
+		"strict": true, // Включает все строгие проверки
+		"skipLibCheck": true, // Пропускает проверку типов библиотек
+		"outDir": "./dist", // Директория для скомпилированных файлов
+		"resolveJsonModule": true, // Позволяет импортировать .json файлы
+		"sourceMap": true, // Генерация карт для отладки
+		"allowJs": false, // Не разрешаем использование js файлов
+		"noImplicitAny": false, // Пока что разрешаем использование any в типах (TODO удалим позднее, когда проект будет близок к завершению)
+		"noUnusedLocals": true, // Сообщает о неиспользуемых, но объявленных переменных
+		"noUnusedParameters": true, // Сообщает о неиспользуемых параметрах функции
+		"noImplicitReturns": true, // Предупреждение, если путь в функции не возвращает значение
+		"noFallthroughCasesInSwitch": true, // Предупреждает о случаях fallthrough в switch
+		"moduleResolution": "nodenext", // Использует резолвер модулей Node.js
+		"typeRoots": ["./node_modules/@types"], // Указывает пути для типов
+		"incremental": true, // Включает инкрементальную сборку
+		"paths": {
+			"@config/*": ["./config/*"], // Короткий путь для папки config
+			"@core/*": ["./core/*"], // Короткий путь для папки core
+			"@errors/*": ["./errors/*"], // Короткий путь для папки errors
+			"@locales/*": ["./locales/*"], // Короткий путь для папки locales
+			"@migrations/*": ["./migrations/*"], // Короткий путь для папки migrations
+			"@service/*": ["./service/*"], // Короткий путь для папки service
+			"@custom-types/*": ["./types/*"], // Короткий путь для папки types
+			"@utils/*": ["./utils/*"] // Короткий путь для папки utils
+		}
+	},
+	"include": ["**/*.d.ts", "**/*.ts"],
+	"exclude": ["./node_modules", "./dist", "./assets"],
+	"files": ["./global.d.ts"] // Принудительно загружаем глобальные типы (обычный include и typeRoots их не видели)
 }

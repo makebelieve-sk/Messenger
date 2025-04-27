@@ -1,128 +1,133 @@
-import EventEmitter from "eventemitter3";
-
-import Logger from "@service/Logger";
-import Request from "@core/Request";
+import { type NotificationSettings } from "@core/models/NotificationSettings";
+import { type Photos } from "@core/models/Photos";
+import { type User } from "@core/models/User";
+import { type UserDetails } from "@core/models/UserDetails";
+import type Request from "@core/Request";
+import NotificationSettingsService from "@core/services/NotificationSettingsService";
+import PhotosService from "@core/services/PhotosService";
 import UserDetailsService from "@core/services/UserDetailsService";
-import { User } from "@core/models/User";
-import { UserDetails } from "@core/models/UserDetails";
-import { MY_ID } from "@utils/constants";
-import { IUser, IUserDetails } from "@custom-types/models.types";
-import { ApiRoutes } from "@custom-types/enums";
-import { MainClientEvents, UserEvents } from "@custom-types/events";
-import { AppDispatch } from "@custom-types/redux.types";
-import { setLoading } from "@store/main/slice";
+import Logger from "@service/Logger";
+import useUserStore from "@store/user";
+import type { IApiUser, IApiUserDetails, IUserData } from "@custom-types/api.types";
 
 const logger = Logger.init("User");
 
-// Класс, реализовывающий сущность "Пользователь" согласно контракту "Пользователь"
-export default class UserService extends EventEmitter implements User {
-    private readonly _userDetails: UserDetails;
-    private _user!: IUser;
+/**
+ * Класс, реализовывающий сущность "Пользователь" согласно контракту "Пользователь".
+ * Внутренний объект this._user представляет собой данные, которые пришли с сервера.
+ * То есть, он может содержать внутри себя необработанные данные (например, null).
+ * После редактирования или обновления/удаления аватара this._user становится типом IUser.
+ */
+export default class UserService implements User {
+	private _user!: IApiUser;
+	private readonly _userDetails: UserDetails;
+	private readonly _notificationSettings?: NotificationSettings;
+	private readonly _photos: Photos;
 
-    constructor(private readonly _id: string, private readonly _request: Request, private readonly _dispatch: AppDispatch) {
-        super();
+	constructor(private readonly _request: Request, private readonly _userData: IUserData) {
+		logger.debug("init");
 
-        logger.debug(`init user [id=${this._id}]`);
+		const { user, userDetails, notificationSettings } = this._userData;
 
-        this._id === MY_ID
-            ? this._getMe()
-            : this._getUser();
+		this._updateUser(user);
 
-        this._userDetails = new UserDetailsService(this._request);
-    }
+		// Создаем сущность дополнительной информации о пользователе
+		this._userDetails = new UserDetailsService(userDetails);
 
-    get id() {
-        return this._user.id;
-    }
+		if (this._userData.isMe && notificationSettings) {
+			// Создаем сущность настроек уведомлений
+			this._notificationSettings = new NotificationSettingsService(notificationSettings);
+		}
+		
+		// Создаем сущность фотографий
+		this._photos = new PhotosService(this._request, this._user.id);
+	}
 
-    get user() {
-        return this._user;
-    }
+	get photos() {
+		return this._photos;
+	}
 
-    get firstName() {
-        return this._user.firstName;
-    }
+	get details() {
+		return this._userDetails;
+	}
 
-    get thirdName() {
-        return this._user.thirdName;
-    }
+	get settings() {
+		return this._notificationSettings;
+	}
 
-    get phone() {
-        return this._user.phone;
-    }
+	get id() {
+		return this._user.id;
+	}
 
-    get email() {
-        return this._user.email;
-    }
+	get firstName() {
+		return this._user.firstName;
+	}
 
-    get fullName() {
-        return this._user.firstName + " " + this._user.thirdName;
-    }
+	get secondName() {
+		return this._user.secondName || "";
+	}
 
-    get avatarUrl() {
-        return this._user.avatarUrl ? this._user.avatarUrl : "";
-    }
+	get thirdName() {
+		return this._user.thirdName;
+	}
 
-    get userDetails() {
-        return this._userDetails;
-    }
+	get phone() {
+		return this._user.phone;
+	}
 
-    // Получение данных о себе
-    private _getMe() {
-        this._request.get({
-            route: ApiRoutes.getMe,
-            setLoading: (isLoading: boolean) => {
-                this._dispatch(setLoading(isLoading));
-            },
-            successCb: (data: { user: IUser }) => {
-                this._user = data.user;
-                logger.info(`get info about yourself: ${JSON.stringify(this._user)}`);
-                this.emit(MainClientEvents.GET_ME);
-            }
-        });
-    }
+	get email() {
+		return this._user.email;
+	}
 
-    // Получение данных другого пользователя
-    private _getUser() {
-        this._request.post({
-            route: ApiRoutes.getUser,
-            data: { id: this._id },
-            successCb: (data: { user: IUser }) => {
-                // this._user = data.user;
-                logger.info(`get info about another user: ${JSON.stringify(data.user)}`);
-            }
-        });
-    }
+	get fullName() {
+		return this._user.firstName + " " + this._user.thirdName;
+	}
 
-    // Обновление данных о себе (так как после входа уже существует в мапе мой профиль и сущность Пользователь)
-    updateMe() {
-        logger.debug("updateMe");
+	get avatarUrl() {
+		return this._user.avatarUrl || "";
+	}
 
-        this._getMe();
-        this._userDetails.updateDetails();
-    }
+	get avatarCreateDate() {
+		return this._user.avatarCreateDate || "";
+	}
 
-    // Замена поля пользователя и обновление в глобальном состоянии
-    changeField(field: string, value: string) {
-        logger.debug(`changeField [field: ${field}, value=${value}]`);
-        
-        this._user[field] = value;
-        this.emit(UserEvents.CHANGE_FIELD, field, value);
-    }
+	// Обновление данных о пользователе при редактировании
+	updateUser({ user, userDetails }: { user: IApiUser; userDetails: IApiUserDetails; }) {
+		logger.debug("updateUser");
 
-    // Обновление данных о пользователе при редактировании
-    updateInfo({ user, userDetails }: { user: IUser, userDetails: IUserDetails }) {
-        logger.debug("updateInfo");
+		this._updateUser({
+			...this._user,
+			...user,
+		});
+		this._userDetails.updateDetails(userDetails);
+	}
 
-        this._user = user;
-        this._userDetails.editDetails(userDetails);
-    }
+	// Изменение аватара пользователя
+	changeAvatar(updatedAvatar?: { newAvatarUrl: string; avatarCreationDate: string; }) {
+		logger.debug(`changeAvatar [value=${updatedAvatar?.newAvatarUrl}]`);
 
-    /**
-     * Статичный метод фабрика
-     * Возвращает сущность "Пользователь"
-     */
-    static create(...args: [string, Request, AppDispatch]) {
-        return new UserService(...args);
-    }
+		this._updateUser({
+			...this._user,
+			avatarUrl: updatedAvatar?.newAvatarUrl || null,
+			avatarCreateDate: updatedAvatar?.avatarCreationDate || null,
+		});
+	}
+
+	// Обновление полей пользователя
+	private _updateUser(newUser: IApiUser) {
+		this._user = newUser;
+
+		// Уведомление стора об изменении полей пользователя
+		useUserStore.getState().setUser({
+			id: this.id,
+			firstName: this.firstName,
+			secondName: this.secondName,
+			thirdName: this.thirdName,
+			phone: this.phone,
+			email: this.email,
+			fullName: this.fullName,
+			avatarUrl: this.avatarUrl,
+			avatarCreateDate: this.avatarCreateDate,
+		});
+	}
 }

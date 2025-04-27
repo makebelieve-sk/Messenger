@@ -1,139 +1,125 @@
-import { FileVarieties, MessageTypes } from "@custom-types/enums";
+import { MessageTypes } from "@custom-types/enums";
 
-// Интерфейс атрибутов модели Users
+// Интерфейс атрибутов модели User
 export interface IUser {
-    id: string;
-    firstName: string;
-    secondName: string;
-    thirdName: string;
-    email: string;
-    phone: string;
-    password: string;
-    avatarUrl: string;
-    salt: string;
+	id: string;
+	firstName: string;
+	secondName: string | null;
+	thirdName: string;
+	email: string;
+	phone: string;
+	password: string;
+	salt: string;
+	avatarId: string | null;
 };
 
-// Интерфейс атрибутов модели User_details
-export interface IUserDetails {
-    id: number;
-    userId: string;
-    birthday: string;
-    city: string;
-    work: string;
-    sex: string;
-    lastSeen?: string;
-};
-
-// Интерфейс атрибутов модели Friends
-export interface IFriend {
-    id: number;
-    userId: string;
-    friendId: string;
-};
-
-// Интерфейс атрибутов модели Subscribers
-export interface ISubscriber {
-    id: number;
-    userId: string;
-    subscriberId: string;
-    leftInSubs: number;
-};
-
-// Интерфейс атрибутов модели Messages
-export interface IMessage {
-    id: string;
-    userId: string;
-    chatId: string;
-    files?: string[] | File[] | null | string | IFile[];
-    type: MessageTypes;
-    createDate: string;
-    message: string;
-    fileExt?: FileVarieties;
-    callId?: string | null;
-    isRead: number;
-    // Модель чата
-    Chat?: { id: string; };
-    // Модель пользователя (кто отправитель сообщения)
-    User?: {
-        id: string;
-        firstName: string;
-        thirdName: string;
-        avatarUrl: string;
-    };
-    Call?: any;
-    authorAvatar?: string;
-};
-
-// Интерфейс атрибутов модели Chats
-export interface IChat {
-    id: string;
-    name: string | null;
-    avatarUrl: string | null;
-};
-
-// Интерфейс атрибутов модели Files
-export interface IFile {
-    id: string;
-    name: string;
-    size: number;
-    path: string;
-    extension: string;
-};
-
-// Интерфейс атрибутов модели ReadMessages
-export interface IReadMessages {
-    id: string;
-    userId: string;
-    messageId: string;
-    isRead: number;
-};
-
-// Интерфейс атрибутов модели Photos
+// Интерфейс атрибутов модели Photo
 export interface IPhoto {
-    id: string;
-    userId: string;
-    path: string;
-    createDate: string;
+	id: string;
+	userId: string;
+	path: string;
+	size: number;
+	extension: string;
+	createdAt: string;
 };
 
-// Интерфейс атрибутов модели UsersInChat
-export interface IUsersInChat {
-    id: string;
-    userId: string;
-    chatId: string;
+// Интерфейс атрибутов модели User_Detail
+export interface IUserDetail {
+	userId: string;
+	birthday: string | null;
+	city: string | null;
+	work: string | null;
+	sex: string | null;
+	lastSeen: string | null;
 };
 
-// Интерфейс атрибутов модели BlockUsers
-export interface IBlockUsers {
-    id: string;
-    userId: string;
-    userBlocked: string;
+// Интерфейс атрибутов модели User_Photo
+export interface IUserPhoto {
+	photoId: string;
+	userId: string;
 };
 
-// Интерфейс атрибутов модели ChatSoundNotifications
-export interface IChatSoundNotifications {
-    id: string;
-    chatId: string;
-    userId: string;
+// Интерфейс атрибутов модели Notification_Settings
+export interface INotificationSettings {
+	userId: string;
+	soundEnabled: number;
+	messageSound: number;
+	friendRequestSound: number;
 };
 
-// Интерфейс атрибутов модели DeletedMessages
-export interface IDeletedMessages {
-    id: string;
-    messageId: string;
-    userId: string;
+// Интерфейс атрибутов модели Friend_Action
+export interface IFriendAction {
+	id: string;
+	sourceUserId: string;
+	targetUserId: string;
+	actionType: number;
 };
 
-// Интерфейс атрибутов модели DeletedChats
-export interface IDeletedChats {
-    id: string;
-    chatId: string;
-    userId: string;
+// Интерфейс атрибутов модели Friend_Action_Log
+export interface IFriendActionLog {
+	id: string;
+	sourceUserId: string;
+	targetUserId: string;
+	actionType: number;
+	createdAt: string;
 };
 
-// Интерфейс атрибутов модели FilesInMessage
-export interface IFilesInMessage {
-    id: string;
-    messageId: string;
-    fileId: string;
+// Интерфейс атрибутов модели Chat
+export interface IChat {
+	id: string;
+	avatarId: string | null;
+	name: string | null;
+};
+
+// Интерфейс атрибутов модели DisabledChatSound
+export interface IDisabledChatSound {
+	chatId: string;
+	userId: string;
+};
+
+// Интерфейс атрибутов модели UserInChat
+export interface IUserInChat {
+	userId: string;
+	chatId: string;
+};
+
+// Интерфейс атрибутов модели Message
+export interface IMessage {
+	id: string;
+	userId: string;
+	chatId: string;
+	type: MessageTypes;
+	message: string;
+	createdAt: string;
+};
+
+// Интерфейс атрибутов модели UserMessageStatus
+export interface IUserMessageStatus {
+	messageId: string;
+	userId: string;
+	isRead: number;
+	isDeleted: number;
+};
+
+// Интерфейс атрибутов модели PhotoInMessage
+export interface IPhotoInMessage {
+	photoId: string;
+	messageId: string;
+};
+
+// Интерфейс атрибутов модели File
+export interface IFile {
+	id: string;
+	userId: string;
+	name: string;
+	path: string;
+	size: number;
+	extension: string;
+	createdAt: string;
+};
+
+// Интерфейс атрибутов модели FileInMessage
+export interface IFileInMessage {
+	fileId: string;
+	messageId: string;
 };

@@ -1,0 +1,27 @@
+@use "@styles/abstract/colors.scss" as *;
+
+div.react-tel-input.phone-input {
+    input {
+        width: 100%;
+    }
+
+    &__error {
+        input {
+            border: 1px solid $error;
+
+            &:hover {
+                border: 1px solid $error;
+            }
+
+            &:focus {
+                border: 1px solid $error;
+                box-shadow: 0 0 0 1px $error;
+            }
+        }
+
+        .special-label {
+            font-size: 12px;
+            color: $error;
+        }
+    }
+}

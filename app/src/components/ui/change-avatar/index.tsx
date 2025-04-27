@@ -1,58 +1,70 @@
-import { memo, ChangeEvent, Dispatch, SetStateAction } from "react";
+import { type ChangeEvent, memo } from "react";
 
 import InputImageComponent from "@components/ui/input-image";
-import { ApiRoutes } from "@custom-types/enums";
 import useMainClient from "@hooks/useMainClient";
+import { ApiRoutes } from "@custom-types/enums";
+
+export interface IUpdatedAvatar {
+	newAvatar: {
+		newAvatarUrl: string;
+		avatarCreationDate: string;
+	};
+	newPhoto: {
+		id: string;
+		newPhotoUrl: string;
+		photoCreationDate: string;
+	};
+};
 
 interface IChangeAvatarComponent {
-    labelText: string;
-    loading: boolean;
-    mustAuth?: boolean;
-    onChange: ({ id, newAvatarUrl, newPhotoUrl }: { id: string; newAvatarUrl: string; newPhotoUrl: string; }) => void;
-    setLoading: Dispatch<SetStateAction<boolean>>;
+	labelText: string;
+	loading: boolean;
+	mustAuth?: boolean;
+	onChange: (updateOptions: IUpdatedAvatar) => void;
+	setLoading: (isLoading: boolean) => void;
 };
 
 // Базовый компонент для смены аватара (используется для смены аватара на страницах регистрации/профиля)
 export default memo(function ChangeAvatarComponent({ labelText, loading, mustAuth = false, onChange, setLoading }: IChangeAvatarComponent) {
-    const { mainApi } = useMainClient();
+	const { mainApi } = useMainClient();
 
-    // Функция изменения аватарки
-    const handleChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
-        const target = event.target as HTMLInputElement;
+	// Функция изменения аватарки
+	const handleChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
+		const target = event.target as HTMLInputElement;
 
-        if (target && target.files) {
-            const file = target.files[0];
+		if (target && target.files) {
+			const file = target.files[0];
 
-            if (file) {
-                // Очищаем значение инпута
-                target.value = "";
+			if (file) {
+				// Очищаем значение инпута
+				target.value = "";
 
-                // Даем запрос на обновление аватарки
-                uploadImage(file);
-            }
-        }
-    };
+				// Даем запрос на обновление аватарки
+				uploadImage(file);
+			}
+		}
+	};
 
-    // Отправка аватара на сервер
-    const uploadImage = (file: File) => {
-        const formData = new FormData();    // Создаем объект FormData
-        formData.append("avatar", file);    // Добавляем файл аватара в объект formData
+	// Отправка аватара на сервер
+	const uploadImage = (file: File) => {
+		const formData = new FormData(); // Создаем объект FormData
+		formData.append("avatar", file); // Добавляем файл аватара в объект formData
 
-        mainApi.uploadAvatarAuth(
-            mustAuth ? ApiRoutes.changeAvatar : ApiRoutes.uploadAvatar,
-            formData,
-            setLoading,
-            (data: { success: boolean; id: string; newAvatarUrl: string; newPhotoUrl: string; }) => {
-                // Обновляем поле avatarUrl в объекте пользователя
-                onChange(data);
-            }
-        );
-    };
+		mainApi.uploadAvatarAuth(
+			mustAuth ? ApiRoutes.changeAvatar : ApiRoutes.uploadAvatar,
+			formData,
+			setLoading,
+			(data: IUpdatedAvatar) => {
+				// Обновляем поле avatarUrl в объекте пользователя
+				onChange(data);
+			},
+		);
+	};
 
-    return <InputImageComponent 
-        id={`change-avatar-${labelText}`}
-        text={labelText}
-        loading={loading}
-        onChange={handleChangeImage}
-    />
+	return <InputImageComponent 
+		id={`change-avatar-${labelText}`} 
+		text={labelText} 
+		loading={loading} 
+		onChange={handleChangeImage} 
+	/>;
 });

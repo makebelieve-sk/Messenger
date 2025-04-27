@@ -1,131 +1,101 @@
-import { useState, useEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 import GridComponent from "@components/ui/grid";
-import SpinnerComponent from "@components/ui/spinner";
 import PaperComponent from "@components/ui/paper";
-import { onClickBlockType } from "@modules/profile/friends";
-import useUser from "@hooks/useUser";
+import SpinnerComponent from "@components/ui/spinner";
 import useUserDetails from "@hooks/useUserDetails";
-import { useAppSelector } from "@hooks/useGlobalState";
-import { selectFriendState } from "@store/friend/slice";
-import { selectUserState } from "@store/user/slice";
+import i18next from "@service/i18n";
+import usePhotosStore from "@store/photos";
+import useUserStore from "@store/user";
 import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
-import { UserDetailsEvents } from "@custom-types/events";
 
 import "./personal-info.scss";
 
-interface IPersonalInfo {
-	onClickBlock: onClickBlockType;
-};
+// Компонент отвечающий за персональную информацию пользователя
+export default function PersonalInfo() {
+	const fullName = useUserStore(state => state.user.fullName);
+	const birthday = useUserStore(state => state.userDetails.birthday);
+	const city = useUserStore(state => state.userDetails.city);
+	const work = useUserStore(state => state.userDetails.work);
 
-export default memo(function PersonalInfo({ onClickBlock }: IPersonalInfo) {
-	const [loading, setLoading] = useState(false);
+	const photosCount = usePhotosStore(state => state.count);
+	const isPhotosLoading = usePhotosStore(state => state.isPhotosLoading);
 
-	const { photosCount } = useAppSelector(selectUserState);
-	const { friendsCount, subscribersCount } =
-		useAppSelector(selectFriendState);
-
-	const { t } = useTranslation();
-	const { fullName } = useUser();
 	const userDetails = useUserDetails();
 	const navigate = useNavigate();
 
-	const handleOnLoading = (isLoading: boolean) => setLoading(isLoading);
-
-	// Подписка на событие лоадинг
-	useEffect(() => {
-		userDetails.on(UserDetailsEvents.SET_LOADING, handleOnLoading);
-
-		return () => {
-			userDetails.off(UserDetailsEvents.SET_LOADING, handleOnLoading);
+	// Обработка клика по блоку
+	const onClickBlock = (tab?: FriendsTab) => {
+		const stateOptions: { mainTab: MainFriendTabs; tab?: FriendsTab; } = {
+			mainTab: MainFriendTabs.allFriends,
 		};
-	}, []);
 
-	return <GridComponent className="info-container__grid">
+		if (tab) {
+			stateOptions.tab = tab;
+		}
+
+		navigate(Pages.friends, { state: stateOptions });
+	};
+
+	return <GridComponent>
 		<PaperComponent className="info-container paper-block">
 			<div className="info-container__main-info">
 				<div className="info-container__username">{fullName}</div>
 			</div>
 
 			<div className="info-container__short-info-block">
-				<div
-					className="info-container__short-info-block__edit"
-					onClick={() => navigate(Pages.edit)}
-				>
-					{t("profile-module.edit")}
+				<div className="info-container__short-info-block__edit" onClick={() => navigate(Pages.edit)}>
+					{i18next.t("profile-module.edit")}
 				</div>
 
-				{loading
-					? <SpinnerComponent />
-					: <>
-						<div className="info-container__short-info-block__row">
-							<div className="info-container__short-info-block__row__title">
-								{t("profile-module.birthday")}:
-							</div>
-							<span>{userDetails.birthday}</span>
-						</div>
+				<div className="info-container__short-info-block__row">
+					<div className="info-container__short-info-block__row__title">{i18next.t("profile-module.birthday")}:</div>
+					<span className="info-container__short-info-block__row__value">{birthday}</span>
+				</div>
 
-						<div className="info-container__short-info-block__row">
-							<div className="info-container__short-info-block__row__title">
-								{t("profile-module.city")}:
-							</div>
-							<span>{userDetails.city}</span>
-						</div>
+				<div className="info-container__short-info-block__row">
+					<div className="info-container__short-info-block__row__title">{i18next.t("profile-module.city")}:</div>
+					<span className="info-container__short-info-block__row__value">{city}</span>
+				</div>
 
-						<div className="info-container__short-info-block__row">
-							<div className="info-container__short-info-block__row__title">
-								{t("profile-module.work")}:
-							</div>
-							<span>{userDetails.work}</span>
-						</div>
-					</>
-				}
+				<div className="info-container__short-info-block__row">
+					<div className="info-container__short-info-block__row__title">{i18next.t("profile-module.work")}:</div>
+					<span className="info-container__short-info-block__row__value">{work}</span>
+				</div>
 			</div>
 
 			<div className="info-container__counts-block">
 				<div
-					className="counts-block__count"
-					onClick={() =>
-						onClickBlock(Pages.friends, {
-							mainTab: MainFriendTabs.allFriends,
-						})
-					}
+					className="info-container__counts-block__count"
+					onClick={() => onClickBlock()}
 				>
-					<span>{friendsCount}</span>{" "}
-					{userDetails.getFriendsText(friendsCount)}
+					<span className="info-container__counts-block__count__value">{0}</span> {userDetails.getFriendsText(0)}
 				</div>
 
 				<div
-					className="counts-block__count"
-					onClick={() =>
-						onClickBlock(Pages.friends, {
-							mainTab: MainFriendTabs.allFriends,
-							tab: FriendsTab.subscribers,
-						})
+					className="info-container__counts-block__count"
+					onClick={() => onClickBlock(FriendsTab.subscribers)}
+				>
+					<span className="info-container__counts-block__count__value">{0}</span> {userDetails.getSubscribersText(0)}
+				</div>
+
+				<div className="info-container__counts-block__count" onClick={() => navigate(Pages.photos)}>
+					{isPhotosLoading 
+						? <SpinnerComponent />
+						: <>
+							<span className="info-container__counts-block__count__value">{photosCount}</span> {userDetails.getPhotosText(photosCount)}
+						</>
 					}
-				>
-					<span>{subscribersCount}</span>{" "}
-					{userDetails.getSubscribersText(subscribersCount)}
 				</div>
 
-				<div
-					className="counts-block__count"
-					onClick={() => navigate(Pages.photos)}
-				>
-					<span>{photosCount}</span>{" "}
-					{userDetails.getPhotosText(photosCount)}
+				<div className="info-container__counts-block__count">
+					<span className="info-container__counts-block__count__value">0</span> {userDetails.getAudiosText(0)}
 				</div>
 
-				<div className="counts-block__count">
-					<span>0</span> {userDetails.getAudiosText(0)}
-				</div>
-
-				<div className="counts-block__count">
-					<span>0</span> {userDetails.getVideosText(0)}
+				<div className="info-container__counts-block__count">
+					<span className="info-container__counts-block__count__value">0</span> {userDetails.getVideosText(0)}
 				</div>
 			</div>
 		</PaperComponent>
-	</GridComponent>
-});
+	</GridComponent>;
+};

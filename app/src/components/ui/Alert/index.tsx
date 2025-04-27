@@ -1,35 +1,22 @@
-import { memo } from "react";
-import { Slide, Alert } from "@mui/material";
+import { memo, type ReactNode } from "react";
+import Alert from "@mui/material/Alert";
 
 import "./alert.scss";
 
 interface IAlertComponent {
-	show?: boolean;
-	children?: React.ReactNode;
-	status?: "error" | "success" | "warning" | "info";
-	className?: string;
-	onClose?: () => void;
-	severity?: "success" | "info" | "warning" | "error";
-}
+    children: ReactNode;
+    color?: "error" | "success" | "warning" | "info";
+    className?: string;
+    severity?: "success" | "info" | "warning" | "error";
+};
 
-// Базовый компонент алерта
-export default memo(function AlertComponent({
-	show,
-	children,
-	status = "success",
-	className,
-	onClose,
-	severity
-}: IAlertComponent) {
-	return <Slide
-		in={show}
-		mountOnEnter
-		unmountOnExit
-		timeout={1000}
-		className={"slide"}
+// Базовый компонент Alert
+export default memo(function AlertComponent({ children, color = "success", className = "", severity }: IAlertComponent) {
+	return <Alert 
+		color={color} 
+		className={`alert ${className}`} 
+		severity={severity}
 	>
-		<Alert color={status} className={className} onClose={onClose} severity={severity}>
-			{children}
-		</Alert>
-	</Slide>
+		{children}
+	</Alert>;
 });

@@ -1,0 +1,29 @@
+# Официальный образ SQL Server 2019
+FROM mcr.microsoft.com/mssql/server:2019-latest
+
+# Переключаемся на пользователя root, чтобы можно было устанавливать пакеты
+USER root
+
+# Обновляем пакеты в контейнере
+# Устанавливаем пакет gettext-base, который необходим для работы скрипта entrypoint-mssql.sh (замены .env переменных в init.sql)
+# Устанавливаем пакеты curl, apt-transport-https, lsb-release, gnupg2, которые необходимы для установки драйвера ODBC
+# Устанавливаем пакеты msodbcsql17, mssql-tools, которые необходимы для работы SQL Server
+# Самое важдное здесь - установка /opt/mssql-tools/bin/sqlcmd, так как мы будем ее вызывать для запуска mssql server
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gettext-base curl apt-transport-https lsb-release gnupg2 && \
+    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && \
+    ACCEPT_EULA=Y apt-get install -y --no-install-recommends msodbcsql17 mssql-tools && \
+    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Копируем скрипты и устанавливаем права доступа
+COPY ./init.sql /docker-entrypoint-initdb.d/init.sql.template
+
+# Устанавливаем права на запись для директории
+RUN chmod -R 775 /docker-entrypoint-initdb.d
+
+# Возвращаемся обратно на пользователя mssql, чтобы можно было выполнять команды SQL
+USER mssql

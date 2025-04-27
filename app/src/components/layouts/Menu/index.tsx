@@ -1,86 +1,79 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import Stack from "@mui/material/Stack";
-import MenuList from "@mui/material/MenuList";
-import Badge from "@mui/material/Badge";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 
+import NotificationBadge from "@components/services/badges/notification-badge";
 import MenuItemComponent from "@components/ui/menu-item";
+import MenuListComponent from "@components/ui/menu-list";
 import useMainClient from "@hooks/useMainClient";
-import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
-import { selectMainState, setMessageNotification } from "@store/main/slice";
-import { selectMessagesState } from "@store/message/slice";
+import i18n from "@service/i18n";
 import { Pages } from "@custom-types/enums";
 
 import "./menu.scss";
 
 // Компонент главного меню. Отрисовывается на каждой странице
 export default function MenuComponent() {
-    const { mainApi } = useMainClient();
-    const { t } = useTranslation();
-    const { friendNotification, messageNotification } = useAppSelector(selectMainState);
-    const { unRead } = useAppSelector(selectMessagesState);
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+	const { mainApi } = useMainClient();
+	const navigate = useNavigate();
 
-    // Получаем уведомления для отрисовки в Badge
-    useEffect(() => {
-        // Уведомления для друзей
-        mainApi.getFriendsNotification();
+	// Получаем уведомления для отрисовки в Badge
+	useEffect(() => {
+		// Уведомления для друзей
+		mainApi.getFriendsNotification();
 
-        // Уведомления для сообщений
-        mainApi.getMessageNotification();
-    }, []);
+		// Уведомления для сообщений
+		mainApi.getMessageNotification();
+	}, []);
 
-    // При изменении непрочитанных сообщений в чатах изменяем количество чатов, содержащих непрочитанные сообщения
-    useEffect(() => {
-        const unReadChats = Object.keys(unRead);
+	// При изменении непрочитанных сообщений в чатах изменяем количество чатов, содержащих непрочитанные сообщения
+	// useEffect(() => {
+	//     const unReadChats = Object.keys(unRead);
 
-        dispatch(setMessageNotification(unReadChats.length));
-    }, [unRead]);
+	//     dispatch(setMessageNotification(unReadChats.length));
+	// }, [unRead]);
 
-    // Обработка клика по пункту "Друзья"
-    // const onClickFriends = () => {
-    //     navigate({ pathname: Pages.friends, query: { mainTab: MainFriendTabs.allFriends, tab: FriendsTab.all } });
-    // };
+	// Обработка клика по пункту "Друзья"
+	// const onClickFriends = () => {
+	//     navigate({ pathname: Pages.friends, query: { mainTab: MainFriendTabs.allFriends, tab: FriendsTab.all } });
+	// };
 
-    return <div id="menu" className="menu">
-        <Stack direction="column" spacing={2}>
-            <nav>
-                <MenuList id="list" className="menu__list">
-                    <MenuItemComponent onClick={() => navigate(Pages.profile)} className="menu__list__item">
-                        <AccountCircleOutlinedIcon color="primary" />
-                        <div>{ t("menu.profile") }</div>
-                    </MenuItemComponent>
+	return <div className="menu">
+		<nav className="menu__nav">
+			<MenuListComponent>
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.profile)}>
+					<AccountCircleOutlinedIcon color="primary" />
 
-                    <MenuItemComponent onClick={() => navigate(Pages.messages)} className="menu__list__item">
-                        <MessageOutlinedIcon color="primary" />
-                        <div>{ t("menu.messanger") }</div>
-                        <Badge
-                            color="default"
-                            badgeContent={messageNotification || null}
-                            className="menu__list__item__badge"
-                        />
-                    </MenuItemComponent>
+					<div className="menu__nav__item__title">
+						{i18n.t("menu.profile")}
+					</div>
+				</MenuItemComponent>
 
-                    <MenuItemComponent onClick={() => navigate(Pages.friends)} className="menu__list__item">
-                        <PeopleOutlinedIcon color="primary" />
-                        <div>{ t("menu.friends") }</div>
-                        <Badge 
-                            color="default" 
-                            badgeContent={friendNotification || null} 
-                            className="menu__list__item__badge" 
-                        />
-                    </MenuItemComponent>
-                </MenuList>
-            </nav>
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.messages)}>
+					<MessageOutlinedIcon color="primary" />
 
-            <div className="menu__down-info">
-                { t("menu.to-developers") }
-            </div>
-        </Stack>
-    </div>
+					<div className="menu__nav__item__title">
+						{i18n.t("menu.messanger")}
+					</div>
+
+					<NotificationBadge content={0} />
+				</MenuItemComponent>
+
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.friends)}>
+					<PeopleOutlinedIcon color="primary" />
+                    
+					<div className="menu__nav__item__title">
+						{i18n.t("menu.friends")}
+					</div>
+
+					<NotificationBadge content={0} />
+				</MenuItemComponent>
+			</MenuListComponent>
+		</nav>
+
+		<div className="menu__down-info">
+			{i18n.t("menu.to-developers")}
+		</div>
+	</div>;
 };

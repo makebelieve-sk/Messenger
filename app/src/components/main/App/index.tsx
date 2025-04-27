@@ -1,43 +1,38 @@
-import Router from "@components/main/Router";
-import ServiceComponents from "@components/main/ServiceComponents";
+import ContentLayoutComponent from "@components/layouts/content";
 import HeaderComponent from "@components/layouts/header";
 import MenuComponent from "@components/layouts/menu";
+import Router from "@components/main/Router";
+import ServiceComponents from "@components/main/ServiceComponents";
 import SpinnerComponent from "@components/ui/spinner";
-import { selectMainState } from "@store/main/slice";
-import { useAppSelector } from "@hooks/useGlobalState";
-import ContentLayout from "@components/layouts/content";
+import useUserStore from "@store/user";
 
 import "./app.scss";
 
 // Главный компонент, который отрисовывает основную верстку проекта
 export default function App() {
-	const { isAuth, loading } = useAppSelector(selectMainState);
+	const isLoading = useUserStore(state => state.isUserLoading);
+	const user = useUserStore(state => state.user);
 
 	return <div className="root">
-		<ServiceComponents />
+		<ServiceComponents isAuth={Boolean(user)} />
 
-		{loading
+		{isLoading
 			? <SpinnerComponent />
 			: <>
-				{isAuth ? <HeaderComponent /> : null}
+				{user ? <HeaderComponent /> : null}
 
 				<div className="root__wrapper">
-					<div
-						className={`root__wrapper__container ${isAuth
-							? ""
-							: "root__wrapper__container__no-auth"
-							}`}
-					>
-						{isAuth ? <MenuComponent /> : null}
+					<div className={`root__wrapper__container ${user ? "" : "root__wrapper__container__no-auth" }`}>
+						{user ? <MenuComponent /> : null}
 
-						<ContentLayout>
+						<ContentLayoutComponent>
 							<div className="root__wrapper__container__content">
-								<Router />
+								<Router isAuth={Boolean(user)} />
 							</div>
-						</ContentLayout>
+						</ContentLayoutComponent>
 					</div>
 				</div>
 			</>
 		}
-	</div>
+	</div>;
 }

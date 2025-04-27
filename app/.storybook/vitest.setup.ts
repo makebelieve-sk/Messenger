@@ -1,5 +1,6 @@
 import { beforeAll } from "vitest";
 import { setProjectAnnotations } from "@storybook/react";
+
 import * as projectAnnotations from "./preview";
 
 // Это важный шаг для применения правильной конфигурации при тестировании ваших историй.

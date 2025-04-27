@@ -1,32 +1,31 @@
-import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import Tabs from "@mui/material/Tabs";
+import { type FormEvent, type SyntheticEvent, useEffect, useState } from "react";
 import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 
+import AlertAnimationComponent from "@components/ui/alert-animation";
 import BoxComponent from "@components/ui/box";
-import AlertComponent from "@components/ui/alert";
 import ButtonComponent from "@components/ui/button";
-import SpinnerComponent from "@components/ui/spinner";
 import PaperComponent from "@components/ui/paper";
-import EditTabsModule from "@modules/edit";
-import useMainClient from "@hooks/useMainClient";
-import useUserDetails from "@hooks/useUserDetails";
 import useProfile from "@hooks/useProfile";
-import useUser from "@hooks/useUser";
-import { REQUIRED_FIELD } from "@utils/constants";
-import { ProfileEvents, UserDetailsEvents } from "@custom-types/events";
+import EditTabsModule from "@modules/edit";
+import i18next from "@service/i18n";
+import useProfileStore from "@store/profile";
+import useUserStore from "@store/user";
+import { NOT_CORRECT_FORMAT, REQUIRED_FIELD } from "@utils/constants";
 
 import "@styles/pages/edit.scss";
+
+const REQUIRED_FIELDS = [ "name", "surName", "phone", "email" ];
 
 export interface IFormValues {
 	name: string;
 	surName: string;
-	sex: string;
-	birthday: string | null;
-	work: string;
-	city: string;
 	phone: string;
 	email: string;
+	sex: string;
+	birthday: string;
+	work: string;
+	city: string;
 };
 
 export interface IFormErrors {
@@ -36,86 +35,86 @@ export interface IFormErrors {
 	email?: string;
 };
 
+// Страница регистрации
 export default function Edit() {
-	const [tab, setTab] = useState(0);
-	const [loadingSaveBtn, setLoadingSaveBtn] = useState(false);
-	const [showAlert, setShowAlert] = useState(false);
-	const [formValues, setFormValues] = useState<IFormValues>({
-		name: "",
-		surName: "",
-		sex: "",
-		birthday: "",
-		work: "",
-		city: "",
-		phone: "",
-		email: "",
+	const showAlert = useProfileStore(state => state.showEditAlert);
+	const saveLoading = useProfileStore(state => state.isEditLoading);
+	const editErrors = useProfileStore(state => state.editErrors);
+
+	const name = useUserStore(state => state.user.firstName);
+	const surName = useUserStore(state => state.user.thirdName);
+	const email = useUserStore(state => state.user.email);
+	const phone = useUserStore(state => state.user.phone);
+
+	const birthday = useUserStore(state => state.editUserDetails.birthday);
+	const city = useUserStore(state => state.editUserDetails.city);
+	const work = useUserStore(state => state.editUserDetails.work);
+	const sex = useUserStore(state => state.editUserDetails.sex);
+
+	const [ tab, setTab ] = useState(0);
+	const [ formValues, setFormValues ] = useState<IFormValues>({
+		name,
+		surName,
+		phone,
+		email,
+		sex,
+		birthday,
+		work,
+		city,
 	});
-	const [formErrors, setFormErrors] = useState<IFormErrors | null>({});
-	const [saveDisabled, setSaveDisabled] = useState(false);
-	const [loading, setLoading] = useState(false);
+	const [ formErrors, setFormErrors ] = useState<IFormErrors | null>({});
+	const [ saveDisabled, setSaveDisabled ] = useState(false);
 
-	const mainClient = useMainClient();
 	const profile = useProfile();
-	const userDetails = useUserDetails();
-	const user = useUser();
-	const { t } = useTranslation();
 
-	const REQUIRED_FIELDS = ["name", "surName", "phone", "email"];
-
-	// Подписываемся на события сущностей
+	// Закрываем AlertAnimationComponent (если вдруг был открыт)
 	useEffect(() => {
-		userDetails.on(UserDetailsEvents.UPDATE, handleSetFormValues);
-		userDetails.on(UserDetailsEvents.SET_LOADING, handleOnLoading);
-		profile.on(UserDetailsEvents.SET_LOADING, handleOnLoadingSaveBtn);
-
-		profile.on(ProfileEvents.SET_ALERT, () => setShowAlert(true));
-
-		// Добавляем проверку на то, чтобы не было пустых полей при монтировании
-		if (userDetails.details) {
-			handleSetFormValues();
-		}
-
 		return () => {
-			userDetails.off(UserDetailsEvents.UPDATE, handleSetFormValues);
-			userDetails.off(UserDetailsEvents.SET_LOADING, handleOnLoading);
-			userDetails.off(UserDetailsEvents.SET_LOADING, handleOnLoadingSaveBtn);
-
-			profile.off(ProfileEvents.SET_ALERT, () => setShowAlert(true));
+			if (showAlert) onCloseAlert();
 		};
-	}, []);
+	}, [ showAlert ]);
+
+	// Указываем ошибки, пришедшие от сервера, полям в форме редактирования
+	useEffect(() => {
+		if (editErrors) {
+			onSetEditInfoErrors(editErrors);
+		}
+	}, [ editErrors ]);
 
 	// Установка disabled кнопке "Сохранить"
 	useEffect(() => {
-		setSaveDisabled(
-			loadingSaveBtn ||
-			Boolean(formErrors && Object.values(formErrors).some(Boolean))
-		);
-	}, [loadingSaveBtn, formValues]);
+		setSaveDisabled(saveLoading || Boolean(formErrors && Object.values(formErrors).some(Boolean)));
+	}, [ saveLoading, formValues ]);
 
-	// Обработчик на событие UserDetailsEvents.UPDATE
-	const handleSetFormValues = () => {
-		setFormValues({
-			name: user.firstName,
-			surName: user.thirdName,
-			sex: userDetails.details.sex,
-			birthday: userDetails.details.birthday,
-			work: userDetails.details.work,
-			city: userDetails.details.city,
-			phone: user.phone,
-			email: user.email,
+	// Обрабатываем ошибки, пришедшие с сервера, при редактировании
+	const onSetEditInfoErrors = ({ field, fields }: { field?: string; fields?: string[]; }) => {
+		let errorFields = {};
+
+		if (fields && fields.length) {
+			for (const field of fields) {
+				errorFields = {
+					...errorFields,
+					[field]: REQUIRED_FIELD,
+				};
+			}
+		}
+		
+		if (field) {
+			errorFields = {
+				[field]: NOT_CORRECT_FORMAT,
+			};
+		}
+
+		setFormErrors({
+			...formErrors,
+			...errorFields,
 		});
-	}
-
-	// Обработчик на событие UserDetailsEvents.UPDATE
-	const handleOnLoading = (isLoading: boolean) => setLoading(isLoading);
-
-	// Обработчик на событие UserDetailsEvents.SET_LOADING
-	const handleOnLoadingSaveBtn = (isLoading: boolean) => setLoadingSaveBtn(isLoading);
+	};
 
 	// Обработка смены вкладки
 	const onChangeTab = (_: SyntheticEvent, newValue: number) => {
 		setTab(newValue);
-		setShowAlert(false);
+		useProfileStore.getState().setShowEditAlert(false);
 	};
 
 	// Обработка изменения значения поля формы
@@ -127,84 +126,58 @@ export default function Edit() {
 
 		if (REQUIRED_FIELDS.includes(field)) {
 			setFormErrors({
-				[field]: value ? "" : REQUIRED_FIELD
+				[field]: value ? "" : REQUIRED_FIELD,
 			});
 		}
 	};
 
 	// Обработка кнопки "Сохранить"
 	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-		try {
-			event.preventDefault();
+		event.preventDefault();
 
-			if (!formValues || saveDisabled) {
-				mainClient.catchErrors(t("edit.error.no_user"));
-				return;
-			}
+		const processedValues = Object.fromEntries(
+			Object.entries(formValues).map(([ key, value ]) => [
+				key, 
+				value === "" ? null : value,
+			]),
+		) as IFormValues;
 
-			profile.editInfo(formValues);
-		} catch (error) {
-			setLoadingSaveBtn(false);
-			mainClient.catchErrors(t("edit.error.change_user_info") + error);
-		}
+		profile.editInfo(processedValues);
+		onCloseAlert();
+	};
+
+	// Закрытие AlertAnimationComponent
+	const onCloseAlert = () => {
+		useProfileStore.getState().setShowEditAlert(false);
 	};
 
 	return <PaperComponent className="edit-container">
-		<Tabs
-			orientation="vertical"
-			value={tab}
-			onChange={onChangeTab}
-			aria-label="Edit tabs"
-			className={"edit-container__tabs"}
-		>
-			<Tab
-				label={t("edit.main")}
-				id="main"
-				aria-controls="main"
-				disabled={loadingSaveBtn}
-				className={"edit-container__tab-name"}
-			/>
-			<Tab
-				label={t("edit.contacts")}
-				id="contacts"
-				aria-controls="contacts"
-				disabled={loadingSaveBtn}
-				className={"edit-container__tab-name"}
-			/>
+		<Tabs orientation="vertical" value={tab} onChange={onChangeTab} aria-label="Edit tabs" className="edit-container__tabs">
+			<Tab label={i18next.t("edit.main")} id="main" aria-controls="main" disabled={saveLoading} className="edit-container__tab-name" />
+			<Tab label={i18next.t("edit.contacts")} id="contacts" aria-controls="contacts" disabled={saveLoading} className="edit-container__tab-name" />
 		</Tabs>
 
-		<div className={"edit-container__module"}>
-			<BoxComponent component="form" noValidate onSubmit={onSubmit}>
-				{loading
-					? <SpinnerComponent />
-					: <EditTabsModule
-						tab={tab}
-						formValues={formValues}
-						formErrors={formErrors}
-						onChange={onChange}
-					/>
-				}
+		<div className="edit-container__module">
+			<BoxComponent component="form" noValidate onSubmit={onSubmit} className="edit-container__module__form">
+				<EditTabsModule tab={tab} formValues={formValues} formErrors={formErrors} onChange={onChange} />
 
 				<ButtonComponent
 					fullWidth
 					type="submit"
 					variant="contained"
-					className={"edit-container__module__loading-button"}
-					loading={loadingSaveBtn}
+					className="edit-container__module__form__loading-button"
+					loading={saveLoading}
 					disabled={saveDisabled}
 				>
-					Сохранить
+					{i18next.t("edit.save")}
 				</ButtonComponent>
 
-				{showAlert
-					? <AlertComponent show={showAlert}>
-						<>
-							<b>{t("edit.save")}</b> - {t("edit.show_data")}
-						</>
-					</AlertComponent>
-					: null
-				}
+				<AlertAnimationComponent show={showAlert} onExited={onCloseAlert}>
+					<>
+						<b>{i18next.t("edit.changes_save")}</b> - {i18next.t("edit.show_data")}
+					</>
+				</AlertAnimationComponent>
 			</BoxComponent>
 		</div>
-	</PaperComponent>
+	</PaperComponent>;
 }

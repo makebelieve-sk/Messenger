@@ -1,0 +1,8 @@
+# Используем официальный образ RedisInsight в качестве базового
+FROM redis/redisinsight:latest
+
+# Переключаемся на пользователя root для установки curl
+USER root
+
+# Устанавливаем curl с использованием apk
+RUN apk update && apk add --no-cache curl

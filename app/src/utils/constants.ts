@@ -18,4 +18,17 @@ export const LOGS_FILE_NAME = import.meta.env.VITE_LOGS_FILE_NAME as string;
 
 export const NO_PHOTO = "/assets/images/noPhoto.jpg";
 export const REQUIRED_FIELD = i18next.t("utils.required_field");
-export const MY_ID = "me";
+export const NOT_CORRECT_FORMAT = i18next.t("utils.not_correct_format");
+
+// Таймаут анимации появления/исчезновения компонента AlertAnimationComponent через Slide (MUI компонент) 
+export const SLIDE_ALERT_TIMEOUT = 500;
+// Таумаут исчезновения AlertAnimationComponent
+export const ALERT_TIMEOUT = 5000;
+// Таумаут исчезновения SnackbarComponent
+export const SNACKBAR_TIMEOUT = 10000;
+// Наименование поля аватара пользователя
+export const AVATAR_URL = "avatarUrl";
+// Лимит подгрузки количества фотографий на странице "Фотографии"
+export const PHOTOS_LIMIT = 25;
+// Тип ошибки, отправляемой по сокету, в момент неуспешной валидации токена сессии
+export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";
