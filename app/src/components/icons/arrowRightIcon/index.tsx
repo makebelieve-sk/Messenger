@@ -8,6 +8,7 @@ export default function ArrowRightIconComponent({ className, onClick, size = 24 
     const iconSize = typeof size === "number" ? `${size}px` : size;
 
     return <svg
+        data-testid="arrow-right-icon"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         width={iconSize}

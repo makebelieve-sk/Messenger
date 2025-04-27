@@ -67,36 +67,37 @@ export default function HeaderComponent() {
     return <header className="header">
         <div className="header-container">
             <div className="header-container__toolbar">
-                <div className="header-container__toolbar__logo" onClick={() => goTo(Pages.profile)} onMouseDown={onMouseDown}>
+                <div className="header-container__toolbar__logo" onClick={() => goTo(Pages.profile)} onMouseDown={onMouseDown} data-testid="menu-profile">
                     <Logo />
                 </div>
 
                 <div className="header-container__toolbar__avatar">
                     <div onClick={event => setAnchorElUser(event.currentTarget)}>
-                        <UserAvatarComponent src={avatarUrl} alt={profile.user.fullName} />
+                        <UserAvatarComponent  data-testid="avatar-img" src={avatarUrl} alt={profile.user.fullName} />
                     </div>
 
                     <MenuComponent
                         id="menu-header"
+                        data-testid="menu-header"
                         anchorEl={anchorElUser}
                         anchorOrigin={anchorOrigin}
                         open={Boolean(anchorElUser)}
                         autoFocus={false}
                         onClose={() => setAnchorElUser(null)}
                     >
-                        <MenuItemComponent onClick={() => goTo(Pages.settings)}>
+                        <MenuItemComponent onClick={() => goTo(Pages.settings)} data-testid="menu-settings">
                             <TypographyComponent variant="body2">
                                 {t("header.settings")}
                             </TypographyComponent>
                         </MenuItemComponent>
 
-                        <MenuItemComponent onClick={() => goTo(Pages.help)}>
+                        <MenuItemComponent onClick={() => goTo(Pages.help)} data-testid="menu-help">
                             <TypographyComponent variant="body2">
                                 {t("header.help")}
                             </TypographyComponent>
                         </MenuItemComponent>
 
-                        <MenuItemComponent onClick={logout}>
+                        <MenuItemComponent onClick={logout} data-testid="menu-logout">
                             <TypographyComponent variant="body2">
                                 {t("header.logout")}
                             </TypographyComponent>

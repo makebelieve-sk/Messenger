@@ -9,7 +9,6 @@ export default defineConfig({
         globals: true, // можно использовать expect без импорта
         environment: "jsdom", // для React-тестов
         setupFiles: "./vitest.setup.ts",
-        // "./src/__tests__/setup/vitest.setup.ts"
         coverage: {
             reporter: ["text", "json", "html"], // HTML и консольный отчёт
         },

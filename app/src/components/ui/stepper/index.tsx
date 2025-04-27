@@ -8,8 +8,8 @@ interface IStepperComponent {
 };
 
 export default function StepperComponent({ steps, activeStep }: IStepperComponent) {
-    return <Stepper activeStep={activeStep}>
-        {steps.map(label => <Step key={label}>
+    return <Stepper data-testid="stepper" activeStep={activeStep}>
+        {steps.map(label => <Step data-testid="step" key={label}>
             <StepLabel>{label}</StepLabel>
         </Step>
         )}

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinkComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <a
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1orsvah-MuiTypography-root-MuiLink-root"
+    data-testid="link"
+  />
+</DocumentFragment>
+`;

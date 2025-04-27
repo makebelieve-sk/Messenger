@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StepperComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="MuiStepper-root MuiStepper-horizontal css-ibtndc-MuiStepper-root"
+    data-testid="stepper"
+  />
+</DocumentFragment>
+`;

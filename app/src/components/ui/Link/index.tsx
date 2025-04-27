@@ -13,7 +13,7 @@ export default function LinkComponent({ href, children, onClick, ...props }: ILi
 		if (onClick) onClick();
 	};
 
-	return <MuiLink href={href} onClick={onEvent} {...props}>
+	return <MuiLink data-testid="link" href={href} onClick={onEvent} {...props}>
 		{children}
 	</MuiLink>
 }

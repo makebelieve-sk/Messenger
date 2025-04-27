@@ -16,6 +16,7 @@ interface IMenuComponent {
 // Базовый компонент меню
 export default function MenuComponent({ children, id, anchorEl, anchorOrigin, open, autoFocus, onClose }: IMenuComponent) {
     return <Menu
+        data-testid="menu-component"
         id={id}
         anchorEl={anchorEl}
         anchorOrigin={anchorOrigin}

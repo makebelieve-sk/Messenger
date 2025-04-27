@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AppComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="root"
+  >
+    <div>
+      Mocked ServiceComponents
+    </div>
+    <div
+      class="root__wrapper"
+    >
+      <div
+        class="root__wrapper__container root__wrapper__container__no-auth"
+      >
+        <div
+          class="content MuiBox-root css-0"
+        >
+          <div
+            class="root__wrapper__container__content"
+          >
+            <div>
+              Mocked Router
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -13,7 +13,7 @@ export default memo(function CopyrightComponent() {
 	const { t } = useTranslation();
 
 	return (
-		<div className="copyright">
+		<div data-testid="copyright" className="copyright">
 			{ t("ui.copyright") }
 			<LinkComponent
 				href={Pages.aboutUs}

@@ -14,7 +14,7 @@ interface ISelectComponent {
 
 export default function SelectComponent({ children, labelId, id, value, onChange, text }: ISelectComponent) {
     return (
-        <div className="select">
+        <div className="select" data-testid="select">
             <InputLabel className="select__label" id={labelId}>{text}</InputLabel>
             <Select
                 labelId={labelId}

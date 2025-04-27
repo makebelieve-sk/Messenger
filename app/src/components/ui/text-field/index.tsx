@@ -21,6 +21,7 @@ interface ITextFieldComponent {
 // Базовый компонент текстфилда
 export default function TextFieldComponent({ id, name, type, margin, variant, label, autoComplete, required, fullWidth, value, autoFocus, error, helperText, onChange, className }: ITextFieldComponent) {
     return <TextField
+        data-testid="text-field"
         id={id}
         name={name}
         type={type}

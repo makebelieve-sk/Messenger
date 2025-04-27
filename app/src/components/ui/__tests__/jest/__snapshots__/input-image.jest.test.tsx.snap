@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InputImage matches snapshot 1`] = `
+<DocumentFragment>
+  <button
+    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-image css-wyro15-MuiButtonBase-root-MuiButton-root"
+    id=":r1:"
+    tabindex="0"
+    type="button"
+  >
+    <label
+      class="input-image__label"
+      for="test"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-caption input-image__label__text css-mpaqru-MuiTypography-root"
+      >
+        test
+      </p>
+      <input
+        accept="image/*"
+        hidden=""
+        id="test"
+        type="file"
+      />
+    </label>
+  </button>
+</DocumentFragment>
+`;

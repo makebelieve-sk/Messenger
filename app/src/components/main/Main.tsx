@@ -16,7 +16,7 @@ export default function Main() {
 
     return <ThemeProvider theme={THEME}>
         <MainClientContext.Provider value={mainClient}>
-            <App _={setIsDarkMode} />
+            <App _={setIsDarkMode} data-testid="app"/>
         </MainClientContext.Provider>
     </ThemeProvider>
 }

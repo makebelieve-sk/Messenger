@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserAvatarComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <img
+    class="user-avatar"
+    data-testid="mocked-avatar"
+  />
+</DocumentFragment>
+`;

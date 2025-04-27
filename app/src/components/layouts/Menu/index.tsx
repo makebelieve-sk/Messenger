@@ -51,12 +51,12 @@ export default function MenuComponent() {
         <Stack direction="column" spacing={2}>
             <nav>
                 <MenuList id="list" className="menu__list">
-                    <MenuItemComponent onClick={() => navigate(Pages.profile)} className="menu__list__item">
+                    <MenuItemComponent onClick={() => navigate(Pages.profile)} className="menu__list__item" data-testid="menu-profile">
                         <AccountCircleOutlinedIcon color="primary" />
                         <div>{ t("menu.profile") }</div>
                     </MenuItemComponent>
 
-                    <MenuItemComponent onClick={() => navigate(Pages.messages)} className="menu__list__item">
+                    <MenuItemComponent onClick={() => navigate(Pages.messages)} className="menu__list__item" data-testid="menu-messenger">
                         <MessageOutlinedIcon color="primary" />
                         <div>{ t("menu.messanger") }</div>
                         <Badge
@@ -66,7 +66,7 @@ export default function MenuComponent() {
                         />
                     </MenuItemComponent>
 
-                    <MenuItemComponent onClick={() => navigate(Pages.friends)} className="menu__list__item">
+                    <MenuItemComponent onClick={() => navigate(Pages.friends)} className="menu__list__item" data-testid="menu-friends">
                         <PeopleOutlinedIcon color="primary" />
                         <div>{ t("menu.friends") }</div>
                         <Badge 

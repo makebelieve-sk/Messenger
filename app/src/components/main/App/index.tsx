@@ -17,9 +17,9 @@ export default function App() {
 		<ServiceComponents />
 
 		{loading
-			? <SpinnerComponent />
+			? <SpinnerComponent data-testid="spinner"/>
 			: <>
-				{isAuth ? <HeaderComponent /> : null}
+				{isAuth ? <HeaderComponent  data-testid="header"/> : null}
 
 				<div className="root__wrapper">
 					<div
@@ -28,7 +28,7 @@ export default function App() {
 							: "root__wrapper__container__no-auth"
 							}`}
 					>
-						{isAuth ? <MenuComponent /> : null}
+						{isAuth ? <MenuComponent data-testid="menu"/> : null}
 
 						<ContentLayout>
 							<div className="root__wrapper__container__content">

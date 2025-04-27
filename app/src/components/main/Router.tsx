@@ -33,7 +33,7 @@ export default function Router() {
     }
     
     return isAuth
-        ? <Routes>
+        ? <Routes data-testid="router">
             <Route path={Pages.profile} element={<Profile />} />
             <Route path={Pages.edit} element={<Edit />} />
             <Route path={Pages.messages} element={<div>228</div>} />

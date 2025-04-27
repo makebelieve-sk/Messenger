@@ -35,6 +35,7 @@ export default memo(function AvatarComponent({ children, src, alt, isOnline = fa
             src={srcImage}
             alt={alt}
             className={`avatar-badge__avatar ${className}`}
+            data-testid="avatar"
             onClick={onClick}
         >
             {children}
