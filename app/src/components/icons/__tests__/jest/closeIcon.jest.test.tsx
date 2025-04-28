@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+
 import CloseIconComponent from "@components/icons/closeIcon";
 
 describe("ArrowLeftIcon", () => {

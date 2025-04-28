@@ -1,4 +1,5 @@
 import EventEmitter from "eventemitter3";
+
 import { IUserDetails } from "@custom-types/models.types";
 
 // Контракт модели "Дополнительная информация о пользователе"

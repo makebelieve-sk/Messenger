@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+
 import CheckboxComponent from "@components/ui/checkbox";
 
 describe("CheckboxComponent", () => {

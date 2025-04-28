@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+
 import ContentLayout from "@components/layouts/content";
 
 const meta: Meta<typeof ContentLayout> = {

@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { NO_PHOTO, API_URL } from "@utils/constants";
+import { useEffect,useState } from "react";
+
+import { API_URL,NO_PHOTO } from "@utils/constants";
 
 // Возврат корректного адреса картинки
 export default function useImage(src?: string) {

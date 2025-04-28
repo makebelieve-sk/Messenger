@@ -1,8 +1,8 @@
 import { memo } from "react";
 
-import { IFormErrors, IFormValues } from "@pages/Edit";
 import Contacts from "@modules/edit/contacts";
 import Main from "@modules/edit/main";
+import { IFormErrors, IFormValues } from "@pages/Edit";
 import { EditTabs } from "@custom-types/enums";
 
 interface IEditTabsModule extends ITabModule {

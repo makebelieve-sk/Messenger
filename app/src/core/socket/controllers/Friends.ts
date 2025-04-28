@@ -1,13 +1,13 @@
 import EventEmitter from "eventemitter3";
 
-import Logger from "@service/Logger";
 import { validateHandleEvent } from "@core/socket/validation";
+import Logger from "@service/Logger";
 import { addFriend, deleteFriend } from "@store/friend/slice";
 import { setFriendNotification } from "@store/main/slice";
 import { FriendsNoticeTypes, SocketActions } from "@custom-types/enums";
+import { SocketEvents } from "@custom-types/events";
 import { AppDispatch } from "@custom-types/redux.types";
 import { SocketType } from "@custom-types/socket.types";
-import { SocketEvents } from "@custom-types/events";
 
 const logger = Logger.init("Socket:FriendsController");
 

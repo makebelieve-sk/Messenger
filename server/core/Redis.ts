@@ -1,11 +1,11 @@
-import { createClient, RedisClientType } from "redis";
 import { RedisStore } from "connect-redis";
+import { createClient, RedisClientType } from "redis";
 
-import { RedisKeys } from "@custom-types/enums";
-import { TimeoutType } from "@custom-types/index";
-import { RedisError } from "@errors/index";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
+import { RedisError } from "@errors/index";
+import { RedisKeys } from "@custom-types/enums";
+import { TimeoutType } from "@custom-types/index";
 
 const logger = Logger("Redis");
 

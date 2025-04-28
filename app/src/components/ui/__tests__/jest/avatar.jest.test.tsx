@@ -1,6 +1,7 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import Avatar from "@components/ui/avatar";
 import { MemoryRouter } from "react-router-dom";
+import { fireEvent, render, screen } from "@testing-library/react";
+
+import Avatar from "@components/ui/avatar";
 
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),

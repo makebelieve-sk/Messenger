@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Slide, Alert } from "@mui/material";
+import { Alert,Slide } from "@mui/material";
 
 import "./alert.scss";
 

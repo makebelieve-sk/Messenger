@@ -1,16 +1,16 @@
 import EventEmitter from "eventemitter3";
 
-import Logger from "@service/Logger";
 import CatchErrors from "@core/CatchErrors";
+import ProfilesController from "@core/controllers/ProfilesController";
+import MainApi from "@core/MainApi";
+import { Profile } from "@core/models/Profile";
 import Request from "@core/Request";
 import Socket from "@core/socket/Socket";
-import ProfilesController from "@core/controllers/ProfilesController";
-import { Profile } from "@core/models/Profile";
-import MainApi from "@core/MainApi";
+import Logger from "@service/Logger";
 import { setAuth } from "@store/main/slice";
 import { Pages } from "@custom-types/enums";
-import { AppDispatch } from "@custom-types/redux.types";
 import { MainClientEvents } from "@custom-types/events";
+import { AppDispatch } from "@custom-types/redux.types";
 import { MY_ID } from "@utils/constants";
 
 const logger = Logger.init();

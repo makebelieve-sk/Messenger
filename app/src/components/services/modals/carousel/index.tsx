@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect,useState } from "react";
 
 import ModalComponent from "@components/ui/modal";
-import Info from "@modules/carousel/info";
 import CarouselModule, { ICarouselImage } from "@modules/carousel";
-import eventBus from "@utils/event-bus";
+import Info from "@modules/carousel/info";
 import { GlobalEvents } from "@custom-types/events";
+import eventBus from "@utils/event-bus";
 
 const modalTitle = "modal-carousel-title";
 const modalDescription = "modal-carousel-description";

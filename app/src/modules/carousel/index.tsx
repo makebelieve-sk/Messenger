@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { memo,useState } from "react";
 import MobileStepper from "@mui/material/MobileStepper";
 
 import { ICarouselData } from "@components/services/modals/carousel";

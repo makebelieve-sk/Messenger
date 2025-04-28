@@ -1,7 +1,7 @@
 import EventEmitter from "eventemitter3";
 
-import { IUser, IUserDetails } from "@custom-types/models.types";
 import { UserDetails } from "@core/models/UserDetails";
+import { IUser, IUserDetails } from "@custom-types/models.types";
 
 // Контракт модели "Пользователь"
 export interface User extends EventEmitter {

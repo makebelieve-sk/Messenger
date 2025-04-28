@@ -1,6 +1,7 @@
-import { render, screen } from "@testing-library/react";
-import Router from "@components/main/Router";
 import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
+
+import Router from "@components/main/Router";
 import { Pages } from "@custom-types/enums";
 
 // Мок для хука useMainClient

@@ -1,11 +1,11 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import HeaderComponent from "@components/layouts/header";
-import { AVATAR_URL } from "@utils/files";
-import { BASE_URL } from "@utils/constants";
 import { UserEvents } from "@custom-types/events";
-import React from "react";
+import { BASE_URL } from "@utils/constants";
+import { AVATAR_URL } from "@utils/files";
 
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),

@@ -1,20 +1,20 @@
 import crypto from "crypto";
-import { Request, Response, NextFunction, Express } from "express";
-import { v4 as uuid } from "uuid";
+import { Express,NextFunction, Request, Response } from "express";
 import { PassportStatic } from "passport";
+import { v4 as uuid } from "uuid";
 
-import Logger from "@service/logger";
-import { t } from "@service/i18n";
-import { updateSessionMaxAge } from "@utils/session";
-import { getSafeUserFields } from "@utils/user";
-import { UsersType } from "@custom-types/index";
-import { ApiRoutes, HTTPStatuses, RedisKeys, SocketActions } from "@custom-types/enums";
-import { ISafeUser } from "@custom-types/user.types";
-import RedisWorks from "@core/Redis";
-import Middleware from "@core/Middleware";
 import Database from "@core/Database";
+import Middleware from "@core/Middleware";
+import RedisWorks from "@core/Redis";
+import { t } from "@service/i18n";
+import Logger from "@service/logger";
 import { AuthError } from "@errors/controllers";
 import { PassportError } from "@errors/index";
+import { ApiRoutes, HTTPStatuses, RedisKeys, SocketActions } from "@custom-types/enums";
+import { UsersType } from "@custom-types/index";
+import { ISafeUser } from "@custom-types/user.types";
+import { updateSessionMaxAge } from "@utils/session";
+import { getSafeUserFields } from "@utils/user";
 
 const logger = Logger("AuthController");
 const COOKIE_NAME = process.env.COOKIE_NAME as string;

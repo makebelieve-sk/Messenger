@@ -1,7 +1,8 @@
-import { render, screen } from "@testing-library/react";
-import { mockUseAppSelector } from "../../../../__mocks__/@hooks/useGlobalState";
-import App from "@components/main/app";
 import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
+
+import App from "@components/main/app";
+import { mockUseAppSelector } from "../../../../__mocks__/@hooks/useGlobalState";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),

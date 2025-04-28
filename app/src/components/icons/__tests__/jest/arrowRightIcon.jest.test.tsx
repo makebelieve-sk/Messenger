@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+
 import ArrowRightIconComponent from "@components/icons/arrowRightIcon";
 
 describe("ArrowLeftIcon", () => {

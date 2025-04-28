@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 
-import Logger from "@service/Logger";
 import CatchErrors, { CatchType } from "@core/CatchErrors";
+import Logger from "@service/Logger";
 import { ApiRoutes } from "@custom-types/enums";
-import { AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT, API_URL } from "@utils/constants";
+import { API_URL,AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT } from "@utils/constants";
 
 const logger = Logger.init("Request");
 

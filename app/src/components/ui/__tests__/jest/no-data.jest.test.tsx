@@ -1,4 +1,5 @@
-import { screen, render } from "@testing-library/react"
+import { render,screen } from "@testing-library/react"
+
 import NoDataComponent from "@components/ui/no-data"
 
 describe("No-data", () => {

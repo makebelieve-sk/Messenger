@@ -1,8 +1,8 @@
-import { memo, ChangeEvent, lazy, Suspense } from "react";
+import { ChangeEvent, lazy, memo, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 
-import { ITabModule } from "@modules/edit";
 import Spinner from "@components/ui/spinner";
+import { ITabModule } from "@modules/edit";
 
 // Лениво подгружаем компонент и его стили (так как пакет имеет большой вес)
 const TextFieldComponent = lazy(() => import("@components/ui/text-field"));

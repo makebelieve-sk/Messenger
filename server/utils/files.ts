@@ -1,7 +1,7 @@
-import sharp from "sharp";
-import { v4 as uuid } from "uuid";
 import fs from "fs";
 import path from "path";
+import sharp from "sharp";
+import { v4 as uuid } from "uuid";
 
 import Logger from "@service/logger";
 

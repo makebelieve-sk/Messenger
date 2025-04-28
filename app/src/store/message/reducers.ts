@@ -1,9 +1,9 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import Logger from "@service/Logger";
 import i18next from "@service/i18n";
-import { IFile, IMessage } from "@custom-types/models.types";
+import Logger from "@service/Logger";
 import { UnReadTypes } from "@custom-types/enums";
+import { IFile, IMessage } from "@custom-types/models.types";
 import { MessageStateType } from "@custom-types/redux.types";
 
 const logger = Logger.init("store/messages");

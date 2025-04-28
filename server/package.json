@@ -11,8 +11,8 @@
     "start:production": "node -r module-alias/register dist/index.js",
     "build": "npm run lint && tsc",
     "build:local": "npm run build && cross-env NODE_ENV=production npm run start:production",
-    "test": "npm run test",
-    "lint": "eslint \"**/*.ts\""
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "connect-redis": "^8.0.1",
@@ -53,6 +53,8 @@
     "@typescript-eslint/parser": "^8.21.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.18.0",
+    "eslint-plugin-import": "^2.31.0",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
     "jiti": "^2.4.2",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",

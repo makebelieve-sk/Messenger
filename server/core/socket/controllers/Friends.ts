@@ -1,11 +1,11 @@
 import EventEmitter from "events";
 
+import { validateHandleEvent } from "@core/socket/validation";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { SocketActions } from "@custom-types/enums";
-import { SocketWithUser } from "@custom-types/socket.types";
 import { SocketEvents } from "@custom-types/events";
-import { validateHandleEvent } from "@core/socket/validation";
+import { SocketWithUser } from "@custom-types/socket.types";
 
 const logger = Logger("Socket:FriendsController");
 

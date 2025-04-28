@@ -1,5 +1,5 @@
-import { createTheme } from "@mui/material/styles";
 import { useMemo, useState } from "react";
+import { createTheme } from "@mui/material/styles";
 
 export default function useTheme() {
   const [isDarkMode, setIsDarkMode] = useState(false);

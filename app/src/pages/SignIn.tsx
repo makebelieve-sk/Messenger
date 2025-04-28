@@ -1,21 +1,21 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect,useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import CheckboxComponent from "@components/ui/checkbox";
-import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
-import TextFieldComponent from "@components/ui/text-field";
-import BoxComponent from "@components/ui/box";
 import LockIconComponent from "@components/icons/lockIcon";
+import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
+import BoxComponent from "@components/ui/box";
 import ButtonComponent from "@components/ui/button";
-import TypographyComponent from "@components/ui/typography";
-import GridComponent from "@components/ui/grid";
+import CheckboxComponent from "@components/ui/checkbox";
 import CopyrightComponent from "@components/ui/copyright";
+import GridComponent from "@components/ui/grid";
 import LinkComponent from "@components/ui/link";
 import PaperComponent from "@components/ui/paper";
-import { REQUIRED_FIELD } from "@utils/constants";
+import TextFieldComponent from "@components/ui/text-field";
+import TypographyComponent from "@components/ui/typography";
 import useMainClient from "@hooks/useMainClient";
 import { Pages } from "@custom-types/enums";
+import { REQUIRED_FIELD } from "@utils/constants";
 
 import styles from "@styles/pages/sign-in.module.scss";
 

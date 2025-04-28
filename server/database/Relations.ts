@@ -1,5 +1,6 @@
-import Logger from "@service/logger";
 import Models from "@database/models/Models";
+
+import Logger from "@service/logger";
 
 const logger = Logger("Relations");
 

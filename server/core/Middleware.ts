@@ -1,16 +1,16 @@
-import { Request, Response, NextFunction, Express } from "express";
+import { Express,NextFunction, Request, Response } from "express";
 import path from "path";
 
-import Logger from "@service/logger";
-import { t } from "@service/i18n";
 import RedisWorks from "@core/Redis";
+import { t } from "@service/i18n";
+import Logger from "@service/logger";
+import { AuthError } from "@errors/controllers";
+import { BaseError, MiddlewareError } from "@errors/index";
 import { HTTPStatuses, RedisKeys } from "@custom-types/enums";
 import { IRequestWithShapedImages, IRequestWithSharpedAvatar } from "@custom-types/express.types";
 import { ISafeUser } from "@custom-types/user.types";
 import { createSharpedImage } from "@utils/files";
 import { updateSessionMaxAge } from "@utils/session";
-import { AuthError } from "@errors/controllers";
-import { BaseError, MiddlewareError } from "@errors/index";
 
 const logger = Logger("Middleware");
 
@@ -55,7 +55,7 @@ export default class Middleware {
         logger.debug("catch");
 
         // Для корректного выполнения обработчика ошибки ендпоинтов необходимо всегда указывать 4 параметра (даже если все 4 не используются)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         this._app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
             const nextError = error instanceof BaseError
                 ? error

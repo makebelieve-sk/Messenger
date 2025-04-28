@@ -1,6 +1,6 @@
-import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
 
 interface IStepperComponent {
     steps: string[];

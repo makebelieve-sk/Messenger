@@ -1,5 +1,5 @@
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import "./select.scss";
 

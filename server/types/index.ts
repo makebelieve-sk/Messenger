@@ -1,4 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from "http";
+
 import { ISocketUser } from "@custom-types/socket.types";
 
 export type UsersType = Map<string, ISocketUser>;

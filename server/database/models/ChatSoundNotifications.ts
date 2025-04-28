@@ -1,4 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
+
 import { IChatSoundNotifications } from "@custom-types/models.types";
 
 // Тип модели ChatSoundNotifications, унаследованного от Sequelize

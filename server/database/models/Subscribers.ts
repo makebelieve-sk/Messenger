@@ -1,4 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
+
 import { ISubscriber } from "@custom-types/models.types";
 
 // Тип модели Subscribers, унаследованного от Sequelize

@@ -1,6 +1,7 @@
-import SpinnerComponent from "../spinner";
-import { lazy, Suspense, JSX } from "react";
 import dayjs, { Dayjs } from "dayjs";
+import { JSX,lazy, Suspense } from "react";
+
+import SpinnerComponent from "../spinner";
 
 // Типизация возвращаемых значений для динамической загрузки
 type LazyLoadedProviderType = {

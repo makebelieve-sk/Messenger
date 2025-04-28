@@ -1,10 +1,10 @@
 import EventEmitter from "events";
 
+import { validateHandleEvent, ValidateHandleReturnType } from "@core/socket/validation";
 import Logger from "@service/logger";
 import { SocketActions } from "@custom-types/enums";
-import { CallbackAckType, ISocketUser, SocketWithUser } from "@custom-types/socket.types";
 import { SocketEvents } from "@custom-types/events";
-import { validateHandleEvent, ValidateHandleReturnType } from "@core/socket/validation";
+import { CallbackAckType, ISocketUser, SocketWithUser } from "@custom-types/socket.types";
 
 const logger = Logger("Socket:MessagesController");
 

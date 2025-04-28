@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize";
+
 import Logger from "@service/logger";
 
 const logger = Logger("utils/where");

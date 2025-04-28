@@ -1,20 +1,20 @@
 import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 
-import BoxComponent from "@components/ui/box";
 import AlertComponent from "@components/ui/alert";
+import BoxComponent from "@components/ui/box";
 import ButtonComponent from "@components/ui/button";
-import SpinnerComponent from "@components/ui/spinner";
 import PaperComponent from "@components/ui/paper";
-import EditTabsModule from "@modules/edit";
+import SpinnerComponent from "@components/ui/spinner";
 import useMainClient from "@hooks/useMainClient";
-import useUserDetails from "@hooks/useUserDetails";
 import useProfile from "@hooks/useProfile";
 import useUser from "@hooks/useUser";
-import { REQUIRED_FIELD } from "@utils/constants";
+import useUserDetails from "@hooks/useUserDetails";
+import EditTabsModule from "@modules/edit";
 import { ProfileEvents, UserDetailsEvents } from "@custom-types/events";
+import { REQUIRED_FIELD } from "@utils/constants";
 
 import "@styles/pages/edit.scss";
 

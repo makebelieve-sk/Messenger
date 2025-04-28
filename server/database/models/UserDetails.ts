@@ -1,4 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
+
 import { IUserDetails } from "@custom-types/models.types";
 
 // Тип модели User, унаследованного от Sequelize

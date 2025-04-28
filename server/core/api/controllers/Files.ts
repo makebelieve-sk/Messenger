@@ -1,15 +1,15 @@
-import multer from "multer";
-import { v4 as uuid } from "uuid";
+import { Express,NextFunction, Request, Response } from "express";
 import fs from "fs";
+import multer from "multer";
 import { Op } from "sequelize";
-import { Request, Response, NextFunction, Express } from "express";
+import { v4 as uuid } from "uuid";
 
-import Logger from "@service/logger";
-import { t } from "@service/i18n";
-import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
-import Middleware from "@core/Middleware";
 import Database from "@core/Database";
+import Middleware from "@core/Middleware";
+import { t } from "@service/i18n";
+import Logger from "@service/logger";
 import { FilesError } from "@errors/controllers";
+import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
 import { MB_1 } from "@utils/files";
 
 const logger = Logger("FilesController");

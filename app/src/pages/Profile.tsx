@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
 import GridComponent from "@components/ui/grid";
-import { Pages } from "@custom-types/enums";
-import MainPhoto from "@modules/profile/main-photo";
 import Friends from "@modules/profile/friends";
+import MainPhoto from "@modules/profile/main-photo";
 import PersonalInfo from "@modules/profile/personal-info";
 import Photos from "@modules/profile/photos";
+import { Pages } from "@custom-types/enums";
 
 import "@styles/pages/profile.scss";
 

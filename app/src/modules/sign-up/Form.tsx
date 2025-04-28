@@ -1,14 +1,14 @@
-import { memo, lazy, Suspense } from "react";
+import { lazy, memo, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import type { CountryData } from "react-phone-input-2";
 
-import GridComponent from "@components/ui/grid";
-import TextFieldComponent from "@components/ui/text-field";
 import BoxComponent from "@components/ui/box";
+import GridComponent from "@components/ui/grid";
 import SpinnerComponent from "@components/ui/spinner";
-import { emailCheck } from "@utils/email-check";
-import { REQUIRED_FIELD } from "@utils/constants";
+import TextFieldComponent from "@components/ui/text-field";
 import { ISignUpState } from "@pages/SignUp";
+import { REQUIRED_FIELD } from "@utils/constants";
+import { emailCheck } from "@utils/email-check";
 
 import "./sign-up.scss";
 

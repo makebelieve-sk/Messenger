@@ -1,21 +1,21 @@
 import EventEmitter from "eventemitter3";
 
-import UsersController from "@core/socket/controllers/Users";
 import FriendsController from "@core/socket/controllers/Friends";
 import MessangesController from "@core/socket/controllers/Messages";
+import UsersController from "@core/socket/controllers/Users";
 import { ValidateHandleReturnType } from "@core/socket/validation";
-import Logger from "@service/Logger";
 import i18next from "@service/i18n";
-import PlayAudio from "@utils/play-audio";
+import Logger from "@service/Logger";
 import { setSystemError } from "@store/error/slice";
 import { setOnlineUsers } from "@store/main/slice";
 import { setMessage } from "@store/message/slice";
 import { Pages, SocketActions } from "@custom-types/enums";
+import { MainClientEvents, SocketEvents } from "@custom-types/events";
 import { IMessage, IUser } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
 import { CallbackAckType, SocketType } from "@custom-types/socket.types";
-import { MainClientEvents, SocketEvents } from "@custom-types/events";
 import { SOCKET_MIDDLEWARE_ERROR } from "@utils/index";
+import PlayAudio from "@utils/play-audio";
 
 const logger = Logger.init("SocketController");
 const SERVER_DISCONNECT = "io server disconnect";

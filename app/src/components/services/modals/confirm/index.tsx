@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import BoxComponent from "@components/ui/box";
+import { SmallButtonComponent } from "@components/ui/button/small-button";
 import ModalComponent from "@components/ui/modal";
 import TypographyComponent from "@components/ui/typography";
-import { SmallButtonComponent } from "@components/ui/button/small-button";
-import BoxComponent from "@components/ui/box";
-import eventBus from "@utils/event-bus";
 import { GlobalEvents } from "@custom-types/events";
+import eventBus from "@utils/event-bus";
 
 import "./confirm.scss";
 

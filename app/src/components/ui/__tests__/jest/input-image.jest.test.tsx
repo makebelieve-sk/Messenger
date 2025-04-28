@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+
 import InputImage from "@components/ui/input-image";
 
 describe("InputImage", () => {

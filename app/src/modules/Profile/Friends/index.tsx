@@ -1,20 +1,20 @@
-import { useState, useEffect, memo } from "react";
+import { memo,useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 
-import GridComponent from "@components/ui/grid";
-import PaperComponent from "@components/ui/paper";
 import UserAvatarComponent from "@components/ui/avatar/user-avatar";
+import GridComponent from "@components/ui/grid";
 import NoDataComponent from "@components/ui/no-data";
+import PaperComponent from "@components/ui/paper";
 import SpinnerComponent from "@components/ui/spinner";
-import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
-import { IUser } from "@custom-types/models.types";
 import { useAppSelector } from "@hooks/useGlobalState";
 import useProfile from "@hooks/useProfile";
-import { selectMainState } from "@store/main/slice";
 import { selectFriendState } from "@store/friend/slice";
+import { selectMainState } from "@store/main/slice";
+import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
+import { IUser } from "@custom-types/models.types";
 import { getFullName } from "@utils/index";
 
 import "./friends.scss";

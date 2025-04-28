@@ -1,7 +1,8 @@
-import { render, screen } from "@testing-library/react"
-import CopyrightComponent from "@components/ui/copyright";
-import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event";
+
+import CopyrightComponent from "@components/ui/copyright";
 
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),

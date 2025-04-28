@@ -1,6 +1,6 @@
 import { memo } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import LinkComponent from "@components/ui/link";
 import { Pages } from "@custom-types/enums";

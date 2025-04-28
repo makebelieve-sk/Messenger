@@ -1,17 +1,17 @@
-import { RequestHandler } from "express";
-import { ExtendedError, Server } from "socket.io";
 import EventEmitter from "events";
+import { RequestHandler } from "express";
 import { IncomingMessage } from "http";
+import { ExtendedError, Server } from "socket.io";
 
 import Database from "@core/Database";
 import RedisWorks from "@core/Redis";
 import SocketController from "@core/socket/SocketController";
-import Logger from "@service/logger";
 import { t } from "@service/i18n";
-import { SocketType, SocketWithUser } from "@custom-types/socket.types";
-import { ServerType, UsersType } from "@custom-types/index";
-import { RedisKeys } from "@custom-types/enums";
+import Logger from "@service/logger";
 import { SocketError } from "@errors/index";
+import { RedisKeys } from "@custom-types/enums";
+import { ServerType, UsersType } from "@custom-types/index";
+import { SocketType, SocketWithUser } from "@custom-types/socket.types";
 
 declare module "http" {
     interface IncomingMessage {

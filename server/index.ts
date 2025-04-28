@@ -1,14 +1,15 @@
 import express from "express";
 import http from "http";
 
+import MainServer from "@core/MainServer";
+import { initI18n, t } from "@service/i18n";
+import Logger from "@service/logger";
+import ProcessWorks from "@service/Process";
+import { BaseError } from "@errors/index";
+
 // Необходимо подключить alias для всего приложения
 import "./service/aliases";
 import "@service/env";
-import ProcessWorks from "@service/Process";
-import Logger from "@service/logger";
-import { initI18n, t } from "@service/i18n";
-import MainServer from "@core/MainServer";
-import { BaseError } from "@errors/index";
 
 const logger = Logger();
 const PORT = process.env.PORT as string;

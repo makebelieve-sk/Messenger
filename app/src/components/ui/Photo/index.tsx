@@ -1,12 +1,12 @@
-import { useState, memo } from "react";
+import { memo,useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { IModalConfirmData } from "@components/services/modals/confirm";
 import CloseIconComponent from "@components/icons/closeIcon";
+import { IModalConfirmData } from "@components/services/modals/confirm";
 import useImage from "@hooks/useImage";
+import { GlobalEvents } from "@custom-types/events";
 import { NO_PHOTO } from "@utils/constants";
 import eventBus from "@utils/event-bus";
-import { GlobalEvents } from "@custom-types/events";
 
 import "./photo.scss";
 

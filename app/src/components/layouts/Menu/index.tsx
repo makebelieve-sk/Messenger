@@ -1,16 +1,16 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Stack from "@mui/material/Stack";
-import MenuList from "@mui/material/MenuList";
-import Badge from "@mui/material/Badge";
+import { useNavigate } from "react-router-dom";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
+import Badge from "@mui/material/Badge";
+import MenuList from "@mui/material/MenuList";
+import Stack from "@mui/material/Stack";
 
 import MenuItemComponent from "@components/ui/menu-item";
-import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
+import useMainClient from "@hooks/useMainClient";
 import { selectMainState, setMessageNotification } from "@store/main/slice";
 import { selectMessagesState } from "@store/message/slice";
 import { Pages } from "@custom-types/enums";

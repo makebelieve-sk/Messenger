@@ -1,14 +1,14 @@
-import { useState, useEffect, memo } from "react";
-import { useNavigate } from "react-router-dom";
+import { memo,useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import GridComponent from "@components/ui/grid";
-import SpinnerComponent from "@components/ui/spinner";
 import PaperComponent from "@components/ui/paper";
-import { onClickBlockType } from "@modules/profile/friends";
+import SpinnerComponent from "@components/ui/spinner";
+import { useAppSelector } from "@hooks/useGlobalState";
 import useUser from "@hooks/useUser";
 import useUserDetails from "@hooks/useUserDetails";
-import { useAppSelector } from "@hooks/useGlobalState";
+import { onClickBlockType } from "@modules/profile/friends";
 import { selectFriendState } from "@store/friend/slice";
 import { selectUserState } from "@store/user/slice";
 import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";

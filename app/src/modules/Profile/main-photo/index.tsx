@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import useProfile from "@hooks/useProfile";
 import ChangeAvatarComponent from "@components/ui/change-avatar";
-import PhotoComponent from "@components/ui/photo";
-import PaperComponent from "@components/ui/paper";
 import GridComponent from "@components/ui/grid";
+import PaperComponent from "@components/ui/paper";
+import PhotoComponent from "@components/ui/photo";
+import useProfile from "@hooks/useProfile";
 
 import "./main-photo.scss";
 

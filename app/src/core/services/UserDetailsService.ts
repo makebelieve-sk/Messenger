@@ -1,14 +1,14 @@
 import EventEmitter from "eventemitter3";
 
+import { UserDetails } from "@core/models/UserDetails";
+import Request from "@core/Request";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
-import Request from "@core/Request";
-import { UserDetails } from "@core/models/UserDetails";
-import { muchSelected } from "@utils/index";
-import { getMonthName } from "@utils/date";
+import { ApiRoutes } from "@custom-types/enums";
 import { UserDetailsEvents } from "@custom-types/events";
 import { IUserDetails } from "@custom-types/models.types";
-import { ApiRoutes } from "@custom-types/enums";
+import { getMonthName } from "@utils/date";
+import { muchSelected } from "@utils/index";
 
 const logger = Logger.init("UserDetails");
 const NOT_COMPLETE = i18next.t("profile-module.not_complete");

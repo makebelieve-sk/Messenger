@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { ErrorStateType, RootState } from "@custom-types/redux.types";
 import reducers from "@store/error/reducers";
+import { ErrorStateType, RootState } from "@custom-types/redux.types";
 
 // Начальное состояние
 export const initialState: ErrorStateType = {

@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import { SocketActions } from "@custom-types/enums";
-import { FriendSchema, SocketUserSchema } from "@service/validation";
 import { t } from "@service/i18n";
+import { FriendSchema, SocketUserSchema } from "@service/validation";
+import { SocketActions } from "@custom-types/enums";
 
 // Описание схемы отправки данных событий друзей
 export const emitFriendsSchema = {

@@ -1,11 +1,12 @@
-import { render, screen, fireEvent } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
+import { fireEvent,render, screen } from "@testing-library/react";
+
+import MenuComponent from "@components/layouts/menu";
+import { mockUseAppDispatch,mockUseAppSelector } from "../../../../__mocks__/@hooks/useGlobalState";
+import { mockStore } from "../../../../__mocks__/store";
 
 jest.mock("@hooks/useGlobalState");
-import { mockUseAppSelector, mockUseAppDispatch } from "../../../../__mocks__/@hooks/useGlobalState";
-import { mockStore } from "../../../../__mocks__/store";
-import MenuComponent from "@components/layouts/menu";
 
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),

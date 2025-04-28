@@ -1,18 +1,18 @@
-import { Express } from "express";
 import crypto from "crypto";
+import { Express } from "express";
 import Passport, { PassportStatic } from "passport";
 import { IVerifyOptions, Strategy } from "passport-local";
-
-import Logger from "@service/logger";
-import { t } from "@service/i18n";
-import Database from "@core/Database";
 import { UserInstance } from "@database/models/Users";
-import { getSafeUserFields } from "@utils/user";
-import { validateEmail, validatePhoneNumber } from "@utils/auth";
+
+import Database from "@core/Database";
+import { t } from "@service/i18n";
+import Logger from "@service/logger";
 import { PassportError } from "@errors/index";
-import { UsersType } from "@custom-types/index";
 import { HTTPStatuses } from "@custom-types/enums";
+import { UsersType } from "@custom-types/index";
 import { ISafeUser } from "@custom-types/user.types";
+import { validateEmail, validatePhoneNumber } from "@utils/auth";
+import { getSafeUserFields } from "@utils/user";
 
 const logger = Logger("Passport");
 

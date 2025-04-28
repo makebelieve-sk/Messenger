@@ -1,5 +1,5 @@
-import Typography from "@mui/material/Typography";
 import { ElementType } from "react";
+import Typography from "@mui/material/Typography";
 
 interface ITypographyComponent {
     children: React.ReactNode;

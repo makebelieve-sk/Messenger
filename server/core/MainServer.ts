@@ -1,18 +1,18 @@
-import express, { Express } from "express";
-import path from "path";
 import cookieParser from "cookie-parser";
-import session from "express-session";
 import cors from "cors";
+import express, { Express } from "express";
+import session from "express-session";
+import path from "path";
 
-import Logger from "@service/logger";
 import ApiServer from "@core/api/ApiServer";
-import RedisWorks from "@core/Redis";
-import PassportWorks from "@core/Passport";
 import Database from "@core/Database";
+import PassportWorks from "@core/Passport";
+import RedisWorks from "@core/Redis";
 import SocketWorks from "@core/socket/Socket";
+import Logger from "@service/logger";
+import { ServerType, UsersType } from "@custom-types/index";
 import { oneHour } from "@utils/datetime";
 import { ASSETS_PATH } from "@utils/files";
-import { ServerType, UsersType } from "@custom-types/index";
 
 const logger = Logger("MainServer");
 

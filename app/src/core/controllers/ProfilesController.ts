@@ -1,12 +1,12 @@
 import EventEmitter from "eventemitter3";
 
-import ProfileService from "@core/services/ProfileServices";
-import Request from "@core/Request";
 import { Profile } from "@core/models/Profile";
-import Logger from "@service/Logger";
+import Request from "@core/Request";
+import ProfileService from "@core/services/ProfileServices";
 import i18next from "@service/i18n";
-import { AppDispatch } from "@custom-types/redux.types";
+import Logger from "@service/Logger";
 import { MainClientEvents } from "@custom-types/events";
+import { AppDispatch } from "@custom-types/redux.types";
 import { MY_ID } from "@utils/constants";
 
 const logger = Logger.init("ProfilesController");

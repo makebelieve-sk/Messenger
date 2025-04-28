@@ -1,21 +1,21 @@
 import EventEmitter from "eventemitter3";
 
-import { IFormValues } from "@pages/Edit";
-import Logger from "@service/Logger";
-import Request from "@core/Request";
-import UserService from "@core/services/UserService";
 import { Profile } from "@core/models/Profile";
 import { User } from "@core/models/User";
-import { addPhotos, deletePhoto, setPhotos, setPhotosCount } from "@store/user/slice";
+import Request from "@core/Request";
+import UserService from "@core/services/UserService";
+import { IFormValues } from "@pages/Edit";
+import Logger from "@service/Logger";
 import { setFriendsCount, setSubscribersCount, setTopFriends } from "@store/friend/slice";
+import { addPhotos, deletePhoto, setPhotos, setPhotosCount } from "@store/user/slice";
 import { ApiRoutes } from "@custom-types/enums";
+import { GlobalEvents, MainClientEvents, ProfileEvents,UserDetailsEvents, UserEvents } from "@custom-types/events";
 import { IPhoto, IUser, IUserDetails } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
-import { GlobalEvents, MainClientEvents, UserEvents, UserDetailsEvents, ProfileEvents } from "@custom-types/events";
+import eventBus from "@utils/event-bus";
 import { AVATAR_URL } from "@utils/files";
 import { getFullName } from "@utils/index";
 import { currentDate } from "@utils/time";
-import eventBus from "@utils/event-bus";
 
 const logger = Logger.init("Profile");
 

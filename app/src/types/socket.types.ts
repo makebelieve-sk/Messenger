@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 
-import { SocketActions, MessageReadStatus } from "@custom-types/enums";
+import { MessageReadStatus,SocketActions } from "@custom-types/enums";
 import { IMessage, IUser } from "@custom-types/models.types";
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -43,7 +43,7 @@ interface ServerToClientEvents {
 };
 
 // Необходимо корректно указать тип аргументов => [infer _] нам необходим, но на него ругается линтер
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 type HandleArgsType<D extends (...args: any[]) => void> = Parameters<D> extends [infer R, infer _] ? R : unknown;
 
 export type {

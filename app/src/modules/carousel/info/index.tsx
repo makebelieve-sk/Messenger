@@ -1,9 +1,9 @@
-import { useState, useEffect, memo } from "react";
+import { memo,useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import UserAvatarComponent from "@components/ui/avatar/user-avatar";
-import { ICarouselImage } from "@modules/carousel/index";
 import useUser from "@hooks/useUser";
+import { ICarouselImage } from "@modules/carousel/index";
 import { transformDate } from "@utils/date";
 
 import "./info.scss";

@@ -1,22 +1,22 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
-import StepperComponent from "@components/ui/stepper";
-import GridComponent from "@components/ui/grid";
-import BoxComponent from "@components/ui/box";
-import TypographyComponent from "@components/ui/typography";
-import LinkComponent from "@components/ui/link";
-import ButtonComponent from "@components/ui/button";
 import LockIconComponent from "@components/icons/lockIcon";
+import SystemAvatarComponent from "@components/ui/avatar/system-avatar";
+import BoxComponent from "@components/ui/box";
+import ButtonComponent from "@components/ui/button";
 import CopyrightComponent from "@components/ui/copyright";
-import SignUpForm from "@modules/sign-up/Form";
-import ChooseAvatar from "@modules/sign-up/ChooseAvatar";
+import GridComponent from "@components/ui/grid";
+import LinkComponent from "@components/ui/link";
+import StepperComponent from "@components/ui/stepper";
+import TypographyComponent from "@components/ui/typography";
 import useMainClient from "@hooks/useMainClient";
+import ChooseAvatar from "@modules/sign-up/ChooseAvatar";
+import SignUpForm from "@modules/sign-up/Form";
+import i18next from "@service/i18n";
 import { Pages } from "@custom-types/enums";
 import { IUser } from "@custom-types/models.types";
-import i18next from "@service/i18n";
 
 import styles from "@styles/pages/sign-up.module.scss";
 

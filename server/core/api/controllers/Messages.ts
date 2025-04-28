@@ -1,21 +1,21 @@
-import { v4 as uuid } from "uuid";
-import { Request, Response, Express, NextFunction } from "express";
+import { Express, NextFunction,Request, Response } from "express";
 import { Op } from "sequelize";
 import { Literal, Where } from "sequelize/types/utils";
+import { v4 as uuid } from "uuid";
 
-import Logger from "@service/logger";
-import { t } from "@service/i18n";
-import { getSearchWhere } from "@utils/where";
-import { LIMIT, LOAD_MORE_LIMIT } from "@utils/limits";
-import { isImage } from "@utils/files";
-import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "@custom-types/enums";
-import { IFile, IMessage } from "@custom-types/models.types";
-import { IChatInfo, IDialog } from "@custom-types/chat.types";
-import { ISafeUser, UserPartial } from "@custom-types/user.types";
-import { IImage } from "@custom-types/index";
-import Middleware from "@core/Middleware";
 import Database from "@core/Database";
+import Middleware from "@core/Middleware";
+import { t } from "@service/i18n";
+import Logger from "@service/logger";
 import { MessagesError } from "@errors/controllers";
+import { IChatInfo, IDialog } from "@custom-types/chat.types";
+import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "@custom-types/enums";
+import { IImage } from "@custom-types/index";
+import { IFile, IMessage } from "@custom-types/models.types";
+import { ISafeUser, UserPartial } from "@custom-types/user.types";
+import { isImage } from "@utils/files";
+import { LIMIT, LOAD_MORE_LIMIT } from "@utils/limits";
+import { getSearchWhere } from "@utils/where";
 
 const logger = Logger("MessagesController");
 

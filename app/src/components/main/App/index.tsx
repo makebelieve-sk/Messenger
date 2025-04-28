@@ -1,11 +1,11 @@
-import Router from "@components/main/Router";
-import ServiceComponents from "@components/main/ServiceComponents";
+import ContentLayout from "@components/layouts/content";
 import HeaderComponent from "@components/layouts/header";
 import MenuComponent from "@components/layouts/menu";
+import Router from "@components/main/Router";
+import ServiceComponents from "@components/main/ServiceComponents";
 import SpinnerComponent from "@components/ui/spinner";
-import { selectMainState } from "@store/main/slice";
 import { useAppSelector } from "@hooks/useGlobalState";
-import ContentLayout from "@components/layouts/content";
+import { selectMainState } from "@store/main/slice";
 
 import "./app.scss";
 

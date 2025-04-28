@@ -1,4 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
+
 import { IBlockUsers } from "@custom-types/models.types";
 
 // Тип модели BlockUsers, унаследованного от Sequelize

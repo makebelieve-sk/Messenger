@@ -1,8 +1,8 @@
 import { Sequelize } from "sequelize";
 
-import { DatabaseError } from "@errors/index";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
+import { DatabaseError } from "@errors/index";
 import initSchema from "@migrations/04.03.2025-init-schema";
 
 const logger = Logger("Migrations");

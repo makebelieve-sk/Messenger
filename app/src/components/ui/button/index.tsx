@@ -1,5 +1,5 @@
-import Button from "@mui/material/Button";
 import { JSX } from "react";
+import Button from "@mui/material/Button";
 
 export interface IButtonComponent {
     children: React.ReactNode;

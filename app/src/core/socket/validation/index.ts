@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-import Logger from "@service/Logger";
-import i18next from "@service/i18n";
-import { handleUsersSchema } from "@core/socket/validation/schemas/users";
-import { handleMainSchema } from "@core/socket/validation/schemas/main";
 import { emitFriendsSchema, handleFriendsSchema } from "@core/socket/validation/schemas/friends";
+import { handleMainSchema } from "@core/socket/validation/schemas/main";
 import { emitMessagesSchema, handleMessagesSchema } from "@core/socket/validation/schemas/messages";
+import { handleUsersSchema } from "@core/socket/validation/schemas/users";
+import i18next from "@service/i18n";
+import Logger from "@service/Logger";
 import { ClientToServerEvents, HandleArgsType, ServerToClientEvents } from "@custom-types/socket.types";
 
 const logger = Logger.init("Validation:Socket");

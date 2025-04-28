@@ -1,24 +1,24 @@
-import { useState, useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useTranslation } from "react-i18next";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 
+import BoxComponent from "@components/ui/box";
 import ModalComponent from "@components/ui/modal";
 import SpinnerComponent from "@components/ui/spinner";
-import BoxComponent from "@components/ui/box";
-import { ICarouselImage } from "@modules/carousel";
-import useMainClient from "@hooks/useMainClient";
 import { useAppDispatch, useAppSelector } from "@hooks/useGlobalState";
+import useMainClient from "@hooks/useMainClient";
+import { ICarouselImage } from "@modules/carousel";
 import { selectMessagesState, setAttachments } from "@store/message/slice";
-import { IFile } from "@custom-types/models.types";
-import { ValueOf } from "@custom-types/index";
 import { GlobalEvents } from "@custom-types/events";
-import { currentSize } from "@utils/files";
+import { ValueOf } from "@custom-types/index";
+import { IFile } from "@custom-types/models.types";
 import { transformDate } from "@utils/date";
-import { getHoursWithMinutes } from "@utils/time";
 import eventBus from "@utils/event-bus";
+import { currentSize } from "@utils/files";
+import { getHoursWithMinutes } from "@utils/time";
 
 import "./modal-with-attachments.scss";
 

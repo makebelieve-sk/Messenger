@@ -1,16 +1,16 @@
 import EventEmitter from "eventemitter3";
 
-import Logger from "@service/Logger";
-import Request from "@core/Request";
-import UserDetailsService from "@core/services/UserDetailsService";
 import { User } from "@core/models/User";
 import { UserDetails } from "@core/models/UserDetails";
-import { MY_ID } from "@utils/constants";
-import { IUser, IUserDetails } from "@custom-types/models.types";
+import Request from "@core/Request";
+import UserDetailsService from "@core/services/UserDetailsService";
+import Logger from "@service/Logger";
+import { setLoading } from "@store/main/slice";
 import { ApiRoutes } from "@custom-types/enums";
 import { MainClientEvents, UserEvents } from "@custom-types/events";
+import { IUser, IUserDetails } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
-import { setLoading } from "@store/main/slice";
+import { MY_ID } from "@utils/constants";
 
 const logger = Logger.init("User");
 

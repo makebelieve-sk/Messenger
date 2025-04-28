@@ -1,14 +1,14 @@
 import EventEmitter from "eventemitter3";
 
+import { validateHandleEvent } from "@core/socket/validation";
 import Logger from "@service/Logger";
+import { changeLastMessageInDialog, deleteDialog, deleteMessage, editMessage, setUnRead, setWriteMessage, updateMessage } from "@store/message/slice";
 import { Pages, SocketActions, UnReadTypes } from "@custom-types/enums";
+import { MainClientEvents, SocketEvents } from "@custom-types/events";
 import { IUser } from "@custom-types/models.types";
 import { AppDispatch } from "@custom-types/redux.types";
 import { SocketType } from "@custom-types/socket.types";
-import { MainClientEvents, SocketEvents } from "@custom-types/events";
-import { changeLastMessageInDialog, deleteDialog, deleteMessage, editMessage, setUnRead, setWriteMessage, updateMessage } from "@store/message/slice";
 import { getFullName } from "@utils/index";
-import { validateHandleEvent } from "@core/socket/validation";
 
 const logger = Logger.init("Socket:MessagesController");
 

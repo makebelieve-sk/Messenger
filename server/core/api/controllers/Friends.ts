@@ -1,16 +1,16 @@
-import { v4 as uuid } from "uuid";
-import { Request, Response, Express, NextFunction } from "express";
+import { Express, NextFunction,Request, Response } from "express";
 import { Transaction } from "sequelize";
+import { v4 as uuid } from "uuid";
 
-import Logger from "@service/logger";
-import { t } from "@service/i18n";
-import { getSearchWhere } from "@utils/where";
-import { ApiRoutes, FriendsTab, HTTPStatuses } from "@custom-types/enums";
-import { ISafeUser } from "@custom-types/user.types";
-import { UsersType } from "@custom-types/index";
-import Middleware from "@core/Middleware";
 import Database from "@core/Database";
+import Middleware from "@core/Middleware";
+import { t } from "@service/i18n";
+import Logger from "@service/logger";
 import { FriendsError } from "@errors/controllers";
+import { ApiRoutes, FriendsTab, HTTPStatuses } from "@custom-types/enums";
+import { UsersType } from "@custom-types/index";
+import { ISafeUser } from "@custom-types/user.types";
+import { getSearchWhere } from "@utils/where";
 
 const logger = Logger("FriendsController");
 

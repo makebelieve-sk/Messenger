@@ -1,10 +1,10 @@
-import { Socket, Server } from "socket.io";
+import { Server,Socket } from "socket.io";
 
 import SocketController from "@core/socket/SocketController";
-import { SocketActions, MessageReadStatus } from "@custom-types/enums";
+import { MessageReadStatus,SocketActions } from "@custom-types/enums";
+import { IEditMessage } from "@custom-types/message.types";
 import { IMessage } from "@custom-types/models.types";
 import { ISafeUser, UserPartial } from "@custom-types/user.types";
-import { IEditMessage } from "@custom-types/message.types";
 
 interface ISocketUser extends ISafeUser {
     sockets: Map<string, SocketController>;
@@ -54,7 +54,7 @@ interface ServerToClientEvents {
 };
 
 // Необходимо корректно указать тип аргументов => [infer _] нам необходим, но на него ругается линтер
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 type HandleArgsType<D extends (...args: any[]) => void> = Parameters<D> extends [infer R, infer _] ? R : unknown;
 
 export type {

@@ -3,12 +3,12 @@ import { io } from "socket.io-client";
 
 import SocketController from "@core/socket/SocketController";
 import { validateEmitEvent } from "@core/socket/validation";
-import Logger from "@service/Logger";
 import i18next from "@service/i18n";
-import { SOCKET_RECONECTION_ATTEMPTS, SOCKET_RECONNECTION_DELAY, SOCKET_URL, SOCKET_ACK_TIMEOUT } from "@utils/constants";
+import Logger from "@service/Logger";
+import { MainClientEvents, SocketEvents } from "@custom-types/events";
 import { AppDispatch } from "@custom-types/redux.types";
 import { ClientToServerEvents, SocketType } from "@custom-types/socket.types";
-import { MainClientEvents, SocketEvents } from "@custom-types/events";
+import { SOCKET_ACK_TIMEOUT,SOCKET_RECONECTION_ATTEMPTS, SOCKET_RECONNECTION_DELAY, SOCKET_URL } from "@utils/constants";
 
 const logger = Logger.init("Socket");
 
@@ -53,7 +53,7 @@ export default class Socket extends EventEmitter {
 
     // Основной метод отправки события с клиента на сервер с добавлением ack (подтверждение обработки сервером данного события)
     // Необходимо корректно указать тип аргументов => [infer _] нам необходим, но на него ругается линтер
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     async send<T extends keyof ClientToServerEvents>(type: T, ...args: Parameters<ClientToServerEvents[T]> extends [...infer R, infer _] ? R : unknown[]) {
         try {
             const validateData = validateEmitEvent(type, args[0]);

@@ -1,4 +1,5 @@
-import { screen, render } from "@testing-library/react"
+import { render,screen } from "@testing-library/react"
+
 import SelectComponent from "@components/ui/select"
 
 jest.mock("@mui/material/Select", () => {

@@ -1,4 +1,5 @@
 import { DataTypes, Model, ModelStatic, Sequelize } from "sequelize";
+
 import { IPhoto } from "@custom-types/models.types";
 
 // Тип модели Photos, унаследованного от Sequelize

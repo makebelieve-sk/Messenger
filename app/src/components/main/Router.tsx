@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
+import { useAppSelector } from "@hooks/useGlobalState";
+import useMainClient from "@hooks/useMainClient";
+import Edit from "@pages/Edit";
 import Profile from "@pages/Profile";
 import SignIn from "@pages/SignIn";
 import SignUp from "@pages/SignUp";
-import Edit from "@pages/Edit";
 import { selectMainState } from "@store/main/slice";
-import { useAppSelector } from "@hooks/useGlobalState";
-import useMainClient from "@hooks/useMainClient";
 import { Pages } from "@custom-types/enums";
 import { MainClientEvents } from "@custom-types/events";
 

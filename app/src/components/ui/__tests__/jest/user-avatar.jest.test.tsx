@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
+
 import UserAvatarComponent from "@components/ui/avatar/user-avatar";
 
 jest.mock("react-router-dom", () => ({

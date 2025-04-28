@@ -1,5 +1,5 @@
-import path from "path";
 import moduleAlias from "module-alias";
+import path from "path";
 
 // Устанавливаем алиасы в зависимости от окружения
 if (process.env.NODE_ENV === "production") {

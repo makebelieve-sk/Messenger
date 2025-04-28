@@ -1,6 +1,6 @@
-import { createLogger, format, transports } from "winston";
-import path from "path";
 import fs from "fs";
+import path from "path";
+import { createLogger, format, transports } from "winston";
 
 import { timestamp } from "@utils/datetime";
 

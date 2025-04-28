@@ -1,4 +1,5 @@
-import { parsePhoneNumberFromString, isValidPhoneNumber } from "libphonenumber-js";
+import { isValidPhoneNumber,parsePhoneNumberFromString } from "libphonenumber-js";
+
 import Logger from "@service/logger";
 
 const logger = Logger("utils/auth");

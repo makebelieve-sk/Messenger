@@ -1,12 +1,12 @@
-import { useState, useEffect, memo } from "react";
+import { memo,useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import BoxComponent from "@components/ui/box";
+import ChangeAvatarComponent from "@components/ui/change-avatar";
 import GridComponent from "@components/ui/grid";
+import PhotoComponent from "@components/ui/photo";
 import SpinnerComponent from "@components/ui/spinner";
 import TypographyComponent from "@components/ui/typography";
-import ChangeAvatarComponent from "@components/ui/change-avatar";
-import PhotoComponent from "@components/ui/photo";
 import { AVATAR_URL } from "@utils/files";
 
 import "./sign-up.scss";

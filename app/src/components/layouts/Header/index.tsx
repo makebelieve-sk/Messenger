@@ -1,18 +1,18 @@
-import { useState, useEffect, MouseEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { MouseEvent,useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
+import Logo from "@components/layouts/header/Logo";
 import UserAvatarComponent from "@components/ui/avatar/user-avatar";
-import TypographyComponent from "@components/ui/typography";
 import MenuComponent from "@components/ui/menu";
 import MenuItemComponent from "@components/ui/menu-item";
-import Logo from "@components/layouts/header/Logo";
+import TypographyComponent from "@components/ui/typography";
 import useMainClient from "@hooks/useMainClient";
 import useProfile from "@hooks/useProfile";
-import { BASE_URL } from "@utils/constants";
-import { AVATAR_URL } from "@utils/files";
 import { Pages } from "@custom-types/enums";
 import { UserEvents } from "@custom-types/events";
+import { BASE_URL } from "@utils/constants";
+import { AVATAR_URL } from "@utils/files";
 
 import "./header.scss";
 

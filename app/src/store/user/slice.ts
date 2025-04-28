@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import reducers from "@store/user/reducers";
-import { UserStateType, RootState } from "@custom-types/redux.types";
+import { RootState,UserStateType } from "@custom-types/redux.types";
 
 // Начальное состояние
 export const initialState: UserStateType = {

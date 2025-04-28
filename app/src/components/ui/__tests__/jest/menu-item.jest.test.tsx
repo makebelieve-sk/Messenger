@@ -1,4 +1,5 @@
-import { screen, render } from "@testing-library/react"
+import { render,screen } from "@testing-library/react"
+
 import MenuItemComponent from "@components/ui/menu-item"
 
 describe("Menu-item", () => {
