@@ -1,279 +1,342 @@
-import { Express, NextFunction,Request, Response } from "express";
+import type { Express, NextFunction, Request, Response } from "express";
 import fs from "fs";
 import multer from "multer";
 import path from "path";
-import { Transaction } from "sequelize";
-import { v4 as uuid } from "uuid";
+import { type Transaction } from "sequelize";
 
-import Database from "@core/Database";
-import Middleware from "@core/Middleware";
+import multerConfig from "@config/multer.config";
+import Middleware from "@core/api/Middleware";
+import Database from "@core/database/Database";
+import { type CreationAttributes } from "@core/database/models/photo";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { ImagesError } from "@errors/controllers";
 import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
-import { IRequestWithShapedImages, IRequestWithSharpedAvatar } from "@custom-types/express.types";
-import { ISafeUser } from "@custom-types/user.types";
-import { currentDate } from "@utils/datetime";
-import { ASSETS_PATH, MB_1 } from "@utils/files";
+import { ASSETS_DIR } from "@utils/constants";
+import { getPhotoInfo } from "@utils/files";
 
 const logger = Logger("ImagesController");
 
-const MULTER_MAX_FILE_SIZE = parseInt(process.env.MULTER_MAX_FILE_SIZE as string);
-const MULTER_MAX_FILEX_COUNT = parseInt(process.env.MULTER_MAX_FILEX_COUNT as string);
+interface IDeleteImage {
+	userId: string;
+	imageUrl: string;
+	isAvatar: boolean;
+	transaction: Transaction;
+};
 
 // Класс, отвечающий за API работы с изображениями (аватар/фотографии)
 export default class ImagesController {
-    // Хранение буфера данных файла в оперативной памяти - может вызвать переполнение - поэтому используется только для изображений + ограничение по размеру и кол-ву изображений
-    private readonly _uploader = multer({
-        storage: multer.memoryStorage(), // Хранилище файлов
-        limits: {
-            fileSize: MB_1 * MULTER_MAX_FILE_SIZE,  // Ограничение на размер одного файла в 10 МБ
-            files: MULTER_MAX_FILEX_COUNT           // Ограничение на количество файлов за один запрос
-        }
-    });
+	/**
+	 * Хранение буфера данных файла в оперативной памяти - это может вызвать переполнение.
+	 * Поэтому используется только для изображений + ограничение по размеру и кол-ву изображений.
+	 */
+	private readonly _uploader = multer(multerConfig);
 
-    constructor(private readonly _app: Express, private readonly _middleware: Middleware, private readonly _database: Database) {
-        this._init();
-    }
+	constructor(
+		private readonly _app: Express,
+		private readonly _middleware: Middleware,
+		private readonly _database: Database,
+	) {
+		this._init();
+	}
 
-    private _init() {
-        this._app.post(ApiRoutes.uploadAvatar, this._uploader.single("avatar"), this._middleware.sharpAvatar.bind(this._middleware), this._uploadAvatar);
-        this._app.post(ApiRoutes.saveAvatar, this._middleware.mustAuthenticated.bind(this._middleware), this._saveAvatar.bind(this));
-        this._app.post(
-            ApiRoutes.changeAvatar,
-            this._middleware.mustAuthenticated.bind(this._middleware),
-            this._uploader.single("avatar"),
-            this._middleware.sharpAvatar.bind(this._middleware),
-            this._changeAvatar.bind(this)
-        );
+	private _init() {
+		this._app.post(
+			ApiRoutes.uploadAvatar, 
+			this._uploader.single("avatar"), 
+			this._middleware.sharpAvatar.bind(this._middleware), 
+			this._uploadAvatar,
+		);
+		this._app.post(
+			ApiRoutes.changeAvatar,
+			this._middleware.mustAuthenticated.bind(this._middleware),
+			this._uploader.single("avatar"),
+			this._middleware.sharpAvatar.bind(this._middleware),
+			this._changeAvatar.bind(this),
+		);
 
-        this._app.get(ApiRoutes.getPhotos, this._middleware.mustAuthenticated.bind(this._middleware), this._getPhotos.bind(this));
-        this._app.post(
-            ApiRoutes.savePhotos,
-            this._middleware.mustAuthenticated.bind(this._middleware),
-            this._uploader.array("photo"),
-            this._middleware.sharpImages.bind(this._middleware),
-            this._savePhotos.bind(this)
-        );
-        this._app.post(ApiRoutes.deletePhoto, this._middleware.mustAuthenticated.bind(this._middleware), (req, res, next) => this._deletePhoto(req, res, next));
-    }
+		this._app.post(
+			ApiRoutes.getPhotos, 
+			this._middleware.mustAuthenticated.bind(this._middleware), 
+			this._getPhotos.bind(this),
+		);
+		this._app.post(
+			ApiRoutes.savePhotos,
+			this._middleware.mustAuthenticated.bind(this._middleware),
+			this._uploader.array("photo"),
+			this._middleware.sharpImages.bind(this._middleware),
+			this._savePhotos.bind(this),
+		);
+		this._app.post(
+			ApiRoutes.deletePhoto, 
+			this._middleware.mustAuthenticated.bind(this._middleware), 
+			(req, res, next) => this._deletePhoto(req, res, next),
+		);
+	}
 
-    // Обрезаем и сохраняем аватар пользователя на диск при регистрации
-    private _uploadAvatar(req: Request, res: Response, next: NextFunction) {
-        logger.debug("_uploadAvatar");
+	// Обрезаем и сохраняем аватар пользователя на диск при регистрации
+	private _uploadAvatar(req: Request, res: Response) {
+		logger.debug("_uploadAvatar [newAvatarUrl=%s]", req.sharpedAvatarUrl);
 
-        try {
-            res.json({ success: true, newAvatarUrl: (req as IRequestWithSharpedAvatar).sharpedAvatarUrl });
-        } catch (error) {
-            next(error);
-        }
-    };
+		const { sharpedAvatarUrl, sharpedPhotoUrl } = req;
 
-    // Сохранение аватара в таблицы Photos и Users после успешной регистрации нового пользователя
-    private async _saveAvatar(req: Request, res: Response, next: NextFunction) {
-        logger.debug("_saveAvatar [req.body=%j]", req.body);
+		res.json({ 
+			success: true,
+			newAvatar: {
+				newAvatarUrl: sharpedAvatarUrl,
+			},
+			newPhoto: {
+				newPhotoUrl: sharpedPhotoUrl,
+			},
+		});
+	}
 
-        const transaction = await this._database.sequelize.transaction();
+	// Изменение аватара на главной странице пользователя
+	private async _changeAvatar(req: Request, res: Response, next: NextFunction) {
+		const transaction = await this._database.sequelize.transaction();
 
-        try {
-            const { avatarUrl }: { avatarUrl: string; } = req.body;
-            const userId = (req.user as ISafeUser).id;
+		try {
+			const { id: userId } = req.user;
+			const { sharpedAvatarUrl, sharpedPhotoUrl } = req;
 
-            // Добавляем аватар в таблицу Users
-            await this._database.models.users.update(
-                { avatarUrl },
-                { where: { id: userId }, transaction }
-            );
+			logger.debug("_changeAvatar [userId=%s, sharpedAvatarUrl=%s, sharpedPhotoUrl=%s]", userId, sharpedAvatarUrl, sharpedPhotoUrl);
 
-            // Добавляем данный аватар в фотографии пользователя
-            await this._database.models.photos.create({
-                id: uuid(),
-                userId,
-                path: avatarUrl,
-                createDate: currentDate
-            }, { transaction });
+			if (!sharpedAvatarUrl) {
+				throw new ImagesError(t("photos.error.sharp_avatar_path_not_found"));
+			}
 
-            await transaction.commit();
+			if (!sharpedPhotoUrl) {
+				throw new ImagesError(t("photos.error.sharp_photo_path_not_found"));
+			}
 
-            res.json({ success: true });
-        } catch (error) {
-            await transaction.rollback();
-            next(error);
-        }
-    };
+			const foundUser = await this._database.repo.users.getById({
+				userId,
+				transaction,
+			});
 
-    // Изменение аватара на главной странице пользователя
-    private async _changeAvatar(req: Request, res: Response, next: NextFunction) {
-        const transaction = await this._database.sequelize.transaction();
+			if (!foundUser) {
+				throw new ImagesError(t("photos.error.user_not_found"), HTTPStatuses.NotFound);
+			}
 
-        try {
-            const userId = (req.user as ISafeUser).id;
-            const sharpedAvatarUrl = (req as IRequestWithSharpedAvatar).sharpedAvatarUrl;
-            const sharpedPhotoUrl = (req as IRequestWithSharpedAvatar).sharpedPhotoUrl;
+			// Получаем объект пользователя с аватаром и безопасными полями
+			const foundUserWithAvatar = await this._database.repo.users.getUserWithAvatar({
+				user: foundUser,
+				transaction,
+			});
 
-            logger.debug("_changeAvatar [userId=%s, sharpedAvatarUrl=%s, sharpedPhotoUrl=%s]", userId, sharpedAvatarUrl, sharpedPhotoUrl);
+			// Если у пользователя уже существует аватар, то его необходимо удалить из БД и с диска
+			if (foundUserWithAvatar.avatarUrl) {
+				await this._deleteImage({
+					userId,
+					imageUrl: foundUserWithAvatar.avatarUrl,
+					isAvatar: true,
+					transaction,
+				});
+			}
 
-            if (!sharpedAvatarUrl) {
-                await transaction.rollback();
-                return next(new ImagesError(t("photos.error.sharp_avatar_path_not_found")));
-            }
+			// Создаем в таблице Photo аватар пользователя
+			const newAvatar = await this._database.repo.photos.create({
+				userId,
+				photoPath: sharpedAvatarUrl,
+				transaction,
+			});
 
-            if (!sharpedPhotoUrl) {
-                await transaction.rollback();
-                return next(new ImagesError(t("photos.error.sharp_photo_path_not_found")));
-            }
+			// Обновляем только что созданный аватар у пользователя
+			foundUser.avatarId = newAvatar.id;
+			await foundUser.save({ transaction });
 
-            const findUser = await this._database.models.users.findByPk(userId, {
-                attributes: ["id", "avatarUrl"],
-                transaction
-            });
+			// Добавляем только что созданный аватар как новую отдельную фотографию в профиль пользователя
+			const newPhoto = await this._database.repo.photos.create({
+				userId,
+				photoPath: sharpedPhotoUrl,
+				transaction,
+			});
 
-            if (!findUser) {
-                await transaction.rollback();
-                return next(new ImagesError(t("photos.error.user_not_found"), HTTPStatuses.NotFound));
-            }
+			// Добавляем только что созданную фотографию в связную таблицу User_Photos для связи фотографии и профиля пользователя
+			await this._database.repo.userPhotos.create({
+				creationAttributes: {
+					userId,
+					photoId: newPhoto.id,
+				},
+				transaction,
+			});
 
-            // Если у пользователя уже существует аватар, то его необходимо удалить из БД и с диска 
-            if (findUser.avatarUrl) {
-                req.body = {
-                    imageUrl: findUser.avatarUrl
-                }
+			await transaction.commit();
 
-                await this._deletePhoto(req, res, next, transaction);
-            }
+			res.status(HTTPStatuses.Created).json({
+				success: true,
+				newAvatar: {
+					newAvatarUrl: sharpedAvatarUrl,
+					avatarCreationDate: newAvatar.createdAt,
+				},
+				newPhoto: {
+					id: newPhoto.id,
+					newPhotoUrl: sharpedPhotoUrl,
+					photoCreationDate: newPhoto.createdAt,
+				},
+			});
+		} catch (error) {
+			await transaction.rollback();
+			next(error);
+		}
+	}
 
-            // Обновляем аватар в таблице Users
-            await this._database.models.users.update(
-                { avatarUrl: sharpedAvatarUrl },
-                { where: { id: userId }, transaction }
-            );
+	/**
+	 * Получение всех фотографий пользователя, добавленных в его профиль.
+	 * Получить фотографии мы можем у разных пользователей, в зависимости от выбранного профиля.
+	 */
+	private async _getPhotos(req: Request, res: Response, next: NextFunction) {
+		const transaction = await this._database.sequelize.transaction();
 
-            const newPhotoId = uuid();
+		try {
+			const { userId, limit, offset }: { userId: string; limit: number; offset: number; } = req.body;
 
-            // Добавляем данный аватар в фотографии пользователя
-            await this._database.models.photos.create({
-                id: newPhotoId,
-                userId,
-                path: sharpedPhotoUrl,
-                createDate: currentDate
-            }, { transaction });
+			logger.debug("_getPhotos [userId=%s]", userId);
 
-            await transaction.commit();
+			const result = await this._database.repo.photos.getUserPhotos({
+				filters: { userId },
+				options: { limit, offset },
+				transaction,
+			});
 
-            res.json({ success: true, id: newPhotoId, newAvatarUrl: sharpedAvatarUrl, newPhotoUrl: sharpedPhotoUrl });
-        } catch (error) {
-            await transaction.rollback();
-            next(error);
-        }
-    };
+			await transaction.commit();
 
-    // Получение всех фотографий пользователя
-    private async _getPhotos(req: Request, res: Response, next: NextFunction) {
-        try {
-            const userId = (req.user as ISafeUser).id;
-            logger.debug("_getPhotos [userId=%s]", userId);
+			res.json({ success: true, ...result });
+		} catch (error) {
+			await transaction.rollback();
+			next(error);
+		}
+	}
 
-            const photos = await this._database.models.photos.findAll({
-                where: { userId },
-                include: [{
-                    model: this._database.models.users,
-                    as: "User",
-                    attributes: ["id", "firstName", "thirdName", "avatarUrl"]
-                }]
-            });
+	// Сохраняем фотографии в профиль пользователя (фотографии в профиль пользователя может сохранять только сам этот пользователь)
+	private async _savePhotos(req: Request, res: Response, next: NextFunction) {
+		const transaction = await this._database.sequelize.transaction();
 
-            res.json({ success: true, photos });
-        } catch (error) {
-            next(error);
-        }
-    };
+		try {
+			const { sharpedImageUrls: imagesUrls } = req;
+			const { id: userId } = req.user;
 
-    // Сохраняем фотографии в таблицу Photos
-    private async _savePhotos(req: Request, res: Response, next: NextFunction) {
-        try {
-            const imagesUrls = (req as IRequestWithShapedImages).sharpedImageUrls;
-            const { id: userId, firstName, thirdName, avatarUrl } = req.user as ISafeUser;
+			logger.debug("_savePhotos [imagesUrls=%j]", imagesUrls);
 
-            logger.debug("_savePhotos [imagesUrls=%j]", imagesUrls);
+			if (!imagesUrls || !imagesUrls.length) {
+				throw new ImagesError(t("photos.error.sharp_photo_paths_not_found"));
+			}
 
-            if (!imagesUrls || !imagesUrls.length) {
-                return next(new ImagesError(t("photos.error.sharp_photo_paths_not_found")));
-            }
+			// Подготавливаем фотографии для bulkCreate
+			const photosCreation: Promise<CreationAttributes>[] = imagesUrls.map(async imageUrl => {
+				const photoCreation = await getPhotoInfo(imageUrl);
 
-            const photos: { id: string; userId: string; path: string; }[] = imagesUrls.map(imageUrl => ({
-                id: uuid(),
-                userId,
-                path: imageUrl,
-                createDate: currentDate
-            }));
+				return {
+					...photoCreation,
+					userId,
+				};
+			});
 
-            await this._database.models.photos.bulkCreate(photos);
+			const photos = await Promise.all(photosCreation);
 
-            res.json({
-                success: true,
-                photos: photos.map(photo => ({
-                    ...photo,
-                    User: {
-                        id: userId,
-                        firstName,
-                        thirdName,
-                        avatarUrl
-                    }
-                }))
-            });
-        } catch (error) {
-            next(error);
-        }
-    };
+			// Сохраняем фотографии в таблицу Photos
+			const createdPhotos = await this._database.repo.photos.bulkCreate({
+				photos,
+				transaction,
+			});
 
-    // Удаление аватара/фотографии из БД и с диска
-    private async _deletePhoto(req: Request, res: Response, next: NextFunction, existsTransaction?: Transaction) {
-        logger.debug("_deletePhoto [req.body=%j]", req.body);
+			const userPhotos = createdPhotos.map(photo => ({
+				userId,
+				photoId: photo.id,
+			}));
 
-        const transaction = existsTransaction || await this._database.sequelize.transaction();
+			// Сохраняем записи только что добавленных фотографий конкретному пользователю
+			await this._database.repo.userPhotos.bulkCreate({
+				records: userPhotos,
+				transaction,
+			});
 
-        try {
-            const { imageUrl, isAvatar = true }: { imageUrl: string; isAvatar: boolean; } = req.body;
+			await transaction.commit();
 
-            const filePath = path.join(__dirname, "../../", ASSETS_PATH, imageUrl);
+			res.status(HTTPStatuses.Created).json({ 
+				success: true, 
+				photos: createdPhotos.map(photo => photo.getEntity()), 
+			});
+		} catch (error) {
+			await transaction.rollback();
+			next(error);
+		}
+	}
 
-            const userId = (req.user as ISafeUser).id;
+	// Удаление аватара/фотографии из БД и с диска
+	private async _deletePhoto(req: Request, res: Response, next: NextFunction) {
+		const transaction = await this._database.sequelize.transaction();
 
-            if (!imageUrl) {
-                await transaction.rollback();
-                return next(new ImagesError(t("photos.error.delete_photo_path_not_found")));
-            }
+		try {
+			const { imageUrl, isAvatar = true }: { imageUrl: string; isAvatar: boolean; } = req.body;
+			const { id: userId } = req.user;
 
-            if (!fs.existsSync(filePath)) {
-                await transaction.rollback();
-                return next(new ImagesError(t("photos.error.photo_not_found"), HTTPStatuses.NotFound));
-            }
+			logger.debug("_deletePhoto [imageUrl=%s, isAvatar=%s]", imageUrl, isAvatar);
 
-            // Если это аватар, то удаляем из таблицы Users
-            if (isAvatar) {
-                await this._database.models.users.update(
-                    { avatarUrl: "" },
-                    { where: { id: userId }, transaction }
-                );
-            } else {
-                // Удаляем фотографии из таблицы Photos
-                await this._database.models.photos.destroy({
-                    where: { userId, path: imageUrl },
-                    transaction
-                });
-            }
+			if (!imageUrl) {
+				throw new ImagesError(t("photos.error.delete_photo_path_not_found"), HTTPStatuses.NotFound);
+			}
 
-            // Удаление файла с диска
-            fs.unlinkSync(filePath);
+			await this._deleteImage({ userId, imageUrl, isAvatar, transaction });
 
-            if (!existsTransaction) {
-                await transaction.commit();
-                res.json({ success: true });
-            }
-        } catch (error) {
-            await transaction.rollback();
-            // return нужен для того, чтобы код далее не вызвался
-            return next(error);
-        }
-    };
+			await transaction.commit();
+
+			/**
+			 * Обязательно добавляем end для того, чтобы запрос был закрыт и до конца обработан.
+			 * Так как в этом случае мы не возвращаем никакие данные и просто установка статуса NoContent
+			 * лишь позволит запросу зависнуть в необработанном состоянии
+			 */
+			res.status(HTTPStatuses.NoContent).end();
+		} catch (error) {
+			await transaction.rollback();
+			next(error);
+		}
+	}
+
+	// Общая функция удаления фотографии/аватара из БД и из диска
+	private async _deleteImage({ userId, imageUrl, isAvatar, transaction }: IDeleteImage) {
+		logger.debug("_deleteImage [userId=%s, imageUrl=%s, isAvatar=%s]", userId, imageUrl, isAvatar);
+
+		try {
+			const filePath = path.join(__dirname, "../../../", ASSETS_DIR, imageUrl);
+
+			if (!fs.existsSync(filePath)) {
+				throw new ImagesError(t("photos.error.photo_not_found"), HTTPStatuses.NotFound);
+			}
+
+			if (isAvatar) {
+				const user = await this._database.repo.users.getById({
+					userId,
+					transaction,
+				});
+
+				if (!user) {
+					throw new ImagesError(t("photos.error.user_not_found"), HTTPStatuses.NotFound);
+				}
+
+				// Удаляем аватар из таблицы Photos
+				await this._database.repo.photos.destroy({
+					filters: { userId: user.id, path: imageUrl },
+					transaction,
+				});
+			} else {
+				// Удаляем фотографию или предыдущий аватар из таблицы Photos
+				const photoId = await this._database.repo.photos.returnDestroyedRow({
+					filters: { userId, path: imageUrl },
+					transaction,
+				});
+
+				// Удаляем запись из связной таблицы User_Photos
+				await this._database.repo.userPhotos.destroy({
+					filters: { userId, photoId },
+					transaction,
+				});
+			}
+
+			// Удаление файла с диска
+			fs.unlinkSync(filePath);
+		} catch (error) {
+			throw error;
+		}
+	}
 }

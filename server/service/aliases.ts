@@ -1,16 +1,18 @@
 import moduleAlias from "module-alias";
-import path from "path";
+import { join, resolve } from "path";
 
 // Устанавливаем алиасы в зависимости от окружения
 if (process.env.NODE_ENV === "production") {
-    moduleAlias.addAliases({
-        "@core": path.resolve(__dirname, "../core"),
-        "@database": path.resolve(__dirname, "../database"),
-        "@errors": path.resolve(__dirname, "../errors"),
-        "@locales": path.resolve(__dirname, "../locales"),
-        "@migrations": path.resolve(__dirname, "../migrations"),
-        "@service": path.resolve(__dirname, "../service"),
-        "@custom-types": path.resolve(__dirname, "../types"),
-        "@utils": path.resolve(__dirname, "../utils")
-    });
+	const ROOT_DIR = resolve(__dirname, "..");
+
+	moduleAlias.addAliases({
+		"@config": join(ROOT_DIR, "config"),
+		"@core": join(ROOT_DIR, "core"),
+		"@errors": join(ROOT_DIR, "errors"),
+		"@locales": join(ROOT_DIR, "locales"),
+		"@migrations": join(ROOT_DIR, "migrations"),
+		"@service": join(ROOT_DIR, "service"),
+		"@custom-types": join(ROOT_DIR, "types"),
+		"@utils": join(ROOT_DIR, "utils"),
+	});
 }

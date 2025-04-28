@@ -1,14 +1,14 @@
 import ts from "@typescript-eslint/eslint-plugin";
 import parser from "@typescript-eslint/parser";
-// import path from "path";
+import path from "path";
 import importPlugin from "eslint-plugin-import";
 import simpleImportSortPlugin from "eslint-plugin-simple-import-sort";
 import storybookPlugin from "eslint-plugin-storybook";
 
-// const eslintConfig = require(path.resolve(__dirname, "../eslint.config.ts")).default;
+const eslintConfig = require(path.resolve(__dirname, "../.eslint.config.ts")).default;
 
 export default [
-	// eslintConfig, // Абсолютный путь к общему конфигу
+	eslintConfig, // Абсолютный путь к общему конфигу
 	// Общая конфигурация для файлов Storybook
 	{
 		files: ["**/*.stories.@(js|jsx|ts|tsx)"],

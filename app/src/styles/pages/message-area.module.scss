@@ -1,63 +1,60 @@
-@use "@styles/abstract/variables.scss" as *;
-@use "@styles/abstract/colors.scss" as *;
-
 .message-area-container {
-    grid-column-start: 1;
-    grid-row-start: 1;
-    overflow: hidden;
-    margin-bottom: 10px;
-    min-height: calc(100vh - $calcHeight);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: $white;
-    border-radius: 5px;
-    position: relative;
+	grid-column-start: 1;
+	grid-row-start: 1;
+	overflow: hidden;
+	margin-bottom: 10px;
+	min-height: calc(100vh - $messages-container-height);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: $white;
+	border-radius: 5px;
+	position: relative;
 
-    &__messages {
-        width: 100%;
-        flex: 1 1 auto;
-        position: relative;
-        margin-bottom: 25px;
+	&__messages {
+		width: 100%;
+		flex: 1 1 auto;
+		position: relative;
+		margin-bottom: 25px;
 
-        &__scrollable {
-            overflow-y: overlay;
-            display: block;
-            height: auto;
-            max-height: 100%;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            top: 0;
+		&__scrollable {
+			overflow-y: overlay;
+			display: block;
+			height: auto;
+			max-height: 100%;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			top: 0;
 
-            &__spinner {
-                margin: auto;
-            }
+			&__spinner {
+				margin: auto;
+			}
 
-            &__messages-wrapper {
-                padding-top: 10px;
-                padding-left: 10px;
-                padding-right: 10px;
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-end;
-                min-height: 100%;
+			&__messages-wrapper {
+				padding-top: 10px;
+				padding-left: 10px;
+				padding-right: 10px;
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+				min-height: 100%;
 
-                &__is-more {
-                    margin: auto;
-                }
-            }
+				&__is-more {
+					margin: auto;
+				}
+			}
 
-            &__no-history {
-                font-size: 14px;
-                opacity: 0.7;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
-        }
-    }
+			&__no-history {
+				font-size: 14px;
+				opacity: 0.7;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+		}
+	}
 }

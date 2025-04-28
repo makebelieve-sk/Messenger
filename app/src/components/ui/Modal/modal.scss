@@ -1,6 +1,3 @@
-@use "@styles/abstract/colors.scss" as colors;
-@use "@styles/abstract/variables.scss" as vars;
-
 .modal-open {
   overflow: hidden;
 }
@@ -9,9 +6,9 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: vars.$modal-overlay-width;
-    height: vars.$modal-overlay-height;
-    background: colors.$modal-overlay-background;
+    width: $modal-overlay-width;
+    height: $modal-overlay-height;
+    background: $modal-overlay-bg;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,13 +16,14 @@
   }
   
   .modal-content {
-    background: white;
+    background: $modal-content-bg;
     padding: 20px;
     border-radius: 8px;
     max-width: 90%;
-    box-shadow: vars.$modal-content-box-shadow colors.$modal-content-box-shadow;
-    width: vars.$modal-content-width;
-    height: vars.$modal-content-height;
+    margin: $modal-content-margin;
+    box-shadow: $modal-content-box-shadow;
+    width: $modal-content-width;
+    height: $modal-content-height;
     display: flex;
     flex-direction: column;
     align-items: center;

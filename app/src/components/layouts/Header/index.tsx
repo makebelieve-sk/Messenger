@@ -1,110 +1,91 @@
-import { MouseEvent,useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { type MouseEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Logo from "@components/layouts/header/Logo";
-import UserAvatarComponent from "@components/ui/avatar/user-avatar";
+import MainLogoIconComponent from "@components/icons/main-logo";
+import UserAvatarComponent from "@components/services/avatars/user-avatar";
 import MenuComponent from "@components/ui/menu";
 import MenuItemComponent from "@components/ui/menu-item";
 import TypographyComponent from "@components/ui/typography";
 import useMainClient from "@hooks/useMainClient";
-import useProfile from "@hooks/useProfile";
+import i18n from "@service/i18n";
+import useUserStore from "@store/user";
 import { Pages } from "@custom-types/enums";
-import { UserEvents } from "@custom-types/events";
 import { BASE_URL } from "@utils/constants";
-import { AVATAR_URL } from "@utils/files";
 
 import "./header.scss";
 
 const anchorOrigin = { vertical: "top", horizontal: "left" } as const;
+const WHEEL_CLICK_TYPE = 1;
 
 // Компонент верхушки приложения. Отрисовывается на каждой странице
 export default function HeaderComponent() {
-    const mainClient = useMainClient();
-    const profile = useProfile();
-    const navigate = useNavigate();
-    const { t } = useTranslation();
+	const mainClient = useMainClient();
+	const navigate = useNavigate();
 
-    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-    const [avatarUrl, setAvatarUrl] = useState<string>(profile.user.avatarUrl);
+	const [ anchorElUser, setAnchorElUser ] = useState<null | HTMLElement>(null);
 
-    useEffect(() => {
-        // После обновления поля пользователя необходимо добавить проверку на обновление аватара и обновлять его в состоянии
-        profile.on(UserEvents.CHANGE_FIELD, onChangeField);
+	const userId = useUserStore(state => state.user.id);
+	const userAvatarUrl = useUserStore(state => state.user.avatarUrl);
+	const userFullname = useUserStore(state => state.user.fullName);
 
-        // Отписываемся от данного события при размонтировании, чтобы избежать утечки памяти
-        return () => {
-            profile.off(UserEvents.CHANGE_FIELD, onChangeField);
-        }
-    }, []);
+	// Переход на страницу
+	const goTo = (link: Pages) => {
+		if (anchorElUser) setAnchorElUser(null);
+		navigate(link);
+	};
 
-    // Коллбек события UserEvents.CHANGE_FIELD
-    const onChangeField = (field: string) => {
-        if (field === AVATAR_URL) {
-            setAvatarUrl(profile.user.avatarUrl);
-        }
-    }
+	// Клик по лого колесиком мыши
+	const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
+		if (event.button === WHEEL_CLICK_TYPE) {
+			window.open(BASE_URL);
+		}
+	};
 
-    // Переход на страницу
-    const goTo = (link: Pages) => {
-        if (anchorElUser) setAnchorElUser(null);
-        navigate(link);
-    };
+	// Выход
+	const logout = () => {
+		setAnchorElUser(null);
+		mainClient.mainApi.logout();
+	};
 
-    // Клик по лого колесиком мыши
-    const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
-        if (event.button === 1) {
-            window.open(BASE_URL);
-        }
-    }
+	return <header className="header">
+		<div className="header-container">
+			<div className="header-container__toolbar">
+				<div className="header-container__toolbar__logo" onClick={() => goTo(Pages.profile)} onMouseDown={onMouseDown}>
+					<MainLogoIconComponent />
+				</div>
 
-    // Выход
-    const logout = () => {
-        setAnchorElUser(null);
-        mainClient.mainApi.logout();
-    };
+				<div className="header-container__toolbar__avatar">
+					<div onClick={event => setAnchorElUser(event.currentTarget)}>
+						<UserAvatarComponent userId={userId} src={userAvatarUrl} alt={userFullname} />
+					</div>
 
-    return <header className="header">
-        <div className="header-container">
-            <div className="header-container__toolbar">
-                <div className="header-container__toolbar__logo" onClick={() => goTo(Pages.profile)} onMouseDown={onMouseDown} data-testid="menu-profile">
-                    <Logo />
-                </div>
+					<MenuComponent
+						anchorEl={anchorElUser}
+						anchorOrigin={anchorOrigin}
+						open={Boolean(anchorElUser)}
+						autoFocus={false}
+						onClose={() => setAnchorElUser(null)}
+					>
+						<MenuItemComponent onClick={() => goTo(Pages.settings)}>
+							<TypographyComponent variant="body2">
+								{i18n.t("header.settings")}
+							</TypographyComponent>
+						</MenuItemComponent>
 
-                <div className="header-container__toolbar__avatar">
-                    <div onClick={event => setAnchorElUser(event.currentTarget)}>
-                        <UserAvatarComponent  data-testid="avatar-img" src={avatarUrl} alt={profile.user.fullName} />
-                    </div>
+						<MenuItemComponent onClick={() => goTo(Pages.help)}>
+							<TypographyComponent variant="body2">
+								{i18n.t("header.help")}
+							</TypographyComponent>
+						</MenuItemComponent>
 
-                    <MenuComponent
-                        id="menu-header"
-                        data-testid="menu-header"
-                        anchorEl={anchorElUser}
-                        anchorOrigin={anchorOrigin}
-                        open={Boolean(anchorElUser)}
-                        autoFocus={false}
-                        onClose={() => setAnchorElUser(null)}
-                    >
-                        <MenuItemComponent onClick={() => goTo(Pages.settings)} data-testid="menu-settings">
-                            <TypographyComponent variant="body2">
-                                {t("header.settings")}
-                            </TypographyComponent>
-                        </MenuItemComponent>
-
-                        <MenuItemComponent onClick={() => goTo(Pages.help)} data-testid="menu-help">
-                            <TypographyComponent variant="body2">
-                                {t("header.help")}
-                            </TypographyComponent>
-                        </MenuItemComponent>
-
-                        <MenuItemComponent onClick={logout} data-testid="menu-logout">
-                            <TypographyComponent variant="body2">
-                                {t("header.logout")}
-                            </TypographyComponent>
-                        </MenuItemComponent>
-                    </MenuComponent>
-                </div>
-            </div>
-        </div>
-    </header>
+						<MenuItemComponent onClick={logout}>
+							<TypographyComponent variant="body2">
+								{i18n.t("header.logout")}
+							</TypographyComponent>
+						</MenuItemComponent>
+					</MenuComponent>
+				</div>
+			</div>
+		</div>
+	</header>;
 };

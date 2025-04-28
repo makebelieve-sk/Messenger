@@ -7,6 +7,8 @@
 	"sign-in.forgot_password": "Forgot your password?",
 	"sign-in.register": "No account? Register!",
 
+	"sign-in.error.incorrect_login_or_password": "The username or password is incorrect.",
+
 	"sign-up.sign_up": "Sign Up",
 	"sign-up.enter": "Do you already have an account? Sign in",
 	"sign-up.back": "Back",
@@ -15,7 +17,7 @@
 	"sign-up.main_step": "Main data",
 	"sign-up.choose_avatar_step": "Choose avatar",
 
-	"sign-up.error.step_unknowed": "An error occurred when generating the content for the step {{step}}",
+	"sign-up.error.step_unknowed": "An error occurred when generating the content for the step {{step}}.",
 
 	"images-carousel-module.you": "You",
 	"images-carousel-module.further": "Further",
@@ -24,7 +26,8 @@
 	"profile-module.friends": "Friends",
 	"profile-module.friends_online": "Online friends",
 	"profile-module.online": " online",
-	"profile-module.no_data": "The{{isOnline}} friends list is empty at the moment.",
+	"profile-module.no_data": "The online friends list is empty at the moment.",
+	"profile-module.no_friends": "The friends list is empty at the moment.",
 	"profile-module.change": "Change",
 	"profile-module.edit": "Edit",
 	"profile-module.birthday": "Birthday",
@@ -67,14 +70,18 @@
 	"sign-up-module.password": "Password",
 	"sign-up-module.repeat_password": "Repeat the password",
 
+	"core.profiles-controller.error.profile_exists": "Profile with id: {{id}} already exists.",
 	"core.profiles-controller.error.profile_not_exists": "Profile with id: {{id}} not exists.",
+	"core.profiles-controller.error.my_profile_not_exists": "My profile not exists.",
 
 	"core.socket.error.user_not_exists_on_server": "The user does not exist.",
 	"core.socket.error.user_not_exists": "User not exists.",
-	"core.socket.error.connect_error": "The socket connection error [isSocketActive={{isSocketActive}}]: {{message}}",
+	"core.socket.error.connect_error": "The socket connection error [isSocketActive={{isSocketActive}}]: {{message}}.",
 	"core.socket.error.reconnect_failed": "Couldn't reconnect to the server.",
-	"core.socket.error.emit": "Error when processing an event on the server [type: {{type}}]: {{message}}",
-	"core.socket.error.emit_event_on_the_server": "[{{timestamp}}] | An error occurred on the server when processing this event: {{message}}",
+	"core.socket.error.emit": "Error when processing an event on the server [type: {{type}}]: {{message}}.",
+	"core.socket.error.emit_event_on_the_server": "[{{timestamp}}] | An error occurred on the server when processing this event: {{message}}.",
+
+	"core.request.unknown_status": "Unknown request status: {{status}}.",
 
 	"core.catch-errors.error": "Error.",
 	"core.catch-errors.error.network": "Error when receiving a response from the server. The server is most likely unavailable at the moment. Check your internet connection.",
@@ -83,8 +90,8 @@
 	"core.catch-errors.error.canceled": "The request has been cancelled.",
 	"core.catch-errors.error.unknown": "Unknown error.",
 
-	"core.socket.connection_established": "The socket connection to the server is established [socket.id={{socketId}}]",
-	"core.socket.connection_successfully_recovered": "The socket connection to the server has been successfully recovered [socket.id={{socketId}}]",
+	"core.socket.connection_established": "The socket connection to the server is established [socket.id={{socketId}}].",
+	"core.socket.connection_successfully_recovered": "The socket connection to the server has been successfully recovered [socket.id={{socketId}}].",
 	"core.socket.online_users": "Online users: ",
 	"core.socket.new_user_connected": "New user connected: ",
 	"core.socket.user_disconnected": "User disconnected: ",
@@ -100,28 +107,28 @@
 	"menu.friends": "Friends",
 	"menu.to-developers": "To developers",
 
-    "modals.photos": "Photos",
-    "modals.files": "Files",
-    "modals.images_not_yet": "There are no photos yet.",
-    "modals.files_not_yet": "There are no files yet.",
-    "modals.cancel": "Cancel",
-    "modals.copy_successfull": "The text has been successfully copied to the clipboard!",
-    "modals.copy_the_message_and_send_to_email": "Please copy the error text and email it to the developers: {{email}}",
-    "modals.download": "Download the log file",
-    "modals.reset_page": "Reset page",
+	"modals.photos": "Photos",
+	"modals.files": "Files",
+	"modals.images_not_yet": "There are no photos yet.",
+	"modals.files_not_yet": "There are no files yet.",
+	"modals.cancel": "Cancel",
+	"modals.copy_successfull": "The text has been successfully copied to the clipboard!",
+	"modals.copy_the_message_and_send_to_email": "Please copy the error text and email it to the developers: {{email}}.",
+	"modals.download": "Download the log file",
+	"modals.reset_page": "Reset page",
 
 	"modals.error.copy": "Error when copying text to clipboard: ",
 	"modals.error.server": "Oops! An error occurred in the server operation.",
 
 	"ui.copyright": "Copyright ©",
-	"ui.product_name": "VK-CLON",
-
+	"ui.product_name": " VK-CLON ",
 	"ui.sure_delete_photo": "Do you really want to delete this photo?",
 	"ui.delete": "Delete",
 
-	"redux.error.unknowed_type_if_unread_messages": "Unknown type of unread messages: {{type}}",
+	"redux.error.unknowed_type_if_unread_messages": "Unknown type of unread messages: {{type}}.",
 
 	"utils.required_field": "Required field",
+	"utils.not_correct_format": "Incorrect format",
 	"utils.byte": "byte",
 
 	"utils.months.jan": "jan",
@@ -149,19 +156,18 @@
 
 	"utils.yesterday": "yesterday ",
 
-	"edit.error.no_user": "No user",
-	"edit.error.change_user_info": "Error changing user info:",
 	"edit.main": "Main",
 	"edit.contacts": "Contacts",
-	"edit.save": "Changes saved",
-	"edit.show_data": "new data will be shown on your page",
+	"edit.changes_save": "Changes saved",
+	"edit.show_data": "new data will be shown on your page.",
+	"edit.save": "Save",
 
 	"edit_tabs.name": "Name",
 	"edit_tabs.surname": "Surname",
 	"edit_tabs.sex": "Sex",
-	"edit_tabs.sex_not_specified": "Not specified",
-	"edit_tabs.sex_male": "Male",
-	"edit_tabs.sex_female": "Female",
+	"edit_tabs.select_sex.label_not_specified": "Not specified",
+	"edit_tabs.select_sex.label_male": "Male",
+	"edit_tabs.select_sex.label_female": "Female",
 	"edit_tabs.work": "Work",
 	"edit_tabs.birthday": "Birthday",
 	"edit_tabs.birthday_date": "Enter date",

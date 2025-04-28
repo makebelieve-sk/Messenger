@@ -1,17 +1,17 @@
 import importPlugin from "eslint-plugin-import";
 import simpleImportSortPlugin from "eslint-plugin-simple-import-sort";
-// import path from "path";
+import path from "path";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 
-// const eslintConfig = require(path.resolve(__dirname, "../.eslint.config.ts")).default;
+const eslintConfig = require(path.resolve(__dirname, "../.eslint.config.ts")).default;
 
 export default [
 	{
 		// Глобальные игноры (должны быть в первом конфиге)
 		ignores: [ "**/dist/**", "**/node_modules/**", "**/dumps/**" ],
 	},
-	// eslintConfig, // Абсолютный путь к общему конфигу
+	eslintConfig, // Абсолютный путь к общему конфигу
 	{
 		files: [ "**/*.ts" ], // Указываем, что проверяются только файлы TypeScript
 		languageOptions: {

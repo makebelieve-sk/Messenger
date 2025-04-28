@@ -1,72 +1,69 @@
-@use "@styles/abstract/colors.scss" as *;
-@use "@styles/abstract/variables.scss" as *;
-
 .messages-container {
-    width: 100%;
-    min-height: calc(100vh - $calcHeight);
-    overflow: hidden;
-    position: relative;
+	width: 100%;
+	min-height: calc(100vh - $messages-container-height);
+	overflow: hidden;
+	position: relative;
 
-    &__header {
-        padding: 5px;
-        border-bottom: 1px solid $light-grey;
-    }
+	&__header {
+		padding: 5px;
+		border-bottom: 1px solid $messages-border;
+	}
 
-    &__skeleton-container {
-        div {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            width: 100%;
+	&__skeleton-container {
+		div {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			width: 100%;
 
-            span {
-                &:first-child {
-                    width: 60px;
-                    height: 50px;
-                    margin-right: 10px;
-                }
+			span {
+				&:first-child {
+					width: 60px;
+					height: 50px;
+					margin-right: 10px;
+				}
 
-                &:last-child {
-                    width: 100%;
-                    margin-right: 10px;
-                    height: 38px;
+				&:last-child {
+					width: 100%;
+					margin-right: 10px;
+					height: 38px;
 
-                    &:last-child {
-                        margin-right: 0;
-                    }
-                }
-            }
-        }
-    }
+					&:last-child {
+						margin-right: 0;
+					}
+				}
+			}
+		}
+	}
 
-    .skeleton-container {
-        width: 100%;
-        margin-top: 20px;
+	.skeleton-container {
+		width: 100%;
+		margin-top: 20px;
 
-        &__row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-    }
+		&__row {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		}
+	}
 
-    &__list {
-        padding-left: 20px;
-        padding-right: 20px;
-        max-height: calc(100vh - $calcHeightDialogs);
-        overflow-y: auto;
+	&__list {
+		padding-left: 20px;
+		padding-right: 20px;
+		max-height: calc(100vh - $messages-container-list);
+		overflow-y: auto;
 
-        &__is-more {
-            margin: 0 auto;
-        }
-    }
+		&__is-more {
+			margin: 0 auto;
+		}
+	}
 
-    &__no-dialogs {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding-top: 20px;
-    }
+	&__no-dialogs {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		padding-top: 20px;
+	}
 }

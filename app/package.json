@@ -20,6 +20,9 @@
     "test:vitest:watch": "vitest",
     "coverage:jest": "jest --coverage",
     "coverage:vitest": "vitest run --coverage",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -30,21 +33,19 @@
     "@mui/lab": "^6.0.0-beta.22",
     "@mui/material": "^6.3.1",
     "@mui/x-date-pickers": "^7.24.0",
-    "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.7.9",
     "browserslist-to-esbuild": "^2.1.1",
     "dayjs": "^1.11.13",
-    "eventemitter3": "^5.0.1",
     "i18next": "^24.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^15.4.0",
     "react-phone-input-2": "^2.15.1",
-    "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.1",
     "socket.io-client": "^4.8.1",
     "uuid": "^11.0.5",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
@@ -88,10 +89,5 @@
     "vite": "^6.0.7",
     "vite-plugin-eslint": "^1.8.1",
     "vitest": "^3.1.1"
-  },
-  "eslintConfig": {
-    "extends": [
-      "plugin:storybook/recommended"
-    ]
   }
 }

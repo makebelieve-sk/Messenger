@@ -10,7 +10,7 @@
     width: 100%;
 }
 
-.select>.select__label {
+.select > .select__label {
     position: absolute;
     -webkit-transform: translate(14px, -9px) scale(0.75);
     -moz-transform: translate(14px, -9px) scale(0.75);
@@ -21,6 +21,6 @@
     z-index: 1;
 }
 
-.select:has(.Mui-focused)>.select__label {
+.select:has(.Mui-focused) > .select__label {
     color: $selected-select-label;
 }

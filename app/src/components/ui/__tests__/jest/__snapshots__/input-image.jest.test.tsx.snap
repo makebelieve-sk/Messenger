@@ -2,28 +2,32 @@
 
 exports[`InputImage matches snapshot 1`] = `
 <DocumentFragment>
-  <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-image css-wyro15-MuiButtonBase-root-MuiButton-root"
-    id=":r1:"
-    tabindex="0"
-    type="button"
+  <label
+    class="input-label"
+    for="test"
   >
-    <label
-      class="input-image__label"
-      for="test"
+    <input
+      accept="image/*"
+      hidden=""
+      id="test"
+      type="file"
+    />
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
+      id=":r1:"
+      tabindex="0"
+      type="button"
     >
+      <span
+        class="MuiButton-loadingWrapper"
+        style="display: contents;"
+      />
       <p
-        class="MuiTypography-root MuiTypography-caption input-image__label__text css-mpaqru-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-caption input-label__button__text css-mpaqru-MuiTypography-root"
       >
         test
       </p>
-      <input
-        accept="image/*"
-        hidden=""
-        id="test"
-        type="file"
-      />
-    </label>
-  </button>
+    </button>
+  </label>
 </DocumentFragment>
 `;

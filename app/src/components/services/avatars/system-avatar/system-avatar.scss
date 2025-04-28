@@ -1,0 +1,17 @@
+#system-avatar.system-avatar {
+    margin-left: auto;
+    margin-right: auto;
+    transform: none;
+    width: 46px;
+    height: 46px;
+    margin: $sign-margin-x-small;
+    background-color: $system-avatar-color;
+
+    @media (max-height: 700px) {
+        margin: 0;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}

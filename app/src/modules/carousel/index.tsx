@@ -1,55 +1,38 @@
-import { memo,useState } from "react";
+import { memo } from "react";
 import MobileStepper from "@mui/material/MobileStepper";
 
-import { ICarouselData } from "@components/services/modals/carousel";
 import PhotoComponent from "@components/ui/photo";
 import CarouselButton from "@modules/carousel/button";
+import useImagesCarouselStore from "@store/images-carousel";
 
 import "./carousel.scss";
 
 export interface ICarouselImage {
-    src: string;
-    authorName: string;
-    dateTime: string;
-    authorAvatarUrl: string;
-    alt: string;
+	src: string;
+	authorName: string;
+	dateTime: string;
+	authorAvatarUrl: string;
+	alt: string;
 };
 
 // Точка входа в модуль "Карусель картинок"
-export default memo(({ data }: { data: ICarouselData; }) => {
-    const [activeKey, setActiveKey] = useState(data.index);
+export default memo(({ images }: { images: ICarouselImage[]; }) => {
+	const activeKey = useImagesCarouselStore(state => state.index);
 
-    const images = data.images;
+	return <div className="carousel">
+		<div className="carousel__photo">
+			<PhotoComponent src={images[activeKey].src} alt={images[activeKey].alt} showVisibleIcon={false} />
 
-    // Обработка кнопкок "Назад"/"Вперед"
-    const onHandleClick = (dir: number) => {
-        setActiveKey(prevActiveStep => prevActiveStep + dir);
-    };
-
-    return <div className="carousel">
-        {images && images.length
-            ? <>
-                <div className="carousel__photo">
-                    <PhotoComponent
-                        src={images[activeKey].src}
-                        alt={images[activeKey].alt}
-                        showVisibleIcon={false}
-                    />
-
-                    {images.length > 1
-                        ? <MobileStepper
-                            className="carousel__photo__stepper"
-                            position="static"
-                            steps={images.length}
-                            activeStep={activeKey}
-                            nextButton={<CarouselButton next isDisabled={activeKey === images.length - 1} handleClick={onHandleClick} />}
-                            backButton={<CarouselButton isDisabled={activeKey === 0} handleClick={onHandleClick} />}
-                        />
-                        : null
-                    }
-                </div>
-            </>
-            : null
-        }
-    </div>
-})
+			{images.length > 1 
+				? <MobileStepper
+					className="carousel__photo__stepper"
+					position="static"
+					steps={images.length}
+					activeStep={activeKey}
+					nextButton={<CarouselButton next isDisabled={activeKey === images.length - 1} />}
+					backButton={<CarouselButton isDisabled={!activeKey} />}
+				/>
+				: null}
+		</div>
+	</div>;
+});

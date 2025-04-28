@@ -1,29 +1,29 @@
 import { render, screen } from "@testing-library/react";
 
-import ContentLayout from "@components/layouts/content";
+import ContentLayoutComponent from "@components/layouts/content";
 
-describe("ContentLayout", () => {
-  it("renders children inside BoxComponent", () => {
-    const childrenContent = <div>Test content</div>;
+describe("ContentLayoutComponent", () => {
+	it("renders children inside BoxComponent", () => {
+		const childrenContent = <div>Test content</div>;
 
-    render(<ContentLayout>{childrenContent}</ContentLayout>);
+		render(<ContentLayoutComponent>{childrenContent}</ContentLayoutComponent>);
 
-    // Проверяем, что содержимое дочерних элементов отобразилось
-    expect(screen.getByText("Test content")).toBeInTheDocument();
-  });
+		// Проверяем, что содержимое дочерних элементов отобразилось
+		expect(screen.getByText("Test content")).toBeInTheDocument();
+	});
 
-  it("passes className .content to BoxComponent", () => {
-    render(<ContentLayout>{<div>Test content</div>}</ContentLayout>);
+	it("passes className .content to BoxComponent", () => {
+		render(<ContentLayoutComponent>{<div>Test content</div>}</ContentLayoutComponent>);
 
-    // Проверяем, что класс передается в BoxComponent
-    const box = screen.getByText("Test content").parentElement;
-    expect(box).toHaveClass("content");
-  });
+		// Проверяем, что класс передается в BoxComponent
+		const box = screen.getByText("Test content").parentElement;
+		expect(box).toHaveClass("content");
+	});
 
-  it("matches snapshot", () => {
-    const { asFragment } = render(<ContentLayout>{<div>Test content</div>}</ContentLayout>);
+	it("matches snapshot", () => {
+		const { asFragment } = render(<ContentLayoutComponent>{<div>Test content</div>}</ContentLayoutComponent>);
 
-    // Снимаем снапшот компонента
-    expect(asFragment()).toMatchSnapshot();
-  });
+		// Снимаем снапшот компонента
+		expect(asFragment()).toMatchSnapshot();
+	});
 });

@@ -1,9 +1,9 @@
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import { memo } from "react";
-import { useTranslation } from "react-i18next";
 
 import LazyDatePicker from "@components/ui/date-picker";
-import { IFormValues } from "@pages/Edit";
+import { type IFormValues } from "@pages/Edit";
+import i18next from "@service/i18n";
 import { formattedValue } from "@utils/date";
 
 import "./date-picker.scss";
@@ -13,15 +13,14 @@ interface IDatePicker {
 	onChangeField: (field: string, value: string | null) => void;
 };
 
+// Компонент датапикера на вкладке "Основное" на странице редактирования
 export default memo(function DatePickerComponent({ formValues, onChangeField }: IDatePicker) {
-	const { t } = useTranslation();
-
 	return <LazyDatePicker
-		label={t("edit_tabs.birthday")}
+		label={i18next.t("edit_tabs.birthday")}
 		value={dayjs(formValues.birthday)}
-		placeholder={t("edit_tabs.birthday_date")}
+		placeholder={i18next.t("edit_tabs.birthday_date")}
 		onChange={(newValue: Dayjs | null) => {
 			onChangeField("birthday", formattedValue(newValue));
 		}}
-	/>
+	/>;
 });

@@ -1,18 +1,19 @@
 import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
-import AppService from "@components/main/Main";
-import store from "@store/index";
+import MainClientProvider from "@components/main/MainClientProvider";
 
 import "@service/i18n";
 import "@styles/index.scss";
 
-createRoot(document.getElementById("root") as HTMLElement)
-  .render(
-    <BrowserRouter>
-      <Provider store={store}>
-        <AppService />
-      </Provider>
-    </BrowserRouter>
-  );
+const root = document.getElementById("root");
+
+if (!root) {
+	throw new Error("The root element is not found");
+}
+
+createRoot(root).render(
+	<BrowserRouter>
+		<MainClientProvider />
+	</BrowserRouter>,
+);

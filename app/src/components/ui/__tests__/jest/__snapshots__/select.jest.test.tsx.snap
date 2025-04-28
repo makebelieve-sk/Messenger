@@ -10,7 +10,7 @@ exports[`Select matches snapshot 1`] = `
       class="select__label"
     />
     <div
-      class="select__input"
+      class="select__input undefined"
     >
       Test
     </div>

@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`SystemAvatar matches snapshot 1`] = `
-<DocumentFragment>
-  <div
-    data-testid="mocked-avatar"
-  />
-</DocumentFragment>
-`;

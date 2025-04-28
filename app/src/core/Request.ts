@@ -1,126 +1,175 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
+import axios, { type AxiosInstance } from "axios";
 
-import CatchErrors, { CatchType } from "@core/CatchErrors";
+import type CatchErrors from "@core/CatchErrors";
+import i18next from "@service/i18n";
 import Logger from "@service/Logger";
-import { ApiRoutes } from "@custom-types/enums";
-import { API_URL,AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT } from "@utils/constants";
+import useUIStore from "@store/ui";
+import type { AxiosErrorType, AxiosResponseType } from "@custom-types/axios.types";
+import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
+import { API_URL, AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT } from "@utils/constants";
 
 const logger = Logger.init("Request");
 
 interface IGetRequest {
-    route: ApiRoutes | string;
-    setLoading?: ((value: any) => any);
-    successCb?: ((result: any) => any);
-    failedText?: string;
-};
-
-interface IPostRequest {
-    route: ApiRoutes;
-    data: any;
-    setLoading?: ((value: React.SetStateAction<boolean>) => void);
-    successCb?: ((result: any) => any);
-    failedText?: string;
-    finallyCb?: () => any;
-    config?: { headers?: Record<string, string> };
-    failedCb?: (error: CatchType) => any;
+	route: ApiRoutes | string;
+	setLoading?: (isLoading: boolean) => void;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	successCb?: (result: any) => void;
 };
 
 interface IDownloadFileRequest {
-    window: Window & typeof globalThis;
-    document: Document;
-    params: string;
-    extra: { name: string; };
-    failedText: string;
+	params: string;
+	extra: { name: string };
+};
+
+interface IPostRequest {
+	route: ApiRoutes;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	data: any;
+	setLoading?: (isLoading: boolean) => void;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	successCb?: (result: any) => void;
+	config?: { headers?: { [key: string]: string } };
+};
+
+interface IPutRequest {
+	route: ApiRoutes;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	data: any;
+	setLoading?: (isLoading: boolean) => void;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	successCb?: (result: any) => void;
 };
 
 // Класс, являющийся оберткой над axios, позволяющий давать запросы на сервер по HTTP API
 export default class Request {
-    private readonly _instance: AxiosInstance;
+	private readonly _instance: AxiosInstance;
 
-    constructor(private readonly _catchErrors: CatchErrors) {
-        this._instance = axios.create({
-            baseURL: API_URL,                                               // Основное URL-адрес для всех запросов
-            withCredentials: true,                                          // Разрешает отправлять cookie и авторизационные заголовки с запросами к другому домену
-            timeout: AXIOS_TIMEOUT,                                         // Время ожидания ответа от сервера (иначе будет выброшена ошибка)
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": API_URL,
-                "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE"
-            },                                                              // Объект заголовков HTTP-запросов
-            responseEncoding: AXIOS_RESPONSE_ENCODING                       // Кодировка, используемая для декодирования ответа от сервера
-        });
-    };
+	constructor(private readonly _catchErrors: CatchErrors) {
+		logger.debug("init");
 
-    private _errorHandler(error: AxiosError, failedText?: string): CatchType {
-        return this._catchErrors.catch(`${error.name}: ${error.message}\n${failedText}`, error);
-    }
+		this._instance = axios.create({
+			// Основное URL-адрес для всех запросов
+			baseURL: API_URL,
+			// Разрешает отправлять cookie и авторизационные заголовки с запросами к другому домену
+			withCredentials: true,
+			// Время ожидания ответа от сервера (иначе будет выброшена ошибка)
+			timeout: AXIOS_TIMEOUT,
+			// Объект заголовков HTTP-запросов
+			headers: {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": API_URL,
+				"Access-Control-Allow-Methods": "GET,PUT,POST,DELETE",
+			},
+			// Кодировка, используемая для декодирования ответа от сервера
+			responseEncoding: AXIOS_RESPONSE_ENCODING,
+		});
+	}
 
-    // GET запрос на сервер
-    get({ route, setLoading, successCb, failedText }: IGetRequest): void {
-        logger.debug(`get [route=${route}]`);
+	private _errorHandler(error: AxiosErrorType) {
+		this._catchErrors.catchAxios(error);
+	}
 
-        setLoading ? setLoading(true) : undefined;
+	// GET запрос на сервер
+	get({ route, setLoading, successCb }: IGetRequest): void {
+		logger.debug(`get [route=${route}]`);
 
-        this._instance
-            .get(route)
-            .then(response => {
-                const data = response.data;
+		setLoading ? setLoading(true) : undefined;
 
-                if (data.success) {
-                    successCb ? successCb(data) : undefined;
-                }
-            })
-            .catch((error: AxiosError) => this._errorHandler(error, failedText))
-            .finally(() => {
-                setLoading ? setLoading(false) : undefined;
-            });
-    };
+		this._instance
+			.get(route)
+			.then((response: AxiosResponseType) => {
+				this._handleSuccessStatuses(response, successCb);
+			})
+			.catch((error: AxiosErrorType) => {
+				this._errorHandler(error);
+			})
+			.finally(() => {
+				setLoading ? setLoading(false) : undefined;
+			});
+	}
 
-    // POST запрос на сервер
-    post({ route, data, setLoading, successCb, failedText, finallyCb, config, failedCb }: IPostRequest): void {
-        logger.debug(`post [route=${route}, data=${JSON.stringify(data)}, config=${JSON.stringify(config)}]`);
+	// GET запрос на скачивание файла с сервера
+	downloadFile({ params, extra }: IDownloadFileRequest) {
+		logger.debug(`downloadFile [params=${params}, extra.name=${extra.name}]`);
 
-        setLoading ? setLoading(true) : undefined;
+		this._instance
+			.get(`${ApiRoutes.downloadFile}?${params}`, { responseType: "blob" })
+			.then((response) => {
+				const blob = response.data;
+				const downloadUrl = window.URL.createObjectURL(blob);
 
-        this._instance
-            .post(route, data, config)
-            .then(response => {
-                const data = response.data;
+				const link = document.createElement("a");
+				link.href = downloadUrl;
+				link.download = extra.name;
 
-                if (data.success) {
-                    successCb ? successCb(data) : undefined;
-                }
-            })
-            .catch((error: AxiosError) => {
-                const err = this._errorHandler(error, failedText);
+				document.body.appendChild(link);
 
-                if (failedCb) failedCb(err);
-            })
-            .finally(() => {
-                setLoading ? setLoading(false) : undefined;
-                finallyCb ? finallyCb() : undefined;
-            });
-    };
+				link.click();
+				link.remove();
+			})
+			.catch((error: AxiosErrorType) => {
+				this._errorHandler(error);
+			});
+	}
 
-    // GET запрос на скачивание файла с сервера
-    downloadFile({ window, document, params, extra, failedText }: IDownloadFileRequest) {
-        logger.debug(`downloadFile [params=${params}, extra.name=${extra.name}]`);
+	// POST запрос на сервер (установка/использование данных)
+	post({ route, data, setLoading, successCb, config }: IPostRequest): void {
+		const configLogger = config ? `, config=${JSON.stringify(config)}` : "";
+		logger.debug(`post [route=${route}, data=${JSON.stringify(data)}${configLogger}]`);
 
-        this._instance
-            .get(`${ApiRoutes.downloadFile}?${params}`, { responseType: "blob" })
-            .then(response => {
-                const blob = response.data;
-                const downloadUrl = window.URL.createObjectURL(blob);
+		setLoading ? setLoading(true) : undefined;
 
-                const link = document.createElement("a");
-                link.href = downloadUrl;
-                link.download = extra.name;
+		this._instance
+			.post(route, data, config)
+			.then((response: AxiosResponseType) => {
+				this._handleSuccessStatuses(response, successCb);
+			})
+			.catch((error: AxiosErrorType) => {
+				this._errorHandler(error);
+			})
+			.finally(() => {
+				setLoading ? setLoading(false) : undefined;
+			});
+	}
 
-                document.body.appendChild(link);
+	// PUT запрос на сервер (изменение/обновление данных)
+	put({ route, data, setLoading, successCb }: IPutRequest): void {
+		logger.debug(`put [route=${route}, data=${JSON.stringify(data)}]`);
 
-                link.click();
-                link.remove();
-            })
-            .catch((error: AxiosError) => this._errorHandler(error, failedText))
-    }
-};
+		setLoading ? setLoading(true) : undefined;
+
+		this._instance
+			.put(route, data)
+			.then((response: AxiosResponseType) => {
+				this._handleSuccessStatuses(response, successCb);
+			})
+			.catch((error: AxiosErrorType) => {
+				this._errorHandler(error);
+			})
+			.finally(() => {
+				setLoading ? setLoading(false) : undefined;
+			});
+	}
+
+	// Обработка положительного статуса HTTP
+	private _handleSuccessStatuses(response: AxiosResponseType, cb?: Function) {
+		const { data, status } = response;
+
+		switch (status) {
+		case HTTPStatuses.OK:
+		case HTTPStatuses.Created: {
+			if (data.success) {
+				cb ? cb(data) : undefined;
+			}
+			break;
+		}
+		case HTTPStatuses.NoContent: {
+			cb ? cb() : undefined;
+			break;
+		}
+		default:
+			useUIStore.getState().setError(i18next.t("core.request.unknown_status", { status }));
+		}
+	}
+}
