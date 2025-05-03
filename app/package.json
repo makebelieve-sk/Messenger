@@ -13,7 +13,6 @@
     "prepare": "cd .. && husky",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
-    "test:coverage": "",
     "test:jest": "jest",
     "test:vitest": "vitest run",
     "test:jest:watch": "jest --watch",
