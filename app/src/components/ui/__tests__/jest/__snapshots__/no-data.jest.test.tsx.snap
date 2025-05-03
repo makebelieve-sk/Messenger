@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`No-data matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="opacity-text no-items"
+    data-testid="no-data"
+  >
+    Test
+  </div>
+</DocumentFragment>
+`;

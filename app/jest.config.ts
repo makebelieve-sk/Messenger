@@ -13,6 +13,16 @@ const config: Config = {
   // Для настройки путей или алиасов, если они используются
   moduleNameMapper: {
     "^@components/(.*)$": "<rootDir>/src/components/$1",
+    "^@core/(.*)$": "<rootDir>/src/core/$1",
+    "^@hooks/(.*)$": "<rootDir>/src/hooks/$1",
+    "^@locales/(.*)$": "<rootDir>/src/locales/$1",
+    "^@modules/(.*)$": "<rootDir>/src/modules/$1",
+    "^@pages/(.*)$": "<rootDir>/src/pages/$1",
+    "^@service/(.*)$": "<rootDir>/src/service/$1",
+    "^@store/(.*)$": "<rootDir>/src/store/$1",
+    "^@custom-types/(.*)$": "<rootDir>/src/types/$1",
+    "^@styles/(.*)$": "<rootDir>/src/styles/$1",
+    "^@utils/(.*)$": "<rootDir>/src/utils/$1",
   },
 
   // Трансформаторы для обработки файлов
@@ -26,7 +36,10 @@ const config: Config = {
   collectCoverageFrom: ["src/components/**/*.{ts,tsx}", "!src/**/*.d.ts"], // собираем покрытие только для исходных файлов
 
   // Игнорируем папки и файлы, которые не должны попадать в coverage
-  coveragePathIgnorePatterns: ["/node_modules/", "/dist/"],
+  coveragePathIgnorePatterns: ["/node_modules/", "/dist/", "/build/"],
+
+  // Добавляем игнорирование файлов, связанных с Vitest
+  testPathIgnorePatterns: ["/node_modules/", "/dist/", "/build/", "\\.vitest\\.",]
 };
 
 export default config;

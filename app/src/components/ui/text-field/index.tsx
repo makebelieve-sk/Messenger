@@ -38,6 +38,7 @@ export default memo(function TextFieldComponent({
 	className,
 }: ITextFieldComponent) {
 	return <TextField
+		data-testid="text-field"
 		id={id}
 		name={name}
 		type={type}

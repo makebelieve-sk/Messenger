@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Select matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="select"
+    data-testid="select"
+  >
+    <label
+      class="select__label"
+    />
+    <div
+      class="select__input undefined"
+    >
+      Test
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -9,6 +9,7 @@ export default function LockIconComponent({ className, onClick, size = 24 }: ILo
 	const iconSize = typeof size === "number" ? `${size}px` : size;
 
 	return <svg
+		data-testid="lock-icon"
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 24 24"
 		width={iconSize}

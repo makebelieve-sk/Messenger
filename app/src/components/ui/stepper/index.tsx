@@ -10,10 +10,10 @@ interface IStepperComponent {
 
 // Базовый компонент степпера
 export default memo(function StepperComponent({ steps, activeStep }: IStepperComponent) {
-	return <Stepper activeStep={activeStep}>
+	return <Stepper data-testid="stepper" activeStep={activeStep}>
 		{
 			steps.map(label => {
-				return <Step key={label}>
+				return <Step key={label} data-testid="step">
 					<StepLabel>{label}</StepLabel>
 				</Step>;
 			})

@@ -17,7 +17,7 @@ interface ISelectComponent {
 // Базовый компонент списка выбора
 export default memo(function SelectComponent({ children, labelId, id, value, text, className, onChange }: ISelectComponent) {
 	return (
-		<div className="select">
+		<div className="select" data-testid="select">
 			<InputLabel className="select__label" id={labelId}>
 				{text}
 			</InputLabel>
