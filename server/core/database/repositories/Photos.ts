@@ -102,7 +102,7 @@ export default class Photos {
 						required: true,
 					},
 				],
-				order: [["createdAt", "DESC"], ["id", "DESC"]],
+				order: [ [ "createdAt", "DESC" ], [ "id", "DESC" ] ],
 			});
 
 			return {
