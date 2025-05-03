@@ -177,8 +177,8 @@ export default class UserController {
 
 			// Обновляем поля пользователя
 			Object.assign(foundUser, {
-				email,
-				phone,
+				email: validationEmail,
+				phone: validationPhone,
 				firstName: name,
 				thirdName: surName,
 			});

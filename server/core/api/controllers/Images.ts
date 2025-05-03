@@ -83,10 +83,10 @@ export default class ImagesController {
 		res.json({ 
 			success: true,
 			newAvatar: {
-				newAvatarUrl: sharpedAvatarUrl,
+				path: sharpedAvatarUrl,
 			},
 			newPhoto: {
-				newPhotoUrl: sharpedPhotoUrl,
+				path: sharpedPhotoUrl,
 			},
 		});
 	}
