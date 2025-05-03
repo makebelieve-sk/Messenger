@@ -82,8 +82,17 @@ export default function SignUp() {
 	const signUpErrors = useAuthStore(state => state.signUpErrors);
 	const loading = useAuthStore(state => state.signUpLoading);
 
-	const mainClient = useMainClient();
+	const { mainApi, removeProfile } = useMainClient();
 	const navigate = useNavigate();
+
+	/**
+	 * Если своего пользователя перекинуло на страницу входа (после 401 статуса) и пользователь сам перешел на страницу регистрации, 
+	 * его необходимо удалить из контроллера профилей. Такое действие необходимо, так как в CatchErrors в обработке _redirect
+	 * нет возможности удалять профиль пользователя (только через Zustand, но это костыль, так как будет использована подписка).
+	 */
+	useEffect(() => {
+		removeProfile();
+	}, []);
 
 	// Подписка на событие ошибок, возникающих при регистрации
 	useEffect(() => {
@@ -201,8 +210,8 @@ export default function SignUp() {
 	const onChangeAvatar = (field: string, data: IUpdatedAvatar) => {
 		const { newAvatar, newPhoto } = data;
 
-		onChange(field, newAvatar.newAvatarUrl);
-		setNewPhotoUrl(newPhoto.newPhotoUrl);
+		onChange(field, newAvatar.path);
+		setNewPhotoUrl(newPhoto.path);
 	};
 
 	const handleSubmit = () => {
@@ -218,7 +227,7 @@ export default function SignUp() {
 			photoUrl: newPhotoUrl,
 		};
 
-		mainClient.mainApi.signUp(user);
+		mainApi.signUp(user);
 	};
 
 	const getStepContent = (step: number) => {
@@ -304,4 +313,4 @@ export default function SignUp() {
 
 		<CopyrightComponent />
 	</BoxComponent>;
-}
+};

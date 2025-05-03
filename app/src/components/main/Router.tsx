@@ -2,6 +2,7 @@ import { memo, useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
 import Edit from "@pages/Edit";
+import Photos from "@pages/Photos";
 import Profile from "@pages/Profile";
 import SignIn from "@pages/SignIn";
 import SignUp from "@pages/SignUp";
@@ -28,6 +29,7 @@ export default memo(function Router({ isAuth }: { isAuth: boolean; }) {
 			<Route path={Pages.profile} element={<Profile />} />
 			<Route path={Pages.edit} element={<Edit />} />
 			<Route path={Pages.messages} element={<div>228</div>} />
+			<Route path={Pages.photos} element={<Photos />} />
 			<Route path={Pages.notExists} element={<Navigate to={Pages.profile} />} />
 		</Routes>
 	 	: <Routes>

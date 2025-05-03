@@ -1,4 +1,4 @@
-import { type Transaction } from "sequelize";
+import { Op, type Transaction } from "sequelize";
 
 import createPhotos, { type CreationAttributes, Photo } from "@core/database/models/photo";
 import Repository from "@core/database/Repository";
@@ -10,7 +10,7 @@ import { getPhotoInfo } from "@utils/files";
 
 interface IGetUserPhoto {
 	filters: { userId: string; };
-	options: { limit: number; offset: number; };
+	options: { limit: number; lastCreatedDate: string | null; };
 	transaction?: Transaction;
 };
 
@@ -69,7 +69,7 @@ export default class Photos {
 					{
 						model: this._repo.users.model,
 						as: AliasAssociations.PHOTOS_WITH_USER,
-						through: { 
+						through: {
 							where: { userId: filters.userId },
 						},
 						attributes: [],
@@ -79,23 +79,30 @@ export default class Photos {
 				transaction,
 			});
 
+			const where: { userId: string; createdAt?: { [Op.lt]: string; }; } = filters;
+
+			if (options.lastCreatedDate) {
+				where.createdAt = {
+					[Op.lt]: options.lastCreatedDate,
+				};
+			}
+
 			const foundPhotos = await this._model.findAll({
-				where: filters,
+				where,
 				limit: options.limit,
-				offset: options.offset,
 				transaction,
 				include: [
 					{
 						model: this._repo.users.model,
 						as: AliasAssociations.PHOTOS_WITH_USER,
-						through: { 
+						through: {
 							where: { userId: filters.userId },
 						},
 						attributes: [],
 						required: true,
 					},
 				],
-				order: [ [ "createdAt", "DESC" ] ],
+				order: [["createdAt", "DESC"], ["id", "DESC"]],
 			});
 
 			return {

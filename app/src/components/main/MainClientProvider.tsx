@@ -13,4 +13,4 @@ export default function MainClientProvider() {
 	return <MainClientContext.Provider value={mainClient}>
 		<App />
 	</MainClientContext.Provider>;
-}
+};

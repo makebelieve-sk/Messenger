@@ -9,7 +9,7 @@ import useImagesCarouselStore from "@store/images-carousel";
 import useProfileStore from "@store/profile";
 import { type IUserData } from "@custom-types/api.types";
 import { ApiRoutes } from "@custom-types/enums";
-import type { IPhoto, IUser, IUserDetails } from "@custom-types/models.types";
+import type { IUser, IUserDetails } from "@custom-types/models.types";
 
 const logger = Logger.init("Profile");
 
@@ -40,7 +40,7 @@ export default class ProfileService implements Profile {
 	}
 
 	get photosService() {
-		return this._user.photos;
+		return this._user.photosService;
 	}
 
 	//-------------------------------------------------
@@ -48,18 +48,10 @@ export default class ProfileService implements Profile {
 	//-------------------------------------------------
 	// Обновление аватара пользователя
 	onSetAvatar({ newAvatar, newPhoto }: IUpdatedAvatar) {
-		const { id, newPhotoUrl, photoCreationDate } = newPhoto;
-
-		logger.debug(`onSetAvatar [newAvatar=${newAvatar.newAvatarUrl}]`);
+		logger.debug(`onSetAvatar [newAvatar=${newAvatar.path}]`);
 
 		this._user.changeAvatar(newAvatar);
-		this._user.photos.addPhotoFromAvatar({
-			id,
-			userName: this._user.fullName,
-			userAvatarUrl: this._user.avatarUrl,
-			path: newPhotoUrl,
-			createDate: photoCreationDate,
-		});
+		this._user.photosService.addPhotoFromAvatar(newPhoto);
 	}
 
 	// Удаление аватара
@@ -76,25 +68,9 @@ export default class ProfileService implements Profile {
 		});
 	}
 
-	//-------------------------------------------------
-	// Методы блока с фотографиями
-	//-------------------------------------------------
-	// Клик по фотографии
-	onClickPhoto(photos: IPhoto[], index: number) {
-		logger.debug(`onClickPhoto [photos=${photos}, index=${index}]`);
-
-		if (photos && photos.length) {
-			useImagesCarouselStore.getState().setImagesCarousel({
-				images: photos.map((photo) => ({
-					src: photo.path,
-					alt: photo.id,
-					authorName: photo.userName,
-					authorAvatarUrl: photo.userAvatarUrl,
-					dateTime: photo.createDate,
-				})),
-				index,
-			});
-		}
+	// Клик по аватару пользователя
+	onClickAvatar() {
+		useImagesCarouselStore.getState().setAvatar(true);
 	}
 
 	//-------------------------------------------------

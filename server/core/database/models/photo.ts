@@ -58,7 +58,7 @@ export default (sequelize: Sequelize) => {
 				type: DataTypes.STRING(50),
 				allowNull: false,
 				validate: {
-					isIn: [ [ "jpg", "jpeg", "png", "gif", "bmp", "webp" ] ],
+					isIn: [["jpg", "jpeg", "png", "gif", "bmp", "webp"]],
 				},
 			},
 			createdAt: {
@@ -75,7 +75,20 @@ export default (sequelize: Sequelize) => {
 			},
 			modelName: "Photo",
 			tableName: "Photos",
-			indexes: [ { fields: [ "user_id" ], name: "IDX_Photos_UserId" } ],
+			indexes: [{ fields: ["user_id"], name: "IDX_Photos_UserId" }],
+			hooks: {
+				/**
+				 * Используем хук, который вызывается только для текущей модели и применяется ко всем экземплярам.
+				 * Так как используем bulkCreate, то добавляем не большой смещение в 1 микросекунду,
+				 * чтобы записи можно было брать правильно в порядке создания.
+				 */
+				beforeBulkCreate(instances) {
+					const now = Date.now();
+					instances.forEach((inst, idx) => {
+						inst.setDataValue("createdAt", new Date(now + idx) as unknown as string);
+					});
+				}
+			},
 		},
 	);
 

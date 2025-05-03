@@ -7,4 +7,4 @@ export default function SpinnerComponent() {
 	return <div className="spinner">
 		<CircularProgress />
 	</div>;
-}
+};

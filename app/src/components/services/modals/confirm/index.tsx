@@ -1,4 +1,4 @@
-import { SmallButtonComponent } from "@components/services/buttons/small-button";
+import SmallButtonComponent from "@components/services/buttons/small-button";
 import BoxComponent from "@components/ui/box";
 import ModalComponent from "@components/ui/modal";
 import TypographyComponent from "@components/ui/typography";
@@ -18,7 +18,7 @@ export interface IConfirmModalData {
 
 // Модальное окно с подтверждением операции (например, удаление фотографии/аватара)
 export default function ModalWithConfirm() {
-	const confirmModal = useUIStore((state) => state.confirmModal);
+	const confirmModal = useUIStore(state => state.confirmModal);
 
 	// Выполнение действия
 	const onAction = () => {
@@ -51,4 +51,4 @@ export default function ModalWithConfirm() {
 			</TypographyComponent>
 		</BoxComponent>
 	</ModalComponent>;
-}
+};

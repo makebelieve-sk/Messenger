@@ -42,9 +42,18 @@ export default function SignIn() {
 	const signInErrors = useAuthStore(state => state.signInErrors);
 	const loading = useAuthStore(state => state.signInLoading);
 
-	const { mainApi } = useMainClient();
+	const { mainApi, removeProfile } = useMainClient();
 
 	const navigate = useNavigate();
+
+	/**
+	 * Если своего пользователя перекинуло на страницу входа (после 401 статуса), его необходимо удалить
+	 * из контроллера профилей. Такое действие необходимо, так как в CatchErrors в обработке _redirect
+	 * нет возможности удалять профиль пользователя (только через Zustand, но это костыль, так как будет использована подписка).
+	 */
+	useEffect(() => {
+		removeProfile();
+	}, []);
 
 	// Подписка на событие ошибок, возникающих при входе
 	useEffect(() => {
@@ -209,4 +218,4 @@ export default function SignIn() {
 			</BoxComponent>
 		</GridComponent>
 	</GridComponent>;
-}
+};

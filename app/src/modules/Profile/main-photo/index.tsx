@@ -16,18 +16,7 @@ export default function MainPhoto() {
 
 	// Клик по своей аватарке
 	const clickHandler = () => {
-		profile.onClickPhoto(
-			[
-				{
-					id: profile.userService.id,
-					userName: profile.userService.fullName,
-					userAvatarUrl: profile.userService.avatarUrl,
-					path: profile.userService.avatarUrl,
-					createDate: profile.userService.avatarCreateDate,
-				},
-			],
-			0,
-		);
+		profile.onClickAvatar();
 	};
 
 	// Установка загрузки
@@ -45,8 +34,8 @@ export default function MainPhoto() {
 		profile.onDeleteAvatar();
 	};
 
-	return <GridComponent className="main-photo__grid">
-		<PaperComponent className="main-photo paper-block">
+	return <GridComponent className="main-photo">
+		<PaperComponent className="main-photo__container paper-block">
 			<PhotoComponent
 				src={profile.userService.avatarUrl}
 				alt="user-avatar"
@@ -54,7 +43,7 @@ export default function MainPhoto() {
 				deleteHandler={deleteHandler}
 			/>
 
-			<div className="main-photo__edit-button">
+			<div className="main-photo__container__edit-button">
 				<ChangeAvatarComponent
 					labelText={i18next.t("profile-module.change")}
 					loading={loading}
@@ -65,4 +54,4 @@ export default function MainPhoto() {
 			</div>
 		</PaperComponent>
 	</GridComponent>;
-}
+};

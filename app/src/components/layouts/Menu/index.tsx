@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 
@@ -68,6 +69,14 @@ export default function MenuComponent() {
 					</div>
 
 					<NotificationBadge content={0} />
+				</MenuItemComponent>
+
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.photos)}>
+					<CameraAltIcon color="primary" />
+                    
+					<div className="menu__nav__item__title">
+						{i18n.t("menu.photos")}
+					</div>
 				</MenuItemComponent>
 			</MenuListComponent>
 		</nav>

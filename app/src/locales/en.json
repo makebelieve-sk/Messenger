@@ -70,6 +70,9 @@
 	"sign-up-module.password": "Password",
 	"sign-up-module.repeat_password": "Repeat the password",
 
+	"photos-module.empty": "There are no photos yet.",
+	"photos-module.add_more": "Add photos",
+
 	"core.profiles-controller.error.profile_exists": "Profile with id: {{id}} already exists.",
 	"core.profiles-controller.error.profile_not_exists": "Profile with id: {{id}} not exists.",
 	"core.profiles-controller.error.my_profile_not_exists": "My profile not exists.",
@@ -105,6 +108,7 @@
 	"menu.profile": "My profile",
 	"menu.messanger": "Messanger",
 	"menu.friends": "Friends",
+	"menu.photos": "Photos",
 	"menu.to-developers": "To developers",
 
 	"modals.photos": "Photos",

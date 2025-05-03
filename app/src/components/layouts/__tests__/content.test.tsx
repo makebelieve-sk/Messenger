@@ -17,7 +17,7 @@ describe("ContentLayoutComponent", () => {
 
 		// Проверяем, что класс передается в BoxComponent
 		const box = screen.getByText("Test content").parentElement;
-		expect(box).toHaveClass("content");
+		expect(box).toHaveClass("main-content");
 	});
 
 	it("matches snapshot", () => {

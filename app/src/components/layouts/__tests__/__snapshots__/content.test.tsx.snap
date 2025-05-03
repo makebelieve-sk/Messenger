@@ -3,7 +3,7 @@
 exports[`ContentLayoutComponent matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="content"
+    class="main-content"
   >
     <div>
       Test content

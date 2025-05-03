@@ -4,28 +4,39 @@
 	background: $main-background;
 	overflow-x: hidden;
 	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 
 	&__wrapper {
 		width: inherit;
+		height: calc(100vh - 78px); // 100vh - высота хедера, gap и margin-bottom
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding-bottom: 20px;
+		margin-bottom: 10px;
 
 		&__container {
 			width: $content-width;
+			height: 100%;
 			display: flex;
 			align-items: flex-start;
 			justify-content: center;
+			gap: 10px;
+		}
+	}
 
-			&__no-auth {
-				width: 100%;
-			}
+	&__no-auth {
+		height: inherit;
+		width: 100%;
+		display: block;
 
-			&__content {
-				flex: 1;
-				margin-top: 20px;
-			}
+		.root__wrapper__container {
+			width: inherit;
+			height: inherit;
+			display: flex;
+			align-items: flex-start;
+			justify-content: center;
 		}
 	}
 }

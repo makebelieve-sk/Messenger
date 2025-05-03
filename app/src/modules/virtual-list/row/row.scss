@@ -1,0 +1,12 @@
+.list {
+    &__loading-row {
+        width: 100%;
+        height: max-content;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    &__row {
+        display: flex;
+    }
+}

@@ -100,10 +100,11 @@ export interface IReadMessages {
 // Интерфейс структуры данных "Фотография"
 export interface IPhoto {
 	id: string;
-	userName: string;
-	userAvatarUrl: string;
+	userId: string;
+	size: string;
 	path: string;
-	createDate: string;
+	extension: string;
+	createdAt: string;
 };
 
 // Интерфейс структуры данных "Пользователи в диалоге"
