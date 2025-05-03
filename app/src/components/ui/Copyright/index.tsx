@@ -10,7 +10,7 @@ import "./copyright.scss";
 export default function CopyrightComponent() {
 	const navigate = useNavigate();
 
-	return <div className="copyright">
+	return <div className="copyright" data-testid="copyright">
 		{i18next.t("ui.copyright")}
 
 		<LinkComponent href={Pages.aboutUs} variant="body2" onClick={() => navigate(Pages.aboutUs)}>

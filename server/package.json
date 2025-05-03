@@ -12,7 +12,7 @@
 		"build": "tsc && copyfiles -u 1 sql/**/*.sql dist/sql",
 		"build:local": "npm run build && cross-env NODE_ENV=production npm run start:production",
 		"test": "npm run test",
-		"lint": "eslint . --ext .ts",
+		"lint": "eslint .",
 		"lint:fix": "eslint . --ext .ts --fix",
 		"migrate-dev:undo": "ts-node -r tsconfig-paths/register scripts/migration-undo.ts",
 		"migrate-prod:undo": "node -r module-alias/register dist/scripts/migration-undo.js",

@@ -56,4 +56,4 @@ export default class MainClient {
 	downloadLogFile() {
 		logger.downloadToFile();
 	}
-}
+};

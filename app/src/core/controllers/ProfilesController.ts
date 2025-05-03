@@ -100,4 +100,4 @@ export default class ProfilesController {
 	private _checkProfile(userId: string) {
 		return this._profiles.get(userId) || null;
 	}
-}
+};

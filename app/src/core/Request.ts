@@ -172,4 +172,4 @@ export default class Request {
 			useUIStore.getState().setError(i18next.t("core.request.unknown_status", { status }));
 		}
 	}
-}
+};

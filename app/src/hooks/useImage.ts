@@ -11,4 +11,4 @@ export default function useImage(src: string | null) {
 	}, [ src ]);
 
 	return srcImage;
-}
+};

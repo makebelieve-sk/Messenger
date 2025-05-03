@@ -16,7 +16,7 @@ export default memo(function LinkComponent({ href, children, onClick, ...props }
 		if (onClick) onClick();
 	};
 
-	return <Link {...props} href={href} onClick={onEvent}>
+	return <Link {...props} href={href} onClick={onEvent} data-testid="link">
 		{children}
 	</Link>;
 });

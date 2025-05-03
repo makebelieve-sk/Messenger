@@ -4,4 +4,4 @@ import useUser from "@hooks/useUser";
 export default function useUserDetails(userId?: string) {
 	const user = useUser(userId);
 	return user.detailsService;
-}
+};

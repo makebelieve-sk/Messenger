@@ -106,4 +106,4 @@ export default class ProfileService implements Profile {
 			},
 		});
 	}
-}
+};

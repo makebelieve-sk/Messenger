@@ -131,4 +131,4 @@ export default class UserService implements User {
 			avatarCreateDate: this.avatarCreateDate,
 		});
 	}
-}
+};

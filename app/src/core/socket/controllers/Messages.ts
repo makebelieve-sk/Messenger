@@ -117,4 +117,4 @@ export default class MessangesController {
 			toFormatAck(validateData, callback);
 		});
 	}
-}
+};

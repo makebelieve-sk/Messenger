@@ -88,4 +88,4 @@ export default class Socket {
 		logger.debug("disconnect");
 		this._socket.disconnect();
 	}
-}
+};

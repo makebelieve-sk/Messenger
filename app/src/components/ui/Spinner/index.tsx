@@ -4,7 +4,7 @@ import "./spinner.scss";
 
 // Базовый компонент спиннера загрузки
 export default function SpinnerComponent() {
-	return <div className="spinner">
+	return <div data-testid="spinner" className="spinner">
 		<CircularProgress />
 	</div>;
 };

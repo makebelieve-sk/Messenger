@@ -107,4 +107,4 @@ export default class SocketController {
 		this._socket.auth = { userId: this._myId };
 		this._socket.connect();
 	}
-}
+};

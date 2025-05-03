@@ -141,4 +141,4 @@ export default class PhotosService implements Photos {
 			hasMore: this._hasMore,
 		});
 	}
-}
+};

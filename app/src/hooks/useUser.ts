@@ -4,4 +4,4 @@ import useProfile from "@hooks/useProfile";
 export default function useUser(userId?: string) {
 	const profile = useProfile(userId);
 	return profile.userService;
-}
+};

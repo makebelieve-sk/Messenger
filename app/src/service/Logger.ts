@@ -89,4 +89,4 @@ export default class Logger {
 			URL.revokeObjectURL(link.href);
 		}
 	}
-}
+};

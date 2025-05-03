@@ -3,7 +3,7 @@
 exports[`ContentLayoutComponent matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="main-content"
+    class="main-content MuiBox-root css-0"
   >
     <div>
       Test content

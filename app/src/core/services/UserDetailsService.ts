@@ -153,4 +153,4 @@ export default class UserDetailsService implements UserDetails {
 	private _getText(...args: [number, string[]]) {
 		return muchSelected(...args);
 	}
-}
+};

@@ -1,4 +1,5 @@
-import { type ChangeEvent, type Dispatch, lazy, memo, type SetStateAction, Suspense } from "react";
+import type { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { lazy, memo, Suspense } from "react";
 import { type CountryData } from "react-phone-input-2";
 
 import BoxComponent from "@components/ui/box";

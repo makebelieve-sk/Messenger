@@ -43,7 +43,7 @@ export default function MenuComponent() {
 	return <div className="menu">
 		<nav className="menu__nav">
 			<MenuListComponent>
-				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.profile)}>
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.profile)} data-testid="menu-profile">
 					<AccountCircleOutlinedIcon color="primary" />
 
 					<div className="menu__nav__item__title">
@@ -51,7 +51,7 @@ export default function MenuComponent() {
 					</div>
 				</MenuItemComponent>
 
-				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.messages)}>
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.messages)} data-testid="menu-friends">
 					<MessageOutlinedIcon color="primary" />
 
 					<div className="menu__nav__item__title">
@@ -61,7 +61,7 @@ export default function MenuComponent() {
 					<NotificationBadge content={0} />
 				</MenuItemComponent>
 
-				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.friends)}>
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.friends)} data-testid="menu-messenger">
 					<PeopleOutlinedIcon color="primary" />
                     
 					<div className="menu__nav__item__title">
