@@ -26,4 +26,4 @@ export default function ArrowLeftIconComponent({ className, onClick, size = 24 }
 			strokeLinejoin="round" 
 		/>
 	</svg>;
-}
+};

@@ -21,18 +21,16 @@ export default function App() {
 			: <>
 				{user ? <HeaderComponent /> : null}
 
-				<div className="root__wrapper">
-					<div className={`root__wrapper__container ${user ? "" : "root__wrapper__container__no-auth" }`}>
+				<div className={`root__wrapper ${user ? "" : "root__no-auth" }`}>
+					<div className="root__wrapper__container">
 						{user ? <MenuComponent /> : null}
 
 						<ContentLayoutComponent>
-							<div className="root__wrapper__container__content">
-								<Router isAuth={Boolean(user)} />
-							</div>
+							<Router isAuth={Boolean(user)} />
 						</ContentLayoutComponent>
 					</div>
 				</div>
 			</>
 		}
 	</div>;
-}
+};

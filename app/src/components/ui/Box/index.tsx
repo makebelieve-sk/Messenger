@@ -1,4 +1,4 @@
-import { type FormEvent, memo, type ReactNode } from "react";
+import { type FormEvent, forwardRef, memo, type ReactNode, type Ref } from "react";
 import Box from "@mui/material/Box";
 
 interface IBoxComponent {
@@ -11,9 +11,17 @@ interface IBoxComponent {
 };
 
 // Базовый компонент бокса
-export default memo(function BoxComponent({ children, id, className = "", component = "div", noValidate, onSubmit }: IBoxComponent) {
+export default memo(forwardRef<HTMLDivElement, IBoxComponent>(function BoxComponent({
+	children, 
+	id, 
+	className = "", 
+	component = "div", 
+	noValidate, 
+	onSubmit, 
+}: IBoxComponent, parentRef: Ref<HTMLDivElement | null>) {
 	return <Box
 		id={id}
+		ref={parentRef}
 		className={className}
 		component={component}
 		noValidate={noValidate}
@@ -21,4 +29,4 @@ export default memo(function BoxComponent({ children, id, className = "", compon
 	>
 		{children}
 	</Box>;
-});
+}));

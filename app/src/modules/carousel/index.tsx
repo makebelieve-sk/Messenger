@@ -3,33 +3,37 @@ import MobileStepper from "@mui/material/MobileStepper";
 
 import PhotoComponent from "@components/ui/photo";
 import CarouselButton from "@modules/carousel/button";
-import useImagesCarouselStore from "@store/images-carousel";
 
 import "./carousel.scss";
 
+interface ICarousel {
+	image: ICarouselImage;
+	activeKey: number;
+	allCount: number;
+};
+
 export interface ICarouselImage {
 	src: string;
+	alt: string;
 	authorName: string;
 	dateTime: string;
 	authorAvatarUrl: string;
-	alt: string;
 };
 
 // Точка входа в модуль "Карусель картинок"
-export default memo(({ images }: { images: ICarouselImage[]; }) => {
-	const activeKey = useImagesCarouselStore(state => state.index);
-
+export default memo(({ image, activeKey, allCount }: ICarousel) => {
 	return <div className="carousel">
 		<div className="carousel__photo">
-			<PhotoComponent src={images[activeKey].src} alt={images[activeKey].alt} showVisibleIcon={false} />
+			<PhotoComponent src={image.src} alt={image.alt} showDeleteIcon={false} />
 
-			{images.length > 1 
+			{allCount > 1
 				? <MobileStepper
 					className="carousel__photo__stepper"
+					variant="text"
 					position="static"
-					steps={images.length}
+					steps={allCount}
 					activeStep={activeKey}
-					nextButton={<CarouselButton next isDisabled={activeKey === images.length - 1} />}
+					nextButton={<CarouselButton isNext isDisabled={activeKey === allCount - 1} />}
 					backButton={<CarouselButton isDisabled={!activeKey} />}
 				/>
 				: null}

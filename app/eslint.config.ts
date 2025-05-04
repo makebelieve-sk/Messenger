@@ -4,6 +4,7 @@ import path from "path";
 import importPlugin from "eslint-plugin-import";
 import simpleImportSortPlugin from "eslint-plugin-simple-import-sort";
 import storybookPlugin from "eslint-plugin-storybook";
+import reactPlugin from "eslint-plugin-react";
 
 const eslintConfig = require(path.resolve(__dirname, "../.eslint.config.ts")).default;
 
@@ -33,20 +34,32 @@ export default [
 			}, // Добавляем поддержку браузерных глобальных объектов
 		},
 		plugins: {
+			react: reactPlugin, // Подключаем плагин для React
 			"@typescript-eslint": ts, // Подключаем плагин для TypeScript
 			import: importPlugin, // Подключение плагина для корректных импортов
 			"simple-import-sort": simpleImportSortPlugin, // Подключение дополнительного плагина для управления импортами
 		},
+		settings: {
+			react: {
+			  	version: "detect" // Автоматически определяет версию React
+			}
+		},
 		rules: {
+			"react/jsx-uses-react": "warn",				// Обнаруживает неиспользованный импорт React
+			"react/jsx-uses-vars": "warn",				// Обнаруживает неиспользованные переменные в JSX
+			"react/jsx-no-undef": "warn",				// Обнаруживает неопределённые компоненты/переменные в JSX
+			"react/jsx-key": "warn",					// Убеждается, что элементы в массивах имеют уникальный key
+			"react/jsx-fragments": "warn",				// Убеждается, что JSX-фрагменты используются правильно
+			"react/jsx-no-duplicate-props": "warn",		// Обнаруживает дублирующиеся свойства в JSX
 			"@typescript-eslint/no-unused-vars": [ 
 				"warn", 
 				{ 
-					"argsIgnorePattern": "_",                           // Игнорировать аргументы, начинающиеся с _
-					"varsIgnorePattern": "_",                           // Игнорировать переменные, начинающиеся с _
+					"argsIgnorePattern": "_",                          // Игнорировать аргументы, начинающиеся с _
+					"varsIgnorePattern": "_",                          // Игнорировать переменные, начинающиеся с _
 				},      
-			],                                                          // Предупреждать о неиспользуемых переменных
-			"@typescript-eslint/no-explicit-any": "warn",               // Предупреждать об использовании "any"
-			"@typescript-eslint/ban-ts-comment": "warn",                // Предупреждать о лишних комментариях "@ts-ignore"
+			],                                                         // Предупреждать о неиспользуемых переменных
+			"@typescript-eslint/no-explicit-any": "warn",              // Предупреждать об использовании "any"
+			"@typescript-eslint/ban-ts-comment": "warn",               // Предупреждать о лишних комментариях "@ts-ignore"
 			"@typescript-eslint/explicit-function-return-type": "off", // Не требовать явного указания возвращаемого типа
 			"import/newline-after-import": [ "warn", { count: 1 } ],   // Обязательная пустая строка после импорта
         	"import/first": "warn",                                    // Вынос строк импортов в начало файла

@@ -33,4 +33,4 @@ export default function Profile() {
 			</GridComponent>
 		</GridComponent>
 	</GridComponent>;
-}
+};

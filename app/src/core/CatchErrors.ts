@@ -217,4 +217,4 @@ export default class CatchErrors {
 		logger.error(this._errorText);
 		useUIStore.getState().setError(this._errorText);
 	}
-}
+};

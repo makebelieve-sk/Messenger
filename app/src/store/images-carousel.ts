@@ -1,32 +1,30 @@
 import { create } from "zustand";
 
-import { type ICarouselImage } from "@modules/carousel";
-
 interface IImagesCarouselState {
-    index: number;
-    images: ICarouselImage[] | null;
+	isAvatar:  boolean;
+    photoIndex: number | null;
 };
 
 interface IImagesCarouselActions {
+	setAvatar: (isAvatar: boolean) => void;
+	setIndex: (photoIndex: number) => void;
     changeIndex: (dir: 1 | -1) => void;
-    setImagesCarousel: (data: { images: ICarouselImage[]; index: number; }) => void;
-    resetImages: () => void;
     reset: () => void;
 };
 
 // Состояние стора для сброса (используется при выходе)
 const resetState = {
-	index: 0,
-	images: null,
+	isAvatar: false,
+	photoIndex: null,
 };
 
-// Состояние карусели картинок приложения
+// Состояние карусели фотографий приложения
 const useImagesCarouselStore = create<IImagesCarouselState & IImagesCarouselActions>(set => ({
 	...resetState,
 
-	changeIndex: dir => set(state => ({ index: state.index + dir })),
-	setImagesCarousel: ({ images, index }) => set({ images, index }),
-	resetImages: () => set({ images: null }),
+	setAvatar: isAvatar => set({ isAvatar }),
+	setIndex: photoIndex => set({ photoIndex }),
+	changeIndex: dir => set(state => ({ photoIndex: (state.photoIndex as number) + dir })),
 	reset: () => set({ ...resetState }),
 }));
 

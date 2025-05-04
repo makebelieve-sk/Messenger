@@ -4,4 +4,4 @@ import useMainClient from "@hooks/useMainClient";
 export default function useProfile(userId?: string) {
 	const mainClient = useMainClient();
 	return mainClient.getProfile(userId);
-}
+};

@@ -3,17 +3,11 @@ import { type ChangeEvent, memo } from "react";
 import InputImageComponent from "@components/ui/input-image";
 import useMainClient from "@hooks/useMainClient";
 import { ApiRoutes } from "@custom-types/enums";
+import { type IPhoto } from "@custom-types/models.types";
 
 export interface IUpdatedAvatar {
-	newAvatar: {
-		newAvatarUrl: string;
-		avatarCreationDate: string;
-	};
-	newPhoto: {
-		id: string;
-		newPhotoUrl: string;
-		photoCreationDate: string;
-	};
+	newAvatar: IPhoto;
+	newPhoto: IPhoto;
 };
 
 interface IChangeAvatarComponent {

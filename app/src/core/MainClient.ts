@@ -39,8 +39,21 @@ export default class MainClient {
 		return this._profilesController.getProfile(userId);
 	}
 
+	/**
+	 * Удаляем профиль своего пользователя.
+	 * Это возможно только, если в запросе вернулся 401 статус и пользователя перекинуло на страницу входа.
+	 * Где также, он может перейти на страницу регистрации.
+	 * При этом, условие проверки существования this и ProfilesController обязательно, так как его может не быть при
+	 * первом входе на страницу входа/регистрации (еще не до конца инициализировался конструктор класса MainClient).
+	 */
+	removeProfile() {
+		if (this && this._profilesController) {
+			this._profilesController.removeProfile();
+		}
+	}
+
 	// Скачать файл с логами
 	downloadLogFile() {
 		logger.downloadToFile();
 	}
-}
+};

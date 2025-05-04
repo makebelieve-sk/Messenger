@@ -22,7 +22,7 @@ const snackBarAnchor = { vertical: "bottom", horizontal: "left" } as const;
 
 // Модальное окно с текстом возникшей ошибки (обрабатывает любую ошибку, будь то в коде клиента, АПИ и тд.)
 export default function ModalWithError() {
-	const error = useUIStore((state) => state.error);
+	const error = useUIStore(state => state.error);
 	const [ visibleSnackbar, setVisibleSnackbar ] = useState(false);
 
 	const mainClient = useMainClient();
@@ -97,4 +97,4 @@ export default function ModalWithError() {
 			</BoxComponent>
 		</ModalComponent>
 	</>;
-}
+};

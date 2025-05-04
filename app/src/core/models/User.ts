@@ -2,12 +2,13 @@ import { type NotificationSettings } from "@core/models/NotificationSettings";
 import { type Photos } from "@core/models/Photos";
 import { type UserDetails } from "@core/models/UserDetails";
 import type { IApiUser, IApiUserDetails } from "@custom-types/api.types";
+import { type IPhoto } from "@custom-types/models.types";
 
 // Контракт модели "Пользователь"
 export interface User {
-	photos: Photos;
-	details: UserDetails;
-	settings?: NotificationSettings;
+	photosService: Photos;
+	detailsService: UserDetails;
+	settingsService?: NotificationSettings;
 
 	id: string;
 	firstName: string;
@@ -19,5 +20,5 @@ export interface User {
 	avatarCreateDate: string;
 
 	updateUser: ({ user, userDetails }: { user: IApiUser; userDetails: IApiUserDetails; }) => void;
-	changeAvatar: (updatedAvatar?: { newAvatarUrl: string; avatarCreationDate: string; }) => void;
+	changeAvatar: (updatedAvatar?: IPhoto) => void;
 };

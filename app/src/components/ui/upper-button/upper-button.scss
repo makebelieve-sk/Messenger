@@ -1,0 +1,12 @@
+button.upper-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+    padding: 3px;
+    border-radius: 50%;
+    background-color: $upper-background-color;
+    border: 1px solid $black;
+}

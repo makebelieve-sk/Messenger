@@ -46,15 +46,15 @@ export async function createSharpedImage(file: Express.Multer.File) {
 	 * 4) вывод в новый файл
 	 */
 	const jpegBuffer = await sharp(file.buffer)
-	.withMetadata()
-	.toFormat(JPEG_FORMAT)
-	.jpeg({ quality: SHARP_QUALITY, progressive: true })
-	.toBuffer();
+		.withMetadata()
+		.toFormat(JPEG_FORMAT)
+		.jpeg({ quality: SHARP_QUALITY, progressive: true })
+		.toBuffer();
 
-await fs.promises.writeFile(
-	path.join(ROOT_PATH, folderPath, outputFile),
-	jpegBuffer
-);
+	await fs.promises.writeFile(
+		path.join(ROOT_PATH, folderPath, outputFile),
+		jpegBuffer,
+	);
 	return { folderPath, outputFile };
 }
 

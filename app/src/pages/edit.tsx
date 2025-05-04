@@ -180,4 +180,4 @@ export default function Edit() {
 			</BoxComponent>
 		</div>
 	</PaperComponent>;
-}
+};

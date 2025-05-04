@@ -1,6 +1,6 @@
 import { type ChangeEvent, memo, useRef } from "react";
 
-import { SmallButtonComponent } from "@components/services/buttons/small-button";
+import SmallButtonComponent from "@components/services/buttons/small-button";
 import TypographyComponent from "@components/ui/typography";
 
 import "./input-image.scss";

@@ -11,13 +11,21 @@ import "./photo.scss";
 interface IPhotoComponent {
 	src: string;
 	alt: string;
-	showVisibleIcon?: boolean;
+	showDeleteIcon?: boolean;
+	isLazy?: boolean;
 	clickHandler?: () => void;
 	deleteHandler?: () => void;
 };
 
 // Базовый компонент фотографии
-export default memo(function PhotoComponent({ src, alt, showVisibleIcon = true, clickHandler, deleteHandler }: IPhotoComponent) {
+export default memo(function PhotoComponent({ 
+	src, 
+	alt, 
+	showDeleteIcon = true, 
+	isLazy = false, 
+	clickHandler, 
+	deleteHandler, 
+}: IPhotoComponent) {
 	const [ visibleCloseIcon, setVisibleCloseIcon ] = useState(false);
 
 	const srcImage = useImage(src);
@@ -29,12 +37,12 @@ export default memo(function PhotoComponent({ src, alt, showVisibleIcon = true, 
 
 	// Обработка наведения на изображение
 	const onMouseOver = () => {
-		if (showVisibleIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(true);
+		if (showDeleteIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(true);
 	};
 
 	// Обработка ухода курсора с изображения
 	const onMouseOut = () => {
-		if (showVisibleIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(false);
+		if (showDeleteIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(false);
 	};
 
 	// Удаление изображения
@@ -59,6 +67,6 @@ export default memo(function PhotoComponent({ src, alt, showVisibleIcon = true, 
 			: null
 		}
 
-		<img src={srcImage} alt={alt} className="photo__image" />
+		<img src={srcImage} alt={alt} className="photo__image" loading={isLazy ? "lazy" : "eager"} />
 	</div>;
 });

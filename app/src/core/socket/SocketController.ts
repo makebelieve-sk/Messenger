@@ -7,6 +7,7 @@ import Logger from "@service/Logger";
 import useUIStore from "@store/ui";
 import { SocketActions } from "@custom-types/enums";
 import { type SocketType } from "@custom-types/socket.types";
+import { SOCKET_MIDDLEWARE_ERROR } from "@utils/constants";
 
 const logger = Logger.init("SocketController");
 const SERVER_DISCONNECT = "io server disconnect";
@@ -48,7 +49,7 @@ export default class SocketController {
 			logger.error(i18next.t("core.socket.error.connect_error", { isSocketActive, message: error.message }));
 
 			// Означает, что соединение было отклонено сервером и не равно авторизационной ошибке мидлвара сервера
-			if (!isSocketActive && error.message !== i18next.t("core.socket.error.user_not_exists_on_server")) {
+			if (!isSocketActive && error.message !== SOCKET_MIDDLEWARE_ERROR) {
 				this._manualReconnect();
 				return;
 			}
@@ -106,4 +107,4 @@ export default class SocketController {
 		this._socket.auth = { userId: this._myId };
 		this._socket.connect();
 	}
-}
+};

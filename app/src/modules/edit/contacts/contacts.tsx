@@ -1,4 +1,4 @@
-import { ChangeEvent, memo } from "react";
+import { type ChangeEvent, memo } from "react";
 
 import TextFieldComponent from "@components/ui/text-field";
 import { type ITabModule } from "@modules/edit";

@@ -70,6 +70,9 @@
 	"sign-up-module.password": "Пароль",
 	"sign-up-module.repeat_password": "Повторите пароль",
 
+	"photos-module.empty": "Фотографий пока нет.",
+	"photos-module.add_more": "Добавить фотографии",
+
 	"core.profiles-controller.error.profile_exists": "Профиль с id: {{id}} уже существует.",
 	"core.profiles-controller.error.profile_not_exists": "Профиля с id: {{id}} не существует.",
 	"core.profiles-controller.error.my_profile_not_exists": "Мой профиль не существует.",
@@ -105,6 +108,7 @@
 	"menu.profile": "Моя страница",
 	"menu.messanger": "Мессенджер",
 	"menu.friends": "Друзья",
+	"menu.photos": "Фотографии",
 	"menu.to-developers": "Разработчикам",
 
 	"modals.photos": "Фотографии",

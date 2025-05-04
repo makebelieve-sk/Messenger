@@ -86,4 +86,4 @@ export default class UsersController {
 		logger.debug("disconnect");
 		this._socket.disconnect();
 	}
-}
+};

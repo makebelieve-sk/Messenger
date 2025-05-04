@@ -7,4 +7,4 @@ export default function SpinnerComponent() {
 	return <div data-testid="spinner" className="spinner">
 		<CircularProgress />
 	</div>;
-}
+};

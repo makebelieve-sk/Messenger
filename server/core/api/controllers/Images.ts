@@ -83,10 +83,10 @@ export default class ImagesController {
 		res.json({ 
 			success: true,
 			newAvatar: {
-				newAvatarUrl: sharpedAvatarUrl,
+				path: sharpedAvatarUrl,
 			},
 			newPhoto: {
-				newPhotoUrl: sharpedPhotoUrl,
+				path: sharpedPhotoUrl,
 			},
 		});
 	}
@@ -165,15 +165,8 @@ export default class ImagesController {
 
 			res.status(HTTPStatuses.Created).json({
 				success: true,
-				newAvatar: {
-					newAvatarUrl: sharpedAvatarUrl,
-					avatarCreationDate: newAvatar.createdAt,
-				},
-				newPhoto: {
-					id: newPhoto.id,
-					newPhotoUrl: sharpedPhotoUrl,
-					photoCreationDate: newPhoto.createdAt,
-				},
+				newAvatar: newAvatar,
+				newPhoto,
 			});
 		} catch (error) {
 			await transaction.rollback();
@@ -189,13 +182,13 @@ export default class ImagesController {
 		const transaction = await this._database.sequelize.transaction();
 
 		try {
-			const { userId, limit, offset }: { userId: string; limit: number; offset: number; } = req.body;
+			const { userId, limit, lastCreatedDate }: { userId: string; limit: number; lastCreatedDate: string | null; } = req.body;
 
-			logger.debug("_getPhotos [userId=%s]", userId);
+			logger.debug("_getPhotos [userId=%s, lastCreatedDate=%s]", userId, lastCreatedDate);
 
 			const result = await this._database.repo.photos.getUserPhotos({
 				filters: { userId },
-				options: { limit, offset },
+				options: { limit, lastCreatedDate },
 				transaction,
 			});
 

@@ -127,4 +127,4 @@ export default class MainApi {
 			this._socket.init(userData.user.id);
 		}
 	}
-}
+};

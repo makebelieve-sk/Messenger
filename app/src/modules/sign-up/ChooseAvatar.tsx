@@ -62,7 +62,7 @@ export default memo(function ChooseAvatar({ username, avatarUrl, onChange, onCha
 								src={avatarUrl} 
 								alt="user-avatar" 
 								deleteHandler={deleteAvatar} 
-								showVisibleIcon={false}
+								showDeleteIcon={false}
 							/>
 						</div>
 						: <div className="choose-avatar__container__avatar-without-user">

@@ -9,6 +9,7 @@ import UserDetailsService from "@core/services/UserDetailsService";
 import Logger from "@service/Logger";
 import useUserStore from "@store/user";
 import type { IApiUser, IApiUserDetails, IUserData } from "@custom-types/api.types";
+import { type IPhoto } from "@custom-types/models.types";
 
 const logger = Logger.init("User");
 
@@ -43,15 +44,15 @@ export default class UserService implements User {
 		this._photos = new PhotosService(this._request, this._user.id);
 	}
 
-	get photos() {
+	get photosService() {
 		return this._photos;
 	}
 
-	get details() {
+	get detailsService() {
 		return this._userDetails;
 	}
 
-	get settings() {
+	get settingsService() {
 		return this._notificationSettings;
 	}
 
@@ -103,13 +104,13 @@ export default class UserService implements User {
 	}
 
 	// Изменение аватара пользователя
-	changeAvatar(updatedAvatar?: { newAvatarUrl: string; avatarCreationDate: string; }) {
-		logger.debug(`changeAvatar [value=${updatedAvatar?.newAvatarUrl}]`);
+	changeAvatar(updatedAvatar?: IPhoto) {
+		logger.debug(`changeAvatar [value=${updatedAvatar?.path}]`);
 
 		this._updateUser({
 			...this._user,
-			avatarUrl: updatedAvatar?.newAvatarUrl || null,
-			avatarCreateDate: updatedAvatar?.avatarCreationDate || null,
+			avatarUrl: updatedAvatar?.path || null,
+			avatarCreateDate: updatedAvatar?.createdAt || null,
 		});
 	}
 
@@ -130,4 +131,4 @@ export default class UserService implements User {
 			avatarCreateDate: this.avatarCreateDate,
 		});
 	}
-}
+};

@@ -9,6 +9,7 @@ import PaperComponent from "@components/ui/paper";
 import PhotoComponent from "@components/ui/photo";
 import SpinnerComponent from "@components/ui/spinner";
 import useProfile from "@hooks/useProfile";
+import useUser from "@hooks/useUser";
 import i18next from "@service/i18n";
 import usePhotosStore from "@store/photos";
 import { Pages } from "@custom-types/enums";
@@ -24,6 +25,7 @@ export default function Photos() {
 	const photosCount = usePhotosStore(state => state.count);
 
 	const profile = useProfile();
+	const photosService = useUser().photosService;
 	const navigate = useNavigate();
 
 	// Загружаем первую страницу фотографий
@@ -32,8 +34,8 @@ export default function Photos() {
 	}, []);
 
 	// Клик по одной из своих фотографий
-	const onClickPhoto = (index: number) => {
-		profile.onClickPhoto(photos, index);
+	const onClickPhoto = (photoId: string) => {
+		photosService.onClickPhoto(photoId);
 	};
 
 	// Добавление новых фотографий
@@ -54,7 +56,10 @@ export default function Photos() {
 
 	// Удаление одной фотографии
 	const deleteOnePhoto = (photo: IPhoto) => {
-		profile.photosService.deletePhoto({ photoId: photo.id, imageUrl: photo.path, isAvatar: false });
+		profile.photosService.deletePhoto(
+			{ photoId: photo.id, imageUrl: photo.path, isAvatar: false },
+			true,
+		);
 	};
 
 	return <GridComponent>
@@ -86,7 +91,7 @@ export default function Photos() {
 									key={photo.id}
 									src={photo.path}
 									alt={profile.userService.fullName + " " + index}
-									clickHandler={() => onClickPhoto(index)}
+									clickHandler={() => onClickPhoto(photo.id)}
 									deleteHandler={() => deleteOnePhoto(photo)}
 								/>
 							</div>;
@@ -96,7 +101,7 @@ export default function Photos() {
 			}
 
 			<InputImageComponent 
-				id="add-new-photos" 
+				id="profile-add-new-photos" 
 				text={i18next.t("profile-module.add_more")} 
 				loading={isAddPhotosLoading} 
 				multiple 
@@ -104,4 +109,4 @@ export default function Photos() {
 			/>
 		</PaperComponent>
 	</GridComponent>;
-}
+};

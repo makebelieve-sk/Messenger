@@ -61,4 +61,4 @@ export default class FriendsController {
 			toFormatAck(validateData, callback);
 		});
 	}
-}
+};

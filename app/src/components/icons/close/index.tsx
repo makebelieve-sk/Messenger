@@ -25,4 +25,4 @@ export default function CloseIconComponent({ className, onClick, size = 24 }: IC
 			strokeLinejoin="round" 
 		/>
 	</svg>;
-}
+};

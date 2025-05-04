@@ -2,8 +2,8 @@
 
 .edit-container {
 	display: flex;
-	flex-grow: 1;
-	width: 100%;
+	width: inherit;
+	height: max-content;
 
 	&__tabs {
 		border-right: 1px solid $edit-tab-border-color;

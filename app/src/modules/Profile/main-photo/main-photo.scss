@@ -1,23 +1,31 @@
 .main-photo {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: relative;
-
-    .photo {
-        max-width: fit-content;
-        max-height: 350px;
-        overflow: hidden;
-        margin: 0 auto;
-        min-height: auto;
-    }
-
-    &__edit-button {
-        width: 100%;
-        padding: 0;
+    width: 100%;
+    min-height: 407.8px; // Высчитал высоту, согласно внутерннимм отступам, высоте кнопки и максимальной высоте аватара
+    
+    &__container {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        bottom: 10px;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 10px;
+        position: relative;
+        width: 100%;
+        min-height: 100%;
+
+        .photo {
+            max-width: fit-content;
+            max-height: 350px;
+            overflow: hidden;
+            margin: 0 auto;
+            min-height: auto;
+        }
+
+        &__edit-button {
+            width: 100%;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            bottom: 10px;
+        }
     }
 }
