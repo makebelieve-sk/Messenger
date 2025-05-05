@@ -1,10 +1,10 @@
-import { memo } from "react";
+import { type ChangeEvent, memo } from "react";
 import Switch from "@mui/material/Switch";
 
 interface ISwitchComponent {
     name: string;
     checked: boolean;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 // Базовый компонент переключателя

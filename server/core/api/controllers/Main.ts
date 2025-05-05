@@ -68,8 +68,6 @@ export default class MainController {
 			// Уведомляем собственные подключения о выходе после выполнения всех удалений в базе данных
 			await socketNotification();
 
-			// TODO: написать, что на фронте будет приходить событие по сокету LOGOUT и там уже происходит очистка как при выходе на всех вкладках и браузерах
-
 			await transaction.commit();
 
 			res.status(HTTPStatuses.NoContent).clearCookie(COOKIE_NAME).end();
