@@ -23,4 +23,12 @@ export default class UserMessageStatuses {
 			throw new RepositoryError(t("repository.error.internal_db", { repo: "UserMessageStatuses", method: "create" }) + (error as Error).message);
 		}
 	}
+
+	async destroy({ filters, transaction }: { filters: { userId: string; }; transaction: Transaction; }) {
+		try {
+			return this._model.destroy({ where: filters, transaction });
+		} catch (error) {
+			throw new RepositoryError(t("repository.error.internal_db", { repo: "UserMessageStatuses", method: "destroy" }) + (error as Error).message);
+		}
+	}
 }

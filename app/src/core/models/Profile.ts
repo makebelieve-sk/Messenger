@@ -9,6 +9,8 @@ export interface Profile {
 	userService: User;
 	photosService: Photos;
 
+	deleteAccount: () => void;
+
 	onSetAvatar: (updateOptions: IUpdatedAvatar) => void;
 	onDeleteAvatar: () => void;
 	onClickAvatar: () => void;

@@ -1,6 +1,17 @@
 import { BaseError } from "@errors/index";
 import { HTTPErrorTypes, HTTPStatuses } from "@custom-types/enums";
 
+export class MainError extends BaseError {
+	constructor(
+		readonly message: string,
+		readonly status: HTTPStatuses = HTTPStatuses.ServerError,
+	) {
+		super(message, status);
+
+		this.name = "Main error";
+	}
+}
+
 export class AuthError extends BaseError {
 	constructor(
 		readonly message: string,

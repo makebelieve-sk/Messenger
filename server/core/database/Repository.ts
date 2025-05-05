@@ -1,4 +1,4 @@
-import type { Sequelize, Transaction } from "sequelize";
+import { Op, type Sequelize, type Transaction } from "sequelize";
 
 import Chats from "@core/database/repositories/Chats";
 import DisabledChatsSound from "@core/database/repositories/DisabledChatsSound";
@@ -18,6 +18,11 @@ import UsersInChat from "@core/database/repositories/UsersInChat";
 import { t } from "@service/i18n";
 import { RepositoryError } from "@errors/index";
 import { HTTPStatuses } from "@custom-types/enums";
+
+interface IDestroyOptions {
+	sourceUserId: string;
+	targetUserId: string; 
+};
 
 // Класс, содержит доступы ко всем таблицам базы данных
 export default class Repository {
@@ -127,6 +132,80 @@ export default class Repository {
 			}
 
 			return { userDetails, notificationSettings };
+		} catch (error) {
+			const nextError = error instanceof RepositoryError ? error : new RepositoryError((error as Error).message);
+
+			throw nextError;
+		}
+	}
+
+	// Общий метод удаления учетной записи пользователя
+	async deleteUser({ userId, transaction }: { userId: string; transaction: Transaction; }) {
+		try {
+			/**
+			 * Сообщения пользователя, саму запись пользователя и его чаты не трогаем.
+			 * Должна остатся возможность посмотреть сообщения этого удаленного пользователя остальным участникам чата.
+			 * При входе в приватные чаты (где были два пользователя, один из которых удаленный) должна быть пометка 
+			 * о том, что этот пользователь удален и данный чат остался только для чтения.
+			 */
+
+			// Удаляем все записи из статусов сообщений в чатах
+			await this._userMessageStatuses.destroy({
+				filters: { userId },
+				transaction,
+			});
+
+			// Удаляем все записи из конкретных настроек чатов
+			await this._disabledChatsSound.destroy({
+				filters: { userId },
+				transaction,
+			});
+
+			// Удаляем все записи дружбы с другими пользователями
+			await this._friendActions.destroy<IDestroyOptions>({
+				filters: { [Op.or]: [
+					{ sourceUserId: userId },
+					{ targetUserId: userId },
+				] },
+				transaction,
+			});
+
+			// Удаляем все записи из журнала дружбы с другими пользователями
+			await this._friendActionsLog.destroy<IDestroyOptions>({
+				filters: { [Op.or]: [
+					{ sourceUserId: userId },
+					{ targetUserId: userId },
+				] },
+				transaction,
+			});
+
+			// Удаляем все записи из глобальных настроек
+			await this._notificationsSettings.destroy({
+				filters: { userId },
+				transaction,
+			});
+
+			// Удаляем все записи из фотографий пользователя
+			await this._userPhotos.destroy({
+				filters: { userId },
+				transaction,
+			});
+
+			// Удаляем все записи из всего списка фотографий
+			await this._userDetails.destroy({
+				filters: { userId },
+				transaction,
+			});
+
+			const user = await this._users.getById({ userId, transaction });
+
+			if (!user) {
+				throw new RepositoryError(t("users.error.user_not_found"), HTTPStatuses.NotFound);
+			}
+
+			// Помечаем такого пользователя как удаленного
+			user.isDeleted = true;
+			await user.save({ transaction });
 		} catch (error) {
 			const nextError = error instanceof RepositoryError ? error : new RepositoryError((error as Error).message);
 

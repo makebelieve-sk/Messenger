@@ -4,7 +4,7 @@ import { DataTypes, Model } from "sequelize";
 import { Photo } from "@core/database/models/photo";
 import { type ISafeUser } from "@custom-types/user.types";
 
-export type CreationAttributes = InferCreationAttributes<User, { omit: "id" | "secondName" | "avatarId" | "avatarUrl" | "avatarCreateDate" }>
+export type CreationAttributes = InferCreationAttributes<User, { omit: "id" | "secondName" | "avatarId" | "avatarUrl" | "avatarCreateDate" | "isDeleted" }>
 
 export class User extends Model<InferAttributes<User, { omit: "avatarUrl" | "avatarCreateDate" }>, CreationAttributes> {
 	declare id: CreationOptional<string>;
@@ -16,6 +16,7 @@ export class User extends Model<InferAttributes<User, { omit: "avatarUrl" | "ava
 	declare password: string;
 	declare salt: string;
 	declare avatarId: CreationOptional<ForeignKey<Photo["id"]> | null>;
+	declare isDeleted: CreationOptional<boolean>;
 
 	// Данных полей в модели нет, но они нужны для отрисовки аватара пользователя (а он используется вообще везде, где только можно) и времени его добавления
 	declare avatarUrl: NonAttribute<string | null>;
@@ -31,6 +32,7 @@ export class User extends Model<InferAttributes<User, { omit: "avatarUrl" | "ava
 			phone: this.phone,
 			avatarUrl: this.avatarUrl,
 			avatarCreateDate: this.avatarCreateDate,
+			isDeleted: this.isDeleted,
 		};
 	}
 };
@@ -87,6 +89,12 @@ export default (sequelize: Sequelize) => {
 				onUpdate: "CASCADE",
 				field: "avatar_id",
 			},
+			isDeleted: {
+				type: DataTypes.BOOLEAN, // Такой тип автоматически маппится в BIT (0/1)
+				allowNull: false,
+				defaultValue: false,
+				field: "is_deleted",
+			},
 		},
 		{
 			sequelize,
@@ -97,8 +105,8 @@ export default (sequelize: Sequelize) => {
 			modelName: "User",
 			tableName: "Users",
 			indexes: [
-				{ fields: [ "email" ], unique: true, name: "IDX_Users_Email" },
-				{ fields: [ "phone" ], unique: true, name: "IDX_Users_Phone" },
+				{ fields: [ "email" ], unique: true, name: "UQ_Users_Active_Email", where: { is_deleted: false } },
+				{ fields: [ "phone" ], unique: true, name: "UQ_Users_Active_Phone", where: { is_deleted: false } },
 			],
 		},
 	);

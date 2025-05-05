@@ -20,6 +20,9 @@ const NOT_REQUIRED_SIGN_UP_FIELDS = [ "avatarUrl", "photoUrl" ];
 
 // Класс, отвечающий за API авторизации/аутентификации
 export default class AuthController {
+	static redisWork: RedisWorks;
+	static users: UsersController;
+
 	constructor(
 		private readonly _app: Express,
 		private readonly _middleware: Middleware,
@@ -28,6 +31,9 @@ export default class AuthController {
 		private readonly _passport: PassportStatic,
 		private readonly _users: UsersController,
 	) {
+		AuthController.redisWork = this._redisWork;
+		AuthController.users = this._users;
+
 		this._init();
 	}
 
@@ -76,8 +82,8 @@ export default class AuthController {
 			// Проверка обязательных полей объекта регистрации
 			if (missingFields.length) {
 				throw new AuthError(
-					t("auth.error.missing_fields", { fields: missingFields.join(", ") }), 
-					HTTPStatuses.BadRequest, 
+					t("auth.error.missing_fields", { fields: missingFields.join(", ") }),
+					HTTPStatuses.BadRequest,
 					{
 						type: HTTPErrorTypes.SIGN_UP,
 						fields: missingFields,
@@ -95,8 +101,8 @@ export default class AuthController {
 
 			if (checkDublicateEmail) {
 				throw new AuthError(
-					t("auth.error.user_with_email_already_exists", { email }), 
-					HTTPStatuses.Conflict, 
+					t("auth.error.user_with_email_already_exists", { email }),
+					HTTPStatuses.Conflict,
 					{
 						type: HTTPErrorTypes.SIGN_UP,
 						field: "email",
@@ -111,8 +117,8 @@ export default class AuthController {
 
 			if (checkDublicatePhone) {
 				throw new AuthError(
-					t("auth.error.user_with_phone_already_exists", { phone }), 
-					HTTPStatuses.Conflict, 
+					t("auth.error.user_with_phone_already_exists", { phone }),
+					HTTPStatuses.Conflict,
 					{
 						type: HTTPErrorTypes.SIGN_UP,
 						field: "phone",
@@ -218,10 +224,10 @@ export default class AuthController {
 
 			await transaction.commit();
 
-			res.json({ 
-				success: true, 
-				user, 
-				userDetails: userDetails.getEntity(), 
+			res.json({
+				success: true,
+				user,
+				userDetails: userDetails.getEntity(),
 				notificationSettings: notificationSettings.getEntity(),
 			});
 		} catch (error) {
@@ -233,35 +239,51 @@ export default class AuthController {
 	// Выход пользователя
 	private async _logout(req: Request, res: Response, next: NextFunction) {
 		try {
-			const { id: userId } = req.user;
+			logger.debug("_logout [userId=%s]", req.user.id);
 
-			logger.debug("_logout [userId=%s]", userId);
+			// Выход из текущей сессии
+			const socketNotification = await AuthController.logout(req);
 
-			if (!req.sessionID) {
-				throw new AuthError(t("auth.error.session_id_not_exists_on_deleted_session", {
-					session: req.session.toString(),
-				}));
-			}
+			// Уведомляем собственные подключения о выходе
+			await socketNotification();
 
-			// Выход из passport.js
-			await new Promise((resolve, reject) => {
-				req.logout((error?: Error) => {
-					error ? reject(new AuthError(error.message)) : resolve(true);
-				});
+			// Удаляем session-cookie (sid)
+			res.status(HTTPStatuses.NoContent).clearCookie(COOKIE_NAME).end();
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Статичный метод выхода. Он статичен, так как будет использоваться в другом классе контроллере (см. MainController)
+	static async logout(req: Request) {
+		const { id: userId } = req.user;
+
+		if (!req.sessionID) {
+			throw new AuthError(t("auth.error.session_id_not_exists_on_deleted_session", {
+				session: req.session.toString(),
+			}));
+		}
+
+		// Выход из passport.js
+		await new Promise((resolve, reject) => {
+			req.logout((error?: Error) => {
+				error ? reject(new AuthError(error.message)) : resolve(true);
 			});
+		});
 
-			// Удаляем текущую сессию express.js пользователя
-			await new Promise((resolve, reject) => {
-				req.session.destroy((error?: Error) => {
-					error ? reject(new AuthError(error.message)) : resolve(true);
-				});
+		// Удаляем текущую сессию express.js пользователя
+		await new Promise((resolve, reject) => {
+			req.session.destroy((error?: Error) => {
+				error ? reject(new AuthError(error.message)) : resolve(true);
 			});
+		});
 
-			// Удаляем флаг rememberMe из Redis
-			await this._redisWork.delete(RedisKeys.REMEMBER_ME, userId);
+		// Удаляем флаг rememberMe из Redis
+		await AuthController.redisWork.delete(RedisKeys.REMEMBER_ME, userId);
 
+		return async () => {
 			// Получаем из списка пользователей текущего пользователя
-			const logoutingUser = this._users.get(userId);
+			const logoutingUser = AuthController.users.get(userId);
 
 			if (!logoutingUser) {
 				throw new AuthError(t("auth.error.user_not_exists"), HTTPStatuses.NotFound);
@@ -272,11 +294,6 @@ export default class AuthController {
 
 			// Отправляем событие пользователю о выходе (всем его открытым вкладкам)
 			await socketController.sendTo(SocketActions.LOG_OUT, {}, userId);
-
-			// Удаляем session-cookie (sid)
-			res.status(HTTPStatuses.NoContent).clearCookie(COOKIE_NAME).end();
-		} catch (error) {
-			next(error);
-		}
+		};
 	}
 }

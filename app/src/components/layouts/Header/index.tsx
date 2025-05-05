@@ -8,6 +8,7 @@ import MenuItemComponent from "@components/ui/menu-item";
 import TypographyComponent from "@components/ui/typography";
 import useMainClient from "@hooks/useMainClient";
 import i18n from "@service/i18n";
+import useUIStore from "@store/ui";
 import useUserStore from "@store/user";
 import { Pages } from "@custom-types/enums";
 import { BASE_URL } from "@utils/constants";
@@ -28,9 +29,27 @@ export default function HeaderComponent() {
 	const userAvatarUrl = useUserStore(state => state.user.avatarUrl);
 	const userFullname = useUserStore(state => state.user.fullName);
 
+	// Открытие меню
+	const onOpenMenu = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+		/**
+		 * Обязательно останавливаем погружение события клика ниже к аватару, чтобы именно на этом компоненте
+		 * не происходил переход на страницу профиля (поведение по умолчанию у аватара).
+		 * Поэтому обработчик onClickCapture (то есть срабатывает только на фазе погружения события). И мы запрещаем ему 
+		 * спускаться ниже до дочернего компонента.
+		 */
+		event.stopPropagation();
+		setAnchorElUser(event.currentTarget);
+	};
+
+	// Открытие модального окна "Настройки"
+	const openSettingsModal = () => {
+		closeMenu();
+		useUIStore.getState().setSettingsModal(true);
+	};
+
 	// Переход на страницу
 	const goTo = (link: Pages) => {
-		if (anchorElUser) setAnchorElUser(null);
+		if (anchorElUser) closeMenu();
 		navigate(link);
 	};
 
@@ -41,9 +60,12 @@ export default function HeaderComponent() {
 		}
 	};
 
+	// Закрытие меню
+	const closeMenu = () => setAnchorElUser(null);
+
 	// Выход
 	const logout = () => {
-		setAnchorElUser(null);
+		closeMenu();
 		mainClient.mainApi.logout();
 	};
 
@@ -55,7 +77,7 @@ export default function HeaderComponent() {
 				</div>
 
 				<div className="header-container__toolbar__avatar">
-					<div onClick={event => setAnchorElUser(event.currentTarget)}>
+					<div onClickCapture={onOpenMenu}>
 						<UserAvatarComponent userId={userId} src={userAvatarUrl} alt={userFullname} />
 					</div>
 
@@ -64,9 +86,9 @@ export default function HeaderComponent() {
 						anchorOrigin={anchorOrigin}
 						open={Boolean(anchorElUser)}
 						autoFocus={false}
-						onClose={() => setAnchorElUser(null)}
+						onClose={closeMenu}
 					>
-						<MenuItemComponent onClick={() => goTo(Pages.settings)}>
+						<MenuItemComponent onClick={openSettingsModal}>
 							<TypographyComponent variant="body2">
 								{i18n.t("header.settings")}
 							</TypographyComponent>

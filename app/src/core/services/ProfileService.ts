@@ -7,6 +7,7 @@ import { type IFormValues } from "@pages/Edit";
 import Logger from "@service/Logger";
 import useImagesCarouselStore from "@store/images-carousel";
 import useProfileStore from "@store/profile";
+import useUIStore from "@store/ui";
 import { type IUserData } from "@custom-types/api.types";
 import { ApiRoutes } from "@custom-types/enums";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
@@ -41,6 +42,20 @@ export default class ProfileService implements Profile {
 
 	get photosService() {
 		return this._user.photosService;
+	}
+
+	// Удаление аккаунта пользователя
+	deleteAccount() {
+		this._request.get({
+			route: ApiRoutes.deleteAccount,
+			setLoading: (isLoading: boolean) => {
+				useProfileStore.getState().setDeleteAccountLoading(isLoading);
+			},
+			successCb: () => {
+				useProfileStore.getState().setDeleteAccountLoading(false);
+				useUIStore.getState().setSettingsModal(false);
+			},
+		});
 	}
 
 	//-------------------------------------------------

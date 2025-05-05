@@ -37,7 +37,7 @@ export default class UserService implements User {
 
 		if (this._userData.isMe && notificationSettings) {
 			// Создаем сущность настроек уведомлений
-			this._notificationSettings = new NotificationSettingsService(notificationSettings);
+			this._notificationSettings = new NotificationSettingsService(this._request, notificationSettings);
 		}
 		
 		// Создаем сущность фотографий

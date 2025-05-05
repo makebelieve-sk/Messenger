@@ -6,9 +6,9 @@ import { type INotificationSettings } from "@custom-types/models.types";
 
 export class NotificationSettings extends Model<InferAttributes<NotificationSettings>, InferCreationAttributes<NotificationSettings>> {
 	declare userId: ForeignKey<User["id"]>;
-	declare soundEnabled: number;
-	declare messageSound: number;
-	declare friendRequestSound: number;
+	declare soundEnabled: boolean;
+	declare messageSound: boolean;
+	declare friendRequestSound: boolean;
 
 	getEntity(): INotificationSettings {
 		return {
@@ -35,20 +35,20 @@ export default (sequelize: Sequelize) => {
 				field: "user_id",
 			},
 			soundEnabled: {
-				type: DataTypes.INTEGER,
-				defaultValue: 1,
+				type: DataTypes.BOOLEAN,
+				defaultValue: true,
 				allowNull: false,
 				field: "sound_enabled",
 			},
 			messageSound: {
-				type: DataTypes.INTEGER,
-				defaultValue: 1,
+				type: DataTypes.BOOLEAN,
+				defaultValue: true,
 				allowNull: false,
 				field: "message_sound",
 			},
 			friendRequestSound: {
-				type: DataTypes.INTEGER,
-				defaultValue: 1,
+				type: DataTypes.BOOLEAN,
+				defaultValue: true,
 				allowNull: false,
 				field: "friend_request_sound",
 			},
