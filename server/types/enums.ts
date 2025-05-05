@@ -2,6 +2,8 @@
 enum ApiRoutes {
 	//----main-----------
 	checkHealth = "/check-health",
+	soundNotifications = "/sound-notifications",
+	deleteAccount = "/delete-account",
 	//----auth-----------
 	signUp = "/sign-up",
 	signIn = "/sign-in",

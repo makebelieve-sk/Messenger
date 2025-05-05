@@ -1,4 +1,6 @@
 {
+	"main.error.users_notifications_not_found": "Звуковые уведомления пользователей не найдены.",
+	
 	"auth.error.incorrect_login_or_password": "Не верно указан логин или пароль.",
 	"auth.error.not_auth_or_token_expired": "Вы не авторизованы или время жизни токена сессии подошло к концу.",
 	"auth.error.you_already_auth": "Вы уже авторизированы.",

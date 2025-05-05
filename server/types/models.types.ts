@@ -11,6 +11,7 @@ export interface IUser {
 	password: string;
 	salt: string;
 	avatarId: string | null;
+	isDeleted: boolean;
 };
 
 // Интерфейс атрибутов модели Photo
@@ -42,9 +43,9 @@ export interface IUserPhoto {
 // Интерфейс атрибутов модели Notification_Settings
 export interface INotificationSettings {
 	userId: string;
-	soundEnabled: number;
-	messageSound: number;
-	friendRequestSound: number;
+	soundEnabled: boolean;
+	messageSound: boolean;
+	friendRequestSound: boolean;
 };
 
 // Интерфейс атрибутов модели Friend_Action

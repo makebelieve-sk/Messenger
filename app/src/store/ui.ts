@@ -7,12 +7,16 @@ interface IUIState {
     error: string | null;
     snackbarError: string | null;
     confirmModal: IConfirmModalData | null;
+	settingsModal: boolean;
+	saveSettingsModal: boolean;
 };
 
 interface IUIActions {
     setError: (error: string | null) => void;
     setSnackbarError: (snackbarError: string | null) => void;
     setConfirmModal: (confirmModal: IConfirmModalData | null) => void;
+	setSettingsModal: (settingsModal: boolean) => void;
+	setSaveSettingsModal: (saveSettingsModal: boolean) => void;
     reset: () => void;
 };
 
@@ -23,6 +27,8 @@ const resetState = {
 	error: null,
 	snackbarError: null,
 	confirmModal: null,
+	settingsModal: false,
+	saveSettingsModal: false,
 };
 
 // Состояние основных UI частей приложения
@@ -36,6 +42,8 @@ const useUIStore = create<IUIState & IUIActions>(set => ({
 	},
 	setSnackbarError: snackbarError => set({ snackbarError }),
 	setConfirmModal: confirmModal => set({ confirmModal }),
+	setSettingsModal: settingsModal => set({ settingsModal }),
+	setSaveSettingsModal: saveSettingsModal => set({ saveSettingsModal }),
 	reset: () => set({ ...resetState }),
 }));
 

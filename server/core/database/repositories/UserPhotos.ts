@@ -32,7 +32,7 @@ export default class UserPhotos {
 		}
 	}
 
-	async destroy({ filters, transaction }: { filters: { userId: string; photoId: string }; transaction?: Transaction; }) {
+	async destroy({ filters, transaction }: { filters: { userId: string; photoId?: string; }; transaction?: Transaction; }) {
 		try {
 			await this._model.destroy({ where: filters, transaction });
 		} catch (error) {

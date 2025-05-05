@@ -5,9 +5,9 @@ import { t } from "@service/i18n";
 import { RepositoryError } from "@errors/index";
 
 const DEFAULT_CREATION_ATTRIBUTES = {
-	soundEnabled: 1,
-	messageSound: 1,
-	friendRequestSound: 1,
+	soundEnabled: true,
+	messageSound: true,
+	friendRequestSound: true,
 };
 
 // Репозиторий, который содержит методы по работе с моделью NotificationSettings
@@ -47,6 +47,14 @@ export default class NotificationsSettings {
 					method: "findOneBy",
 				}) + (error as Error).message,
 			);
+		}
+	}
+
+	async destroy({ filters, transaction }: { filters: { userId: string; }; transaction: Transaction; }) {
+		try {
+			return this._model.destroy({ where: filters, transaction });
+		} catch (error) {
+			throw new RepositoryError(t("repository.error.internal_db", { repo: "NotificationsSettings", method: "destroy" }) + (error as Error).message);
 		}
 	}
 }

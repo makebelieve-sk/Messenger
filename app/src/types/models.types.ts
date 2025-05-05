@@ -27,9 +27,9 @@ export interface IUserDetails extends IApiUserDetails {
 // Интерфейс структуры данных "Настройки уведомлений пользователя"
 export interface INotificationSettings {
 	userId: string;
-	soundEnabled: number;
-	messageSound: number;
-	friendRequestSound: number;
+	soundEnabled: boolean;
+	messageSound: boolean;
+	friendRequestSound: boolean;
 };
 
 // Интерфейс структуры данных "Друг"

@@ -1,4 +1,6 @@
 {
+	"main.error.users_notifications_not_found": "User's sound notifications not found.",
+
 	"auth.error.incorrect_login_or_password": "The username or password is incorrect.",
 	"auth.error.not_auth_or_token_expired": "You are not logged in, or the lifetime of the session token has come to an end.",
 	"auth.error.you_already_auth": "You are already logged in.",

@@ -1,4 +1,4 @@
-import type { Sequelize, Transaction } from "sequelize";
+import type { Sequelize, Transaction, WhereOptions } from "sequelize";
 
 import createFriendActions, { type CreationAttributes, FriendAction } from "@core/database/models/friend-action";
 import { t } from "@service/i18n";
@@ -21,6 +21,14 @@ export default class FriendActions {
 			return this._model.create(creationAttributes, { transaction });
 		} catch (error) {
 			throw new RepositoryError(t("repository.error.internal_db", { repo: "FriendActions", method: "create" }) + (error as Error).message);
+		}
+	}
+
+	async destroy<T>({ filters, transaction }: { filters: WhereOptions<T>; transaction: Transaction; }) {
+		try {
+			return this._model.destroy({ where: filters, transaction });
+		} catch (error) {
+			throw new RepositoryError(t("repository.error.internal_db", { repo: "FriendActions", method: "destroy" }) + (error as Error).message);
 		}
 	}
 }

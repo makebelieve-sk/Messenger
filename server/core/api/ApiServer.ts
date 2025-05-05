@@ -39,8 +39,9 @@ export default class ApiServer {
 		// Общий мидлвар, добавляет ограничение на количество запросов для пользователя на всё API
 		this._middleware.rateLimiter();
 
-		new MainController(this._app);
 		new AuthController(this._app, this._middleware, this._database, this._redisWork, this._passport, this._users);
+		// Обязательно объявляем MainController позже AuthController, чтобы был доступен нормально статичный метод logout
+		new MainController(this._app, this._middleware, this._database);
 		new ImagesController(this._app, this._middleware, this._database);
 		// new FilesController(this._app, this._middleware, this._database);
 		// new FriendsController(this._app, this._middleware, this._database, this._users);

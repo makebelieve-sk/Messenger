@@ -11,6 +11,9 @@ enum ApiRoutes {
 	signUp = "/sign-up",
 	signIn = "/sign-in",
 	logout = "/logout",
+	//----main-----------
+	soundNotifications = "/sound-notifications",
+	deleteAccount = "/delete-account",
 	//----userInfo-------
 	getMe = "get-me",
 	getUser = "/get-user",
@@ -94,7 +97,6 @@ enum Pages {
 	signIn = "/sign-in",
 	resetPassword = "/reset-password",
 	error = "/error",
-	settings = "/settings",
 	help = "/help",
 	aboutUs = "/about-us",
 };

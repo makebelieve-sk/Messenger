@@ -120,10 +120,13 @@ export default class Users {
 		}
 	}
 
-	async findOneBy({ filters, transaction }: { filters: { [key: string]: string | number }; transaction?: Transaction; }) {
+	async findOneBy({ filters, transaction }: { filters: { [key: string]: string | number; }; transaction?: Transaction; }) {
 		try {
 			return await this._model.findOne({
-				where: filters,
+				where: {
+					...filters,
+					isDeleted: false,
+				},
 				transaction,
 			});
 		} catch (error) {

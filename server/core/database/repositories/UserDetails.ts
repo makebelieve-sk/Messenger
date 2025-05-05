@@ -51,4 +51,12 @@ export default class UserDetails {
 			throw new RepositoryError(t("repository.error.internal_db", { repo: "UserDetails", method: "updateLastSeen" }) + (error as Error).message);
 		}
 	}
+
+	async destroy({ filters, transaction }: { filters: { userId: string; }; transaction?: Transaction; }) {
+		try {
+			await this._model.destroy({ where: filters, transaction });
+		} catch (error) {
+			throw new RepositoryError(t("repository.error.internal_db", { repo: "UserDetails", method: "destroy" }) + (error as Error).message);
+		}
+	}
 }
