@@ -56,12 +56,9 @@ export default defineConfig({
                 }   // Разбиваем большой чанк на более мелкие по размерности (с помощью плагина visualizer)
             }
         },                  // Опции для разбиения основного чанка на более мелкие чанки
-        // ваши outDir, target, rollupOptions и т.д.
         commonjsOptions: {
             include: [
-                // точно «поймать» ваш пакет
                 /common-types/,
-                // плюс обычно всё из node_modules
                 /node_modules/
             ]
         }
