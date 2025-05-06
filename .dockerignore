@@ -1,15 +1,12 @@
 # Зависимости
 app/node_modules
 server/node_modules
+/packages/common-types/node_modules
 
 # Сборка production
 app/dist
 server/dist
-
-# .env файлы клиента (они копируются перед запуском построения билда клиента)
-app/.env
-app/.env.development
-app/.env.production
+/packages/common-types/dist
 
 # .env файлы сервера (они копируются в момент запуска сервиса сервера)
 server/.env

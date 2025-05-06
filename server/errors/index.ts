@@ -1,5 +1,6 @@
+import { HTTPErrorTypes, HTTPStatuses } from "common-types";
+
 import Logger from "@service/logger";
-import { HTTPErrorTypes, HTTPStatuses } from "@custom-types/enums";
 import { SOCKET_MIDDLEWARE_ERROR } from "@utils/constants";
 
 const logger = Logger("BaseError");

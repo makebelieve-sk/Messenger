@@ -1,8 +1,8 @@
+import { SocketActions } from "common-types";
 import EventEmitter from "events";
 
 import { validateHandleEvent, type ValidateHandleReturnType } from "@core/socket/validation";
 import Logger from "@service/logger";
-import { SocketActions } from "@custom-types/enums";
 import { SocketEvents } from "@custom-types/events";
 import type { CallbackAckType, ISocketUser, SocketWithUser } from "@custom-types/socket.types";
 

@@ -1,16 +1,17 @@
+import { ApiRoutes, HTTPErrorTypes, HTTPStatuses, SocketActions } from "common-types";
 import crypto from "crypto";
 import type { Express, NextFunction, Request, Response } from "express";
 import type { PassportStatic } from "passport";
 
-import Middleware from "@core/api/Middleware";
-import UsersController from "@core/controllers/UsersController";
-import Database from "@core/database/Database";
-import RedisWorks from "@core/Redis";
+import type Middleware from "@core/api/Middleware";
+import type UsersController from "@core/controllers/UsersController";
+import type Database from "@core/database/Database";
+import type RedisWorks from "@core/Redis";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { AuthError } from "@errors/controllers";
 import { PassportError } from "@errors/index";
-import { ApiRoutes, HTTPErrorTypes, HTTPStatuses, RedisKeys, SocketActions } from "@custom-types/enums";
+import { RedisKeys } from "@custom-types/enums";
 import { type ISafeUser } from "@custom-types/user.types";
 import { COOKIE_NAME } from "@utils/constants";
 import { updateSessionMaxAge } from "@utils/session";

@@ -389,3 +389,5 @@ BEGIN
     ALTER TABLE Files_in_Message ADD CONSTRAINT FK_Files_in_Message_Messages
     FOREIGN KEY (message_id) REFERENCES Messages(id) ON DELETE CASCADE;
 END;
+
+SET QUOTED_IDENTIFIER ON;

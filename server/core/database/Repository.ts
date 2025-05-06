@@ -1,3 +1,4 @@
+import { HTTPStatuses } from "common-types";
 import { Op, type Sequelize, type Transaction } from "sequelize";
 
 import Chats from "@core/database/repositories/Chats";
@@ -17,7 +18,6 @@ import Users from "@core/database/repositories/Users";
 import UsersInChat from "@core/database/repositories/UsersInChat";
 import { t } from "@service/i18n";
 import { RepositoryError } from "@errors/index";
-import { HTTPStatuses } from "@custom-types/enums";
 
 interface IDestroyOptions {
 	sourceUserId: string;

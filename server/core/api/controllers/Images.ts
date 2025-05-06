@@ -1,3 +1,4 @@
+import { ApiRoutes, HTTPStatuses } from "common-types";
 import type { Express, NextFunction, Request, Response } from "express";
 import fs from "fs";
 import multer from "multer";
@@ -11,7 +12,6 @@ import { type CreationAttributes } from "@core/database/models/photo";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { ImagesError } from "@errors/controllers";
-import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
 import { ASSETS_DIR } from "@utils/constants";
 import { getPhotoInfo } from "@utils/files";
 

@@ -1,3 +1,4 @@
+import { HTTPStatuses } from "common-types";
 import type { Express, NextFunction, Request, Response } from "express";
 import { MulterError } from "multer";
 import path from "path";
@@ -7,7 +8,7 @@ import RedisWorks from "@core/Redis";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { BaseError, MiddlewareError } from "@errors/index";
-import { HTTPStatuses, RedisKeys } from "@custom-types/enums";
+import { RedisKeys } from "@custom-types/enums";
 import { MB_1, MULTER_MAX_FILE_SIZE, MULTER_MAX_FILES_COUNT } from "@utils/constants";
 import { createSharpedImage } from "@utils/files";
 import { updateSessionMaxAge } from "@utils/session";

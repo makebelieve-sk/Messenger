@@ -36,6 +36,7 @@ const mssqlConfig = {
 			encrypt: true, // Шифрует соединение между сервером и БД (обязателен в Azure SQL Server)
 			enableArithAbort: true, // Следует ли прерывать запросы при арифметических ошибках (рекомендуется для MSSQL)
 			requestTimeout: DATABASE_DIALECT_REQUEST_TIMEOUT, // 15 секунд на выполнение запроса
+			multipleActiveResultSets: true, // Разрешить несколько активных наборов результатов (MARS)
 		},
 		useUTC: true, // Гарантирует, что время сохраняется в БД и возвращается из БД в UTC
 	}, // Опции диалекта

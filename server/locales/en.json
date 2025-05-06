@@ -176,5 +176,9 @@
 	"delete_unused_files_job_schedule.terminate": "Worker [threadId={{threadId}}] of deleting unused project files has been terminated.",
 	"delete_unused_files_job_schedule.full_stop": "The worker [ThreadId={{ThreadId}}] for deleting unused project files was stopped with the error code {{code}}.",
 	"delete_unused_files_job_schedule.success_stopped": "The task of deleting unused project files has been successfully completed.",
-	"delete_unused_files_job_schedule.error": "An error occurred when deleting unused project files: {{error}}."
+	"delete_unused_files_job_schedule.error": "An error occurred when deleting unused project files: {{error}}.",
+
+	"process.close_server": "Server closed, exiting with code {{code}}.",
+	"process.get_signal_before_close": "Received {{signal}}, initiating shutdown...",
+	"process.error.close_server": "Error during shutdown: {{error}}"
 }

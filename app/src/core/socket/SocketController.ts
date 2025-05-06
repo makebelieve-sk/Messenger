@@ -1,3 +1,5 @@
+import { SocketActions } from "common-types";
+
 import type ProfilesController from "@core/controllers/ProfilesController";
 import FriendsController from "@core/socket/controllers/Friends";
 import MessangesController from "@core/socket/controllers/Messages";
@@ -5,7 +7,6 @@ import UsersController from "@core/socket/controllers/Users";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import useUIStore from "@store/ui";
-import { SocketActions } from "@custom-types/enums";
 import { type SocketType } from "@custom-types/socket.types";
 import { SOCKET_MIDDLEWARE_ERROR } from "@utils/constants";
 

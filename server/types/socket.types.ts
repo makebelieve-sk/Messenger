@@ -1,10 +1,10 @@
-import { Server, Socket } from "socket.io";
+import { MessageReadStatus, SocketActions } from "common-types";
+import type { Server, Socket } from "socket.io";
 
-import SocketController from "@core/socket/SocketController";
-import { MessageReadStatus, SocketActions } from "@custom-types/enums";
-import { IEditMessage } from "@custom-types/message.types";
-import { IMessage } from "@custom-types/models.types";
-import { ISafeUser, UserPartial } from "@custom-types/user.types";
+import type SocketController from "@core/socket/SocketController";
+import { type IEditMessage } from "@custom-types/message.types";
+import { type IMessage } from "@custom-types/models.types";
+import type { ISafeUser, UserPartial } from "@custom-types/user.types";
 
 interface ISocketUser extends ISafeUser {
 	sockets: Map<string, SocketController>;

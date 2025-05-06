@@ -1,6 +1,6 @@
-import http, { IncomingMessage, ServerResponse } from "http";
+import type { IncomingMessage, Server, ServerResponse } from "http";
 
-import { ISocketUser } from "@custom-types/socket.types";
+import { type ISocketUser } from "@custom-types/socket.types";
 
 export type UsersType = Map<string, ISocketUser>;
 
@@ -17,6 +17,4 @@ export interface IImage {
 	fromProfile?: boolean;
 };
 
-export type TimeoutType = ReturnType<typeof setTimeout>;
-
-export type ServerType = http.Server<typeof IncomingMessage, typeof ServerResponse>;
+export type ServerType = Server<typeof IncomingMessage, typeof ServerResponse>;

@@ -55,6 +55,7 @@ export async function createSharpedImage(file: Express.Multer.File) {
 		path.join(ROOT_PATH, folderPath, outputFile),
 		jpegBuffer,
 	);
+
 	return { folderPath, outputFile };
 }
 

@@ -1,8 +1,8 @@
+import { SocketActions } from "common-types";
 import { z } from "zod";
 
 import { EditMessageSchema, MessageSchema, NotifyWriteSchema, PartialUserSchema } from "@core/socket/validation/helper";
 import { t } from "@service/i18n";
-import { SocketActions } from "@custom-types/enums";
 
 // Описание схемы отправки данных событий чатов
 export const emitMessagesSchema = {

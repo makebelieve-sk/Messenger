@@ -1,10 +1,11 @@
+import { SocketActions } from "common-types";
+
 import type ProfilesController from "@core/controllers/ProfilesController";
 import { validateHandleEvent } from "@core/socket/validation";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import useGlobalStore from "@store/global";
 import resetAllStores from "@store/index";
-import { SocketActions } from "@custom-types/enums";
 import { type SocketType } from "@custom-types/socket.types";
 import toFormatAck from "@utils/to-format-socket-ack";
 

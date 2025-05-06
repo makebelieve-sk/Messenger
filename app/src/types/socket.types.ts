@@ -1,6 +1,6 @@
+import { MessageReadStatus, SocketActions } from "common-types";
 import { type Socket } from "socket.io-client";
 
-import { MessageReadStatus, SocketActions } from "@custom-types/enums";
 import type { IMessage, IUser } from "@custom-types/models.types";
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;

@@ -1,3 +1,5 @@
+import { ApiRoutes } from "common-types";
+
 import { type IUpdatedAvatar } from "@components/ui/change-avatar";
 import { type Profile } from "@core/models/Profile";
 import { type User } from "@core/models/User";
@@ -9,7 +11,6 @@ import useImagesCarouselStore from "@store/images-carousel";
 import useProfileStore from "@store/profile";
 import useUIStore from "@store/ui";
 import { type IUserData } from "@custom-types/api.types";
-import { ApiRoutes } from "@custom-types/enums";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
 
 const logger = Logger.init("Profile");

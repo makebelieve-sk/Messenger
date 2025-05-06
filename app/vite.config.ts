@@ -55,7 +55,16 @@ export default defineConfig({
                     zod: ["zod"]
                 }   // Разбиваем большой чанк на более мелкие по размерности (с помощью плагина visualizer)
             }
-        }                   // Опции для разбиения основного чанка на более мелкие чанки
+        },                  // Опции для разбиения основного чанка на более мелкие чанки
+        // ваши outDir, target, rollupOptions и т.д.
+        commonjsOptions: {
+            include: [
+                // точно «поймать» ваш пакет
+                /common-types/,
+                // плюс обычно всё из node_modules
+                /node_modules/
+            ]
+        }
     },
     publicDir: "public",    // Директория для статичных файлов (дает возможность обращаться к картинках/шрифтам и тд прямиком из папки public)
     server: {
@@ -86,5 +95,9 @@ export default defineConfig({
                 `
             }
         }
-    }
+    },
+    // Отдаем на перекодирование commonjs модуль в ESM модуль
+    optimizeDeps: {
+        include: ["common-types"]
+    },
 });
