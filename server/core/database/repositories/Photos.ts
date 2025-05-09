@@ -1,10 +1,10 @@
+import { HTTPStatuses } from "common-types";
 import { Op, type Transaction } from "sequelize";
 
 import createPhotos, { type CreationAttributes, Photo } from "@core/database/models/photo";
 import Repository from "@core/database/Repository";
 import { t } from "@service/i18n";
 import { RepositoryError } from "@errors/index";
-import { HTTPStatuses } from "@custom-types/enums";
 import AliasAssociations from "@utils/associations";
 import { getPhotoInfo } from "@utils/files";
 

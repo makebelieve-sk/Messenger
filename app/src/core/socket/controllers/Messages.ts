@@ -1,7 +1,9 @@
+import { SocketActions } from "common-types";
+
 import { validateHandleEvent } from "@core/socket/validation";
 import Logger from "@service/Logger";
 import useGlobalStore from "@store/global";
-import { Pages, SocketActions } from "@custom-types/enums";
+import { Pages } from "@custom-types/enums";
 import { type SocketType } from "@custom-types/socket.types";
 import toFormatAck from "@utils/to-format-socket-ack";
 

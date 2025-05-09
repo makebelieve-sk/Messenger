@@ -1,8 +1,8 @@
+import { ApiRoutes } from "common-types";
 import { type ChangeEvent, memo } from "react";
 
 import InputImageComponent from "@components/ui/input-image";
 import useMainClient from "@hooks/useMainClient";
-import { ApiRoutes } from "@custom-types/enums";
 import { type IPhoto } from "@custom-types/models.types";
 
 export interface IUpdatedAvatar {

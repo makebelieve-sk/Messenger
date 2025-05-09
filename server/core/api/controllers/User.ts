@@ -1,3 +1,4 @@
+import { ApiRoutes, HTTPErrorTypes, HTTPStatuses } from "common-types";
 import type { Express, NextFunction, Request, Response } from "express";
 
 import Middleware from "@core/api/Middleware";
@@ -5,7 +6,6 @@ import Database from "@core/database/Database";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { UsersError } from "@errors/controllers";
-import { ApiRoutes, HTTPErrorTypes, HTTPStatuses } from "@custom-types/enums";
 import { validateEmail, validatePhoneNumber } from "@utils/auth";
 
 const logger = Logger("UserController");

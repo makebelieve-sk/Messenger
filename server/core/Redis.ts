@@ -1,3 +1,4 @@
+import { TimeoutType } from "common-types";
 import { RedisStore } from "connect-redis";
 import { createClient, RedisClientType } from "redis";
 
@@ -6,7 +7,6 @@ import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { RedisError } from "@errors/index";
 import { RedisKeys } from "@custom-types/enums";
-import { TimeoutType } from "@custom-types/index";
 import { REDIS_TIMEOUT_RECONNECTION, REDIS_TTL } from "@utils/constants";
 
 const logger = Logger("Redis");

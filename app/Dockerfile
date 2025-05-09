@@ -5,20 +5,22 @@ FROM node:22 AS build
 WORKDIR /app
 
 # Копируем файлы package.json и package-lock.json
-COPY package*.json ./
+COPY app/package*.json ./
+
+# Копируем локальные пакеты
+COPY packages/common-types /packages/common-types
+
+# Устанавливаем зависимости для модуля packages/common-types
+RUN cd /packages/common-types && npm install && cd ..
 
 # Устанавливаем зависимости
 RUN npm install
 
-# Копируем весь код клиента в контейнер
-COPY . .
+# Копируем весь код клиента в контейнер (включая енвы)
+COPY app/. .
 
-# Копируем файлы .env в контейнер (они нужны перед сборкой, так что не нужно прокидывать их через docker-compose.yml)
-COPY .env ./
-COPY .env.production ./
-
-# Запускаем сборку клиента
-RUN npm run build
+# Запускаем сборку клиента (запрещаем изменять версии пакетов. Строгое соответствие версий пакетов из package и package-lock)
+RUN npm run build --frozen-lockfile
 
 #  Формирование финального образа на базе Nginx
 FROM nginx:alpine
@@ -30,7 +32,7 @@ WORKDIR /root
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Копируем конфигурацию Nginx 
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY app/nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Запускаем Nginx
 CMD ["nginx", "-g", "daemon off;"]

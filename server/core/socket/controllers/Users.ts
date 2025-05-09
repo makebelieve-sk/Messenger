@@ -1,8 +1,8 @@
+import { SocketActions } from "common-types";
 import EventEmitter from "events";
 
 import MainUsersController from "@core/controllers/UsersController";
 import Logger from "@service/logger";
-import { SocketActions } from "@custom-types/enums";
 import { SocketEvents } from "@custom-types/events";
 import { type SocketWithUser } from "@custom-types/socket.types";
 

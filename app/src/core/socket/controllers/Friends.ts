@@ -1,6 +1,7 @@
+import { SocketActions } from "common-types";
+
 import { validateHandleEvent } from "@core/socket/validation";
 import Logger from "@service/Logger";
-import { SocketActions } from "@custom-types/enums";
 import { type SocketType } from "@custom-types/socket.types";
 import toFormatAck from "@utils/to-format-socket-ack";
 

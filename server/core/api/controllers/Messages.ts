@@ -9,7 +9,7 @@
 // import Logger from "@service/logger";
 // import { MessagesError } from "@errors/controllers";
 // import type { IChatInfo, IDialog } from "@custom-types/chat.types";
-// import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "@custom-types/enums";
+// import { ApiRoutes, HTTPStatuses, MessageReadStatus, MessageTypes } from "common-types";
 // import type { IFile, IMessage } from "@custom-types/models.types";
 // import { type UserPartial } from "@custom-types/user.types";
 // import { LIMIT, LOAD_MORE_LIMIT } from "@utils/limits";

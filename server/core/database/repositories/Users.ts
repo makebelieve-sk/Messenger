@@ -1,10 +1,10 @@
+import { HTTPStatuses } from "common-types";
 import type { Transaction } from "sequelize";
 
 import createUsers, { type CreationAttributes, User } from "@core/database/models/user";
 import Repository from "@core/database/Repository";
 import { t } from "@service/i18n";
 import { RepositoryError } from "@errors/index";
-import { HTTPStatuses } from "@custom-types/enums";
 import type { INotificationSettings, IPhoto, IUserDetail } from "@custom-types/models.types";
 
 interface ICreate {

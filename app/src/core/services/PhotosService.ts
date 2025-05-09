@@ -1,10 +1,11 @@
+import { ApiRoutes } from "common-types";
+
 import { type Photos } from "@core/models/Photos";
 import type Request from "@core/Request";
 import Logger from "@service/Logger";
 import useImagesCarouselStore from "@store/images-carousel";
 import usePhotosStore from "@store/photos";
 import useUIStore from "@store/ui";
-import { ApiRoutes } from "@custom-types/enums";
 import { type IPhoto } from "@custom-types/models.types";
 import { PHOTOS_LIMIT } from "@utils/constants";
 

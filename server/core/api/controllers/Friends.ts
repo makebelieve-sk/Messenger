@@ -7,7 +7,7 @@
 // import { t } from "@service/i18n";
 // import Logger from "@service/logger";
 // import { FriendsError } from "@errors/controllers";
-// import { ApiRoutes, FriendsTab, HTTPStatuses } from "@custom-types/enums";
+// import { ApiRoutes, FriendsTab, HTTPStatuses } from "common-types";
 // import { type UsersType } from "@custom-types/index";
 // import { getSearchWhere } from "@utils/where";
 

@@ -1,3 +1,4 @@
+import { ApiRoutes, HTTPStatuses } from "common-types";
 import type { Express, NextFunction, Request, Response } from "express";
 
 import AuthController from "@core/api/controllers/Auth";
@@ -6,7 +7,6 @@ import type Database from "@core/database/Database";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { MainError } from "@errors/controllers";
-import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
 import { COOKIE_NAME } from "@utils/constants";
 
 const logger = Logger("MainController");

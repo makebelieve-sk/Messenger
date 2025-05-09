@@ -1,3 +1,4 @@
+import { FriendsTab } from "common-types";
 import { memo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -6,7 +7,7 @@ import useProfile from "@hooks/useProfile";
 import FriendsBlock from "@modules/profile/top-friends/friends-block";
 import i18next from "@service/i18n";
 import useGlobalStore from "@store/global";
-import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
+import { MainFriendTabs, Pages } from "@custom-types/enums";
 
 // Компонент, отрисовывающий блок онлайн друзей
 export default memo(function OnlineFriends() {

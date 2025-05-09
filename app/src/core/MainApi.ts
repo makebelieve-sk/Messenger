@@ -1,3 +1,5 @@
+import { ApiRoutes } from "common-types";
+
 import { type IUpdatedAvatar } from "@components/ui/change-avatar";
 import type ProfilesController from "@core/controllers/ProfilesController";
 import type Request from "@core/Request";
@@ -6,7 +8,6 @@ import Logger from "@service/Logger";
 import useAuthStore from "@store/auth";
 import useUserStore from "@store/user";
 import { type IUserData } from "@custom-types/api.types";
-import { ApiRoutes } from "@custom-types/enums";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
 
 const logger = Logger.init("MainApi");

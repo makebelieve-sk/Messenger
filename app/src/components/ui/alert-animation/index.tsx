@@ -1,8 +1,8 @@
+import { type TimeoutType } from "common-types";
 import { memo, type ReactNode, useEffect, useRef } from "react";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
 
-import { type TimeoutType } from "@custom-types/index";
 import { ALERT_TIMEOUT, SLIDE_ALERT_TIMEOUT } from "@utils/constants";
 
 interface IAlertAnimationComponent {

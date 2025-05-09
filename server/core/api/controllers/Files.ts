@@ -10,7 +10,7 @@
 // import { t } from "@service/i18n";
 // import Logger from "@service/logger";
 // import { FilesError } from "@errors/controllers";
-// import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
+// import { ApiRoutes, HTTPStatuses } from "common-types";
 
 // const logger = Logger("FilesController");
 

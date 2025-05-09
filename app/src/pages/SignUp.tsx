@@ -1,3 +1,4 @@
+import { HTTPStatuses } from "common-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +18,7 @@ import SignUpForm from "@modules/sign-up/Form";
 import i18next from "@service/i18n";
 import useAuthStore from "@store/auth";
 import useUIStore from "@store/ui";
-import { HTTPStatuses, Pages } from "@custom-types/enums";
+import { Pages } from "@custom-types/enums";
 import { type IUser } from "@custom-types/models.types";
 
 import styles from "@styles/pages/sign-up.module.scss";

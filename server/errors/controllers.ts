@@ -1,5 +1,6 @@
+import { HTTPErrorTypes, HTTPStatuses } from "common-types";
+
 import { BaseError } from "@errors/index";
-import { HTTPErrorTypes, HTTPStatuses } from "@custom-types/enums";
 
 export class MainError extends BaseError {
 	constructor(
