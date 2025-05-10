@@ -1,6 +1,7 @@
 // Устанавливаем необязательным env переменным значения по умолчанию
 export const PORT = process.env.PORT as "8008";
 export const NODE_ENV = process.env.NODE_ENV as "development" | "production" | "test";
+export const MESSANGER_ENV = process.env.MESSANGER_ENV as "development" | "stage" | "production";
 export const CLIENT_URL = process.env.CLIENT_URL as string;
 export const COOKIE_NAME = process.env.COOKIE_NAME as string;
 export const SECRET_KEY = process.env.SECRET_KEY as string;
@@ -56,6 +57,7 @@ export const BACKUP_JOB_SCHEDULE = process.env.BACKUP_JOB_SCHEDULE as string;
 
 // Далее пошли обычные переменные, используемые в проекте
 export const IS_DEV = NODE_ENV === "development";
+export const IS_HTTPS = MESSANGER_ENV !== "production";
 export const MB_1 = 1024 * 1024;
 export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";
 export const BACKUP_ENCYPTED_FILE = "backup.enc";
