@@ -6,7 +6,7 @@
 
 # Также, очень важно: при команде ./docker-compose-start.sh переменная окружения автоматически берется равной development,
 # если не указать другое значение. Для того, чтобы запустить docker compose в production режиме, необходимо указать следующую команду:
-# NODE_ENV=production ./docker-compose-start.sh
+# MESSANGER_ENV=production ./docker-compose-start.sh
 # В PaaS (Heroku/Vercel/Render/etc) переменная окружения устанавливается в разделе "Environment Variables". Также, должна быть прописанной строка запуска:
 # bash ./docker-compose.start.sh в разделе "Start Command" (команда запуска приложения).
 
