@@ -16,7 +16,6 @@ export default memo(function BigUserUserAvatar({ userId, src, alt }: IBigUserUse
 		userId={userId}
 		src={src}
 		alt={alt}
-		id="big-avatar"
-		className="friend-avatar"
+		className="big-avatar"
 	/>;
 });

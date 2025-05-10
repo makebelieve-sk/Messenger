@@ -40,6 +40,11 @@ export default function MenuComponent() {
 	//     navigate({ pathname: Pages.friends, query: { mainTab: MainFriendTabs.allFriends, tab: FriendsTab.all } });
 	// };
 
+	// Обработка клика по блоку фотографий
+	const onClickPhotos = () => {
+		navigate(Pages.photos);
+	};
+
 	return <div className="menu">
 		<nav className="menu__nav">
 			<MenuListComponent>
@@ -71,7 +76,7 @@ export default function MenuComponent() {
 					<NotificationBadge content={0} />
 				</MenuItemComponent>
 
-				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.photos)}>
+				<MenuItemComponent className="menu__nav__item" onClick={onClickPhotos}>
 					<CameraAltIcon color="primary" />
                     
 					<div className="menu__nav__item__title">

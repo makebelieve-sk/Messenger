@@ -37,19 +37,23 @@ export default class MainClient {
 	// Получить профиль пользователя по id
 	getProfile(userId?: string) {
 		return this._profilesController.getProfile(userId);
+	}	
+
+	// Проверка существования профиля пользователя
+	existProfile(userId?: string) {
+		return this._profilesController.checkProfile(userId);
 	}
 
-	/**
-	 * Удаляем профиль своего пользователя.
-	 * Это возможно только, если в запросе вернулся 401 статус и пользователя перекинуло на страницу входа.
-	 * Где также, он может перейти на страницу регистрации.
-	 * При этом, условие проверки существования this и ProfilesController обязательно, так как его может не быть при
-	 * первом входе на страницу входа/регистрации (еще не до конца инициализировался конструктор класса MainClient).
-	 */
-	removeProfile() {
-		if (this && this._profilesController) {
+	// Время авторизации пользователя истекло, необходимо удалить его профиль (то есть свой)
+	lifeTimeExpire() {
+		if (this._profilesController.getMyProfileId()) {
 			this._profilesController.removeProfile();
 		}
+	}
+
+	// Удаляем профиль своего пользователя.
+	removeProfile() {
+		this._profilesController.removeProfile();
 	}
 
 	// Скачать файл с логами

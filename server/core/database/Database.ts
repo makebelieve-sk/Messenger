@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { type Error, Sequelize } from "sequelize";
 
 import mssqlConfig from "@config/mssql.config";
 import Migrations from "@core/database/Migrations";
@@ -6,7 +6,7 @@ import Relations from "@core/database/Relations";
 import Repository from "@core/database/Repository";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
-import { DatabaseError } from "@errors/index";
+import SequelizeError from "@errors/sequelize";
 import { DATEBASE_DOWN_MIGRATIONS } from "@utils/constants";
 
 const logger = Logger("Database");
@@ -36,7 +36,7 @@ export default class Database {
 			await this._sequelize.close();
 			logger.info(t("database.close"));
 		} catch (error) {
-			new DatabaseError(`${t("database.error.close")}: ${(error as Error).message}`);
+			new SequelizeError(error as Error, t("database.error.close"));
 		};
 	}
 
@@ -54,7 +54,7 @@ export default class Database {
 				// Запускаем все миграции
 				this._runMigrations();
 			})
-			.catch((error: Error) => new DatabaseError(`${t("database.error.connect")}: ${error.message}`));
+			.catch((error: Error) => new SequelizeError(error, t("database.error.connect")));
 	}
 
 	// Запуск всех миграций для синхронизации базы данных
@@ -83,7 +83,7 @@ export default class Database {
 				this.close();
 			}
 		} catch (error) {
-			new DatabaseError(`${t("database.error.migrations")}: ${(error as Error).message}`);
+			new SequelizeError(error as Error, t("database.error.migrations"));
 		}
 	}
 

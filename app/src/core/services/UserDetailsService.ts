@@ -69,6 +69,11 @@ export default class UserDetailsService implements UserDetails {
 		});
 	}
 
+	// Синхронизация дополнительной информации о пользователе в Zustand
+	syncUserDetails() {
+		this._updateDetails(this._details);
+	}
+
 	// Получение текста для разного количества друзей
 	getFriendsText(count: number) {
 		return this._getText(count, [

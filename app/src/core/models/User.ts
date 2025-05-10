@@ -20,5 +20,6 @@ export interface User {
 	avatarCreateDate: string;
 
 	updateUser: ({ user, userDetails }: { user: IApiUser; userDetails: IApiUserDetails; }) => void;
+	syncInfo: () => void;
 	changeAvatar: (updatedAvatar?: IPhoto) => void;
 };

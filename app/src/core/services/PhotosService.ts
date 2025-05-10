@@ -40,6 +40,7 @@ export default class PhotosService implements Photos {
 	getAllPhotos() {
 		// На всякий случай добавляем ограничение на запрос, если получили все фотографии
 		if (!this._hasMore) {
+			this._syncStorePhotos();
 			return;
 		}
 
@@ -134,7 +135,7 @@ export default class PhotosService implements Photos {
 		});
 	}
 
-	// Синхронизация фотографий сервиса и стора
+	// Синхронизация фотографий сервиса и глобального состояния
 	private _syncStorePhotos() {
 		usePhotosStore.getState().syncPhotos({
 			photos: this._photos,

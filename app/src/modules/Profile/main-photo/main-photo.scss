@@ -1,6 +1,6 @@
 .main-photo {
     width: 100%;
-    min-height: 407.8px; // Высчитал высоту, согласно внутерннимм отступам, высоте кнопки и максимальной высоте аватара
+    min-height: 407.8px; // Высчитал высоту, согласно внутренним отступам, высоте кнопки и максимальной высоте аватара
     
     &__container {
         display: flex;
@@ -10,6 +10,10 @@
         position: relative;
         width: 100%;
         min-height: 100%;
+
+        &__another-user {
+            justify-content: center;
+        }
 
         .photo {
             max-width: fit-content;

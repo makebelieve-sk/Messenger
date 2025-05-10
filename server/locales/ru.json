@@ -111,8 +111,8 @@
 	"database.error.close": "Закрытие соединения с базой данных завершилось не удачно.",
 	"database.error.connect": "Соединение с базой данных завершилось с ошибкой",
 	"database.error.migrations": "Возникла ошибка с транзакцией при выполнении миграций",
-	"database.error.up_migrations": "Запуск миграций завершился с ошибкой",
-	"database.error.down_migrations": "Запуск откатов миграций завершился с ошибкой",
+	"database.error.up_migrations": "Запуск миграций завершился с ошибкой:",
+	"database.error.down_migrations": "Запуск откатов миграций завершился с ошибкой:",
 
 	"repository.error.photo_not_found": "Фотография не найдена.",
 	"repository.error.destroyed_row_not_found": "Удаляемая строка не найдена.",
@@ -178,6 +178,13 @@
 	"delete_unused_files_job_schedule.success_stopped": "Задача удаления неиспользуемых файлов проекта успешно завершена.",
 	"delete_unused_files_job_schedule.error": "Возникла ошибка при удалении неиспользуемых файлов проекта: {{error}}.",
 
+	"errors.sequelize.database_error": "Ошибка базы данных",
+	"errors.sequelize.validation_error": "Ошибка валидации:",
+	"errors.sequelize.duplicate_entry": "Дублирующаяся запись:",
+	"errors.sequelize.database_operation_failed": "Операция с базой данных не выполнена:",
+	"errors.sequelize.foreign_key_constraint_failed": "Ошибка внешнего ключа",
+	"errors.sequelize.database_timeout": "Превышено время ожидания базы данных",
+	
 	"process.close_server": "Сервер остановлен с кодом {{code}}.",
 	"process.get_signal_before_close": "Получен сигнал {{signal}}, выполняется остановка сервера...",
 	"process.error.close_server": "Произошла ошибка во время остановки сервера: {{error}}"

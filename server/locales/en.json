@@ -111,8 +111,8 @@
 	"database.error.close": "Closing the database connection failed.",
 	"database.error.connect": "The connection to the database failed with an error",
 	"database.error.migrations": "A transaction error occurred while performing migrations",
-	"database.error.up_migrations": "The migrations launch failed with error",
-	"database.error.down_migrations": "The migrations rollback failed with error",
+	"database.error.up_migrations": "The migrations launch failed with error:",
+	"database.error.down_migrations": "The migrations rollback failed with error:",
 
 	"repository.error.photo_not_found": "Photo not found.",
 	"repository.error.destroyed_row_not_found": "The row being deleted was not found.",
@@ -177,6 +177,13 @@
 	"delete_unused_files_job_schedule.full_stop": "The worker [ThreadId={{ThreadId}}] for deleting unused project files was stopped with the error code {{code}}.",
 	"delete_unused_files_job_schedule.success_stopped": "The task of deleting unused project files has been successfully completed.",
 	"delete_unused_files_job_schedule.error": "An error occurred when deleting unused project files: {{error}}.",
+
+	"errors.sequelize.database_error": "Database error",
+	"errors.sequelize.validation_error": "Validation error:",
+	"errors.sequelize.duplicate_entry": "Duplicate entry:",
+	"errors.sequelize.database_operation_failed": "Database operation failed:",
+	"errors.sequelize.foreign_key_constraint_failed": "Foreign key constraint failed",
+	"errors.sequelize.database_timeout": "Database timeout",
 
 	"process.close_server": "Server closed, exiting with code {{code}}.",
 	"process.get_signal_before_close": "Received {{signal}}, initiating shutdown...",

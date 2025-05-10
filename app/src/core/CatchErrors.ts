@@ -74,6 +74,7 @@ export default class CatchErrors {
 				break;
 			}
 			case HTTPStatuses.ServerError:
+			case HTTPStatuses.ServiceUnavailable:
 			default:
 				this._serverError();
 			}
@@ -199,7 +200,7 @@ export default class CatchErrors {
 		this._systemError();
 	}
 
-	// Статус 500
+	// Статус 500/503 (сервис недоступен)
 	private _serverError() {
 		this._handleError();
 	}
