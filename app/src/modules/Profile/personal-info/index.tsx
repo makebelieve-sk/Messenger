@@ -1,13 +1,16 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import GridComponent from "@components/ui/grid";
 import PaperComponent from "@components/ui/paper";
 import SpinnerComponent from "@components/ui/spinner";
+import useProfile from "@hooks/useProfile";
 import useUserDetails from "@hooks/useUserDetails";
 import i18next from "@service/i18n";
 import usePhotosStore from "@store/photos";
 import useUserStore from "@store/user";
 import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
+import { goToAnotherProfile } from "@utils/index";
 
 import "./personal-info.scss";
 
@@ -18,11 +21,18 @@ export default function PersonalInfo() {
 	const city = useUserStore(state => state.userDetails.city);
 	const work = useUserStore(state => state.userDetails.work);
 
+	const navigate = useNavigate();
+	const { userId } = useParams();
+
 	const photosCount = usePhotosStore(state => state.count);
 	const isPhotosLoading = usePhotosStore(state => state.isPhotosLoading);
 
-	const userDetails = useUserDetails();
-	const navigate = useNavigate();
+	const profile = useProfile(userId);
+	const userDetails = useUserDetails(userId);
+
+	useEffect(() => {
+		profile.userService.syncInfo();
+	}, [ userId ]);
 
 	// Обработка клика по блоку
 	const onClickBlock = (tab?: FriendsTab) => {
@@ -37,6 +47,11 @@ export default function PersonalInfo() {
 		navigate(Pages.friends, { state: stateOptions });
 	};
 
+	// Обработка клика по блоку фотографий
+	const onClickPhotos = () => {
+		navigate(goToAnotherProfile(Pages.photos, userId));
+	};
+
 	return <GridComponent>
 		<PaperComponent className="info-container paper-block">
 			<div className="info-container__main-info">
@@ -44,9 +59,12 @@ export default function PersonalInfo() {
 			</div>
 
 			<div className="info-container__short-info-block">
-				<div className="info-container__short-info-block__edit" onClick={() => navigate(Pages.edit)}>
-					{i18next.t("profile-module.edit")}
-				</div>
+				{profile.isMe
+					? <div className="info-container__short-info-block__edit" onClick={() => navigate(Pages.edit)}>
+						{i18next.t("profile-module.edit")}
+					</div>
+					: null
+				}
 
 				<div className="info-container__short-info-block__row">
 					<div className="info-container__short-info-block__row__title">{i18next.t("profile-module.birthday")}:</div>
@@ -79,8 +97,8 @@ export default function PersonalInfo() {
 					<span className="info-container__counts-block__count__value">{0}</span> {userDetails.getSubscribersText(0)}
 				</div>
 
-				<div className="info-container__counts-block__count" onClick={() => navigate(Pages.photos)}>
-					{isPhotosLoading 
+				<div className="info-container__counts-block__count" onClick={onClickPhotos}>
+					{isPhotosLoading
 						? <SpinnerComponent />
 						: <>
 							<span className="info-container__counts-block__count__value">{photosCount}</span> {userDetails.getPhotosText(photosCount)}

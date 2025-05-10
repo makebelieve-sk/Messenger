@@ -67,14 +67,6 @@ export class PassportError extends BaseError {
 	}
 }
 
-export class DatabaseError extends BaseError {
-	constructor(readonly message: string) {
-		super(message);
-
-		this.name = "Database error";
-	}
-}
-
 export class RepositoryError extends BaseError {
 	constructor(
 		readonly message: string,

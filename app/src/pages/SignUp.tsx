@@ -82,7 +82,7 @@ export default function SignUp() {
 	const signUpErrors = useAuthStore(state => state.signUpErrors);
 	const loading = useAuthStore(state => state.signUpLoading);
 
-	const { mainApi, removeProfile } = useMainClient();
+	const mainClient = useMainClient();
 	const navigate = useNavigate();
 
 	/**
@@ -91,7 +91,7 @@ export default function SignUp() {
 	 * нет возможности удалять профиль пользователя (только через Zustand, но это костыль, так как будет использована подписка).
 	 */
 	useEffect(() => {
-		removeProfile();
+		mainClient.removeProfile();
 	}, []);
 
 	// Подписка на событие ошибок, возникающих при регистрации
@@ -227,7 +227,7 @@ export default function SignUp() {
 			photoUrl: newPhotoUrl,
 		};
 
-		mainApi.signUp(user);
+		mainClient.mainApi.signUp(user);
 	};
 
 	const getStepContent = (step: number) => {

@@ -31,6 +31,7 @@ export default class UserService implements User {
 		const { user, userDetails, notificationSettings } = this._userData;
 
 		this._updateUser(user);
+		this._updateMyAvatar();
 
 		// Создаем сущность дополнительной информации о пользователе
 		this._userDetails = new UserDetailsService(userDetails);
@@ -103,6 +104,12 @@ export default class UserService implements User {
 		this._userDetails.updateDetails(userDetails);
 	}
 
+	// Синхронизация данных о пользователе в Zustand
+	syncInfo() {
+		this._updateUser(this._user);
+		this._userDetails.syncUserDetails();
+	}
+
 	// Изменение аватара пользователя
 	changeAvatar(updatedAvatar?: IPhoto) {
 		logger.debug(`changeAvatar [value=${updatedAvatar?.path}]`);
@@ -130,5 +137,19 @@ export default class UserService implements User {
 			avatarUrl: this.avatarUrl,
 			avatarCreateDate: this.avatarCreateDate,
 		});
+	}
+
+	/**
+	 * Обновление аватара пользователя в Zustand.
+	 * Эти данные должны быть статичны, так как используются в Header.tsx и не зависят от профиля пользователя.
+	 */
+	private _updateMyAvatar() {
+		if (this._userData.isMe) {
+			useUserStore.getState().setMyAvatar({
+				src: this.avatarUrl,
+				alt: this.fullName,
+				userId: this.id,
+			});
+		}
 	}
 };

@@ -1,8 +1,8 @@
-import { type Sequelize } from "sequelize";
+import type { Error, Sequelize } from "sequelize";
 
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
-import { DatabaseError } from "@errors/index";
+import SequelizeError from "@errors/sequelize";
 import initSchema from "@migrations/04.03.2025-init-schema";
 import addIsDeletedToUsers from "@migrations/05.05.2025-add-is-deleted-to-users";
 
@@ -31,7 +31,7 @@ export default class Migrations {
 			return true;
 		} catch (error) {
 			await transaction.rollback();
-			new DatabaseError(`${t("database.error.up_migrations")}: ${(error as Error).message}`);
+			new SequelizeError(error as Error, t("database.error.up_migrations"));
 
 			return false;
 		}
@@ -56,7 +56,7 @@ export default class Migrations {
 			return true;
 		} catch (error) {
 			await transaction.rollback();
-			new DatabaseError(`${t("database.error.down_migrations")}: ${(error as Error).message}`);
+			new SequelizeError(error as Error, t("database.error.down_migrations"));
 
 			return false;
 		}

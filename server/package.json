@@ -4,8 +4,12 @@
 	"private": true,
 	"description": "messenger server",
 	"author": "Aleksey Skriabin",
-	"license": "ISC",
+	"license": "UNLICENSED",
 	"main": "index.ts",
+	"engines": {
+		"node": ">=22.0.0",
+		"npm": "^10.0.0"
+	},
 	"scripts": {
 		"start": "cross-env NODE_ENV=development nodemon -r tsconfig-paths/register index.ts",
 		"start:production": "node -r module-alias/register dist/index.js",

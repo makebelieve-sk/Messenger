@@ -1,13 +1,15 @@
 import { memo, useEffect, useState } from "react";
 
 import useUser from "@hooks/useUser";
+import useUserIdFromPath from "@hooks/useUserIdOutsideRoute";
 import CarouselModule, { type ICarouselImage } from "@modules/carousel";
 
 // Отрисовка аватара пользователя в карусели
 export default memo(function AvatarCarousel() {
 	const [ carouselPhoto, setCarouselPhoto ] = useState<ICarouselImage | null>(null);
 
-	const user = useUser();
+	const userId = useUserIdFromPath();
+	const user = useUser(userId);
 
 	useEffect(() => {
 		setCarouselPhoto({
@@ -17,7 +19,7 @@ export default memo(function AvatarCarousel() {
 			authorAvatarUrl: user.avatarUrl,
 			dateTime: user.avatarCreateDate,
 		});
-	}, []);
+	}, [ user ]);
 
 	if (!carouselPhoto) return null;
 

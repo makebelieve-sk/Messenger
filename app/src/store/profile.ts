@@ -6,6 +6,8 @@ interface IProfileState {
     editErrors?: { field?: string; fields?: string[]; };
     isDeleteAvatarLoading: boolean;
 	isDeleteAccountLoading: boolean;
+	isPrepareAnotherUser: boolean;
+
 };
 
 interface IProfileActions {
@@ -14,6 +16,7 @@ interface IProfileActions {
     setEditErrors: (editErrors: { field?: string; fields?: string[]; }) => void;
     setDeleteAvatarLoading: (isDeleteAvatarLoading: boolean) => void;
 	setDeleteAccountLoading: (isDeleteAccountLoading: boolean) => void;
+    setPrepareAnotherUser: (isPrepareAnotherUser: boolean) => void;
     reset: () => void;
 };
 
@@ -24,6 +27,7 @@ const initialState = {
 	editErrors: undefined,
 	isDeleteAvatarLoading: false,
 	isDeleteAccountLoading: false,
+	isPrepareAnotherUser: true,
 };
 
 // Состояние всех данных профиля
@@ -35,6 +39,7 @@ const useProfileStore = create<IProfileState & IProfileActions>(set => ({
 	setEditErrors: editErrors => set({ editErrors }),
 	setDeleteAvatarLoading: isDeleteAvatarLoading => set({ isDeleteAvatarLoading }),
 	setDeleteAccountLoading: isDeleteAccountLoading => set({ isDeleteAccountLoading }),
+	setPrepareAnotherUser: isPrepareAnotherUser => set({ isPrepareAnotherUser }),
 	reset: () => set({ ...initialState }),
 }));
 

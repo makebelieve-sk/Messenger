@@ -74,6 +74,7 @@ enum HTTPStatuses {
 	PayloadTooLarge = 413,
 	TooManyRequests = 429,
 	ServerError = 500,
+	ServiceUnavailable = 503,
 };
 
 // Типы, которые описывают на какой странице возникла ошибка для её корректной отправки через шину событий на клиенте
@@ -88,10 +89,12 @@ enum Pages {
 	notExists = "*",
 	main = "/",
 	profile = "/profile",
+	profileUser = "/profile/:userId?",
 	edit = "/edit",
 	messages = "/messages",
 	friends = "/friends",
 	photos = "/photos",
+	photosUser = "/photos/:userId?",
 	calls = "/calls",
 	signUp = "/sign-up",
 	signIn = "/sign-in",
