@@ -70,4 +70,4 @@ function stopJob() {
 }
 
 // Обработка сигналов главного процесса для остановки задания
-ProcessWorks.handleSignals(stopJob);
+ProcessWorks.registerCleanupTask(stopJob);

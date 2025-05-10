@@ -183,5 +183,9 @@
 	"errors.sequelize.duplicate_entry": "Дублирующаяся запись:",
 	"errors.sequelize.database_operation_failed": "Операция с базой данных не выполнена:",
 	"errors.sequelize.foreign_key_constraint_failed": "Ошибка внешнего ключа",
-	"errors.sequelize.database_timeout": "Превышено время ожидания базы данных"
+	"errors.sequelize.database_timeout": "Превышено время ожидания базы данных",
+	
+	"process.close_server": "Сервер остановлен с кодом {{code}}.",
+	"process.get_signal_before_close": "Получен сигнал {{signal}}, выполняется остановка сервера...",
+	"process.error.close_server": "Произошла ошибка во время остановки сервера: {{error}}"
 }

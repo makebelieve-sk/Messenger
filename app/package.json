@@ -8,12 +8,12 @@
   "type": "module",
   "engines": {
 		"node": ">=22.0.0",
-		"npm": "^10.0.0"
+		"npm": ">=10.0.0"
 	},
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
-    "build": "tsc && vite build",
+    "build": "rimraf dist && tsc && vite build",
     "prepare": "cd .. && husky",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
@@ -77,6 +77,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/browser": "^3.1.1",
     "@vitest/coverage-v8": "^3.1.1",
+    "common-types": "file:../packages/common-types",
     "eslint": "^9.18.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^7.37.5",
@@ -88,6 +89,7 @@
     "jest-scss-transform": "^1.0.4",
     "jiti": "^2.4.2",
     "playwright": "^1.51.1",
+    "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^5.14.0",
     "sass": "^1.86.1",
     "storybook": "^8.6.12",

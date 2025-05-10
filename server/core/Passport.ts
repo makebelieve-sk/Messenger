@@ -1,3 +1,4 @@
+import { HTTPErrorTypes, HTTPStatuses } from "common-types";
 import crypto from "crypto";
 import { type Express } from "express";
 import Passport, { type PassportStatic } from "passport";
@@ -9,7 +10,6 @@ import { type User } from "@core/database/models/user";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { PassportError } from "@errors/index";
-import { HTTPErrorTypes, HTTPStatuses } from "@custom-types/enums";
 import { type ISafeUser } from "@custom-types/user.types";
 import { validateEmail, validatePhoneNumber } from "@utils/auth";
 import { IS_DEV } from "@utils/constants";

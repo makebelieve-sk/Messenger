@@ -1,7 +1,7 @@
+import { FileVarieties, MessageTypes } from "common-types";
 import { v4 as uuid } from "uuid";
 
 import Logger from "@service/Logger";
-import { FileVarieties, MessageTypes } from "@custom-types/enums";
 import type { IFile, IMessage } from "@custom-types/models.types";
 import { isImage } from "@utils/files";
 

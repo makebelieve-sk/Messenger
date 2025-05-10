@@ -1,6 +1,5 @@
 import type { AxiosError, AxiosResponse } from "axios";
-
-import { HTTPErrorTypes } from "@custom-types/enums";
+import { HTTPErrorTypes } from "common-types";
 
 interface IResponseData {
 	success: boolean;

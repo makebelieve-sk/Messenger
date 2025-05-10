@@ -1,4 +1,4 @@
-import { MessageTypes } from "@custom-types/enums";
+import { MessageTypes } from "common-types";
 
 // Интерфейс атрибутов модели User
 export interface IUser {

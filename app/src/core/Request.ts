@@ -1,11 +1,11 @@
 import axios, { type AxiosInstance } from "axios";
+import { ApiRoutes, HTTPStatuses } from "common-types";
 
 import type CatchErrors from "@core/CatchErrors";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import useUIStore from "@store/ui";
 import type { AxiosErrorType, AxiosResponseType } from "@custom-types/axios.types";
-import { ApiRoutes, HTTPStatuses } from "@custom-types/enums";
 import { API_URL, AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT } from "@utils/constants";
 
 const logger = Logger.init("Request");

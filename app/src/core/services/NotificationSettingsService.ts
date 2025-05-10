@@ -1,8 +1,9 @@
+import { ApiRoutes } from "common-types";
+
 import { type NotificationSettings } from "@core/models/NotificationSettings";
 import type Request from "@core/Request";
 import Logger from "@service/Logger";
 import useUIStore from "@store/ui";
-import { ApiRoutes } from "@custom-types/enums";
 import { type INotificationSettings } from "@custom-types/models.types";
 
 const logger = Logger.init("NotificationSettings");

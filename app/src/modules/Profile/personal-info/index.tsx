@@ -1,3 +1,4 @@
+import { FriendsTab } from "common-types";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -9,7 +10,7 @@ import useUserDetails from "@hooks/useUserDetails";
 import i18next from "@service/i18n";
 import usePhotosStore from "@store/photos";
 import useUserStore from "@store/user";
-import { FriendsTab, MainFriendTabs, Pages } from "@custom-types/enums";
+import { MainFriendTabs, Pages } from "@custom-types/enums";
 import { goToAnotherProfile } from "@utils/index";
 
 import "./personal-info.scss";

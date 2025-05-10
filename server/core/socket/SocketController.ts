@@ -1,3 +1,4 @@
+import { SocketActions } from "common-types";
 import EventEmitter from "events";
 import type { Server, Socket } from "socket.io";
 
@@ -10,7 +11,6 @@ import { validateEmitEvent } from "@core/socket/validation";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { SocketError } from "@errors/index";
-import { SocketActions } from "@custom-types/enums";
 import { SocketEvents } from "@custom-types/events";
 import type { HandleArgsType, IAck, ServerToClientEvents, SocketType, SocketWithUser } from "@custom-types/socket.types";
 import { SOCKET_ACK_TIMEOUT } from "@utils/constants";

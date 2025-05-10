@@ -183,5 +183,9 @@
 	"errors.sequelize.duplicate_entry": "Duplicate entry:",
 	"errors.sequelize.database_operation_failed": "Database operation failed:",
 	"errors.sequelize.foreign_key_constraint_failed": "Foreign key constraint failed",
-	"errors.sequelize.database_timeout": "Database timeout"
+	"errors.sequelize.database_timeout": "Database timeout",
+
+	"process.close_server": "Server closed, exiting with code {{code}}.",
+	"process.get_signal_before_close": "Received {{signal}}, initiating shutdown...",
+	"process.error.close_server": "Error during shutdown: {{error}}"
 }

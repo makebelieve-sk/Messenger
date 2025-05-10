@@ -1,8 +1,8 @@
+import { HTTPStatuses } from "common-types";
 import { DatabaseError, type Error, ForeignKeyConstraintError, TimeoutError, UniqueConstraintError, ValidationError } from "sequelize";
 
 import { t } from "@service/i18n";
 import { BaseError } from "@errors/index";
-import { HTTPStatuses } from "@custom-types/enums";
 
 interface IErrorObject {
     message: string;

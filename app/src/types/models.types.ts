@@ -1,5 +1,6 @@
+import { FileVarieties, MessageTypes } from "common-types";
+
 import type { IApiUser, IApiUserDetails } from "@custom-types/api.types";
-import { FileVarieties, MessageTypes } from "@custom-types/enums";
 
 /**
  * В данном файле хранятся описания самих структур моделей.

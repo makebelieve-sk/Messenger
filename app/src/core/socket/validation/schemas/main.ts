@@ -1,7 +1,7 @@
+import { SocketActions } from "common-types";
 import { z } from "zod";
 
 import i18next from "@service/i18n";
-import { SocketActions } from "@custom-types/enums";
 
 // Описание схемы отправки данных основных событий
 export const handleMainSchema = {

@@ -1,3 +1,5 @@
+import { HTTPErrorTypes, HTTPStatuses } from "common-types";
+
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import useAuthStore from "@store/auth";
@@ -6,7 +8,7 @@ import resetAllStores from "@store/index";
 import useProfileStore from "@store/profile";
 import useUIStore from "@store/ui";
 import type { AxiosErrorType, AxiosResponseType } from "@custom-types/axios.types";
-import { ErrorCodes, HTTPErrorTypes, HTTPStatuses, Pages } from "@custom-types/enums";
+import { ErrorCodes, Pages } from "@custom-types/enums";
 
 const logger = Logger.init("CatchErrors");
 
