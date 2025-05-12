@@ -2,6 +2,7 @@
 
 PORT=8008
 NODE_ENV="development"
+MESSANGER_ENV="development"
 CLIENT_URL="http://localhost:3000"
 COOKIE_NAME="sid"
 SECRET_KEY="your secret key here"

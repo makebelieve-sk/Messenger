@@ -14,6 +14,7 @@ app/.env.production
 # .env файлы сервера
 server/.env
 server/.env.development
+server/.env.stage
 server/.env.production
 
 # Файлы npm логов
@@ -43,3 +44,6 @@ server/dumps
 
 # Файл с секретами Docker Secrets
 deploy/sa_password.txt
+
+# Папка с сертификатами для установки https соединения
+server/certs

@@ -11,6 +11,7 @@ server/dist
 # .env файлы сервера (они копируются в момент запуска сервиса сервера)
 server/.env
 server/.env.development
+server/.env.stage
 server/.env.production
 
 # Файлы npm логов
@@ -54,3 +55,6 @@ README.md
 
 # Файлы конфигурации nodemon
 /server/nodemon*.json
+
+# Папка с сертификатами для установки https соединения
+/server/certs

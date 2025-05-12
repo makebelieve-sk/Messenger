@@ -18,6 +18,7 @@ dotenv.config();
 const requiredEnv = [
 	"PORT",
 	"NODE_ENV",
+	"MESSANGER_ENV",
 	"CLIENT_URL",
 	"COOKIE_NAME",
 	"SECRET_KEY",

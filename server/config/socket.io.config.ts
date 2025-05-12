@@ -10,6 +10,7 @@ const socketIoConfig = {
 		// Список разрешенных методов запроса (разрешен только самый первый запрос для установки соединения между сервером и клиентом)
 		methods: [ SOCKET_METHOD ],
 		credentials: true, // Разрешает отправку cookie и других авторизационных данных
+		allowedHeaders: [ "Content-Type", "Authorization" ],
 	},
 	pingInterval: SOCKET_PING_INTARVAL, // Указываем с какой частотой идет heartbeat на клиент
 	// Сколько может ожидать сервер ответа от клиента перед тем, как посчитает соединение закрытым (если клиент все равно не ответит)
@@ -19,6 +20,11 @@ const socketIoConfig = {
 		maxDisconnectionDuration: SOCKET_MAX_DISCONNECTION_DURATION, // Указывает время, в течении которого клиент может переподключиться
 		skipMiddlewares: false, // При разрыве соединении не пропускаем мидлвары socket.io
 	}, // Опция для восстановления соединения клиента из-за временного разрыва (например, спящий режим или потеря сети)
+	allowEIO3: false, // Отключаем поддержку Engine.IO версии 3
+	allowUpgrades: true, // Разрешаем обновление соединения до WebSocket
+	perMessageDeflate: {
+		threshold: 2048, // Минимальный размер сообщения для сжатия
+	},
 };
 
 export default socketIoConfig;
