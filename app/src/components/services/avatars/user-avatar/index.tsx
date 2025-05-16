@@ -13,10 +13,10 @@ interface IUserAvatarComponent {
 };
 
 // Сервисный компонент, используется для отрисовки аватара пользователя
-export default memo(function UserAvatarComponent({ id, className = "", ...props }: IUserAvatarComponent) {
+export default memo(function UserAvatarComponent({ className = "", ...props }: IUserAvatarComponent) {
 	return <AvatarComponent 
 		{...props} 
-		id={`user-avatar ${id}`}
+		id="user-avatar"
 		className={`user-avatar ${className}`}
 	/>;
 });

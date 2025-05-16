@@ -4,8 +4,12 @@
 	"private": true,
 	"description": "messenger server",
 	"author": "Aleksey Skriabin",
-	"license": "ISC",
+	"license": "UNLICENSED",
 	"main": "index.ts",
+	"engines": {
+		"node": ">=22.0.0",
+		"npm": ">=10.0.0"
+	},
 	"scripts": {
 		"check-certs": "bash ./check-certs.sh",
 		"prepare": "cd ../packages/common-types && npm install",

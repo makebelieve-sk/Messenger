@@ -42,7 +42,7 @@ export default function SignIn() {
 	const signInErrors = useAuthStore(state => state.signInErrors);
 	const loading = useAuthStore(state => state.signInLoading);
 
-	const { mainApi, removeProfile } = useMainClient();
+	const mainClient = useMainClient();
 
 	const navigate = useNavigate();
 
@@ -52,7 +52,7 @@ export default function SignIn() {
 	 * нет возможности удалять профиль пользователя (только через Zustand, но это костыль, так как будет использована подписка).
 	 */
 	useEffect(() => {
-		removeProfile();
+		mainClient.lifeTimeExpire();
 	}, []);
 
 	// Подписка на событие ошибок, возникающих при входе
@@ -103,7 +103,7 @@ export default function SignIn() {
 		event.preventDefault();
 
 		if (!saveDisabled) {
-			mainApi.signIn(formValues.values);
+			mainClient.mainApi.signIn(formValues.values);
 		}
 	};
 

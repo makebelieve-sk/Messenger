@@ -25,9 +25,7 @@ export default function HeaderComponent() {
 
 	const [ anchorElUser, setAnchorElUser ] = useState<null | HTMLElement>(null);
 
-	const userId = useUserStore(state => state.user.id);
-	const userAvatarUrl = useUserStore(state => state.user.avatarUrl);
-	const userFullname = useUserStore(state => state.user.fullName);
+	const myAvatar = useUserStore(state => state.myAvatar);
 
 	// Открытие меню
 	const onOpenMenu = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -78,7 +76,7 @@ export default function HeaderComponent() {
 
 				<div className="header-container__toolbar__avatar">
 					<div onClickCapture={onOpenMenu}>
-						<UserAvatarComponent userId={userId} src={userAvatarUrl} alt={userFullname} />
+						<UserAvatarComponent userId={myAvatar.userId} src={myAvatar.src} alt={myAvatar.alt} />
 					</div>
 
 					<MenuComponent

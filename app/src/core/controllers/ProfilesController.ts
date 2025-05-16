@@ -3,6 +3,7 @@ import Request from "@core/Request";
 import ProfileService from "@core/services/ProfileService";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
+import useProfileStore from "@store/profile";
 import useUIStore from "@store/ui";
 import { type IUserData } from "@custom-types/api.types";
 
@@ -23,23 +24,24 @@ export default class ProfilesController {
 	// Получение объекта пользователя
 	getProfile(userId?: string) {
 		if (!userId) {
-			userId = this._getMyProfileId();
+			userId = this.getMyProfileId();
 
 			if (!userId) {
+				useUIStore.getState().setError(i18next.t("core.profiles-controller.error.my_profile_not_exists"));
 				/**
-				 * Помечаем тип как never потому, что при отправке ошибки выше, происходит блокировка действий пользователя,
+				 * Помечаем тип как never потому, что при отправке ошибки, происходит блокировка действий пользователя,
 				 * путем открытия модального окна с ошибкой.
 				 */
 				return undefined as never;
 			}
 		}
 
-		const profile = this._checkProfile(userId);
+		const profile = this.checkProfile(userId);
 
 		if (!profile) {
 			useUIStore.getState().setError(i18next.t("core.profiles-controller.error.profile_not_exists", { id: userId }));
 			/**
-			 * Помечаем тип как never потому, что при отправке ошибки выше, происходит блокировка действий пользователя,
+			 * Помечаем тип как never потому, что при отправке ошибки, происходит блокировка действий пользователя,
 			 * путем открытия модального окна с ошибкой.
 			 */
 			return undefined as never;
@@ -54,7 +56,7 @@ export default class ProfilesController {
 
 		logger.debug(`createProfile [userId=${userId}]`);
 
-		const profile = this._checkProfile(userId);
+		const profile = this.checkProfile(userId);
 
 		if (profile) {
 			useUIStore.getState().setError(i18next.t("core.profiles-controller.error.profile_exists", { id: userId }));
@@ -64,22 +66,43 @@ export default class ProfilesController {
 		const newProfile = new ProfileService(this._request, userData);
 
 		this._profiles.set(userId, newProfile);
+
+		// Если профиль не мой - необходимо сбросить флаг загрузки чужого профиля
+		if (!newProfile.isMe) {
+			useProfileStore.getState().setPrepareAnotherUser(false);
+		}
 	}
 
 	// Удаление своего профиля (либо выход, либо полноценное удаление)
 	removeProfile() {
 		logger.debug("removeProfile");
 
-		const myProfileId = this._getMyProfileId();
+		const myProfileId = this.getMyProfileId();
 
-		if (myProfileId) {
-			this._profiles.delete(myProfileId);
+		if (!myProfileId) {
+			useUIStore.getState().setError(i18next.t("core.profiles-controller.error.my_profile_not_exists"));
+			return;
 		}
+
+		this._profiles.delete(myProfileId);
+	}
+
+	// Проверка существования профиля пользователя
+	checkProfile(userId?: string) {
+		if (!userId) {
+			userId = this.getMyProfileId();
+		}
+
+		if (!userId || !this._profiles.has(userId)) {
+			return null;
+		}
+
+		return this._profiles.get(userId);
 	}
 
 	// Получение id моего профиля среди всех остальных
-	private _getMyProfileId() {
-		let myProfileId: string | undefined;
+	getMyProfileId() {
+		let myProfileId: string | undefined = undefined;
 
 		for (const [ profileId, profile ] of this._profiles.entries()) {
 			if (profile.isMe) {
@@ -88,16 +111,6 @@ export default class ProfilesController {
 			}
 		}
 
-		if (!myProfileId) {
-			useUIStore.getState().setError(i18next.t("core.profiles-controller.error.my_profile_not_exists"));
-			return;
-		}
-
 		return myProfileId;
-	}
-
-	// Проверка существования профиля пользователя
-	private _checkProfile(userId: string) {
-		return this._profiles.get(userId) || null;
 	}
 };

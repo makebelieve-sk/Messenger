@@ -1,3 +1,5 @@
+import { useParams } from "react-router-dom";
+
 import ChangeAvatarComponent, { type IUpdatedAvatar } from "@components/ui/change-avatar";
 import GridComponent from "@components/ui/grid";
 import PaperComponent from "@components/ui/paper";
@@ -10,11 +12,13 @@ import "./main-photo.scss";
 
 // Компонент главной фотографии пользователя (его аватара)
 export default function MainPhoto() {
+	const { userId } = useParams();
+
 	const loading = useProfileStore(state => state.isDeleteAvatarLoading);
 
-	const profile = useProfile();
+	const profile = useProfile(userId);
 
-	// Клик по своей аватарке
+	// Клик по аватарке
 	const clickHandler = () => {
 		profile.onClickAvatar();
 	};
@@ -24,7 +28,7 @@ export default function MainPhoto() {
 		useProfileStore.getState().setDeleteAvatarLoading(isLoading);
 	};
 
-	// Установка/обновление своего аватара
+	// Установка/обновление аватара
 	const changeHandler = (updateOptions: IUpdatedAvatar) => {
 		profile.onSetAvatar(updateOptions);
 	};
@@ -35,7 +39,7 @@ export default function MainPhoto() {
 	};
 
 	return <GridComponent className="main-photo">
-		<PaperComponent className="main-photo__container paper-block">
+		<PaperComponent className={`main-photo__container paper-block ${profile.isMe ? "" : "main-photo__container__another-user"}`}>
 			<PhotoComponent
 				src={profile.userService.avatarUrl}
 				alt="user-avatar"
@@ -43,15 +47,18 @@ export default function MainPhoto() {
 				deleteHandler={deleteHandler}
 			/>
 
-			<div className="main-photo__container__edit-button">
-				<ChangeAvatarComponent
-					labelText={i18next.t("profile-module.change")}
-					loading={loading}
-					mustAuth
-					onChange={changeHandler}
-					setLoading={setLoading}
-				/>
-			</div>
+			{profile.isMe
+				? <div className="main-photo__container__edit-button">
+					<ChangeAvatarComponent
+						labelText={i18next.t("profile-module.change")}
+						loading={loading}
+						mustAuth
+						onChange={changeHandler}
+						setLoading={setLoading}
+					/>
+				</div>
+				: null
+			}
 		</PaperComponent>
 	</GridComponent>;
 };

@@ -1,7 +1,9 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import CloseIconComponent from "@components/icons/close";
 import useImage from "@hooks/useImage";
+import useProfile from "@hooks/useProfile";
 import i18next from "@service/i18n";
 import useUIStore from "@store/ui";
 import { NO_PHOTO } from "@utils/constants";
@@ -26,9 +28,20 @@ export default memo(function PhotoComponent({
 	clickHandler, 
 	deleteHandler, 
 }: IPhotoComponent) {
+	const [ neverShowCloseIcon, setNeverShowCloseIcon ] = useState(false);
 	const [ visibleCloseIcon, setVisibleCloseIcon ] = useState(false);
 
+	const { userId } = useParams();
+
 	const srcImage = useImage(src);
+	const profile = useProfile(userId);
+
+	// Если текущий профиль не мой, то скрываем кнопку удаления
+	useEffect(() => {
+		if (!profile.isMe) {
+			setNeverShowCloseIcon(true);
+		}
+	}, [ userId ]);
 
 	// Клик по изображению
 	const onClick = () => {
@@ -37,12 +50,12 @@ export default memo(function PhotoComponent({
 
 	// Обработка наведения на изображение
 	const onMouseOver = () => {
-		if (showDeleteIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(true);
+		if (!neverShowCloseIcon && showDeleteIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(true);
 	};
 
 	// Обработка ухода курсора с изображения
 	const onMouseOut = () => {
-		if (showDeleteIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(false);
+		if (!neverShowCloseIcon && showDeleteIcon && src && src !== NO_PHOTO) setVisibleCloseIcon(false);
 	};
 
 	// Удаление изображения

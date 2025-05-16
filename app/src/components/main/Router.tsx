@@ -26,10 +26,10 @@ export default memo(function Router({ isAuth }: { isAuth: boolean; }) {
 
 	return isAuth 
 		? <Routes>
-			<Route path={Pages.profile} element={<Profile />} />
+			<Route path={Pages.profileUser} element={<Profile />} />
 			<Route path={Pages.edit} element={<Edit />} />
 			<Route path={Pages.messages} element={<div>228</div>} />
-			<Route path={Pages.photos} element={<Photos />} />
+			<Route path={Pages.photosUser} element={<Photos />} />
 			<Route path={Pages.notExists} element={<Navigate to={Pages.profile} />} />
 		</Routes>
 	 	: <Routes>

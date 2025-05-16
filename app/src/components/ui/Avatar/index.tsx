@@ -4,7 +4,9 @@ import Avatar from "@mui/material/Avatar";
 
 import BadgeComponent from "@components/ui/badge";
 import useImage from "@hooks/useImage";
+import useProfile from "@hooks/useProfile";
 import { Pages } from "@custom-types/enums";
+import { goToAnotherProfile } from "@utils/index";
 
 import "./avatar.scss";
 
@@ -21,10 +23,14 @@ interface IAvatarComponent {
 export default memo(function AvatarComponent({ id, src, alt, userId, className = "", children }: IAvatarComponent) {
 	const srcImage = useImage(src);
 	const navigate = useNavigate();
+	const profile = useProfile();
 
+	// Перенаправление на страницу профиля пользователя
 	const onClick = () => {
-		if (window.location.pathname !== Pages.profile) {
-			navigate(Pages.profile);
+		// Переходим только на чужой профиль
+		if (profile.userService.id !== userId) {
+			// encodeURIComponent необходим, чтобы в URL не было спецсимволов (мало ли в userId что-то подобное есть)
+			navigate(goToAnotherProfile(Pages.profile, userId));
 		}
 	};
 

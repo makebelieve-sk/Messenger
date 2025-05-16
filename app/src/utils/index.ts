@@ -1,4 +1,5 @@
 import Logger from "@service/Logger";
+import { Pages } from "@custom-types/enums";
 import { type IUser } from "@custom-types/models.types";
 
 const logger = Logger.init("utils");
@@ -28,4 +29,10 @@ export const setFocusOnEndNodeElement = (node: HTMLElement, pos = node.childNode
 	range.collapse(true);
 	selection.removeAllRanges();
 	selection.addRange(range);
+};
+
+// Переход на страницу другого пользователя
+export const goToAnotherProfile = (url: Pages, userId?: string) => {
+	// encodeURIComponent необходим, чтобы в URL не было спецсимволов (мало ли в userId что-то подобное есть)
+	return userId ? `${url}/${encodeURIComponent(userId)}` : url;
 };
