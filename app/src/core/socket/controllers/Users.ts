@@ -33,6 +33,7 @@ export default class UsersController {
 
 				if (filteredUsers.length) {
 					useGlobalStore.getState().setOnlineUsers(filteredUsers);
+					this._profilesController.getProfile().userService.friendsService.checkOnlineUsers(filteredUsers);
 				}
 			}
 
@@ -46,6 +47,7 @@ export default class UsersController {
 			if (validateData.success) {
 				logger.info(`${i18next.t("core.socket.new_user_connected")} [user=${JSON.stringify(user)}]`);
 				useGlobalStore.getState().addOnlineUsers(user);
+				this._profilesController.getProfile().userService.friendsService.checkOnlineUsers([user]);
 			}
 
 			toFormatAck(validateData, callback);
@@ -58,6 +60,7 @@ export default class UsersController {
 			if (validateData.success) {
 				logger.info(`${i18next.t("core.socket.user_disconnected")} [userId=${userId}]`);
 				useGlobalStore.getState().deleteOnlineUser(userId);
+				this._profilesController.getProfile().userService.friendsService.removeOnlineUser(userId);
 			}
 
 			toFormatAck(validateData, callback);

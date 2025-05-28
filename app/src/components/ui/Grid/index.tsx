@@ -14,6 +14,7 @@ interface IGridComponent {
     component?: ElementType;
     elevation?: number;
     square?: boolean;
+    direction?: "row" | "column";
 };
 
 // Базовый компонент сетки
@@ -28,6 +29,7 @@ export default memo(function GridComponent({
 	component = "div", 
 	elevation, 
 	square,
+	direction = undefined,
 }: IGridComponent) {
 	return <Grid
 		container={container}
@@ -37,6 +39,7 @@ export default memo(function GridComponent({
 		component={component}
 		elevation={elevation}
 		square={square}
+		direction={direction}
 	>
 		{children}
 	</Grid>;

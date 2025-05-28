@@ -54,14 +54,6 @@ export interface IFriendAction {
 	sourceUserId: string;
 	targetUserId: string;
 	actionType: number;
-};
-
-// Интерфейс атрибутов модели Friend_Action_Log
-export interface IFriendActionLog {
-	id: string;
-	sourceUserId: string;
-	targetUserId: string;
-	actionType: number;
 	createdAt: string;
 };
 

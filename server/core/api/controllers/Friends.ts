@@ -1,682 +1,607 @@
-// import type { Express, NextFunction, Request, Response } from "express";
-// import type { Transaction } from "sequelize";
-// import { v4 as uuid } from "uuid";
-
-// import Middleware from "@core/api/Middleware";
-// import Database from "@core/database/Database";
-// import { t } from "@service/i18n";
-// import Logger from "@service/logger";
-// import { FriendsError } from "@errors/controllers";
-// import { ApiRoutes, FriendsTab, HTTPStatuses } from "common-types";
-// import { type UsersType } from "@custom-types/index";
-// import { getSearchWhere } from "@utils/where";
-
-// const logger = Logger("FriendsController");
-
-// // Класс, отвечающий за API друзей
-// export default class FriendsController {
-// 	constructor(
-// 		private readonly _app: Express,
-// 		private readonly _middleware: Middleware,
-// 		private readonly _database: Database,
-// 		private readonly _users: UsersType,
-// 	) {
-// 		this._init();
-// 	}
-
-// 	// Слушатели запросов контроллера FriendsController
-// 	private _init() {
-// 		this._app.get(ApiRoutes.getFriendsNotification, this._middleware.mustAuthenticated.bind(this._middleware), this._getFriendsNotification.bind(this));
-// 		this._app.get(ApiRoutes.getPossibleUsers, this._middleware.mustAuthenticated.bind(this._middleware), this._getPossibleUsers.bind(this));
-// 		this._app.get(ApiRoutes.getCountFriends, this._middleware.mustAuthenticated.bind(this._middleware), this._getCountFriends.bind(this));
-// 		this._app.post(ApiRoutes.getFriends, this._middleware.mustAuthenticated.bind(this._middleware), this._getFriends.bind(this));
-// 		this._app.post(ApiRoutes.getFriendInfo, this._middleware.mustAuthenticated.bind(this._middleware), this._getFriendInfo.bind(this));
-// 		this._app.post(ApiRoutes.addToFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._addToFriend.bind(this));
-// 		this._app.post(ApiRoutes.unsubscribeUser, this._middleware.mustAuthenticated.bind(this._middleware), this._unsubscribeUser.bind(this));
-// 		this._app.post(ApiRoutes.acceptUser, this._middleware.mustAuthenticated.bind(this._middleware), (req, res, next) =>
-// 			this._acceptUser(req, res, next, undefined),
-// 		);
-// 		this._app.post(ApiRoutes.leftInSubscribers, this._middleware.mustAuthenticated.bind(this._middleware), this._leftInSubscribers.bind(this));
-// 		this._app.post(ApiRoutes.deleteFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._deleteFriend.bind(this));
-// 		this._app.post(ApiRoutes.blockFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._blockFriend.bind(this));
-// 		this._app.post(ApiRoutes.checkBlockStatus, this._middleware.mustAuthenticated.bind(this._middleware), this._checkBlockStatus.bind(this));
-// 	}
-
-// 	// Получение возможных друзей
-// 	private _possibleUsersQuery(userId: string, all: boolean = false, searchValue = "") {
-// 		return `
-//             SELECT ${all ? "" : "TOP (5)"} 
-//                 users.[id], 
-//                 [first_name] AS [firstName], 
-//                 [second_name] AS [secondName], 
-//                 [third_name] AS [thirdName], 
-//                 [email], 
-//                 [phone], 
-//                 [avatar_url] AS [avatarUrl]
-//             FROM [VK_CLONE].[dbo].[Users] AS users
-//             LEFT JOIN [VK_CLONE].[dbo].[Friends] AS friends ON friends.user_id = users.id
-//             LEFT JOIN [VK_CLONE].[dbo].[Subscribers] AS subscribers ON subscribers.user_id = users.id
-//             WHERE users.id != '${userId}' AND users.id NOT IN (
-//                 SELECT friend_id
-//                 FROM [VK_CLONE].[dbo].[Friends] AS friendsIn
-//                 WHERE friendsIn.user_id = '${userId}'
-//             ) AND users.id NOT IN (
-//                 SELECT user_id
-//                 FROM [VK_CLONE].[dbo].[Subscribers] AS subscribersIn
-//                 WHERE subscribers.subscriber_id = '${userId}'
-//             ) AND users.id NOT IN (
-//                 SELECT user_blocked
-//                 FROM [VK_CLONE].[dbo].[Block_users] AS blockUsers
-//                 WHERE blockUsers.user_id = '${userId}'
-//             ) ${searchValue}
-//         `;
-// 	}
-
-// 	// Получение запросов на дружбу
-// 	private _getFreindsRequestsQuery(userId: string, searchQuery: string = "") {
-// 		return `
-//             SELECT 
-//                 users.[id], 
-//                 [first_name] AS [firstName], 
-//                 [second_name] AS [secondName], 
-//                 [third_name] AS [thirdName], 
-//                 [email], 
-//                 [phone], 
-//                 [avatar_url] AS [avatarUrl]
-//             FROM [VK_CLONE].[dbo].[Users] AS users
-//             JOIN [VK_CLONE].[dbo].[Subscribers] AS subscribers ON subscribers.subscriber_id = users.id
-//             WHERE users.id != '${userId}' AND users.id IN (
-//                 SELECT subscriber_id
-//                 FROM [VK_CLONE].[dbo].[Subscribers] AS subscribersIn
-//                 WHERE subscribersIn.user_id = '${userId}' AND left_in_subs = 0
-//             ) ${searchQuery}
-//         `;
-// 	}
-
-// 	// Получить количество заявок в друзья для отрисовки в меню
-// 	private async _getFriendsNotification(req: Request, res: Response, next: NextFunction) {
-// 		try {
-// 			const userId = req.user.id;
-
-// 			logger.debug("_getFriendsNotification  [userId=%s]", userId);
-
-// 			const friends = await this._database.sequelize.query(this._getFreindsRequestsQuery(userId));
-
-// 			if (friends && friends[0]) {
-// 				res.json({ success: true, friendRequests: friends[0].length });
-// 			} else {
-// 				return next(new FriendsError(t("friends.error.get_friends_count")));
-// 			}
-// 		} catch (error) {
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Получение топ-5 возможных друзей
-// 	private async _getPossibleUsers(req: Request, res: Response, next: NextFunction) {
-// 		try {
-// 			const userId = req.user.id;
-
-// 			logger.debug("_getPossibleUsers  [userId=%s]", userId);
-
-// 			const possibleUsers = await this._database.sequelize.query(this._possibleUsersQuery(userId));
-
-// 			if (possibleUsers && possibleUsers[0]) {
-// 				res.json({ success: true, possibleUsers: possibleUsers[0] });
-// 			} else {
-// 				return next(new FriendsError(t("friends.error.get_possible_friends")));
-// 			}
-// 		} catch (error) {
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Получить количество друзей, подписчиков, топ-6 друзей для отрисовки
-// 	private async _getCountFriends(req: Request, res: Response, next: NextFunction) {
-// 		const transaction = await this._database.sequelize.transaction();
-
-// 		try {
-// 			const userId = req.user.id;
-
-// 			logger.debug("_getCountFriends  [userId=%s]", userId);
-
-// 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// 			const friendsCount: [any[], any] = await this._database.sequelize.query(
-// 				`
-//                 SELECT COUNT(*) AS count
-//                 FROM [VK_CLONE].[dbo].[Users] AS users
-//                 JOIN [VK_CLONE].[dbo].[Friends] AS friends ON friends.user_id = users.id
-//                 WHERE users.id != '${userId}' AND users.id IN (
-//                     SELECT friend_id
-//                     FROM [VK_CLONE].[dbo].[Friends] AS friendsIn
-//                     WHERE friendsIn.user_id = '${userId}'
-//                 )
-//             `,
-// 				{ transaction },
-// 			);
-
-// 			const topFriends = await this._database.sequelize.query(
-// 				`
-//                 SELECT DISTINCT TOP(6) 
-//                     users.[id], 
-//                     [first_name] AS [firstName], 
-//                     [second_name] AS [secondName], 
-//                     [third_name] AS [thirdName], 
-//                     [email],
-//                     [phone], 
-//                     [avatar_url] as avatarUrl
-//                 FROM [VK_CLONE].[dbo].[Users] AS users
-//                 JOIN [VK_CLONE].[dbo].[Friends] AS friends ON friends.user_id = users.id
-//                 WHERE users.id != '${userId}' AND users.id IN (
-//                     SELECT friend_id
-//                     FROM [VK_CLONE].[dbo].[Friends] AS friendsIn
-//                     WHERE friendsIn.user_id = '${userId}'
-//                 )
-//             `,
-// 				{ transaction },
-// 			);
-
-// 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// 			const subscribersCount: [any[], any] = await this._database.sequelize.query(
-// 				`
-//                 SELECT COUNT(*) AS count
-//                 FROM [VK_CLONE].[dbo].[Users] AS users
-//                 JOIN [VK_CLONE].[dbo].[Subscribers] AS subscribers ON subscribers.subscriber_id = users.id
-//                 WHERE users.id != '${userId}' AND users.id IN (
-//                     SELECT subscriber_id
-//                     FROM [VK_CLONE].[dbo].[Subscribers] AS subscribersIn
-//                     WHERE subscribersIn.user_id = '${userId}' AND left_in_subs = 1
-//                 )
-//             `,
-// 				{ transaction },
-// 			);
-
-// 			await transaction.commit();
-
-// 			res.json({
-// 				success: true,
-// 				friendsCount: friendsCount && friendsCount[0] ? topFriends[0].length : null,
-// 				topFriends: topFriends && topFriends[0] ? topFriends[0] : null,
-// 				subscribersCount: subscribersCount && subscribersCount[0] ? subscribersCount[0][0].count : null,
-// 			});
-// 		} catch (error) {
-// 			await transaction.rollback();
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Получение 5 возможных друзей, всех друзей и друзей онлайн
-// 	private async _getFriends(req: Request, res: Response, next: NextFunction) {
-// 		logger.debug("_getCountFriends  [req.body=%j]", req.body);
-
-// 		try {
-// 			const { tab = 0, search }: { tab: number; search: string } = req.body;
-// 			const userId = req.user.id;
-
-// 			// Получение обработанной строки поиска
-// 			const searchValue = getSearchWhere(search) as string;
-
-// 			const searchQuery = searchValue ? `AND (LOWER(users.first_name) LIKE '%${searchValue}%' OR LOWER(users.third_name) LIKE '%${searchValue}%')` : "";
-
-// 			switch (tab) {
-// 			// Получение всех друзей
-// 			case FriendsTab.all: {
-// 				const friends = await this._database.sequelize.query(`
-//                         SELECT DISTINCT 
-//                             users.[id], 
-//                             [first_name] AS [firstName], 
-//                             [second_name] AS [secondName], 
-//                             [third_name] AS [thirdName], 
-//                             [email], 
-//                             [phone], 
-//                             [avatar_url] as avatarUrl
-//                         FROM [VK_CLONE].[dbo].[Users] AS users
-//                         JOIN [VK_CLONE].[dbo].[Friends] AS friends ON friends.user_id = users.id
-//                         WHERE users.id != '${userId}' AND users.id IN (
-//                             SELECT friend_id
-//                             FROM [VK_CLONE].[dbo].[Friends] AS friendsIn
-//                             WHERE friendsIn.user_id = '${userId}'
-//                         ) ${searchQuery}
-//                     `);
-
-// 				if (friends && friends[0]) {
-// 					return res.json({ success: true, friends: friends[0] });
-// 				} else {
-// 					return next(new FriendsError(t("friends.error.get_all_friends")));
-// 				}
-// 			}
-// 			// Получение друзей-онлайн
-// 			case FriendsTab.online: {
-// 				if (this._users.size) {
-// 					const usersOnline = Array.from(this._users.values());
-
-// 					const filterUsersOnline = usersOnline.filter(onlineUser => {
-// 						const searchFN = onlineUser.firstName.toLowerCase();
-// 						const searchTN = onlineUser.thirdName.toLowerCase();
-
-// 						if (onlineUser.id !== userId) {
-// 							if (searchValue && (searchFN.includes(searchValue) || searchTN.includes(searchValue))) {
-// 								return true;
-// 							} else if (searchValue && !searchFN.includes(searchValue) && !searchTN.includes(searchValue)) {
-// 								return false;
-// 							}
-
-// 							return true;
-// 						}
-
-// 						return false;
-// 					});
-
-// 					return res.json({ success: true, friends: filterUsersOnline });
-// 				} else {
-// 					return next(new FriendsError(t("friends.error.get_friends_online")));
-// 				}
-// 			}
-// 			// Получение подписчиков
-// 			case FriendsTab.subscribers: {
-// 				const friends = await this._database.sequelize.query(`
-//                         SELECT 
-//                             users.[id], 
-//                             [first_name] AS [firstName], 
-//                             [second_name] AS [secondName], 
-//                             [third_name] AS [thirdName], 
-//                             [email], 
-//                             [phone], 
-//                             [avatar_url] as avatarUrl
-//                         FROM [VK_CLONE].[dbo].[Users] AS users
-//                         JOIN [VK_CLONE].[dbo].[Subscribers] AS subscribers ON subscribers.subscriber_id = users.id
-//                         WHERE users.id != '${userId}' AND users.id IN (
-//                             SELECT subscriber_id
-//                             FROM [VK_CLONE].[dbo].[Subscribers] AS subscribersIn
-//                             WHERE subscribersIn.user_id = '${userId}' AND left_in_subs = 1
-//                         ) ${searchQuery}
-//                     `);
-
-// 				if (friends && friends[0]) {
-// 					return res.json({ success: true, friends: friends[0] });
-// 				} else {
-// 					return next(new FriendsError(t("friends.error.get_subscribers")));
-// 				}
-// 			}
-// 			// Получение входящих заявок
-// 			case FriendsTab.friendRequests: {
-// 				const friends = await this._database.sequelize.query(this._getFreindsRequestsQuery(userId, searchQuery));
-
-// 				if (friends && friends[0]) {
-// 					return res.json({ success: true, friends: friends[0] });
-// 				} else {
-// 					return next(new FriendsError(t("friends.error.get_incoming_requests")));
-// 				}
-// 			}
-// 			// Получение исходящих заявок
-// 			case FriendsTab.incomingRequests: {
-// 				const friends = await this._database.sequelize.query(`
-//                         SELECT 
-//                             users.[id], 
-//                             [first_name] AS [firstName], 
-//                             [second_name] AS [secondName], 
-//                             [third_name] AS [thirdName], 
-//                             [email], 
-//                             [phone], 
-//                             [avatar_url] as avatarUrl
-//                         FROM [VK_CLONE].[dbo].[Users] AS users
-//                         JOIN [VK_CLONE].[dbo].[Subscribers] AS subscribers ON subscribers.user_id = users.id
-//                         WHERE users.id != '${userId}' AND users.id IN (
-//                             SELECT user_id
-//                             FROM [VK_CLONE].[dbo].[Subscribers] AS subscribersIn
-//                             WHERE subscribersIn.subscriber_id = '${userId}'
-//                         ) ${searchQuery}
-//                     `);
-
-// 				if (friends && friends[0]) {
-// 					return res.json({ success: true, friends: friends[0] });
-// 				} else {
-// 					return next(new FriendsError(t("friends.error.get_outgoing_requests")));
-// 				}
-// 			}
-// 			// Поиск друзей
-// 			case FriendsTab.search: {
-// 				const friends = await this._database.sequelize.query(this._possibleUsersQuery(userId, true, searchQuery));
-
-// 				if (friends && friends[0]) {
-// 					return res.json({ success: true, friends: friends[0] });
-// 				} else {
-// 					return next(new FriendsError(t("friends.error.search_friends")));
-// 				}
-// 			}
-// 			default:
-// 				return next(new FriendsError(t("friends.error.unknown_type_friends"), HTTPStatuses.BadRequest));
-// 			}
-// 		} catch (error) {
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Получить специфичную информацию о друге, с которым открыт диалог
-// 	private async _getFriendInfo(req: Request, res: Response, next: NextFunction) {
-// 		logger.debug("_getFriendInfo  [req.body=%j]", req.body);
-
-// 		const transaction = await this._database.sequelize.transaction();
-
-// 		try {
-// 			const { chatId }: { chatId: string } = req.body;
-// 			const userId = req.user.id;
-
-// 			if (!chatId) {
-// 				await transaction.rollback();
-// 				return next(new FriendsError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
-// 			}
-
-// 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// 			const userIdsInChat: any = await this._database.models.chats.findOne({
-// 				where: { id: chatId },
-// 				attributes: [ "userIds" ],
-// 				transaction,
-// 			});
-
-// 			let friendId: string | null = null;
-
-// 			if (userIdsInChat) {
-// 				const ids = userIdsInChat.userIds.split(",");
-// 				const findFriendId = ids.find((id: string) => id !== userId);
-
-// 				if (findFriendId) {
-// 					friendId = findFriendId;
-// 				}
-// 			}
-
-// 			const friendInfo = friendId
-// 				? await this._database.models.users.findByPk(friendId, {
-// 					attributes: [ "id", "avatarUrl", "firstName", "thirdName" ],
-// 					transaction,
-// 				})
-// 				: null;
-
-// 			if (!friendInfo) {
-// 				await transaction.rollback();
-// 				return next(new FriendsError(t("friends.error.friend_id_not_found"), HTTPStatuses.BadRequest));
-// 			}
-
-// 			await transaction.commit();
-
-// 			res.json({
-// 				success: true,
-// 				friendInfo: {
-// 					id: friendInfo.id,
-// 					avatarUrl: friendInfo.avatarUrl,
-// 					friendName: friendInfo.firstName + " " + friendInfo.thirdName,
-// 				},
-// 			});
-// 		} catch (error) {
-// 			await transaction.rollback();
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Добавить пользователя в друзья
-// 	private async _addToFriend(req: Request, res: Response, next: NextFunction) {
-// 		logger.debug("_addToFriend  [req.body=%j]", req.body);
-
-// 		const transaction = await this._database.sequelize.transaction();
-
-// 		try {
-// 			const { friendId }: { friendId: string } = req.body;
-// 			const userId = req.user.id;
-
-// 			if (!friendId) {
-// 				await transaction.rollback();
-// 				return next(new FriendsError(t("friends.error.subscribed_id_not_found"), HTTPStatuses.BadRequest));
-// 			}
-
-// 			const existSubscriber = await this._database.models.subscribers.findOne({
-// 				where: { userId, subscriberId: friendId },
-// 				transaction,
-// 			});
-
-// 			// Если пользователь уже подписан на меня - сразу добавляем его в друзья
-// 			if (existSubscriber) {
-// 				return this._acceptUser(req, res, next, { curTransaction: transaction });
-// 			} else {
-// 				// Создаем запись - я подписан на добавленного пользователя
-// 				await this._database.models.subscribers.create(
-// 					{
-// 						userId: friendId,
-// 						subscriberId: userId,
-// 						leftInSubs: 0,
-// 					},
-// 					{ transaction },
-// 				);
-
-// 				await transaction.commit();
-
-// 				res.json({ success: true });
-// 			}
-// 		} catch (error) {
-// 			await transaction.rollback();
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Отписаться от пользователя
-// 	private async _unsubscribeUser(req: Request, res: Response, next: NextFunction) {
-// 		logger.debug("_unsubscribeUser  [req.body=%j]", req.body);
-
-// 		try {
-// 			const { friendId }: { friendId: string } = req.body;
-// 			const userId = req.user.id;
-
-// 			if (!friendId) {
-// 				return next(new FriendsError(t("friends.error.unsubscribed_id_not_found"), HTTPStatuses.BadRequest));
-// 			}
-
-// 			await this._database.models.subscribers.destroy({
-// 				where: { userId: friendId, subscriberId: userId },
-// 			});
-
-// 			res.json({ success: true });
-// 		} catch (error) {
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Добавить пользователя из подписчиков в друзья
-// 	private async _acceptUser(req: Request, res: Response, next: NextFunction, { curTransaction }: { curTransaction?: Transaction } = {}) {
-// 		logger.debug("_acceptUser  [req.body=%j]", req.body);
-
-// 		const transaction = curTransaction || (await this._database.sequelize.transaction());
-
-// 		try {
-// 			const { friendId }: { friendId: string } = req.body;
-// 			const userId = req.user.id;
-
-// 			if (!friendId) {
-// 				await transaction.rollback();
-// 				return next(new FriendsError(t("friends.error.added_id_not_found"), HTTPStatuses.BadRequest));
-// 			}
-
-// 			// Удаляем пользователя из подписчиков
-// 			await this._database.models.subscribers.destroy({
-// 				where: { userId, subscriberId: friendId },
-// 				transaction,
-// 			});
-
-// 			// Я добавил этого пользователя
-// 			await this._database.models.friends.create(
-// 				{
-// 					userId,
-// 					friendId,
-// 				},
-// 				{ transaction },
-// 			);
-
-// 			// Пользователь добавил меня
-// 			await this._database.models.friends.create(
-// 				{
-// 					userId: friendId,
-// 					friendId: userId,
-// 				},
-// 				{ transaction },
-// 			);
-
-// 			await transaction.commit();
-
-// 			// return нужен для того, чтобы вернуть результат, так как метод используется в другом методе
-// 			return res.json({ success: true });
-// 		} catch (error) {
-// 			await transaction.rollback();
-// 			// return нужен для того, чтобы вернуть результат, так как метод используется в другом методе
-// 			return next(error);
-// 		}
-// 	}
-
-// 	// Оставить пользователя в подписчиках
-// 	private async _leftInSubscribers(req: Request, res: Response, next: NextFunction) {
-// 		logger.debug("_leftInSubscribers  [req.body=%j]", req.body);
-
-// 		try {
-// 			const { friendId }: { friendId: string } = req.body;
-// 			const userId = req.user.id;
-
-// 			if (!friendId) {
-// 				return next(new FriendsError(t("friends.error.left_to_subscribed_id_not_found"), HTTPStatuses.BadRequest));
-// 			}
-
-// 			await this._database.models.subscribers.update({ leftInSubs: 1 }, { where: { userId, subscriberId: friendId } });
-
-// 			res.json({ success: true });
-// 		} catch (error) {
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Удалить из друзей
-// 	private async _deleteFriend(req: Request, res: Response, next: NextFunction) {
-// 		logger.debug("_deleteFriend  [req.body=%j]", req.body);
-
-// 		const transaction: Transaction = await this._database.sequelize.transaction();
-
-// 		try {
-// 			const { friendId }: { friendId: string } = req.body;
-// 			const userId = req.user.id;
-
-// 			if (!friendId) {
-// 				await transaction.rollback();
-// 				return next(new FriendsError(t("friends.error.deleted_id_not_found"), HTTPStatuses.BadRequest));
-// 			}
-
-// 			await this._database.models.friends.destroy({
-// 				where: { userId, friendId },
-// 				transaction,
-// 			});
-
-// 			await this._database.models.friends.destroy({
-// 				where: { userId: friendId, friendId: userId },
-// 				transaction,
-// 			});
-
-// 			await this._database.models.subscribers.create(
-// 				{
-// 					userId,
-// 					subscriberId: friendId,
-// 					leftInSubs: 1,
-// 				},
-// 				{ transaction },
-// 			);
-
-// 			await transaction.commit();
-
-// 			res.json({ success: true });
-// 		} catch (error) {
-// 			await transaction.rollback();
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Заблокировать пользователя
-// 	private async _blockFriend(req: Request, res: Response, next: NextFunction) {
-// 		logger.debug("_blockFriend  [req.body=%j]", req.body);
-
-// 		const transaction: Transaction = await this._database.sequelize.transaction();
-
-// 		try {
-// 			const { friendId }: { friendId: string } = req.body;
-// 			const userId = req.user.id;
-
-// 			if (!friendId) {
-// 				await transaction.rollback();
-// 				return next(new FriendsError(t("friends.error.blocked_id_not_found"), HTTPStatuses.BadRequest));
-// 			}
-
-// 			await this._database.models.friends.destroy({
-// 				where: { userId, friendId },
-// 				transaction,
-// 			});
-
-// 			await this._database.models.friends.destroy({
-// 				where: { userId: friendId, friendId: userId },
-// 				transaction,
-// 			});
-
-// 			await this._database.models.subscribers.destroy({
-// 				where: { userId },
-// 				transaction,
-// 			});
-// 			await this._database.models.subscribers.destroy({
-// 				where: { userId: friendId },
-// 				transaction,
-// 			});
-
-// 			await this._database.models.blockUsers.create(
-// 				{
-// 					id: uuid(),
-// 					userId,
-// 					userBlocked: friendId,
-// 				},
-// 				{ transaction },
-// 			);
-
-// 			await transaction.commit();
-
-// 			res.json({ success: true });
-// 		} catch (error) {
-// 			await transaction.rollback();
-// 			next(error);
-// 		}
-// 	}
-
-// 	// Проверка на блокировку пользователя
-// 	private async _checkBlockStatus(req: Request, res: Response, next: NextFunction) {
-// 		logger.debug("_checkBlockStatus  [req.body=%j]", req.body);
-
-// 		const transaction: Transaction = await this._database.sequelize.transaction();
-
-// 		try {
-// 			const { checkingUser }: { checkingUser: string } = req.body;
-// 			const userId = req.user.id;
-
-// 			if (!checkingUser) {
-// 				await transaction.rollback();
-// 				return next(new FriendsError(t("friends.error.check_blocked_id_not_found"), HTTPStatuses.BadRequest));
-// 			}
-
-// 			// Проверяем, заблокировали ли мы такого пользователя
-// 			const isBlockedByMe = await this._database.models.blockUsers.findOne({
-// 				where: { userId, userBlocked: checkingUser },
-// 				transaction,
-// 			});
-
-// 			// Проверяем, заблокировал ли меня такой пользователь
-// 			const meIsBlocked = await this._database.models.blockUsers.findOne({
-// 				where: { userId: checkingUser, userBlocked: userId },
-// 				transaction,
-// 			});
-
-// 			await transaction.commit();
-
-// 			res.json({ success: true, isBlockedByMe, meIsBlocked });
-// 		} catch (error) {
-// 			await transaction.rollback();
-// 			next(error);
-// 		}
-// 	}
-// }
+import { ApiRoutes, HTTPStatuses, SocketActions } from "common-types";
+import type { Express, NextFunction, Request, Response } from "express";
+import type Transaction from "sequelize/lib/transaction";
+
+import type Middleware from "@core/api/Middleware";
+import type UsersController from "@core/controllers/UsersController";
+import type Database from "@core/database/Database";
+import { t } from "@service/i18n";
+import Logger from "@service/logger";
+import { FriendsError } from "@errors/controllers";
+import { type ServerToClientEvents } from "@custom-types/socket.types";
+import { type ISafeUser } from "@custom-types/user.types";
+
+const logger = Logger("FriendsController");
+
+interface IFriendsData {
+	ids?: string[];
+	userId?: string;
+	limit: number;
+	lastCreatedAt?: string;
+	search?: string;
+};
+
+interface ISendSocket {
+	user: ISafeUser;
+	friendId: string;
+	payload?: Record<string, { userId: string; }>;
+	socketActions: Record<string, keyof ServerToClientEvents>;
+}
+
+// Класс, отвечающий за API друзей
+export default class FriendsController {
+	constructor(
+		private readonly _app: Express,
+		private readonly _middleware: Middleware,
+		private readonly _database: Database,
+		private readonly _users: UsersController,
+	) {
+		this._init();
+	}
+
+	// Слушатели запросов контроллера FriendsController
+	private _init() {
+		this._app.get(ApiRoutes.getFriendsNotification, this._middleware.mustAuthenticated.bind(this._middleware), this._getFriendsNotification.bind(this));
+		// this._app.post(ApiRoutes.getFriendInfo, this._middleware.mustAuthenticated.bind(this._middleware), this._getFriendInfo.bind(this));
+		this._app.post(ApiRoutes.getAllCounts, this._middleware.mustAuthenticated.bind(this._middleware), this._getAllCounts.bind(this));
+		this._app.post(ApiRoutes.getPossibleFriends, this._middleware.mustAuthenticated.bind(this._middleware), this._getPossibleFriends.bind(this));
+		this._app.post(ApiRoutes.getMyFriends, this._middleware.mustAuthenticated.bind(this._middleware), this._getMyFriends.bind(this));
+		this._app.post(ApiRoutes.checkOnlineUser, this._middleware.mustAuthenticated.bind(this._middleware), this._checkOnlineUser.bind(this));
+		this._app.post(ApiRoutes.getFollowers, this._middleware.mustAuthenticated.bind(this._middleware), this._getFollowers.bind(this));
+		this._app.post(ApiRoutes.getBlockedFriends, this._middleware.mustAuthenticated.bind(this._middleware), this._getBlockedFriends.bind(this));
+		this._app.post(ApiRoutes.getCommonFriends, this._middleware.mustAuthenticated.bind(this._middleware), this._getCommonFriends.bind(this));
+		this._app.post(ApiRoutes.getIncomingRequests, this._middleware.mustAuthenticated.bind(this._middleware), this._getIncomingRequests.bind(this));
+		this._app.post(ApiRoutes.getOutgoingRequests, this._middleware.mustAuthenticated.bind(this._middleware), this._getOutgoingRequests.bind(this));
+		this._app.post(ApiRoutes.followFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._followFriend.bind(this));
+		this._app.post(ApiRoutes.unfollow, this._middleware.mustAuthenticated.bind(this._middleware), this._unfollow.bind(this));
+		this._app.post(ApiRoutes.addFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._addFriend.bind(this));
+		this._app.post(ApiRoutes.acceptFriendRequest, this._middleware.mustAuthenticated.bind(this._middleware), this._acceptFriendRequest.bind(this));
+		this._app.post(ApiRoutes.leftInFollowers, this._middleware.mustAuthenticated.bind(this._middleware), this._leftInFollowers.bind(this));
+		this._app.post(ApiRoutes.deleteFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._deleteFriend.bind(this));
+		this._app.post(ApiRoutes.blockFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._blockFriend.bind(this));
+		this._app.post(ApiRoutes.unblockFriend, this._middleware.mustAuthenticated.bind(this._middleware), this._unblockFriend.bind(this));
+		// this._app.post(ApiRoutes.checkBlockStatus, this._middleware.mustAuthenticated.bind(this._middleware), this._checkBlockStatus.bind(this));
+	}
+
+	// Отправка события по сокет-соединению
+	private async _sendSocketEvent({ user, friendId, payload, socketActions }: ISendSocket) {
+		const foundFriend = this._users.get(friendId);
+
+		// Если пользователь не онлайн - не отправляем ничего
+		if (!foundFriend) {
+			return;
+		}
+
+		const { to, broadcast } = socketActions;
+		const toPayload = payload?.to || { user };
+		const broadcastPayload = payload?.broadcast || { user: foundFriend };
+
+		// Получаем сокет-контроллер разблокируемого пользователя
+		const socketController = Array.from(foundFriend.sockets.values())[0];
+
+		// Отправляем событие пользователю об его разблокировке (всем его открытым вкладкам)
+		await socketController.sendTo(to, toPayload, friendId);
+		// Отправляем событие текущему пользователю об удалении из заблокированных пользователей (всем его открытым вкладкам)
+		await socketController.sendBroadcastTo(broadcast, broadcastPayload, user.id);
+	}
+
+	// Получить количество заявок в друзья для отрисовки в меню
+	private async _getFriendsNotification(req: Request, res: Response, next: NextFunction) {
+		try {
+			const userId = req.user.id;
+
+			logger.debug("_getFriendsNotification [userId=%s]", userId);
+
+			const friendsNotification = await this._database.repo.friendActions.getFriendsNotification({ data: { userId } });
+
+			res.status(HTTPStatuses.OK).json({ success: true, friendsNotification });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Получить общее количество всех друзей на всех вкладках для первого входа (в независимости от страницы профиля или друзей)
+	private async _getAllCounts(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_getAllCounts [req.body=%j]", req.body);
+
+		try {
+			const { userId: anotherUserId }: { userId: string; } = req.body;
+			const userId = req.user.id;
+
+			const allCounts = await this._database.repo.friendActions.getAllCounts({ data: { userId, anotherUserId } });
+
+			res.status(HTTPStatuses.OK).json({ success: true, ...allCounts });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Получение списка возможных друзей текущего пользователя
+	private async _getPossibleFriends(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_getPossibleFriends [req.body=%j]", req.body);
+
+		try {
+			const userId = req.user.id;
+
+			const { limit, page = 0, search = "" }: { limit: number; page?: number; search?: string; } = req.body;
+
+			const possibleFriendsData = await this._database.repo.friendActions.getPossibleFriends({ data: { userId, limit, page, search } });
+
+			res.status(HTTPStatuses.OK).json({ success: true, ...possibleFriendsData });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Получение списка друзей текущего пользователя
+	private async _getMyFriends(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_getMyFriends [req.body=%j]", req.body);
+
+		try {
+			const { userId: anotherUserId, limit, lastCreatedAt = "", search = "" }: IFriendsData = req.body;
+			const userId = anotherUserId || req.user.id;
+
+			const myFriendsData = await this._database.repo.friendActions.getMyFriends({ data: { userId, limit, lastCreatedAt, search } });
+
+			res.status(HTTPStatuses.OK).json({ success: true, ...myFriendsData });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Получение списка онлайн друзей текущего пользователя
+	private async _checkOnlineUser(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_checkOnlineUser [req.body=%j]", req.body);
+
+		try {
+			const { ids = [], search = "" }: IFriendsData = req.body;
+			const userId = req.user.id;
+
+			const onlineFriendsData = await this._database.repo.friendActions.getOnlineUsers({ data: { ids, userId, search } });
+
+			res.status(HTTPStatuses.OK).json({ success: true, ...onlineFriendsData });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Получение списка подписчиков
+	private async _getFollowers(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_getFollowers [req.body=%j]", req.body);
+
+		try {
+			const { userId: anotherUserId, limit, lastCreatedAt = "", search = "" }: IFriendsData = req.body;
+			const userId = anotherUserId || req.user.id;
+
+			const followersData = await this._database.repo.friendActions.getFollowers({ data: { userId, limit, lastCreatedAt, search } });
+
+			res.status(HTTPStatuses.OK).json({ success: true, ...followersData });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Получение списка заблокированных пользователей
+	private async _getBlockedFriends(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_getBlockedFriends [req.body=%j]", req.body);
+
+		try {
+			const { limit, lastCreatedAt = "", search = "" }: IFriendsData = req.body;
+			const userId = req.user.id;
+
+			const blockedFriendsData = await this._database.repo.friendActions.getBlockedFriends({ data: { userId, limit, lastCreatedAt, search } });
+
+			res.status(HTTPStatuses.OK).json({ success: true, ...blockedFriendsData });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Получение списка общих друзей с открытым чужим профилем (используется только для подгрузки в чужом профиле)
+	private async _getCommonFriends(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_getCommonFriends [req.body=%j]", req.body);
+
+		try {
+			const { userId: anotherUserId, limit, lastCreatedAt = "", search = "" }: IFriendsData = req.body;
+			const userId = req.user.id;
+
+			if (!anotherUserId) {
+				throw new FriendsError(t("friends.error.get_common_friends_id_not_found"), HTTPStatuses.BadRequest);
+			}
+
+			const commonFriendsData = await this._database.repo.friendActions.getCommonFriends(
+				{ data: { 
+					userId, 
+					anotherUserId, 
+					limit, 
+					lastCreatedAt, 
+					search, 
+				}, 
+				});
+
+			res.status(HTTPStatuses.OK).json({ success: true, ...commonFriendsData });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// // Получить специфичную информацию о друге, с которым открыт диалог
+	// private async _getFriendInfo(req: Request, res: Response, next: NextFunction) {
+	// 	logger.debug("_getFriendInfo  [req.body=%j]", req.body);
+
+	// 	const transaction = await this._database.sequelize.transaction();
+
+	// 	try {
+	// 		const { chatId }: { chatId: string } = req.body;
+	// 		const userId = req.user.id;
+
+	// 		if (!chatId) {
+	// 			await transaction.rollback();
+	// 			return next(new FriendsError(t("chats.error.chat_id_not_found"), HTTPStatuses.BadRequest));
+	// 		}
+
+	// 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// 		const userIdsInChat: any = await this._database.models.chats.findOne({
+	// 			where: { id: chatId },
+	// 			attributes: [ "userIds" ],
+	// 			transaction,
+	// 		});
+
+	// 		let friendId: string | null = null;
+
+	// 		if (userIdsInChat) {
+	// 			const ids = userIdsInChat.userIds.split(",");
+	// 			const findFriendId = ids.find((id: string) => id !== userId);
+
+	// 			if (findFriendId) {
+	// 				friendId = findFriendId;
+	// 			}
+	// 		}
+
+	// 		const friendInfo = friendId
+	// 			? await this._database.models.users.findByPk(friendId, {
+	// 				attributes: [ "id", "avatarUrl", "firstName", "thirdName" ],
+	// 				transaction,
+	// 			})
+	// 			: null;
+
+	// 		if (!friendInfo) {
+	// 			await transaction.rollback();
+	// 			return next(new FriendsError(t("friends.error.friend_id_not_found"), HTTPStatuses.BadRequest));
+	// 		}
+
+	// 		await transaction.commit();
+
+	// 		res.json({
+	// 			success: true,
+	// 			friendInfo: {
+	// 				id: friendInfo.id,
+	// 				avatarUrl: friendInfo.avatarUrl,
+	// 				friendName: friendInfo.firstName + " " + friendInfo.thirdName,
+	// 			},
+	// 		});
+	// 	} catch (error) {
+	// 		await transaction.rollback();
+	// 		next(error);
+	// 	}
+	// }
+
+	// Получить все входящие запросы дружбы
+	private async _getIncomingRequests(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_getIncomingRequests [req.body=%j]", req.body);
+
+		try {
+			const userId = req.user.id;
+
+			const { limit, lastCreatedAt = "", search = "" }: IFriendsData = req.body;
+
+			const incomingRequestsData = await this._database.repo.friendActions.getIncomingRequests({ data: { userId, limit, lastCreatedAt, search } });
+
+			res.status(HTTPStatuses.OK).json({ success: true, ...incomingRequestsData });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Получить все исходящие запросы дружбы
+	private async _getOutgoingRequests(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_getOutgoingRequests [req.body=%j]", req.body);
+
+		try {
+			const userId = req.user.id;
+
+			const { limit, lastCreatedAt = "", search = "" }: IFriendsData = req.body;
+
+			const outgoingRequestsData = await this._database.repo.friendActions.getOutgoingRequests({ data: { userId, limit, lastCreatedAt, search } });
+
+			res.status(HTTPStatuses.OK).json({ success: true, ...outgoingRequestsData });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Добавить пользователя в друзья (подписываемся на него)
+	private async _followFriend(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_followFriend [req.body=%j]", req.body);
+
+		try {
+			const { friendId }: { friendId: string; } = req.body;
+			const userId = req.user.id;
+
+			if (!friendId) {
+				throw new FriendsError(t("friends.error.subscribed_id_not_found"), HTTPStatuses.BadRequest);
+			}
+
+			await this._sendSocketEvent({
+				user: req.user,
+				friendId,
+				socketActions: {
+					to: SocketActions.FOLLOW_FRIEND,
+					broadcast: SocketActions.ADD_OUTGOING_REQUEST,
+				},
+			});
+
+			await this._database.repo.friendActions.followFriend({ data: { userId, friendId } });
+
+			res.status(HTTPStatuses.Created).json({ success: true });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Отписаться от пользователя
+	private async _unfollow(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_unfollow [req.body=%j]", req.body);
+
+		try {
+			const { friendId }: { friendId: string; } = req.body;
+			const userId = req.user.id;
+
+			if (!friendId) {
+				throw new FriendsError(t("friends.error.unfollowed_id_not_found"), HTTPStatuses.BadRequest);
+			}
+
+			await this._sendSocketEvent({
+				user: req.user,
+				friendId,
+				socketActions: {
+					to: SocketActions.UNFOLLOW_FRIEND,
+					broadcast: SocketActions.REMOVE_OUTGOING_REQUEST,
+				},
+			});
+
+			// Удаляем запись - я подписываюсь на добавленного пользователя
+			await this._database.repo.friendActions.unfollowFriend({ data: { userId, friendId } });
+
+			res.status(HTTPStatuses.NoContent).end();
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Добавить пользователя из подписчиков в друзья
+	private async _addFriend(req: Request, res: Response, next: NextFunction, { curTransaction }: { curTransaction?: Transaction } = {}) {
+		logger.debug("_addFriend [req.body=%j]", req.body);
+
+		const transaction = curTransaction || await this._database.sequelize.transaction();
+
+		try {
+			const { friendId }: { friendId: string; } = req.body;
+			const userId = req.user.id;
+
+			if (!friendId) {
+				throw new FriendsError(t("friends.error.added_id_not_found"), HTTPStatuses.BadRequest);
+			}
+
+			await this._sendSocketEvent({
+				user: req.user,
+				friendId,
+				socketActions: {
+					to: SocketActions.ADD_TO_FRIEND,
+					broadcast: SocketActions.REMOVE_FOLLOWER,
+				},
+			});
+
+			// Добавляем пользователя в друзья
+			await this._database.repo.friendActions.addToFriend({ userId, friendId, transaction });
+
+			await transaction.commit();
+
+			res.status(HTTPStatuses.Created).json({ success: true });
+		} catch (error) {
+			await transaction.rollback();
+			next(error);
+		}
+	}
+
+	// Принятие запроса дружбы
+	private async _acceptFriendRequest(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_acceptFriendRequest [req.body=%j]", req.body);
+
+		try {
+			const { friendId }: { friendId: string; } = req.body;
+			const userId = req.user.id;
+
+			if (!friendId) {
+				throw new FriendsError(t("friends.error.accept_friend_not_found"), HTTPStatuses.BadRequest);
+			}
+
+			await this._sendSocketEvent({
+				user: req.user,
+				friendId,
+				socketActions: {
+					to: SocketActions.ADD_FRIEND_REQUEST,
+					broadcast: SocketActions.REMOVE_FRIEND_REQUEST,
+				},
+			});
+
+			await this._database.repo.friendActions.acceptFriendRequest({ data: { userId, friendId } });
+
+			res.status(HTTPStatuses.NoContent).end();
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Оставить пользователя в подписчиках (отклонить запрос на дружбу)
+	private async _leftInFollowers(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_leftInFollowers [req.body=%j]", req.body);
+
+		try {
+			const { friendId }: { friendId: string; } = req.body;
+			const userId = req.user.id;
+
+			if (!friendId) {
+				throw new FriendsError(t("friends.error.left_to_subscribed_id_not_found"), HTTPStatuses.BadRequest);
+			}
+
+			await this._sendSocketEvent({
+				user: req.user,
+				friendId,
+				payload: {
+					to: {
+						userId: req.user.id,
+					},
+				},
+				socketActions: {
+					to: SocketActions.REJECT_FRIEND_REQUEST,
+					broadcast: SocketActions.ADD_TO_FOLLOWER,
+				},
+			});
+
+			await this._database.repo.friendActions.leftInFollowers({ data: { userId, friendId } });
+
+			res.status(HTTPStatuses.NoContent).end();
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Удалить из друзей
+	private async _deleteFriend(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_deleteFriend [req.body=%j]", req.body);
+
+		try {
+			const { friendId }: { friendId: string; } = req.body;
+			const userId = req.user.id;
+
+			if (!friendId) {
+				throw new FriendsError(t("friends.error.deleted_id_not_found"), HTTPStatuses.BadRequest);
+			}
+
+			await this._sendSocketEvent({
+				user: req.user,
+				friendId,
+				socketActions: {
+					to: SocketActions.DELETE_FRIEND,
+					broadcast: SocketActions.DELETING_FRIEND,
+				},
+			});
+
+			await this._database.repo.friendActions.deleteFriend({ data: { userId, friendId } });
+
+			res.status(HTTPStatuses.OK).json({ success: true });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Заблокировать пользователя
+	private async _blockFriend(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_blockFriend [req.body=%j]", req.body);
+
+		try {
+			const { friendId }: { friendId: string; } = req.body;
+			const userId = req.user.id;
+
+			if (!friendId) {
+				throw new FriendsError(t("friends.error.blocked_id_not_found"), HTTPStatuses.BadRequest);
+			}
+
+			await this._sendSocketEvent({
+				user: req.user,
+				friendId,
+				payload: {
+					to: {
+						userId: req.user.id,
+					},
+				},
+				socketActions: {
+					to: SocketActions.BLOCK_FRIEND,
+					broadcast: SocketActions.BLOCKING_FRIEND,
+				},
+			});
+
+			await this._database.repo.friendActions.blockFriend({ data: { userId, friendId } });
+
+			res.status(HTTPStatuses.NoContent).end();
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Разблокировать пользователя
+	private async _unblockFriend(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_unblockFriend [req.body=%j]", req.body);
+
+		try {
+			const { friendId }: { friendId: string; } = req.body;
+			const userId = req.user.id;
+
+			if (!friendId) {
+				throw new FriendsError(t("friends.error.unblocked_id_not_found"), HTTPStatuses.BadRequest);
+			}
+
+			await this._sendSocketEvent({
+				user: req.user,
+				friendId,
+				socketActions: {
+					to: SocketActions.UNBLOCK_FRIEND,
+					broadcast: SocketActions.UNBLOCKING_FRIEND,
+				},
+			});
+
+			await this._database.repo.friendActions.unblockFriend({ data: { userId, friendId } });
+
+			res.status(HTTPStatuses.OK).json({ success: true });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	// // Проверка на блокировку пользователя
+	// private async _checkBlockStatus(req: Request, res: Response, next: NextFunction) {
+	// 	logger.debug("_checkBlockStatus  [req.body=%j]", req.body);
+
+	// 	const transaction: Transaction = await this._database.sequelize.transaction();
+
+	// 	try {
+	// 		const { checkingUser }: { checkingUser: string } = req.body;
+	// 		const userId = req.user.id;
+
+	// 		if (!checkingUser) {
+	// 			await transaction.rollback();
+	// 			return next(new FriendsError(t("friends.error.check_blocked_id_not_found"), HTTPStatuses.BadRequest));
+	// 		}
+
+	// 		// Проверяем, заблокировали ли мы такого пользователя
+	// 		const isBlockedByMe = await this._database.models.blockUsers.findOne({
+	// 			where: { userId, userBlocked: checkingUser },
+	// 			transaction,
+	// 		});
+
+	// 		// Проверяем, заблокировал ли меня такой пользователь
+	// 		const meIsBlocked = await this._database.models.blockUsers.findOne({
+	// 			where: { userId: checkingUser, userBlocked: userId },
+	// 			transaction,
+	// 		});
+
+	// 		await transaction.commit();
+
+	// 		res.json({ success: true, isBlockedByMe, meIsBlocked });
+	// 	} catch (error) {
+	// 		await transaction.rollback();
+	// 		next(error);
+	// 	}
+	// }
+};

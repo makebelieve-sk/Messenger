@@ -10,12 +10,15 @@ import MenuItemComponent from "@components/ui/menu-item";
 import MenuListComponent from "@components/ui/menu-list";
 import useMainClient from "@hooks/useMainClient";
 import i18n from "@service/i18n";
+import useFriendsStore from "@store/friends";
 import { Pages } from "@custom-types/enums";
 
 import "./menu.scss";
 
 // Компонент главного меню. Отрисовывается на каждой странице
 export default function MenuComponent() {
+	const friendsNotification = useFriendsStore(state => state.friendsNotification);
+
 	const { mainApi } = useMainClient();
 	const navigate = useNavigate();
 
@@ -34,16 +37,6 @@ export default function MenuComponent() {
 
 	//     dispatch(setMessageNotification(unReadChats.length));
 	// }, [unRead]);
-
-	// Обработка клика по пункту "Друзья"
-	// const onClickFriends = () => {
-	//     navigate({ pathname: Pages.friends, query: { mainTab: MainFriendTabs.allFriends, tab: FriendsTab.all } });
-	// };
-
-	// Обработка клика по блоку фотографий
-	const onClickPhotos = () => {
-		navigate(Pages.photos);
-	};
 
 	return <div className="menu">
 		<nav className="menu__nav">
@@ -73,10 +66,10 @@ export default function MenuComponent() {
 						{i18n.t("menu.friends")}
 					</div>
 
-					<NotificationBadge content={0} />
+					<NotificationBadge content={friendsNotification} />
 				</MenuItemComponent>
 
-				<MenuItemComponent className="menu__nav__item" onClick={onClickPhotos}>
+				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.photos)}>
 					<CameraAltIcon color="primary" />
                     
 					<div className="menu__nav__item__title">

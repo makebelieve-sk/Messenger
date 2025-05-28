@@ -1,10 +1,9 @@
-import { SocketActions } from "common-types";
+import { HandleArgsType, SocketActions } from "common-types";
 import EventEmitter from "events";
 import type { Server, Socket } from "socket.io";
 
-import MainUsersController from "@core/controllers/UsersController";
-import Database from "@core/database/Database";
-import FriendsController from "@core/socket/controllers/Friends";
+import type MainUsersController from "@core/controllers/UsersController";
+import type Database from "@core/database/Database";
 import MessagesController from "@core/socket/controllers/Messages";
 import UsersController from "@core/socket/controllers/Users";
 import { validateEmitEvent } from "@core/socket/validation";
@@ -12,7 +11,7 @@ import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { SocketError } from "@errors/index";
 import { SocketEvents } from "@custom-types/events";
-import type { HandleArgsType, IAck, ServerToClientEvents, SocketType, SocketWithUser } from "@custom-types/socket.types";
+import type { IAck, ServerToClientEvents, SocketType, SocketWithUser } from "@custom-types/socket.types";
 import { SOCKET_ACK_TIMEOUT } from "@utils/constants";
 
 const logger = Logger("SocketController");
@@ -30,7 +29,6 @@ type SocketToEventHandler = <T extends keyof ServerToClientEvents>(
 // Класс, отвечает за работу текущего сокет-соединения
 export default class SocketController extends EventEmitter {
 	private _usersController!: UsersController;
-	private _friendsController!: FriendsController;
 	private _messagesController!: MessagesController;
 
 	private readonly _userId: string;
@@ -77,7 +75,6 @@ export default class SocketController extends EventEmitter {
 		}
 
 		this._usersController = new UsersController(this._socket, this._users);
-		this._friendsController = new FriendsController(this._socket);
 		this._messagesController = new MessagesController(this._socket);
 
 		this._bindListeners();
@@ -161,30 +158,6 @@ export default class SocketController extends EventEmitter {
 		this._usersController.on(SocketEvents.SEND_BROADCAST, ((type, ...data) => {
 			this._sendBroadcast(type, ...data);
 		}) as SocketEventHandler);
-
-		this._friendsController.on(SocketEvents.HANDLE_ERROR, (error: string) => {
-			this._sendError(error);
-		});
-
-		this._friendsController.on(
-			SocketEvents.NOTIFY_ANOTHER_USER,
-			<T extends keyof ServerToClientEvents>(
-				userTo: string,
-				type: T,
-				data: HandleArgsType<ServerToClientEvents[T]>,
-			) => {
-				// Если получатель - это я, то выводим ошибку
-				if (userTo === this._socket.user.id) {
-					throw new SocketError(t("socket.error.not_correct_user_id_in_socket", { userTo }));
-				}
-
-				const findUser = this._getUser(userTo);
-
-				if (findUser) {
-					this.sendTo(type, data, findUser.id);
-				}
-			},
-		);
 
 		this._messagesController.on(
 			SocketEvents.NOTIFY_FEW_ANOTHER_USERS,
@@ -310,6 +283,27 @@ export default class SocketController extends EventEmitter {
 
 			if (validateData) {
 				const response = await (this._io as Server).to(socketTo).timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, validateData);
+
+				this._handleEmits(response, type);
+			}
+		} catch (error) {
+			this._sendError(t("socket.error.emit_to_with_ack", { type, message: (error as Error).message }));
+		}
+	};
+
+	/**
+	 * Основной метод отправки события с сервера конкретному клиенту с добавлением ack кроме инициатора.
+	 * Здесь идет отправка всем сокет-соединениям одного пользователя (то есть всем открытым вкладкам) кроме инициатора 
+	 * (с фронта которого пришел запрос на сервер).
+	 * Когда имеется в виду отправить событие другому пользователю кроме инициатора (его самого), 
+	 * то необходимо использовать данный метод - поэтому он публичный.
+	 */
+	sendBroadcastTo: SocketToEventHandler = async (type, data, socketTo = this._userId) => {
+		try {
+			const validateData = validateEmitEvent(this._sendError.bind(this), type, data);
+
+			if (validateData) {
+				const response = await (this._io as Server).to(socketTo).except(this._socket.id).timeout(SOCKET_ACK_TIMEOUT).emitWithAck(type, validateData);
 
 				this._handleEmits(response, type);
 			}

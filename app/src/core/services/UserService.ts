@@ -1,8 +1,10 @@
+import { type Friends } from "@core/models/Friends";
 import { type NotificationSettings } from "@core/models/NotificationSettings";
 import { type Photos } from "@core/models/Photos";
 import { type User } from "@core/models/User";
 import { type UserDetails } from "@core/models/UserDetails";
 import type Request from "@core/Request";
+import FriendsService from "@core/services/FriendsService";
 import NotificationSettingsService from "@core/services/NotificationSettingsService";
 import PhotosService from "@core/services/PhotosService";
 import UserDetailsService from "@core/services/UserDetailsService";
@@ -24,6 +26,7 @@ export default class UserService implements User {
 	private readonly _userDetails: UserDetails;
 	private readonly _notificationSettings?: NotificationSettings;
 	private readonly _photos: Photos;
+	private readonly _friends: Friends;
 
 	constructor(private readonly _request: Request, private readonly _userData: IUserData) {
 		logger.debug("init");
@@ -43,6 +46,13 @@ export default class UserService implements User {
 		
 		// Создаем сущность фотографий
 		this._photos = new PhotosService(this._request, this._user.id);
+
+		// Создаем сущность друзей
+		this._friends = new FriendsService(this._request, this._user.id);
+	}
+
+	get friendsService() {
+		return this._friends;
 	}
 
 	get photosService() {

@@ -96,26 +96,12 @@ BEGIN
         id UNIQUEIDENTIFIER PRIMARY KEY,
         source_user_id UNIQUEIDENTIFIER NOT NULL,
         target_user_id UNIQUEIDENTIFIER NOT NULL,
-        action_type INT NOT NULL
-    );
-
-    CREATE INDEX IDX_Friend_Actions_SourceUserId ON Friend_Actions(source_user_id);
-    CREATE INDEX IDX_Friend_Actions_TargetUserId ON Friend_Actions(target_user_id);
-END;
-
--- Создаем таблицу Friend_Actions_Log
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Friend_Actions_Log')
-BEGIN
-    CREATE TABLE Friend_Actions_Log (
-        id UNIQUEIDENTIFIER PRIMARY KEY,
-        source_user_id UNIQUEIDENTIFIER NOT NULL,
-        target_user_id UNIQUEIDENTIFIER NOT NULL,
         action_type INT NOT NULL,
         created_at DATETIME2(3) DEFAULT SYSDATETIME()
     );
 
-    CREATE INDEX IDX_Friend_Actions_Log_SourceUserId ON Friend_Actions_Log(source_user_id);
-    CREATE INDEX IDX_Friend_Actions_Log_TargetUserId ON Friend_Actions_Log(target_user_id);
+    CREATE INDEX IDX_Friend_Actions_SourceUserId ON Friend_Actions(source_user_id);
+    CREATE INDEX IDX_Friend_Actions_TargetUserId ON Friend_Actions(target_user_id);
 END;
 
 -- Создаем таблицу Chats
@@ -282,19 +268,6 @@ END;
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_Friend_Actions_Users_targetUserId')
 BEGIN
     ALTER TABLE Friend_Actions ADD CONSTRAINT FK_Friend_Actions_Users_targetUserId 
-    FOREIGN KEY (target_user_id) REFERENCES Users(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-END;
-
--- Внешние ключи для Friend_Actions_Log
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_Friend_Actions_Log_Users_sourceUserId')
-BEGIN
-    ALTER TABLE Friend_Actions_Log ADD CONSTRAINT FK_Friend_Actions_Log_Users_sourceUserId 
-    FOREIGN KEY (source_user_id) REFERENCES Users(id) ON DELETE CASCADE;
-END;
-
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_Friend_Actions_Log_Users_targetUserId')
-BEGIN
-    ALTER TABLE Friend_Actions_Log ADD CONSTRAINT FK_Friend_Actions_Log_Users_targetUserId 
     FOREIGN KEY (target_user_id) REFERENCES Users(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 END;
 

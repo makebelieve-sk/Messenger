@@ -6,7 +6,6 @@ import DisabledChatsSound from "@core/database/repositories/DisabledChatsSound";
 import Files from "@core/database/repositories/Files";
 import FilesInMessage from "@core/database/repositories/FilesInMessage";
 import FriendActions from "@core/database/repositories/FriendActions";
-import FriendActionsLog from "@core/database/repositories/FriendActionsLog";
 import Messages from "@core/database/repositories/Messages";
 import NotificationsSettings from "@core/database/repositories/NotificationsSettings";
 import Photos from "@core/database/repositories/Photos";
@@ -19,11 +18,6 @@ import UsersInChat from "@core/database/repositories/UsersInChat";
 import { t } from "@service/i18n";
 import { RepositoryError } from "@errors/index";
 
-interface IDestroyOptions {
-	sourceUserId: string;
-	targetUserId: string; 
-};
-
 // Класс, содержит доступы ко всем таблицам базы данных
 export default class Repository {
 	private _users: Users;
@@ -32,7 +26,6 @@ export default class Repository {
 	private _userPhotos: UserPhotos;
 	private _notificationsSettings: NotificationsSettings;
 	private _friendActions: FriendActions;
-	private _friendActionsLog: FriendActionsLog;
 	private _chats: Chats;
 	private _disabledChatsSound: DisabledChatsSound;
 	private _usersInChat: UsersInChat;
@@ -48,8 +41,7 @@ export default class Repository {
 		this._userDetails = new UserDetails(this._sequelize);
 		this._userPhotos = new UserPhotos(this._sequelize);
 		this._notificationsSettings = new NotificationsSettings(this._sequelize);
-		this._friendActions = new FriendActions(this._sequelize);
-		this._friendActionsLog = new FriendActionsLog(this._sequelize);
+		this._friendActions = new FriendActions(this);
 		this._chats = new Chats(this._sequelize);
 		this._disabledChatsSound = new DisabledChatsSound(this._sequelize);
 		this._usersInChat = new UsersInChat(this._sequelize);
@@ -81,9 +73,6 @@ export default class Repository {
 	}
 	get friendActions() {
 		return this._friendActions;
-	}
-	get friendActionsLog() {
-		return this._friendActionsLog;
 	}
 	get chats() {
 		return this._chats;
@@ -161,17 +150,8 @@ export default class Repository {
 				transaction,
 			});
 
-			// Удаляем все записи дружбы с другими пользователями
-			await this._friendActions.destroy<IDestroyOptions>({
-				filters: { [Op.or]: [
-					{ sourceUserId: userId },
-					{ targetUserId: userId },
-				] },
-				transaction,
-			});
-
 			// Удаляем все записи из журнала дружбы с другими пользователями
-			await this._friendActionsLog.destroy<IDestroyOptions>({
+			await this._friendActions.destroy({
 				filters: { [Op.or]: [
 					{ sourceUserId: userId },
 					{ targetUserId: userId },
