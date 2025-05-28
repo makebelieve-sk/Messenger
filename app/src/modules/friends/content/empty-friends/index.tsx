@@ -1,15 +1,15 @@
 import { FriendsTab } from "common-types";
 import { useCallback, useMemo } from "react";
+import { useParams } from "react-router-dom";
 
 import MediumButton from "@components/services/buttons/medium-button";
+import useProfile from "@hooks/useProfile";
 import i18next from "@service/i18n";
 import useFriendsStore from "@store/friends";
 import { IS_MY_FRIENDS } from "@utils/constants";
 import { getEmptyText } from "@utils/friends";
 
 import "./empty-friends.scss";
-import { useParams } from "react-router-dom";
-import useProfile from "@hooks/useProfile";
 
 // Компонент для отрисовки пустого списка друзей
 export default function EmptyFriends() {

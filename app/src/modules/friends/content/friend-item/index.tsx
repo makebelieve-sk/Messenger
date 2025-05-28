@@ -8,6 +8,7 @@ import ListItemComponent from "@components/ui/list-item";
 import ListItemAvatarComponent from "@components/ui/list-item-avatar";
 import ListItemTextComponent from "@components/ui/list-item-text";
 import PopoverMenu from "@components/ui/popover-menu";
+import useProfile from "@hooks/useProfile";
 import useUser from "@hooks/useUser";
 import FriendActions from "@modules/friends/content/friend-item/friend-actions";
 import i18next from "@service/i18n";
@@ -16,7 +17,6 @@ import { IFriend } from "@custom-types/friends.types";
 import { IS_MY_FRIENDS } from "@utils/constants";
 
 import "./friend-item.scss";
-import useProfile from "@hooks/useProfile";
 
 interface IFriendItem {
 	friend: IFriend;
@@ -24,7 +24,7 @@ interface IFriendItem {
 
 // Строка из списка виртуального списка для любой вкладки раздела "Друзья"
 export default memo(function FriendItem({ friend }: IFriendItem) {
-	const [anchorEl, setAnchorEl] = useState<{ el: Element; id: string; } | null>(null);
+	const [ anchorEl, setAnchorEl ] = useState<{ el: Element; id: string; } | null>(null);
 
 	const currentTab = useFriendsStore(state => state.mainTab === FriendsTab.ALL
 		? state.contentTab
@@ -47,13 +47,13 @@ export default memo(function FriendItem({ friend }: IFriendItem) {
 
 	// Получение элементов для выпадающего списка
 	const getPopoverItems = (friendId: string) => {
-		return [{
+		return [ {
 			title: i18next.t("friends-module.actions.remove_friend"),
 			onClick: () => friendsService.deleteFriend(friendId),
 		}, {
 			title: i18next.t("friends-module.actions.block"),
 			onClick: () => friendsService.blockFriend(friendId),
-		}];
+		} ];
 	};
 
 	return <ListItemComponent className="friend-item" key={friend.id}>

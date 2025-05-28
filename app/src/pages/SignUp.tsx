@@ -92,7 +92,7 @@ export default function SignUp() {
 	 * нет возможности удалять профиль пользователя (только через Zustand, но это костыль, так как будет использована подписка).
 	 */
 	useEffect(() => {
-		mainClient.removeProfile();
+		mainClient.lifeTimeExpire();
 	}, []);
 
 	// Подписка на событие ошибок, возникающих при регистрации

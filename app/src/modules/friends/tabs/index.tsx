@@ -4,12 +4,12 @@ import Badge from "@mui/material/Badge";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 
+import useUser from "@hooks/useUser";
 import { type VirtualListHandle } from "@modules/virtual-list/list";
 import i18next from "@service/i18n";
 import useFriendsStore from "@store/friends";
 
 import "./tabs.scss";
-import useUser from "@hooks/useUser";
 
 interface IMainTabs {
     virtualRef: RefObject<VirtualListHandle | null>;

@@ -1,13 +1,13 @@
 import { type FriendsFactory } from "@core/models/FriendsFactory";
 import type Request from "@core/Request";
 import BlockedUsersService from "@core/services/friends/BlockedUsersService";
+import CommonFriendsService from "@core/services/friends/CommonFriendsService";
 import FollowersService from "@core/services/friends/FollowersService";
 import IncomingRequestsService from "@core/services/friends/IncomingService";
 import MyFriendsService from "@core/services/friends/MyFriendsService";
 import OnlineFriendsService from "@core/services/friends/OnlineFriendsService";
 import OutgoingRequestsService from "@core/services/friends/OutGouingRequestsService";
 import SearchService from "@core/services/friends/SearchService";
-import CommonFriendsService from "@core/services/friends/CommonFriendsService";
 
 // Фабрика для создания сущностей управления друзьями
 export default class FriendsFactoryService implements FriendsFactory {

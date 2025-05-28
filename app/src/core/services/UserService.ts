@@ -129,6 +129,7 @@ export default class UserService implements User {
 			avatarUrl: updatedAvatar?.path || null,
 			avatarCreateDate: updatedAvatar?.createdAt || null,
 		});
+		this._updateMyAvatar();
 	}
 
 	// Обновление полей пользователя

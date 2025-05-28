@@ -1,11 +1,12 @@
+import { HandleArgsType } from "common-types";
 import {
 	type EmitClientEventSchemasType,
 	type HandleClientEventSchemasType,
 	validateClientEmitEvent,
 	validateClientHandleEvent,
 } from "validation";
+
 import type { ClientToServerEvents, ServerToClientEvents } from "@custom-types/socket.types";
-import { HandleArgsType } from "common-types";
 
 export type ValidateHandleReturnType = ReturnType<typeof validateClientHandleEvent>;
 

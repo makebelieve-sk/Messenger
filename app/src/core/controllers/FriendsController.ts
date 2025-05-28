@@ -1,15 +1,15 @@
 import { FriendsTab } from "common-types";
 
 import type BlockedUsersService from "@core/services/friends/BlockedUsersService";
+import type CommonFriendsService from "@core/services/friends/CommonFriendsService";
 import type FollowersService from "@core/services/friends/FollowersService";
 import type IncomingRequestsService from "@core/services/friends/IncomingService";
 import type MyFriendsService from "@core/services/friends/MyFriendsService";
 import type OnlineFriendsService from "@core/services/friends/OnlineFriendsService";
 import type OutgoingRequestsService from "@core/services/friends/OutGouingRequestsService";
 import type SearchService from "@core/services/friends/SearchService";
-import useUIStore from "@store/ui";
 import i18n from "@service/i18n";
-import type CommonFriendsService from "@core/services/friends/CommonFriendsService";
+import useUIStore from "@store/ui";
 
 // Контроллер по управлению друзьями текущего пользователя
 export default class FriendsController {

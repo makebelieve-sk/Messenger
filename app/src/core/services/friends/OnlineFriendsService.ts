@@ -1,12 +1,13 @@
+import { ApiRoutes } from "common-types";
+
 import { type BaseFriends } from "@core/models/BaseFriends";
 import type Request from "@core/Request";
 import BaseFriendsService from "@core/services/friends/BaseFriendsService";
-import { type IUser } from "@custom-types/models.types";
 import useFriendsStore from "@store/friends";
+import { type IUser } from "@custom-types/models.types";
 import { FRIENDS_DEBOUNCE_TIMEOUT } from "@utils/constants";
 import debounce from "@utils/debounce";
 import { getFriendEntity } from "@utils/friends";
-import { ApiRoutes } from "common-types";
 
 type GetAllGeneric = { onlineFriends: IUser[]; count: number; hasMore: boolean; };
 
@@ -24,20 +25,20 @@ export default class OnlineFriendsService extends BaseFriendsService implements 
 	private get _params() {
 		return {
 			route: ApiRoutes.checkOnlineUser,
-				data: { ids: this._userIds },
-				setLoading: (isLoading: boolean) => {
-					useFriendsStore.getState().setIsLoadingOnlineFriends(isLoading);
-				},
-				successCb: (data: GetAllGeneric) => {
-					const newFriends = data.onlineFriends
-						.map(getFriendEntity)
-						.filter(friend =>
-							!this.items.some(existing => existing.id === friend.id),
-						);
-					this.items.push(...newFriends);
+			data: { ids: this._userIds },
+			setLoading: (isLoading: boolean) => {
+				useFriendsStore.getState().setIsLoadingOnlineFriends(isLoading);
+			},
+			successCb: (data: GetAllGeneric) => {
+				const newFriends = data.onlineFriends
+					.map(getFriendEntity)
+					.filter(friend =>
+						!this.items.some(existing => existing.id === friend.id),
+					);
+				this.items.push(...newFriends);
 
-					this.syncStore();
-				}
+				this.syncStore();
+			},
 		};
 	}
 
@@ -82,7 +83,7 @@ export default class OnlineFriendsService extends BaseFriendsService implements 
 		});
 
 		useFriendsStore.getState().setOnlineFriends({
-			items: [...filteredItems],
+			items: [ ...filteredItems ],
 			hasMore: this.hasMore,
 			count: this.count,
 		});
@@ -90,7 +91,7 @@ export default class OnlineFriendsService extends BaseFriendsService implements 
 
 	syncStore() {
 		useFriendsStore.getState().setOnlineFriends({
-			items: [...this.items],
+			items: [ ...this.items ],
 			hasMore: this.hasMore,
 			count: this.count,
 		});

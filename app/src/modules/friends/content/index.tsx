@@ -1,7 +1,9 @@
 import { FriendsTab } from "common-types";
 import { type RefObject, type SyntheticEvent, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Tab, Tabs } from "@mui/material";
 
+import useProfile from "@hooks/useProfile";
 import useUser from "@hooks/useUser";
 import { type VirtualListHandle } from "@modules/virtual-list/list";
 import i18next from "@service/i18n";
@@ -9,8 +11,6 @@ import useFriendsStore from "@store/friends";
 import FriendsList from "./friends-list";
 
 import "./friends.scss";
-import { useParams } from "react-router-dom";
-import useProfile from "@hooks/useProfile";
 
 interface IContent {
 	virtualRef: RefObject<VirtualListHandle | null>;
@@ -41,7 +41,7 @@ export default function Content({ virtualRef }: IContent) {
 	// Получение друзей согласно текущей открытой вкладке только один раз (состояние в глобальном состоянии синхронизировано)
 	useEffect(() => {
 		friendsService.getFriends(currentTab);
-	}, [currentTab]);
+	}, [ currentTab ]);
 
 	// Изменение вкладки контента
 	const onChangeTab = (_: SyntheticEvent<Element, Event>, newValue: number) => {

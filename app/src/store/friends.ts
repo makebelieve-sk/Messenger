@@ -203,7 +203,7 @@ const useFriendsStore = create<IFriendsState & IFriendsActions>(set => ({
 		countMyFriends: data.countMyFriends,
 		countFollowers: data.countFollowers,
 		countBlockedFriends: data.countBlockedFriends,
-		countCommonFriends: data.countCommonFriends
+		countCommonFriends: data.countCommonFriends,
 	}),
 
 	setPossibleFriends: ({ items, count, hasMore }) => set({ searchFriends: items, countSearchFriends: count, hasMoreSearchFriends: hasMore }),
@@ -220,7 +220,7 @@ const useFriendsStore = create<IFriendsState & IFriendsActions>(set => ({
 	removeFriendsNotification: () => set(state => ({ 
 		friendsNotification: state.friendsNotification 
 			? state.friendsNotification - 1 
-			: state.friendsNotification 
+			: state.friendsNotification, 
 	})),
 
 	setOutgoingRequests: ({ items, count, hasMore }) => set({ outgoingRequests: items, countOutgoingRequests: count, hasMoreOutgoingRequests: hasMore }),

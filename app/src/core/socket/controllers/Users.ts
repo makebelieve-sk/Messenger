@@ -47,7 +47,7 @@ export default class UsersController {
 			if (validateData.success) {
 				logger.info(`${i18next.t("core.socket.new_user_connected")} [user=${JSON.stringify(user)}]`);
 				useGlobalStore.getState().addOnlineUsers(user);
-				this._profilesController.getProfile().userService.friendsService.checkOnlineUsers([user]);
+				this._profilesController.getProfile().userService.friendsService.checkOnlineUsers([ user ]);
 			}
 
 			toFormatAck(validateData, callback);

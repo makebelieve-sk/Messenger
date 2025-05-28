@@ -1,14 +1,14 @@
 import { SocketActions } from "common-types";
 
+import type FriendsControllerType from "@core/controllers/FriendsController";
+import type ProfilesController from "@core/controllers/ProfilesController";
 import { validateHandleEvent } from "@core/socket/validation";
 import Logger from "@service/Logger";
-import { type SocketType } from "@custom-types/socket.types";
-import toFormatAck from "@utils/to-format-socket-ack";
-import type ProfilesController from "@core/controllers/ProfilesController";
-import { getFriendEntity } from "@utils/friends";
 import useFriendsStore from "@store/friends";
-import type FriendsControllerType from "@core/controllers/FriendsController";
 import useUIStore from "@store/ui";
+import { type SocketType } from "@custom-types/socket.types";
+import { getFriendEntity } from "@utils/friends";
+import toFormatAck from "@utils/to-format-socket-ack";
 
 const logger = Logger.init("Socket:FriendsController");
 

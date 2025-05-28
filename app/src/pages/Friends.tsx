@@ -2,23 +2,23 @@ import { FriendsTab } from "common-types";
 import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import BigUserAvatar from "@components/services/avatars/big-user-avatar";
 import GridComponent from "@components/ui/grid";
+import LinkComponent from "@components/ui/link";
 import PaperComponent from "@components/ui/paper";
+import SpinnerComponent from "@components/ui/spinner";
+import usePrepareAnotherUser from "@hooks/usePrepareAnotherUser";
+import useProfile from "@hooks/useProfile";
+import useUser from "@hooks/useUser";
 import Content from "@modules/friends/content";
 import PossibleFriends from "@modules/friends/possible-friends";
 import MainTabs from "@modules/friends/tabs";
 import { type VirtualListHandle } from "@modules/virtual-list/list";
 import useFriendsStore from "@store/friends";
-import LinkComponent from "@components/ui/link";
-
-import "@styles/pages/friends.scss";
-import useProfile from "@hooks/useProfile";
-import BigUserAvatar from "@components/services/avatars/big-user-avatar";
 import { Pages } from "@custom-types/enums";
 import { goToAnotherProfile } from "@utils/index";
-import usePrepareAnotherUser from "@hooks/usePrepareAnotherUser";
-import SpinnerComponent from "@components/ui/spinner";
-import useUser from "@hooks/useUser";
+
+import "@styles/pages/friends.scss";
 
 // Страница "Друзья"
 export default function Friends() {
@@ -37,7 +37,7 @@ export default function Friends() {
 	// Получение друзей при загрузке страницы
 	useEffect(() => {
 		friendsService.getFriends(FriendsTab.MY);
-	}, [userId]);
+	}, [ userId ]);
 
 	// Обработка перехода на чужой профиль
 	const onClickAnotherUser = () => {
