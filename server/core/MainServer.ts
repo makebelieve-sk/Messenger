@@ -8,6 +8,7 @@ import corsConfig from "@config/cors.config";
 import expressSessionConfig from "@config/express-session.config";
 import expressStaticConfig from "@config/express-static.config";
 import ApiServer from "@core/api/ApiServer";
+import swaggerWork from "@core/api/swagger/Swagger";
 import UsersController from "@core/controllers/UsersController";
 import Database from "@core/database/Database";
 import PassportWorks from "@core/Passport";
@@ -27,6 +28,7 @@ export default class MainServer {
 	private readonly _passport: PassportWorks;
 	private readonly _socket: SocketWorks;
 	private _session!: express.RequestHandler;
+	private readonly _swagger: swaggerWork;
 
 	constructor(
 		private readonly _app: Express,
@@ -34,6 +36,7 @@ export default class MainServer {
 	) {
 		logger.debug("init");
 
+		this._swagger = new swaggerWork();
 		// Инициализация контроллера управления пользователями на сервере
 		this._users = new UsersController();
 		// Инициализируем работу базы данных (модели, отношения)
@@ -45,7 +48,7 @@ export default class MainServer {
 		// Инициализируем работу Passport (мидлвары)
 		this._passport = new PassportWorks(this._app, this._database, this._users);
 		// Инициализируем работу API
-		new ApiServer(this._redisWork, this._app, this._users, this._database, this._passport.passport);
+		new ApiServer(this._redisWork, this._app, this._users, this._database, this._passport.passport, this._swagger);
 		// Инициализируем работу socket.io
 		this._socket = new SocketWorks(this._server, this._users, this._database, this._redisWork, this._session);
 	}
@@ -60,9 +63,9 @@ export default class MainServer {
 		this._app.use(this._session); // Используем конфигурацию сессии express-session
 
 		/**
-		 * Указываем Express использовать папку assets для обслуживания статических файлов
-		 * (опции express.static необходимо прописывать каждому мидлвару в отдельности).
-		 */
+			* Указываем Express использовать папку assets для обслуживания статических файлов
+			* (опции express.static необходимо прописывать каждому мидлвару в отдельности).
+			*/
 		this._app.use(express.static(path.join(__dirname, "../", ASSETS_DIR), expressStaticConfig));
 	}
 

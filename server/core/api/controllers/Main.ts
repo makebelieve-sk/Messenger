@@ -1,13 +1,17 @@
 import { ApiRoutes, HTTPStatuses } from "common-types";
 import type { Express, NextFunction, Request, Response } from "express";
 
+import swaggerConfig from "@config/swagger/swaggerConfig";
 import AuthController from "@core/api/controllers/Auth";
 import type Middleware from "@core/api/Middleware";
+import swaggerWork from "@core/api/swagger/Swagger";
+import { generateMermaidDiagram } from "@core/api/swagger/SwaggerDiagramGenerator";
 import type Database from "@core/database/Database";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { MainError } from "@errors/controllers";
 import { COOKIE_NAME } from "@utils/constants";
+
 
 const logger = Logger("MainController");
 
@@ -17,29 +21,90 @@ export default class MainController {
 		private readonly _app: Express,
 		private readonly _middleware: Middleware,
 		private readonly _database: Database,
+		private readonly _swagger: swaggerWork,
 	) {
 		this._init();
 	}
 
 	// Слушатели запросов контроллера MainController
 	private _init() {
+
 		this._app.get(ApiRoutes.checkHealth, this._checkHealth);
 		this._app.get(
-			ApiRoutes.deleteAccount, 
-			this._middleware.mustAuthenticated.bind(this._middleware), 
+			ApiRoutes.deleteAccount,
+			this._middleware.mustAuthenticated.bind(this._middleware),
 			this._deleteAccount.bind(this),
 		);
 		this._app.put(
-			ApiRoutes.soundNotifications, 
-			this._middleware.mustAuthenticated.bind(this._middleware), 
+			ApiRoutes.soundNotifications,
+			this._middleware.mustAuthenticated.bind(this._middleware),
 			this._soundNotifications.bind(this),
 		);
+
+		this._app.get("/api-docs/diagram", (_, res) => {
+			const endpoints = Object.entries(swaggerConfig.paths)
+				.map(([ path, methods ]) => {
+					const ops = Object.keys(methods).map(
+						(method) => `<li><a href="#" onclick="renderDiagram('${method}', '${path}')">${method.toUpperCase()} ${path}</a></li>`,
+					).join("\n");
+					return ops;
+				}).join("\n");
+
+			const html = `
+  <!DOCTYPE html>
+  <html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Все эндпоинты</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: false });
+
+      async function renderDiagram(method, path) {
+        const response = await fetch(\`/api-docs/diagram-api?path=\${encodeURIComponent(path)}&method=\${method}\`);
+        const { diagram } = await response.json();
+        document.getElementById("diagram").innerHTML = diagram;
+        mermaid.init(undefined, "#diagram");
+      }
+    </script>
+    <style>
+      body { font-family: sans-serif; padding: 2em; }
+      ul { list-style: none; padding: 0; }
+      li { margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <h1>Список всех endpoint’ов</h1>
+    <ul>
+      ${endpoints}
+    </ul>
+    <div id="diagram" class="mermaid"></div>
+  </body>
+  </html>
+  `;
+
+			res.send(html);
+		});
+
+
+		this._app.get("/api-docs/diagram-api", (req, res) => {
+			const { path, method } = req.query;
+
+			if (typeof path === "string" && method && typeof method === "string") {
+				const diagram = generateMermaidDiagram(path, method.toLowerCase());
+				res.json({ diagram });
+			} else {
+				res.status(400).json({ error: "Invalid path parameter" });
+			}
+		});
+
+		this._app.use(ApiRoutes.apiDocs, this._swagger.serve, this._swagger.setup);
 	}
 
 	/**
-     * Проверка "здоровья" сервера.
-     * Используется в основном для получения информации о том, что сервер запущен и работает без критичных ошибок.
-     */
+					* Проверка "здоровья" сервера.
+					* Используется в основном для получения информации о том, что сервер запущен и работает без критичных ошибок.
+					*/
 	private async _checkHealth(_: Request, res: Response, next: NextFunction) {
 		try {
 			logger.debug("_checkHealth success");
