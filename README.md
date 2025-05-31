@@ -268,7 +268,7 @@ npm run dev
 - `NODE_ENV` - окружение (development/production)
 - `CLIENT_URL` - URL клиентского приложения
 - `SECRET_KEY` - секретный ключ для сессий
-- `DATEBASE_*` - настройки подключения к базе данных
+- `DATABASE_*` - настройки подключения к базе данных
 - `REDIS_*` - настройки Redis
 - `SOCKET_*` - настройки WebSocket
 - `MULTER_*` - настройки загрузки файлов
