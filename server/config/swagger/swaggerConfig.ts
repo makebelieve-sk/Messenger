@@ -43,7 +43,7 @@ const swaggerConfig = {
 	],
 	servers: [
 		{
-			url: "http://localhost:8008",
+			url: "https://localhost:8008",
 		},
 	],
 	externalDocs: {

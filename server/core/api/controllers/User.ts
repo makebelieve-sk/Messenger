@@ -117,9 +117,7 @@ export default class UserController {
 
 		try {
 			const fields: IEditInfoBody = req.body;
-			console.log(req.body);
 			const { id: userId } = req.user;
-			console.log(req.user);
 			// Формируем те поля из объекта req.body, которые остались пусты
 			const missingFields = Object.entries(fields)
 				.filter(([ key, value ]) => !value && !NOT_REQUIRED_EDIT_INFO_FIELDS.includes(key))
@@ -138,7 +136,6 @@ export default class UserController {
 			}
 
 			const { name, surName, sex, birthday, work, city, phone, email } = fields;
-			console.log("FIELDS:", fields);
 			// Валидация введенной почты
 			const validationEmail = validateEmail(email);
 
@@ -213,7 +210,6 @@ export default class UserController {
 				userDetails: foundUserDetails.getEntity(),
 			});
 		} catch (error) {
-			console.error("Validation error details:", error);
 			next(error);
 		}
 	}

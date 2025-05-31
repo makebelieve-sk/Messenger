@@ -12,7 +12,6 @@ import Logger from "@service/logger";
 import { MainError } from "@errors/controllers";
 import { COOKIE_NAME } from "@utils/constants";
 
-
 const logger = Logger("MainController");
 
 // Класс, отвечающий за основное/внешнее API
@@ -30,16 +29,7 @@ export default class MainController {
 	private _init() {
 
 		this._app.get(ApiRoutes.checkHealth, this._checkHealth);
-		this._app.get(
-			ApiRoutes.deleteAccount,
-			this._middleware.mustAuthenticated.bind(this._middleware),
-			this._deleteAccount.bind(this),
-		);
-		this._app.put(
-			ApiRoutes.soundNotifications,
-			this._middleware.mustAuthenticated.bind(this._middleware),
-			this._soundNotifications.bind(this),
-		);
+
 
 		this._app.get("/api-docs/diagram", (_, res) => {
 			const endpoints = Object.entries(swaggerConfig.paths)
@@ -97,8 +87,19 @@ export default class MainController {
 				res.status(400).json({ error: "Invalid path parameter" });
 			}
 		});
+		// хз почему но через 	ApiRoutes.apiDocs не работает, хотя я там добавил
+		this._app.use("/api-docs", this._swagger.serve, this._swagger.setup);
 
-		this._app.use(ApiRoutes.apiDocs, this._swagger.serve, this._swagger.setup);
+		this._app.get(
+			ApiRoutes.deleteAccount,
+			this._middleware.mustAuthenticated.bind(this._middleware),
+			this._deleteAccount.bind(this),
+		);
+		this._app.put(
+			ApiRoutes.soundNotifications,
+			this._middleware.mustAuthenticated.bind(this._middleware),
+			this._soundNotifications.bind(this),
+		);
 	}
 
 	/**
