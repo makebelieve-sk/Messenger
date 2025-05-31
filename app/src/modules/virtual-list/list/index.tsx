@@ -1,16 +1,15 @@
 import type { ReactElement, ReactNode, Ref } from "react";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
-import { FixedSizeList as List, type ListOnScrollProps } from "react-window";
+import { FixedSizeList, type ListOnScrollProps } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 
 import SpinnerComponent from "@components/ui/spinner";
 import useResize from "@hooks/useResize";
 import ListRow from "@modules/virtual-list/row";
-import { PHOTOS_LIMIT } from "@utils/constants";
 
 import "./list.scss";
 
-interface IVirtualGrid<T> {
+interface IVirtualList<T> {
 	virtualRef: Ref<VirtualListHandle | null>;
 	items: T[];
 	options: {
@@ -19,15 +18,16 @@ interface IVirtualGrid<T> {
 		itemHeight: number;
 	};
 	hasMore: boolean;
-	emptyText: string;
+	emptyText?: string;
 	isLoading: boolean;
+	limit: number;
 	loadMore: (startIndex?: number, stopIndex?: number) => void;
 	renderCb: (props: { item: T, itemWidth: number, itemHeight: number; }) => ReactNode;
 	onScroll: (options: ListOnScrollProps) => void;
 };
 
 export interface VirtualListHandle {
-	scrollTop(): void;
+	scrollTop(isSmooth?: ScrollBehavior): void;
 };
 
 /**
@@ -36,13 +36,13 @@ export interface VirtualListHandle {
  * Пакет "react-window-infinite-loader" автоматически управляет загрузкой элементов (повторные запросы при быстром скролле не идут). 
  */
 export default forwardRef(function VirtualList<T extends { id: string; }>(
-	props: IVirtualGrid<T>,
+	props: IVirtualList<T>,
 	parentRef: Ref<HTMLDivElement | null>,
 ) {
-	const { virtualRef, items, options, hasMore, emptyText, isLoading, loadMore, renderCb, onScroll } = props;
+	const { virtualRef, items, options, hasMore, emptyText, isLoading, limit, loadMore, renderCb, onScroll } = props;
 	const { cols, gap, itemHeight } = options;
 
-	const listRef = useRef<HTMLDivElement  | null>(null);
+	const listRef = useRef<HTMLDivElement | null>(null);
 
 	const { width, height } = useResize(parentRef);
 	// Реф для предыдущего значения items.length
@@ -73,10 +73,10 @@ export default forwardRef(function VirtualList<T extends { id: string; }>(
 
 	// Добавляем метод скролла виртуальному рефу, определенному в родителе (скролл по кнопке "Вверх")
 	useImperativeHandle(virtualRef, () => ({
-		scrollTop: () => {
+		scrollTop: (behavior: ScrollBehavior = "smooth") => {
 			listRef.current?.scrollTo({
 				top: 0,
-				behavior: "smooth",
+				behavior,
 			});
 		},
 	}), []);
@@ -124,9 +124,9 @@ export default forwardRef(function VirtualList<T extends { id: string; }>(
 
 	/**
 	 * Показываем спиннер загрузки только в первый вход на страницу, последующие разы сбивают виртуальный список
-	 * и он перерисовывается заново (скролл все время влзетает наверх).
+	 * и он перерисовывается заново (скролл все время взлетает наверх).
 	 */
-	if (isLoading && !items.length) {
+	if (isLoading && (!items || !items.length)) {
 		return <div className="virtual-list__loading">
 			<SpinnerComponent />
 		</div>;
@@ -143,10 +143,10 @@ export default forwardRef(function VirtualList<T extends { id: string; }>(
 		itemCount={rowCount}
 		loadMoreItems={loadMore}
 		threshold={2}
-		minimumBatchSize={PHOTOS_LIMIT}
+		minimumBatchSize={limit}
 	>
 		{({ onItemsRendered, ref: infiniteRef }) => {
-			return <List
+			return <FixedSizeList
 				ref={infiniteRef}
 				outerRef={listRef}
 				height={height}
@@ -160,7 +160,7 @@ export default forwardRef(function VirtualList<T extends { id: string; }>(
 				onScroll={onScroll}
 			>
 				{renderItem}
-			</List>;
+			</FixedSizeList>;
 		}}
 	</InfiniteLoader>;
-}) as <T extends { id: string; }>(props: IVirtualGrid<T> & { ref?: Ref<HTMLDivElement | null> }) => ReactElement;
+}) as <T extends { id: string; }>(props: IVirtualList<T> & { ref?: Ref<HTMLDivElement | null> }) => ReactElement;

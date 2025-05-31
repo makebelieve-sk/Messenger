@@ -15,6 +15,7 @@ export interface Profile {
 	onDeleteAvatar: () => void;
 	onClickAvatar: () => void;
 
-	getFriends: () => void;
+	getFriendsAndFollowers: () => void;
+	getOnlineFriends: () => void;
 	editInfo: (result: IFormValues) => void;
 };

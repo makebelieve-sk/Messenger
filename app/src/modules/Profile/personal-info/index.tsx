@@ -8,9 +8,10 @@ import SpinnerComponent from "@components/ui/spinner";
 import useProfile from "@hooks/useProfile";
 import useUserDetails from "@hooks/useUserDetails";
 import i18next from "@service/i18n";
+import useFriendsStore from "@store/friends";
 import usePhotosStore from "@store/photos";
 import useUserStore from "@store/user";
-import { MainFriendTabs, Pages } from "@custom-types/enums";
+import { Pages } from "@custom-types/enums";
 import { goToAnotherProfile } from "@utils/index";
 
 import "./personal-info.scss";
@@ -21,6 +22,9 @@ export default function PersonalInfo() {
 	const birthday = useUserStore(state => state.userDetails.birthday);
 	const city = useUserStore(state => state.userDetails.city);
 	const work = useUserStore(state => state.userDetails.work);
+
+	const myFriendsCount = useFriendsStore(state => state.countMyFriends);
+	const followersCount = useFriendsStore(state => state.countFollowers);
 
 	const navigate = useNavigate();
 	const { userId } = useParams();
@@ -36,16 +40,11 @@ export default function PersonalInfo() {
 	}, [ userId ]);
 
 	// Обработка клика по блоку
-	const onClickBlock = (tab?: FriendsTab) => {
-		const stateOptions: { mainTab: MainFriendTabs; tab?: FriendsTab; } = {
-			mainTab: MainFriendTabs.allFriends,
-		};
+	const onClickBlock = (tab: FriendsTab) => {
+		useFriendsStore.getState().setMainTab(FriendsTab.ALL);
+		useFriendsStore.getState().setContentTab(tab);
 
-		if (tab) {
-			stateOptions.tab = tab;
-		}
-
-		navigate(Pages.friends, { state: stateOptions });
+		navigate(goToAnotherProfile(Pages.friends, userId));
 	};
 
 	// Обработка клика по блоку фотографий
@@ -86,16 +85,16 @@ export default function PersonalInfo() {
 			<div className="info-container__counts-block">
 				<div
 					className="info-container__counts-block__count"
-					onClick={() => onClickBlock()}
+					onClick={() => onClickBlock(FriendsTab.MY)}
 				>
-					<span className="info-container__counts-block__count__value">{0}</span> {userDetails.getFriendsText(0)}
+					<span className="info-container__counts-block__count__value">{myFriendsCount}</span> {userDetails.getFriendsText(myFriendsCount)}
 				</div>
 
 				<div
 					className="info-container__counts-block__count"
-					onClick={() => onClickBlock(FriendsTab.subscribers)}
+					onClick={() => onClickBlock(FriendsTab.FOLLOWERS)}
 				>
-					<span className="info-container__counts-block__count__value">{0}</span> {userDetails.getSubscribersText(0)}
+					<span className="info-container__counts-block__count__value">{followersCount}</span> {userDetails.getSubscribersText(followersCount)}
 				</div>
 
 				<div className="info-container__counts-block__count" onClick={onClickPhotos}>

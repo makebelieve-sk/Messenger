@@ -14,14 +14,10 @@ export default {
 	AVATAR_WITH_CHAT: "AvatarWithChat",
 	CHAT_WITH_AVATAR: "ChatWithAvatar",
 
-	SENT_FRIEND_REQUESTS: "SentFriendRequests",
-	RECEIVED_FRIEND_REQUESTS: "ReceivedFriendRequests",
+	SENT_FRIEND_REQUESTS: "SentFriendRequestsLog",
+	RECEIVED_FRIEND_REQUESTS: "ReceivedFriendRequestsLog",
 	SOURCE_USER: "SourceUser",
 	TARGET_USER: "TargetUser",
-	SENT_FRIEND_REQUESTS_LOG: "SentFriendRequestsLog",
-	RECEIVED_FRIEND_REQUESTS_LOG: "ReceivedFriendRequestsLog",
-	SOURCE_USER_LOG: "SourceUserLog",
-	TARGET_USER_LOG: "TargetUserLog",
     
 	USER_WITH_MESSAGE: "UserWithMessage",
 	MESSAGE_WITH_USER: "MessageWithUser",

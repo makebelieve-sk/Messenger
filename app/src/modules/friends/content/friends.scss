@@ -1,0 +1,25 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: inherit;
+    width: 100%;
+    gap: 10px;
+
+    &__container {
+        height: inherit;
+        width: 100%;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+
+        &__list {
+            height: inherit;
+            width: 100%;
+        }
+    }
+}

@@ -57,7 +57,7 @@ export default class AuthController {
 				// Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore
 				await updateSessionMaxAge(req.session, Boolean(rememberMe));
 
-				return next(new AuthError(t("auth.error.you_already_auth"), HTTPStatuses.PermanentRedirect));
+				throw new AuthError(t("auth.error.you_already_auth"), HTTPStatuses.PermanentRedirect);
 			}
 
 			next();

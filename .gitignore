@@ -47,3 +47,6 @@ deploy/sa_password.txt
 
 # Папка с сертификатами для установки https соединения
 server/certs
+
+# Сборка статичных артефактов Storubook
+app/storybook-static/

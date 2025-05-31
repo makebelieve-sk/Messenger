@@ -15,10 +15,10 @@ import VirtualList, { type VirtualListHandle } from "@modules/virtual-list/list"
 import i18next from "@service/i18n";
 import usePhotosStore from "@store/photos";
 import { type IPhoto } from "@custom-types/models.types";
+import { PHOTOS_LIMIT, VIRTUAL_SCROLL_TRESHOLD } from "@utils/constants";
 
 import "@styles/pages/photos.scss";
 
-const SCROLL_TRESHHOLD = 600;
 const ITEM_HEIGHT = 250;    // Такая же высота необходима быть указана в scss файле для высоты .photo
 const COLS = 3;
 const GAP = 8;
@@ -58,15 +58,15 @@ export default function Photos() {
 		}
 
 		// Возвращаем промис, который завершится в successCb
-		return new Promise<void>(() => {
-			photosService.getAllPhotos();
+		return new Promise<void>(resolve => {
+			photosService.getAllPhotos(resolve);
 		});
 	}, [ hasMore, isLoading, photosService, userId ]);
 
 	// Обработка скролла
 	const handleScroll = useCallback(({ scrollOffset }: ListOnScrollProps) => {
-		// Показываем кнопку "Вверх" после 200px прокрутки
-		setShowUpButton(scrollOffset > SCROLL_TRESHHOLD);
+		// Показываем кнопку "Вверх" после 600px прокрутки
+		setShowUpButton(scrollOffset > VIRTUAL_SCROLL_TRESHOLD);
 	}, []);
 
 	// Скролл до самого верха
@@ -74,7 +74,7 @@ export default function Photos() {
 		virtualRef.current?.scrollTop();
 	};	
 
-	// Явно задаем, что должен отрисовать на каждой строке виртуальный список
+	// Явно задаем, что должен отрисовать на каждой строке виртуального списка
 	const renderCb = useCallback(({ item, itemWidth, itemHeight }: { item: IPhoto; itemWidth: number; itemHeight: number; }) => {
 		return <div key={item.id} className="photos__container__item" style={{ width: itemWidth, height: itemHeight }}>
 			<PhotoComponent
@@ -136,6 +136,7 @@ export default function Photos() {
 				hasMore={hasMore}
 				emptyText={i18next.t("photos-module.empty")}
 				isLoading={isLoading}
+				limit={PHOTOS_LIMIT}
 				loadMore={loadMoreItems}
 				renderCb={renderCb}
 				onScroll={handleScroll}

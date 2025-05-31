@@ -33,21 +33,6 @@ export interface INotificationSettings {
 	friendRequestSound: boolean;
 };
 
-// Интерфейс структуры данных "Друг"
-export interface IFriend {
-	id: number;
-	userId: string;
-	friendId: string;
-};
-
-// Интерфейс структуры данных "Подписчик"
-export interface ISubscriber {
-	id: number;
-	userId: string;
-	subscriberId: string;
-	leftInSubs: number;
-};
-
 // Интерфейс структуры данных "Сообщение"
 export interface IMessage {
 	id: string;

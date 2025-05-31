@@ -75,6 +75,8 @@ export default defineConfig(({ mode }) => {
             } : undefined,
         },
         resolve: {
+            // Чтобы Vite не «разрезолвивал» симлинки по пути и отслеживал реальные файлы пакета
+            preserveSymlinks: true,
             alias: {
                 "@components": path.resolve(__dirname, "src/components"),  // Короткий путь для папки component
                 "@core": path.resolve(__dirname, "src/core"),              // Короткий путь для папки core

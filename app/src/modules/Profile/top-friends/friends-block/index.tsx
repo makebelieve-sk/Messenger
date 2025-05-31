@@ -1,14 +1,13 @@
 import { memo, type ReactNode } from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
 
 import BigUserAvatar from "@components/services/avatars/big-user-avatar";
 import GridComponent from "@components/ui/grid";
+import ListComponent from "@components/ui/list";
+import ListItemComponent from "@components/ui/list-item";
+import ListItemAvatarComponent from "@components/ui/list-item-avatar";
 import PaperComponent from "@components/ui/paper";
 import SpinnerComponent from "@components/ui/spinner";
-import { type IUser } from "@custom-types/models.types";
-import { getFullName } from "@utils/index";
+import { type IFriend } from "@custom-types/friends.types";
 
 import "./friends.scss";
 
@@ -22,7 +21,7 @@ interface IFriendsBlock {
 interface IFriendsBlockState {
 	title: string;
 	count: number;
-	users: IUser[] | null;
+	friends: Omit<IFriend, "createdAt">[] | null;
 };
 
 // Компонент, отрисовывающий блок друзей (онлайн и обычных)
@@ -35,24 +34,22 @@ export default memo(function FriendsBlock({ state, isLoading = false, children, 
 
 			{isLoading 
 				? <SpinnerComponent />
-				: state.users && state.users.length 
-					? <List className="friends-container__top-friends__list">
-						{state.users.map(user => {
-							const userName = getFullName(user);
-
-							return <ListItem className="friends-container__top-friends__item" key={user.id}>
-								<ListItemAvatar className="friends-container__top-friends__item__avatar-block">
+				: state.friends && state.friends.length 
+					? <ListComponent className="friends-container__top-friends__list">
+						{state.friends.slice(0, 6).map(friend => {
+							return <ListItemComponent className="friends-container__top-friends__item" key={friend.id}>
+								<ListItemAvatarComponent className="friends-container__top-friends__item__avatar-block">
 									<BigUserAvatar 
-										userId={user.id}
-										src={user.avatarUrl} 
-										alt={userName}
+										userId={friend.id}
+										src={friend.avatarUrl} 
+										alt={friend.fullName}
 									/>
-								</ListItemAvatar>
+								</ListItemAvatarComponent>
 
-								{user.firstName}
-							</ListItem>;
+								{friend.fullName.split(" ")[0]}
+							</ListItemComponent>;
 						})}
-					</List>
+					</ListComponent>
 					: children
 			}
 		</PaperComponent>

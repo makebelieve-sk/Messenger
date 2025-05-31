@@ -1,4 +1,4 @@
-import { ApiRoutes } from "common-types";
+import { ApiRoutes, FriendsTab } from "common-types";
 
 import { type IUpdatedAvatar } from "@components/ui/change-avatar";
 import { type Profile } from "@core/models/Profile";
@@ -92,17 +92,15 @@ export default class ProfileService implements Profile {
 	//-------------------------------------------------
 	// Методы блока с друзьями
 	//-------------------------------------------------
-	// Получение друзей топ-6
-	getFriends() {
-		// this._request.get({
-		// 	route: ApiRoutes.getCountFriends,
-		// 	setLoading,
-		// 	successCb: (_: { success: boolean; friendsCount: number; topFriends: IUser[] | null; subscribersCount: number }) => {
-		// 		// this._dispatch(setFriendsCount(data.friendsCount));
-		// 		// this._dispatch(setSubscribersCount(data.subscribersCount));
-		// 		// this._dispatch(setTopFriends(data.topFriends));
-		// 	},
-		// });
+	// Получение друзей и подписчиков
+	getFriendsAndFollowers() {
+		this.userService.friendsService.getFriends(FriendsTab.MY);
+		this.userService.friendsService.getFriends(FriendsTab.FOLLOWERS);
+	}
+
+	// Получение онлайн друзей
+	getOnlineFriends() {
+		
 	}
 
 	//-------------------------------------------------

@@ -6,6 +6,7 @@ import type Request from "@core/Request";
 import type Socket from "@core/socket/Socket";
 import Logger from "@service/Logger";
 import useAuthStore from "@store/auth";
+import useFriendsStore from "@store/friends";
 import useUserStore from "@store/user";
 import { type IUserData } from "@custom-types/api.types";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
@@ -83,12 +84,12 @@ export default class MainApi {
 	}
 
 	getFriendsNotification() {
-		// this._request.get({
-		// 	route: ApiRoutes.getFriendsNotification,
-		// 	successCb: (_: { success: boolean; friendRequests: number }) => {
-		// 		// this._dispatch(setFriendNotification(data.friendRequests));
-		// 	},
-		// });
+		this._request.get({
+			route: ApiRoutes.getFriendsNotification,
+			successCb: (data: { success: boolean; friendsNotification: number; }) => {
+				useFriendsStore.getState().setFriendsNotification(data.friendsNotification);
+			},
+		});
 	}
 
 	getMessageNotification() {

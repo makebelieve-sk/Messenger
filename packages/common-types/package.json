@@ -4,8 +4,11 @@
     "private": true,
     "description": "Shared TypeScript enums and interfaces",
     "author": "Aleksey Skriabin",
-    "license": "ISC",
-    "files": ["dist"],
+    "license": "UNLICENSED",
+    "files": [
+        "dist",
+        "package.json"
+    ],
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "exports": {

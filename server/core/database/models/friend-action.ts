@@ -1,16 +1,21 @@
-import type { CreationOptional, ForeignKey, InferAttributes, InferCreationAttributes, Sequelize } from "sequelize";
+import type { CreationOptional, ForeignKey, InferAttributes, InferCreationAttributes, NonAttribute, Sequelize } from "sequelize";
 import { DataTypes, Model } from "sequelize";
 
-import { User } from "@core/database/models/user";
+import { type User } from "@core/database/models/user";
+import { FriendActionType } from "@custom-types/enums";
 import { type IFriendAction } from "@custom-types/models.types";
 
-export type CreationAttributes = InferCreationAttributes<FriendAction, { omit: "id" }>;
+export type CreationAttributes = InferCreationAttributes<FriendAction, { omit: "id" | "createdAt" }>;
 
 export class FriendAction extends Model<InferAttributes<FriendAction>, CreationAttributes> {
 	declare id: CreationOptional<string>;
 	declare sourceUserId: ForeignKey<User["id"]>;
 	declare targetUserId: ForeignKey<User["id"]>;
-	declare actionType: number;
+	declare actionType: FriendActionType;
+	declare createdAt: CreationOptional<string>;
+
+	declare SourceUser: NonAttribute<User>;
+	declare TargetUser: NonAttribute<User>;
 
 	getEntity(): IFriendAction {
 		return {
@@ -18,6 +23,7 @@ export class FriendAction extends Model<InferAttributes<FriendAction>, CreationA
 			sourceUserId: this.sourceUserId,
 			targetUserId: this.targetUserId,
 			actionType: this.actionType,
+			createdAt: this.createdAt,
 		};
 	}
 };
@@ -56,6 +62,11 @@ export default (sequelize: Sequelize) => {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 				field: "action_type",
+			},
+			createdAt: {
+				type: DataTypes.DATE,
+				defaultValue: DataTypes.NOW,
+				field: "created_at",
 			},
 		},
 		{

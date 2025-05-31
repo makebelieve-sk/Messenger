@@ -1,0 +1,11 @@
+# Не добавляем следующие файлы
+node_modules/
+src/
+.gitignore
+index.ts
+package-lock.json
+tsconfig.json
+
+# Добавляем только папку итоговой сборки модуля и package.json
+!dist/
+!package.json

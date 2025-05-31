@@ -1,3 +1,5 @@
+import { FriendsTab } from "common-types";
+
 import i18next from "@service/i18n";
 
 export const DEV = import.meta.env.DEV;
@@ -30,5 +32,16 @@ export const SNACKBAR_TIMEOUT = 10000;
 export const AVATAR_URL = "avatarUrl";
 // Лимит подгрузки количества фотографий на странице "Фотографии"
 export const PHOTOS_LIMIT = 25;
+// Лимит подгрузки количества друзей на странице "Друзья"
+export const FRIENDS_LIMIT = 25;
 // Тип ошибки, отправляемой по сокету, в момент неуспешной валидации токена сессии
 export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";
+// Количество пикселей перед показом кнопки "Вверх" в виртуальном списке
+export const VIRTUAL_SCROLL_TRESHOLD = 600;
+// Вкладки, содержащие всех друзей текущего пользователя (все друзья, онлайн друзья)
+export const IS_MY_FRIENDS = [ FriendsTab.MY, FriendsTab.ONLINE ];
+// Таймаут отдачи запроса по типу действия
+export const FRIENDS_DEBOUNCE_TIMEOUT = {
+	LOAD_MORE: 100,
+	SEARCH: 300,
+};

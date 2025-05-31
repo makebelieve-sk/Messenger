@@ -34,11 +34,11 @@ export default memo(function PhotoComponent({
 	const { userId } = useParams();
 
 	const srcImage = useImage(src);
-	const profile = useProfile(userId);
+	const profile = showDeleteIcon ? useProfile(userId) : null;
 
 	// Если текущий профиль не мой, то скрываем кнопку удаления
 	useEffect(() => {
-		if (!profile.isMe) {
+		if (!profile || !profile.isMe) {
 			setNeverShowCloseIcon(true);
 		}
 	}, [ userId ]);

@@ -11,7 +11,7 @@ interface IBigUserUserAvatar {
 };
 
 // Большой аватар пользователя (используется для друзей)
-export default memo(function BigUserUserAvatar({ userId, src, alt }: IBigUserUserAvatar) {
+export default memo(function BigUserAvatar({ userId, src, alt }: IBigUserUserAvatar) {
 	return <UserAvatarComponent
 		userId={userId}
 		src={src}
