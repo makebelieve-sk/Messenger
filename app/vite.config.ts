@@ -37,6 +37,11 @@ export default defineConfig(({ mode }) => {
             outDir: "dist",      // Директория для сборки продакшен бандла
             target: browserslistToEsbuild([">0.5%", "not dead", "last 2 versions", "not op_mini all", "not ie <= 11"]),   // Установка browerlists
             rollupOptions: {
+                external: [
+                    // Не включаем в итоговую сборку файлы тестов (чтобы не повышать время сборки)
+                    /\.test\.ts?$/,
+                    /\.test\.tsx?$/,
+                ],
                 output: {
                     manualChunks: {
                         // Вынесем React и ReactDOM

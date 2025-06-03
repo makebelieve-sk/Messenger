@@ -15,7 +15,7 @@
     "preview": "vite preview",
     "build": "rimraf dist && tsc && vite build",
     "prepare": "cd .. && husky",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "lint": "tsc --noEmit && eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "test": "jest",
     "test:coverage": "jest --coverage",
