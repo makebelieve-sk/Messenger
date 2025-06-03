@@ -34,7 +34,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.3.1",
     "@mui/lab": "^6.0.0-beta.22",
-    "@mui/material": "^6.3.1",
+    "@mui/material": "^6.4.11",
     "@mui/x-date-pickers": "^7.24.0",
     "axios": "^1.7.9",
     "browserslist-to-esbuild": "^2.1.1",
