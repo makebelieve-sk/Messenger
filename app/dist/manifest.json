@@ -1,0 +1,25 @@
+{
+	"name": "Messanger",
+	"short_name": "Messanger",
+	"description": "The great messanger project",
+	"start_url": "/",
+	"display": "browser",
+	"theme_color": "#000000",
+	"icons": [
+		{
+			"src": "./assets/logos/favicon.ico",
+			"sizes": "64x64 32x32 24x24 16x16",
+			"type": "image/x-icon"
+		},
+		{
+			"src": "./assets/logos/logo192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "./assets/logos/logo512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	]
+}

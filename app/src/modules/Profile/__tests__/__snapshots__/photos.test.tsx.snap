@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Photos renders correctly 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 photo-container paper-block css-1gtchvp-MuiPaper-root"
+      style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="photo-container__title"
+      >
+        <div
+          class="block-title photo-container__title__text"
+        >
+          profile-module.my_photos
+          <span
+            class="counter"
+          >
+            3
+          </span>
+        </div>
+        <a
+          class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineHover photo-container__title__link css-jygu7u-MuiTypography-root-MuiLink-root"
+          data-testid="link"
+        >
+          profile-module.watch_all
+        </a>
+      </div>
+      <div
+        class="photo-container__photos"
+      >
+        <div
+          class="photo-container__photos__wrapper"
+        >
+          <div
+            class="photo"
+          >
+            <img
+              alt="Test User 0"
+              class="photo__image"
+              data-testid="image"
+              loading="eager"
+              src="photo1.jpg"
+            />
+          </div>
+        </div>
+        <div
+          class="photo-container__photos__wrapper"
+        >
+          <div
+            class="photo"
+          >
+            <img
+              alt="Test User 1"
+              class="photo__image"
+              data-testid="image"
+              loading="eager"
+              src="photo2.jpg"
+            />
+          </div>
+        </div>
+        <div
+          class="photo-container__photos__wrapper"
+        >
+          <div
+            class="photo"
+          >
+            <img
+              alt="Test User 2"
+              class="photo__image"
+              data-testid="image"
+              loading="eager"
+              src="photo3.jpg"
+            />
+          </div>
+        </div>
+      </div>
+      <label
+        class="input-label"
+        for="profile-add-new-photos"
+      >
+        <input
+          accept="image/*"
+          data-testid="input-image"
+          hidden=""
+          id="profile-add-new-photos"
+          multiple=""
+          type="file"
+        />
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
+          id=":r0:"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-loadingWrapper"
+            style="display: contents;"
+          />
+          <p
+            class="MuiTypography-root MuiTypography-caption input-label__button__text css-mpaqru-MuiTypography-root"
+          >
+            profile-module.add_more
+          </p>
+        </button>
+      </label>
+    </div>
+  </div>
+</div>
+`;

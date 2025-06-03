@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VirtualList renders empty state correctly 1`] = `
+<div>
+  <div
+    class="virtual-list__no-content opacity-text"
+  >
+    No items found
+  </div>
+</div>
+`;
+
+exports[`VirtualList renders items correctly 1`] = `
+<div>
+  <div
+    data-testid="virtual-list"
+  >
+    <div
+      class="list__row"
+      style="gap: 10px;"
+    >
+      <div>
+        <div
+          data-testid="item-1"
+        >
+          Item 1
+        </div>
+      </div>
+      <div>
+        <div
+          data-testid="item-2"
+        >
+          Item 2
+        </div>
+      </div>
+      <div>
+        <div
+          data-testid="item-3"
+        >
+          Item 3
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`VirtualList renders loading state correctly 1`] = `
+<div>
+  <div
+    class="virtual-list__loading"
+  >
+    <div
+      class="spinner"
+      data-testid="spinner"
+    >
+      <span
+        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+        role="progressbar"
+        style="width: 40px; height: 40px;"
+      >
+        <svg
+          class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+          viewBox="22 22 44 44"
+        >
+          <circle
+            class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+            cx="44"
+            cy="44"
+            fill="none"
+            r="20.2"
+            stroke-width="3.6"
+          />
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`VirtualList renders with custom empty text 1`] = `
+<div>
+  <div
+    class="virtual-list__no-content opacity-text"
+  >
+    Custom empty message
+  </div>
+</div>
+`;
+
+exports[`VirtualList renders with different column count 1`] = `
+<div>
+  <div
+    data-testid="virtual-list"
+  >
+    <div
+      class="list__row"
+      style="gap: 10px;"
+    >
+      <div>
+        <div
+          data-testid="item-1"
+        >
+          Item 1
+        </div>
+      </div>
+      <div>
+        <div
+          data-testid="item-2"
+        >
+          Item 2
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`VirtualList renders with hasMore set to false 1`] = `
+<div>
+  <div
+    data-testid="virtual-list"
+  >
+    <div
+      class="list__row"
+      style="gap: 10px;"
+    >
+      <div>
+        <div
+          data-testid="item-1"
+        >
+          Item 1
+        </div>
+      </div>
+      <div>
+        <div
+          data-testid="item-2"
+        >
+          Item 2
+        </div>
+      </div>
+      <div>
+        <div
+          data-testid="item-3"
+        >
+          Item 3
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

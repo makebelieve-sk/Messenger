@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NotificationBadge matches snapshot with custom className 1`] = `
+<div>
+  <span
+    class="MuiBadge-root notification-badge custom-class css-63ezxx-MuiBadge-root"
+    data-testid="notification-badge"
+  >
+    <span
+      class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-2ao5rv-MuiBadge-badge"
+    >
+      3
+    </span>
+  </span>
+</div>
+`;
+
+exports[`NotificationBadge matches snapshot with null content 1`] = `
+<div>
+  <span
+    class="MuiBadge-root notification-badge css-63ezxx-MuiBadge-root"
+    data-testid="notification-badge"
+  >
+    <span
+      class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-z28gz6-MuiBadge-badge"
+    />
+  </span>
+</div>
+`;
+
+exports[`NotificationBadge matches snapshot with number content 1`] = `
+<div>
+  <span
+    class="MuiBadge-root notification-badge css-63ezxx-MuiBadge-root"
+    data-testid="notification-badge"
+  >
+    <span
+      class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-2ao5rv-MuiBadge-badge"
+    >
+      10
+    </span>
+  </span>
+</div>
+`;
+
+exports[`NotificationBadge matches snapshot with string content 1`] = `
+<div>
+  <span
+    class="MuiBadge-root notification-badge css-63ezxx-MuiBadge-root"
+    data-testid="notification-badge"
+  >
+    <span
+      class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-2ao5rv-MuiBadge-badge"
+    >
+      5
+    </span>
+  </span>
+</div>
+`;
+
+exports[`NotificationBadge passes additional props to Badge component 1`] = `
+<div>
+  <span
+    class="MuiBadge-root notification-badge css-63ezxx-MuiBadge-root"
+    data-testid="notification-badge"
+    id="custom-id"
+  >
+    <span
+      class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-2ao5rv-MuiBadge-badge"
+    >
+      1
+    </span>
+  </span>
+</div>
+`;

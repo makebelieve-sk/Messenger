@@ -26,6 +26,7 @@ export default memo(forwardRef<HTMLDivElement, IBoxComponent>(function BoxCompon
 		component={component}
 		noValidate={noValidate}
 		onSubmit={onSubmit}
+		data-testid="box-component"
 	>
 		{children}
 	</Box>;

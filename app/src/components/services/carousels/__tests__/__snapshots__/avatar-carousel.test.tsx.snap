@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AvatarCarousel should match snapshot when user has avatar 1`] = `
+<div>
+  <div
+    class="carousel"
+    data-testid="carousel"
+  >
+    <div
+      class="carousel__photo"
+    >
+      <div
+        class="photo"
+      >
+        <img
+          alt="123"
+          class="photo__image"
+          data-testid="image"
+          loading="eager"
+          src="/avatar.jpg"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AvatarCarousel should match snapshot when user has no avatar 1`] = `
+<div>
+  <div
+    class="carousel"
+    data-testid="carousel"
+  >
+    <div
+      class="carousel__photo"
+    >
+      <div
+        class="photo"
+      >
+        <img
+          alt=""
+          class="photo__image"
+          data-testid="image"
+          loading="eager"
+          src="/assets/images/noPhoto.jpg"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

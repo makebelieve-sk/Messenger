@@ -67,7 +67,7 @@ export default function HeaderComponent() {
 		mainClient.mainApi.logout();
 	};
 
-	return <header className="header">
+	return <header className="header" data-testid="header">
 		<div className="header-container">
 			<div className="header-container__toolbar">
 				<div className="header-container__toolbar__logo" onClick={() => goTo(Pages.profile)} onMouseDown={onMouseDown}>

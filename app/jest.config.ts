@@ -27,19 +27,26 @@ const config: Config = {
 
     // Трансформаторы для обработки файлов
     transform: {
-        "^.+\\.tsx?$": "ts-jest", // Обрабатываем TypeScript файлы через ts-jest
-        "^.+\\.scss$": "jest-scss-transform", // Преобразуем SCSS файлы через jest-scss-transform для корректной обработки стилей
+        "^.+\\.(ts|tsx)$": ["ts-jest", {
+            useESM: true,
+        }],
+        "^.+\\.scss$": "jest-scss-transform",
     },
 
     // Настройки для покрытия (coverage) кода
     collectCoverage: true,
-    collectCoverageFrom: ["src/components/**/*.{ts,tsx}", "!src/**/*.d.ts"], // собираем покрытие только для исходных файлов
+    collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts"], // собираем покрытие только для исходных файлов
 
     // Игнорируем папки и файлы, которые не должны попадать в coverage
-    coveragePathIgnorePatterns: ["/node_modules/", "/dist/", "/build/"],
+    coveragePathIgnorePatterns: ["/node_modules/", "/dist/", "/src/index.tsx", "/*.stories.tsx", "/utils/constants.ts"],
 
-    // Добавляем игнорирование файлов, связанных с Vitest
-    testPathIgnorePatterns: ["/node_modules/", "/dist/", "/build/", "\\.vitest\\.",]
+    // Добавляем игнорирование файлов
+    testPathIgnorePatterns: ["/node_modules/", "/dist/"],
+
+    // Игнорируем предупреждения Node.js
+    globals: {
+        NODE_OPTIONS: "--no-warnings"
+    }
 };
 
 export default config;

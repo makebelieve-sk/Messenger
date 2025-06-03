@@ -22,7 +22,7 @@ export interface ICarouselImage {
 
 // Точка входа в модуль "Карусель картинок"
 export default memo(({ image, activeKey, allCount }: ICarousel) => {
-	return <div className="carousel">
+	return <div className="carousel" data-testid="carousel">
 		<div className="carousel__photo">
 			<PhotoComponent src={image.src} alt={image.alt} showDeleteIcon={false} />
 

@@ -45,7 +45,7 @@ export default function MenuComponent() {
 		navigate(Pages.photos);
 	};
 
-	return <div className="menu">
+	return <div className="menu" data-testid="menu">
 		<nav className="menu__nav">
 			<MenuListComponent>
 				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.profile)} data-testid="menu-profile">
@@ -63,7 +63,7 @@ export default function MenuComponent() {
 						{i18n.t("menu.messanger")}
 					</div>
 
-					<NotificationBadge content={0} />
+					<NotificationBadge content={"0"} />
 				</MenuItemComponent>
 
 				<MenuItemComponent className="menu__nav__item" onClick={() => navigate(Pages.friends)} data-testid="menu-messenger">
@@ -73,7 +73,7 @@ export default function MenuComponent() {
 						{i18n.t("menu.friends")}
 					</div>
 
-					<NotificationBadge content={0} />
+					<NotificationBadge content={"0"} />
 				</MenuItemComponent>
 
 				<MenuItemComponent className="menu__nav__item" onClick={onClickPhotos}>

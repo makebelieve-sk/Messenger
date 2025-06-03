@@ -41,6 +41,10 @@ export default memo(function ListRow<T extends { id: string }>({ index, style, d
 
 	// Обычная строка с картинками
 	return <div className="list__row" style={{ ...style, gap }}>
-		{rowItems.map(item => renderCb({ item, itemWidth, itemHeight }))}
+		{rowItems.map(item => (
+			<div key={item.id}>
+				{renderCb({ item, itemWidth, itemHeight })}
+			</div>
+		))}
 	</div>;
 }) as <T extends { id: string; }>(props: IListRow<T>) => ReactElement;

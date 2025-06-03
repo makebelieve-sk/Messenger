@@ -7,7 +7,7 @@ import useImagesCarouselStore from "@store/images-carousel";
 const MODAL_TITLE = "modal-carousel-title";
 const MODAL_DESCRIPTION = "modal-carousel-description";
 
-// Модальное окно с фотографиями и необходимой информации о них в виде карусели
+// Модальное окно с фотографиями и необходимой информацией о них в виде карусели
 export default function ModalWithImagesCarousel() {
 	const { isAvatar, photoIndex } = useImagesCarouselStore(state => state);
 

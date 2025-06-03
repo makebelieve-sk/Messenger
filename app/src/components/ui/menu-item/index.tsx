@@ -10,7 +10,7 @@ interface IMenuItemComponent {
 
 // Базовый компонент элемента меню
 export default memo(function MenuItemComponent({ children, onClick, value, className }: IMenuItemComponent) {
-	return <MenuItem className={className} value={value} onClick={onClick}>
+	return <MenuItem className={className} value={value} onClick={onClick} data-testid="menu-item">
 		{children}
 	</MenuItem>;
 });

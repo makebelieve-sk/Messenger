@@ -1,0 +1,132 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PersonalInfo renders correctly 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 info-container paper-block css-1gtchvp-MuiPaper-root"
+      style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="info-container__main-info"
+      >
+        <div
+          class="info-container__username"
+        >
+          Test User
+        </div>
+      </div>
+      <div
+        class="info-container__short-info-block"
+      >
+        <div
+          class="info-container__short-info-block__edit"
+        >
+          profile-module.edit
+        </div>
+        <div
+          class="info-container__short-info-block__row"
+        >
+          <div
+            class="info-container__short-info-block__row__title"
+          >
+            profile-module.birthday
+            :
+          </div>
+          <span
+            class="info-container__short-info-block__row__value"
+          >
+            1990-01-01
+          </span>
+        </div>
+        <div
+          class="info-container__short-info-block__row"
+        >
+          <div
+            class="info-container__short-info-block__row__title"
+          >
+            profile-module.city
+            :
+          </div>
+          <span
+            class="info-container__short-info-block__row__value"
+          >
+            Test City
+          </span>
+        </div>
+        <div
+          class="info-container__short-info-block__row"
+        >
+          <div
+            class="info-container__short-info-block__row__title"
+          >
+            profile-module.work
+            :
+          </div>
+          <span
+            class="info-container__short-info-block__row__value"
+          >
+            Test Work
+          </span>
+        </div>
+      </div>
+      <div
+        class="info-container__counts-block"
+      >
+        <div
+          class="info-container__counts-block__count"
+        >
+          <span
+            class="info-container__counts-block__count__value"
+          >
+            0
+          </span>
+           
+        </div>
+        <div
+          class="info-container__counts-block__count"
+        >
+          <span
+            class="info-container__counts-block__count__value"
+          >
+            0
+          </span>
+           
+        </div>
+        <div
+          class="info-container__counts-block__count"
+        >
+          <span
+            class="info-container__counts-block__count__value"
+          >
+            0
+          </span>
+           
+        </div>
+        <div
+          class="info-container__counts-block__count"
+        >
+          <span
+            class="info-container__counts-block__count__value"
+          >
+            0
+          </span>
+           
+        </div>
+        <div
+          class="info-container__counts-block__count"
+        >
+          <span
+            class="info-container__counts-block__count__value"
+          >
+            0
+          </span>
+           
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

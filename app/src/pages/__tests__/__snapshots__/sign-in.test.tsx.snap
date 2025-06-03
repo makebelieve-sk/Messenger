@@ -1,0 +1,727 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SignIn Page Snapshot tests matches snapshot in initial state 1`] = `
+<div>
+  <main
+    class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-0 MuiGrid2-grid-sm-4 MuiGrid2-grid-md-7 grid-item-style css-1ggughx-MuiGrid2-root"
+    />
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation6 MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-sm-8 MuiGrid2-grid-md-5 grid-item-style css-8xmnro-MuiPaper-root-MuiGrid2-root"
+      style="--Paper-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="MuiBox-root css-0"
+        data-testid="box-component"
+      >
+        <div
+          class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault system-avatar css-18k2bs-MuiAvatar-root"
+          id="system-avatar"
+        >
+          <svg
+            data-testid="lock-icon"
+            height="25px"
+            viewBox="0 0 24 24"
+            width="25px"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="0"
+            />
+          </svg>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h5 css-16xl4zq-MuiTypography-root"
+        >
+          sign-in.sign_in
+        </h1>
+        <form
+          class="MuiBox-root css-0"
+          data-testid="box-component"
+          novalidate=""
+        >
+          <div
+            class="MuiFormControl-root MuiFormControl-marginNormal MuiFormControl-fullWidth MuiTextField-root css-16bevx5-MuiFormControl-root-MuiTextField-root"
+            data-testid="text-field"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error Mui-focused Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-113d811-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="true"
+              for="login"
+              id="login-label"
+            >
+              sign-in.login
+              <span
+                aria-hidden="true"
+                class="MuiFormLabel-asterisk MuiInputLabel-asterisk Mui-error css-1ljffdk-MuiFormLabel-asterisk"
+              >
+                 
+                *
+              </span>
+            </label>
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth Mui-focused MuiInputBase-formControl css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+                aria-describedby="login-helper-text"
+                aria-invalid="true"
+                autocomplete="sign-in.login"
+                class="MuiInputBase-input MuiOutlinedInput-input css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input"
+                id="login"
+                name="login"
+                required=""
+                type="text"
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1ll44ll-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-w1u3ce"
+                >
+                  <span>
+                    sign-in.login
+                     
+                    *
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+            <p
+              class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained Mui-focused Mui-required css-er619e-MuiFormHelperText-root"
+              id="login-helper-text"
+            >
+              sign-in.error.incorrect_login_or_password
+            </p>
+          </div>
+          <div
+            class="MuiFormControl-root MuiFormControl-marginNormal MuiFormControl-fullWidth MuiTextField-root css-16bevx5-MuiFormControl-root-MuiTextField-root"
+            data-testid="text-field"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="false"
+              for="password"
+              id="password-label"
+            >
+              sign-in.password
+              <span
+                aria-hidden="true"
+                class="MuiFormLabel-asterisk MuiInputLabel-asterisk Mui-error css-1ljffdk-MuiFormLabel-asterisk"
+              >
+                 
+                *
+              </span>
+            </label>
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+                aria-describedby="password-helper-text"
+                aria-invalid="true"
+                autocomplete="sign-in.password"
+                class="MuiInputBase-input MuiOutlinedInput-input css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input"
+                id="password"
+                name="password"
+                required=""
+                type="password"
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1ll44ll-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-81qg8w"
+                >
+                  <span>
+                    sign-in.password
+                     
+                    *
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+            <p
+              class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained Mui-required css-er619e-MuiFormHelperText-root"
+              id="password-helper-text"
+            >
+              sign-in.error.incorrect_login_or_password
+            </p>
+          </div>
+          <div
+            class="MuiBox-root css-0"
+            data-testid="box-component"
+          >
+            <span
+              class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-imrjgg-MuiButtonBase-root-MuiCheckbox-root"
+            >
+              <input
+                class="PrivateSwitchBase-input css-j8yymo"
+                data-indeterminate="false"
+                id="rememberMe"
+                type="checkbox"
+                value="false"
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+                data-testid="CheckBoxOutlineBlankIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
+            </span>
+            <label
+              for="rememberMe"
+            >
+              sign-in.remember_me
+            </label>
+          </div>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id=":r2:"
+            tabindex="-1"
+            type="submit"
+          >
+            sign-in.enter
+          </button>
+          <div
+            class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+          >
+            <div
+              class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 grid-item-style css-ticvdu-MuiGrid2-root"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+                data-testid="link"
+              >
+                sign-in.forgot_password
+              </p>
+            </div>
+            <div
+              class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 grid-item-style css-ticvdu-MuiGrid2-root"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+                data-testid="link"
+              >
+                sign-in.register
+              </p>
+            </div>
+          </div>
+        </form>
+        <div
+          class="copyright"
+          data-testid="copyright"
+        >
+          ui.copyright
+          <a
+            class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+            data-testid="link"
+            href="/about-us"
+          >
+            ui.product_name
+          </a>
+          2025
+          .
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+`;
+
+exports[`SignIn Page Snapshot tests matches snapshot with error state 1`] = `
+<div>
+  <main
+    class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-0 MuiGrid2-grid-sm-4 MuiGrid2-grid-md-7 grid-item-style css-1ggughx-MuiGrid2-root"
+    />
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation6 MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-sm-8 MuiGrid2-grid-md-5 grid-item-style css-8xmnro-MuiPaper-root-MuiGrid2-root"
+      style="--Paper-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="MuiBox-root css-0"
+        data-testid="box-component"
+      >
+        <div
+          class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault system-avatar css-18k2bs-MuiAvatar-root"
+          id="system-avatar"
+        >
+          <svg
+            data-testid="lock-icon"
+            height="25px"
+            viewBox="0 0 24 24"
+            width="25px"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="0"
+            />
+          </svg>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h5 css-16xl4zq-MuiTypography-root"
+        >
+          sign-in.sign_in
+        </h1>
+        <form
+          class="MuiBox-root css-0"
+          data-testid="box-component"
+          novalidate=""
+        >
+          <div
+            class="MuiFormControl-root MuiFormControl-marginNormal MuiFormControl-fullWidth MuiTextField-root css-16bevx5-MuiFormControl-root-MuiTextField-root"
+            data-testid="text-field"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error Mui-focused Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-113d811-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="true"
+              for="login"
+              id="login-label"
+            >
+              sign-in.login
+              <span
+                aria-hidden="true"
+                class="MuiFormLabel-asterisk MuiInputLabel-asterisk Mui-error css-1ljffdk-MuiFormLabel-asterisk"
+              >
+                 
+                *
+              </span>
+            </label>
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth Mui-focused MuiInputBase-formControl css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+                aria-describedby="login-helper-text"
+                aria-invalid="true"
+                autocomplete="sign-in.login"
+                class="MuiInputBase-input MuiOutlinedInput-input css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input"
+                id="login"
+                name="login"
+                required=""
+                type="text"
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1ll44ll-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-w1u3ce"
+                >
+                  <span>
+                    sign-in.login
+                     
+                    *
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+            <p
+              class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained Mui-focused Mui-required css-er619e-MuiFormHelperText-root"
+              id="login-helper-text"
+            >
+              sign-in.error.incorrect_login_or_password
+            </p>
+          </div>
+          <div
+            class="MuiFormControl-root MuiFormControl-marginNormal MuiFormControl-fullWidth MuiTextField-root css-16bevx5-MuiFormControl-root-MuiTextField-root"
+            data-testid="text-field"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="false"
+              for="password"
+              id="password-label"
+            >
+              sign-in.password
+              <span
+                aria-hidden="true"
+                class="MuiFormLabel-asterisk MuiInputLabel-asterisk Mui-error css-1ljffdk-MuiFormLabel-asterisk"
+              >
+                 
+                *
+              </span>
+            </label>
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+                aria-describedby="password-helper-text"
+                aria-invalid="true"
+                autocomplete="sign-in.password"
+                class="MuiInputBase-input MuiOutlinedInput-input css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input"
+                id="password"
+                name="password"
+                required=""
+                type="password"
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1ll44ll-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-81qg8w"
+                >
+                  <span>
+                    sign-in.password
+                     
+                    *
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+            <p
+              class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained Mui-required css-er619e-MuiFormHelperText-root"
+              id="password-helper-text"
+            >
+              sign-in.error.incorrect_login_or_password
+            </p>
+          </div>
+          <div
+            class="MuiBox-root css-0"
+            data-testid="box-component"
+          >
+            <span
+              class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-imrjgg-MuiButtonBase-root-MuiCheckbox-root"
+            >
+              <input
+                class="PrivateSwitchBase-input css-j8yymo"
+                data-indeterminate="false"
+                id="rememberMe"
+                type="checkbox"
+                value="false"
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+                data-testid="CheckBoxOutlineBlankIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
+            </span>
+            <label
+              for="rememberMe"
+            >
+              sign-in.remember_me
+            </label>
+          </div>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id=":r8:"
+            tabindex="-1"
+            type="submit"
+          >
+            sign-in.enter
+          </button>
+          <div
+            class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+          >
+            <div
+              class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 grid-item-style css-ticvdu-MuiGrid2-root"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+                data-testid="link"
+              >
+                sign-in.forgot_password
+              </p>
+            </div>
+            <div
+              class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 grid-item-style css-ticvdu-MuiGrid2-root"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+                data-testid="link"
+              >
+                sign-in.register
+              </p>
+            </div>
+          </div>
+        </form>
+        <div
+          class="copyright"
+          data-testid="copyright"
+        >
+          ui.copyright
+          <a
+            class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+            data-testid="link"
+            href="/about-us"
+          >
+            ui.product_name
+          </a>
+          2025
+          .
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+`;
+
+exports[`SignIn Page Snapshot tests matches snapshot with loading state 1`] = `
+<div>
+  <main
+    class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-0 MuiGrid2-grid-sm-4 MuiGrid2-grid-md-7 grid-item-style css-1ggughx-MuiGrid2-root"
+    />
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation6 MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-sm-8 MuiGrid2-grid-md-5 grid-item-style css-8xmnro-MuiPaper-root-MuiGrid2-root"
+      style="--Paper-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="MuiBox-root css-0"
+        data-testid="box-component"
+      >
+        <div
+          class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault system-avatar css-18k2bs-MuiAvatar-root"
+          id="system-avatar"
+        >
+          <svg
+            data-testid="lock-icon"
+            height="25px"
+            viewBox="0 0 24 24"
+            width="25px"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="0"
+            />
+          </svg>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h5 css-16xl4zq-MuiTypography-root"
+        >
+          sign-in.sign_in
+        </h1>
+        <form
+          class="MuiBox-root css-0"
+          data-testid="box-component"
+          novalidate=""
+        >
+          <div
+            class="MuiFormControl-root MuiFormControl-marginNormal MuiFormControl-fullWidth MuiTextField-root css-16bevx5-MuiFormControl-root-MuiTextField-root"
+            data-testid="text-field"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error Mui-focused Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-113d811-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="true"
+              for="login"
+              id="login-label"
+            >
+              sign-in.login
+              <span
+                aria-hidden="true"
+                class="MuiFormLabel-asterisk MuiInputLabel-asterisk Mui-error css-1ljffdk-MuiFormLabel-asterisk"
+              >
+                 
+                *
+              </span>
+            </label>
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth Mui-focused MuiInputBase-formControl css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+                aria-describedby="login-helper-text"
+                aria-invalid="true"
+                autocomplete="sign-in.login"
+                class="MuiInputBase-input MuiOutlinedInput-input css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input"
+                id="login"
+                name="login"
+                required=""
+                type="text"
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1ll44ll-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-w1u3ce"
+                >
+                  <span>
+                    sign-in.login
+                     
+                    *
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+            <p
+              class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained Mui-focused Mui-required css-er619e-MuiFormHelperText-root"
+              id="login-helper-text"
+            >
+              sign-in.error.incorrect_login_or_password
+            </p>
+          </div>
+          <div
+            class="MuiFormControl-root MuiFormControl-marginNormal MuiFormControl-fullWidth MuiTextField-root css-16bevx5-MuiFormControl-root-MuiTextField-root"
+            data-testid="text-field"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="false"
+              for="password"
+              id="password-label"
+            >
+              sign-in.password
+              <span
+                aria-hidden="true"
+                class="MuiFormLabel-asterisk MuiInputLabel-asterisk Mui-error css-1ljffdk-MuiFormLabel-asterisk"
+              >
+                 
+                *
+              </span>
+            </label>
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+                aria-describedby="password-helper-text"
+                aria-invalid="true"
+                autocomplete="sign-in.password"
+                class="MuiInputBase-input MuiOutlinedInput-input css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input"
+                id="password"
+                name="password"
+                required=""
+                type="password"
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1ll44ll-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-81qg8w"
+                >
+                  <span>
+                    sign-in.password
+                     
+                    *
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+            <p
+              class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained Mui-required css-er619e-MuiFormHelperText-root"
+              id="password-helper-text"
+            >
+              sign-in.error.incorrect_login_or_password
+            </p>
+          </div>
+          <div
+            class="MuiBox-root css-0"
+            data-testid="box-component"
+          >
+            <span
+              class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-imrjgg-MuiButtonBase-root-MuiCheckbox-root"
+            >
+              <input
+                class="PrivateSwitchBase-input css-j8yymo"
+                data-indeterminate="false"
+                id="rememberMe"
+                type="checkbox"
+                value="false"
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+                data-testid="CheckBoxOutlineBlankIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
+            </span>
+            <label
+              for="rememberMe"
+            >
+              sign-in.remember_me
+            </label>
+          </div>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id=":r5:"
+            tabindex="-1"
+            type="submit"
+          >
+            sign-in.enter
+          </button>
+          <div
+            class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+          >
+            <div
+              class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 grid-item-style css-ticvdu-MuiGrid2-root"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+                data-testid="link"
+              >
+                sign-in.forgot_password
+              </p>
+            </div>
+            <div
+              class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 grid-item-style css-ticvdu-MuiGrid2-root"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+                data-testid="link"
+              >
+                sign-in.register
+              </p>
+            </div>
+          </div>
+        </form>
+        <div
+          class="copyright"
+          data-testid="copyright"
+        >
+          ui.copyright
+          <a
+            class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+            data-testid="link"
+            href="/about-us"
+          >
+            ui.product_name
+          </a>
+          2025
+          .
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+`;

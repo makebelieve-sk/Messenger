@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SystemAvatarComponent should render correctly with children 1`] = `
+<div>
+  <div
+    class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault system-avatar css-18k2bs-MuiAvatar-root"
+    id="system-avatar"
+  >
+    <span>
+      Test Icon
+    </span>
+  </div>
+</div>
+`;
+
+exports[`SystemAvatarComponent should render correctly with custom className 1`] = `
+<div>
+  <div
+    class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault system-avatar custom-class css-18k2bs-MuiAvatar-root"
+    id="system-avatar"
+  >
+    <span>
+      Test Icon
+    </span>
+  </div>
+</div>
+`;
+
+exports[`SystemAvatarComponent should render correctly with empty className 1`] = `
+<div>
+  <div
+    class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault system-avatar css-18k2bs-MuiAvatar-root"
+    id="system-avatar"
+  >
+    <span>
+      Test Icon
+    </span>
+  </div>
+</div>
+`;

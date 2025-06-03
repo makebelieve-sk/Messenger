@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PhotoComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="photo"
+  >
+    <img
+      alt="Test Photo"
+      class="photo__image"
+      data-testid="image"
+      loading="eager"
+      src="https://example.com/photo.jpg"
+    />
+  </div>
+</DocumentFragment>
+`;

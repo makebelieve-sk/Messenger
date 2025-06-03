@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ModalWithImagesCarousel should render avatar carousel when isAvatar is true 1`] = `<div />`;
+
+exports[`ModalWithImagesCarousel should render both carousels when isAvatar is true and photoIndex is valid 1`] = `<div />`;
+
+exports[`ModalWithImagesCarousel should render photos carousel when photoIndex is valid 1`] = `<div />`;

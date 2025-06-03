@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceComponents shows confirm modal when confirmModal is set in store 1`] = `<div />`;
+
+exports[`ServiceComponents shows error modal when error is set in store 1`] = `<div />`;
+
+exports[`ServiceComponents shows images carousel when isAvatar is true and photoIndex is set 1`] = `
+<div>
+  <div
+    class="MuiSnackbar-root MuiSnackbar-anchorOriginBottomLeft css-1ahi5tg-MuiSnackbar-root"
+    data-testid="snackbar-component"
+    role="presentation"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-3lhuho-MuiPaper-root-MuiAlert-root"
+      direction="up"
+      role="alert"
+      style="--Paper-shadow: none; opacity: 1; transform: scale(1, 1); transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+    >
+      <div
+        class="MuiAlert-icon css-vab54s-MuiAlert-icon"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1ckov0h-MuiSvgIcon-root"
+          data-testid="ErrorOutlineIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+          />
+        </svg>
+      </div>
+      <div
+        class="MuiAlert-message css-zioonp-MuiAlert-message"
+      >
+        test snackbar error
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ServiceComponents shows settings modal when settingsModal is true and user is authenticated 1`] = `
+<div>
+  <div
+    class="MuiSnackbar-root MuiSnackbar-anchorOriginBottomLeft css-1ahi5tg-MuiSnackbar-root"
+    data-testid="snackbar-component"
+    role="presentation"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-3lhuho-MuiPaper-root-MuiAlert-root"
+      direction="up"
+      role="alert"
+      style="--Paper-shadow: none; opacity: 1; transform: scale(1, 1); transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+    >
+      <div
+        class="MuiAlert-icon css-vab54s-MuiAlert-icon"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1ckov0h-MuiSvgIcon-root"
+          data-testid="ErrorOutlineIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+          />
+        </svg>
+      </div>
+      <div
+        class="MuiAlert-message css-zioonp-MuiAlert-message"
+      >
+        test snackbar error
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ServiceComponents shows snackbar error when snackbarError is set in store 1`] = `
+<div>
+  <div
+    class="MuiSnackbar-root MuiSnackbar-anchorOriginBottomLeft css-1ahi5tg-MuiSnackbar-root"
+    data-testid="snackbar-component"
+    role="presentation"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-3lhuho-MuiPaper-root-MuiAlert-root"
+      direction="up"
+      role="alert"
+      style="--Paper-shadow: none; opacity: 1; transform: scale(1, 1); transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+    >
+      <div
+        class="MuiAlert-icon css-vab54s-MuiAlert-icon"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1ckov0h-MuiSvgIcon-root"
+          data-testid="ErrorOutlineIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+          />
+        </svg>
+      </div>
+      <div
+        class="MuiAlert-message css-zioonp-MuiAlert-message"
+      >
+        test snackbar error
+      </div>
+    </div>
+  </div>
+</div>
+`;

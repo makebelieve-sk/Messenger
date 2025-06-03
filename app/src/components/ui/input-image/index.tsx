@@ -30,7 +30,8 @@ export default memo(function InputImageComponent({ id, text, loading, multiple =
 			accept="image/*" 
 			hidden 
 			multiple={multiple} 
-			onChange={onChange} 
+			onChange={onChange}
+			data-testid="input-image" 
 		/>
 
 		<SmallButtonComponent

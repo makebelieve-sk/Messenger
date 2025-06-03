@@ -10,7 +10,7 @@ interface IContentLayout {
 
 // Общий компонент контента
 export default function ContentLayoutComponent({ children }: IContentLayout) {
-	return <BoxComponent className="main-content">
+	return <BoxComponent className="main-content" data-testid="main-content">
 		{children}
 	</BoxComponent>;
 };

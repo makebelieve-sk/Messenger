@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MenuListComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <ul
+    class="MuiList-root MuiList-padding menu__list custom-class css-b7dj7n-MuiList-root"
+    role="menu"
+    tabindex="-1"
+  >
+    <div
+      tabindex="0"
+    >
+      Test Child
+    </div>
+  </ul>
+</DocumentFragment>
+`;

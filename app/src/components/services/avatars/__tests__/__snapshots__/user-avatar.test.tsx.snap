@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserAvatarComponent should render correctly with all props 1`] = `
+<div>
+  <span
+    class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+  >
+    <div
+      class="MuiAvatar-root MuiAvatar-circular avatar user-avatar custom-class css-fmeqll-MuiAvatar-root"
+      id="user-avatar"
+    >
+      <img
+        alt="User Avatar"
+        class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+        src="https://example.com/avatar.jpg"
+      />
+    </div>
+    <span
+      class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+    />
+  </span>
+</div>
+`;
+
+exports[`UserAvatarComponent should render correctly with empty className 1`] = `
+<div>
+  <span
+    class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+  >
+    <div
+      class="MuiAvatar-root MuiAvatar-circular avatar user-avatar css-fmeqll-MuiAvatar-root"
+      id="user-avatar"
+    >
+      <img
+        alt="User Avatar"
+        class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+        src="https://example.com/avatar.jpg"
+      />
+    </div>
+    <span
+      class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+    />
+  </span>
+</div>
+`;
+
+exports[`UserAvatarComponent should render correctly with minimal props 1`] = `
+<div>
+  <span
+    class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+  >
+    <div
+      class="MuiAvatar-root MuiAvatar-circular avatar user-avatar css-fmeqll-MuiAvatar-root"
+      id="user-avatar"
+    >
+      <img
+        alt="User Avatar"
+        class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+        src="https://example.com/avatar.jpg"
+      />
+    </div>
+    <span
+      class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+    />
+  </span>
+</div>
+`;
+
+exports[`UserAvatarComponent should render correctly with null src 1`] = `
+<div>
+  <span
+    class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+  >
+    <div
+      class="MuiAvatar-root MuiAvatar-circular avatar user-avatar css-fmeqll-MuiAvatar-root"
+      id="user-avatar"
+    >
+      <img
+        alt="User Avatar"
+        class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+        src="/assets/images/noPhoto.jpg"
+      />
+    </div>
+    <span
+      class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+    />
+  </span>
+</div>
+`;

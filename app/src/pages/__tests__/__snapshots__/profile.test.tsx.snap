@@ -1,0 +1,320 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Profile Component matches snapshot in initial state 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 grid-item-style css-17yh78r-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+      >
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row main-photo css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 main-photo__container paper-block main-photo__container__another-user css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              class="photo"
+            >
+              <img
+                alt="user-avatar"
+                class="photo__image"
+                data-testid="image"
+                loading="eager"
+                src="/assets/images/noPhoto.jpg"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 friends-container paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              class="block-title"
+            >
+              Friends
+               
+              <span
+                class="counter"
+              >
+                0
+              </span>
+            </div>
+            <div
+              class="opacity-text no-items"
+              data-testid="no-data"
+            >
+              The friends list is empty at the moment.
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 friends-container paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              class="block-title"
+            >
+              Online friends
+               
+              <span
+                class="counter"
+              >
+                0
+              </span>
+            </div>
+            <div
+              class="opacity-text no-items"
+              data-testid="no-data"
+            >
+              На данный момент список онлайн друзей пуст.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 grid-item-style css-1cdctrw-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+      >
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 info-container paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              class="info-container__main-info"
+            >
+              <div
+                class="info-container__username"
+              >
+                John Doe
+              </div>
+            </div>
+            <div
+              class="info-container__short-info-block"
+            >
+              <div
+                class="info-container__short-info-block__row"
+              >
+                <div
+                  class="info-container__short-info-block__row__title"
+                >
+                  Birthday
+                  :
+                </div>
+                <span
+                  class="info-container__short-info-block__row__value"
+                >
+                  1990-01-01
+                </span>
+              </div>
+              <div
+                class="info-container__short-info-block__row"
+              >
+                <div
+                  class="info-container__short-info-block__row__title"
+                >
+                  City
+                  :
+                </div>
+                <span
+                  class="info-container__short-info-block__row__value"
+                >
+                  New York
+                </span>
+              </div>
+              <div
+                class="info-container__short-info-block__row"
+              >
+                <div
+                  class="info-container__short-info-block__row__title"
+                >
+                  Place of work
+                  :
+                </div>
+                <span
+                  class="info-container__short-info-block__row__value"
+                >
+                  Developer
+                </span>
+              </div>
+            </div>
+            <div
+              class="info-container__counts-block"
+            >
+              <div
+                class="info-container__counts-block__count"
+              >
+                <span
+                  class="info-container__counts-block__count__value"
+                >
+                  0
+                </span>
+                 
+              </div>
+              <div
+                class="info-container__counts-block__count"
+              >
+                <span
+                  class="info-container__counts-block__count__value"
+                >
+                  0
+                </span>
+                 
+              </div>
+              <div
+                class="info-container__counts-block__count"
+              >
+                <span
+                  class="info-container__counts-block__count__value"
+                >
+                  0
+                </span>
+                 
+              </div>
+              <div
+                class="info-container__counts-block__count"
+              >
+                <span
+                  class="info-container__counts-block__count__value"
+                >
+                  0
+                </span>
+                 
+              </div>
+              <div
+                class="info-container__counts-block__count"
+              >
+                <span
+                  class="info-container__counts-block__count__value"
+                >
+                  0
+                </span>
+                 
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 photo-container paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              class="photo-container__title"
+            >
+              <div
+                class="block-title photo-container__title__text"
+              >
+                Photos
+                <span
+                  class="counter"
+                >
+                  0
+                </span>
+              </div>
+              <a
+                class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineHover photo-container__title__link css-jygu7u-MuiTypography-root-MuiLink-root"
+                data-testid="link"
+              >
+                Watch all
+              </a>
+            </div>
+            <div
+              class="opacity-text no-items"
+              data-testid="no-data"
+            >
+              No photos
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Profile Component shows loading spinner when profile does not exist 1`] = `
+<div>
+  <div
+    class="user-profile-page-spinner"
+  >
+    <div
+      class="spinner"
+      data-testid="spinner"
+    >
+      <span
+        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+        role="progressbar"
+        style="width: 40px; height: 40px;"
+      >
+        <svg
+          class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+          viewBox="22 22 44 44"
+        >
+          <circle
+            class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+            cx="44"
+            cy="44"
+            fill="none"
+            r="20.2"
+            stroke-width="3.6"
+          />
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Profile Component shows loading spinner when profile is loading 1`] = `
+<div>
+  <div
+    class="user-profile-page-spinner"
+  >
+    <div
+      class="spinner"
+      data-testid="spinner"
+    >
+      <span
+        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+        role="progressbar"
+        style="width: 40px; height: 40px;"
+      >
+        <svg
+          class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+          viewBox="22 22 44 44"
+        >
+          <circle
+            class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+            cx="44"
+            cy="44"
+            fill="none"
+            r="20.2"
+            stroke-width="3.6"
+          />
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+`;

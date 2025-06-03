@@ -1,0 +1,207 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Photos Component matches snapshot in initial state 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 photos paper-block css-1gtchvp-MuiPaper-root"
+    style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+  >
+    <div
+      class="photos__container MuiBox-root css-0"
+      data-testid="box-component"
+    >
+      <div
+        style="position: relative; height: 0px; width: 0px; overflow: auto; will-change: transform; direction: ltr;"
+      >
+        <div
+          style="height: 516px; width: 100%;"
+        >
+          <div
+            class="list__row"
+            style="position: absolute; left: 0px; top: 0px; height: 258px; width: 100%; gap: 8px;"
+          >
+            <div>
+              <div
+                class="photos__container__item"
+                style="width: -5.333333333333333px; height: 250px;"
+              >
+                <div
+                  class="photo"
+                >
+                  <img
+                    alt="1"
+                    class="photo__image"
+                    data-testid="image"
+                    loading="lazy"
+                    src="/path/to/photo1.jpg?w=-10.666666666666666"
+                  />
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="photos__container__item"
+                style="width: -5.333333333333333px; height: 250px;"
+              >
+                <div
+                  class="photo"
+                >
+                  <img
+                    alt="2"
+                    class="photo__image"
+                    data-testid="image"
+                    loading="lazy"
+                    src="/path/to/photo2.jpg?w=-10.666666666666666"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="list__loading-row"
+            style="position: absolute; left: 0px; top: 258px; height: 258px; width: 100%;"
+          >
+            <div
+              class="spinner"
+              data-testid="spinner"
+            >
+              <span
+                class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+                role="progressbar"
+                style="width: 40px; height: 40px;"
+              >
+                <svg
+                  class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+                  viewBox="22 22 44 44"
+                >
+                  <circle
+                    class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+                    cx="44"
+                    cy="44"
+                    fill="none"
+                    r="20.2"
+                    stroke-width="3.6"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Photos Component matches snapshot with empty state 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 photos paper-block css-1gtchvp-MuiPaper-root"
+    style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+  >
+    <div
+      class="photos__container MuiBox-root css-0"
+      data-testid="box-component"
+    >
+      <div
+        class="virtual-list__no-content opacity-text"
+      >
+        There are no photos yet.
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Photos Component matches snapshot with loading state 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 photos paper-block css-1gtchvp-MuiPaper-root"
+    style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+  >
+    <div
+      class="photos__container MuiBox-root css-0"
+      data-testid="box-component"
+    >
+      <div
+        style="position: relative; height: 0px; width: 0px; overflow: auto; will-change: transform; direction: ltr;"
+      >
+        <div
+          style="height: 516px; width: 100%;"
+        >
+          <div
+            class="list__row"
+            style="position: absolute; left: 0px; top: 0px; height: 258px; width: 100%; gap: 8px;"
+          >
+            <div>
+              <div
+                class="photos__container__item"
+                style="width: -5.333333333333333px; height: 250px;"
+              >
+                <div
+                  class="photo"
+                >
+                  <img
+                    alt="1"
+                    class="photo__image"
+                    data-testid="image"
+                    loading="lazy"
+                    src="/path/to/photo1.jpg?w=-10.666666666666666"
+                  />
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="photos__container__item"
+                style="width: -5.333333333333333px; height: 250px;"
+              >
+                <div
+                  class="photo"
+                >
+                  <img
+                    alt="2"
+                    class="photo__image"
+                    data-testid="image"
+                    loading="lazy"
+                    src="/path/to/photo2.jpg?w=-10.666666666666666"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="list__loading-row"
+            style="position: absolute; left: 0px; top: 258px; height: 258px; width: 100%;"
+          >
+            <div
+              class="spinner"
+              data-testid="spinner"
+            >
+              <span
+                class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+                role="progressbar"
+                style="width: 40px; height: 40px;"
+              >
+                <svg
+                  class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+                  viewBox="22 22 44 44"
+                >
+                  <circle
+                    class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+                    cx="44"
+                    cy="44"
+                    fill="none"
+                    r="20.2"
+                    stroke-width="3.6"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

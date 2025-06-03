@@ -12,7 +12,7 @@
 - Axios для HTTP запросов
 - Zustand для управления состоянием
 - Material-UI для компонентов интерфейса
-- React-testing-library, Jest + Vitest для тестирования
+- React-testing-library, Jest для тестирования
 - Storybook для документации компонентов
 
 ### Backend

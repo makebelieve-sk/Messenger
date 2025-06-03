@@ -1,0 +1,37 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.updateSessionMaxAge = updateSessionMaxAge;
+const logger_1 = __importDefault(require("@service/logger"));
+const datetime_1 = require("@utils/datetime");
+const logger = (0, logger_1.default)("utils/session");
+/**
+ * Обновление времени жизни куки сессии и времени жизни этой же сессии в RedisStore.
+ * Обновляем только поле maxAge (не expire, при этом автоматически устанавливается поле expire), потому что лишь это
+ * поле позволяет синхронизировать данные сессии из хранилища (RedisStore) с куки сессии.
+ * Если юзер не нажал кнопку "Запомнить меня", то его кука с сессией активна лишь до его первого закрытия
+ * браузера/вкладки/выхода. В RedisStore идет установка по умолчанию 60 минут.
+ * При этом, после каждого запроса опция maxAge куки сессии должна обновляться с undefined на undefined для того,
+ * чтобы обновлялось автоматически поле ttl в RedisStore (как раз таки синхронизация, про которую я писал выше).
+ * Таким образом, когда юзер вышел с приложения/закрыл браузер/вкладку его кука удаляется сразу же из браузера и также
+ * удаляется через заданное время ttl сама сессия из хранилища RedisStore (то есть максимум после 60 минут его выхода).
+ * Синхронизация достигается путем вызова req.session.save(); - без вызова метода save у сессии автоматически
+ * синхронизация не произойдет.
+ * Если юзер нажал на кнопку "Запомнить меня", то его кука сессии обновляется на 30 дней.
+ * При этом, его ttl в RedisStore автоматически устанавливается также 30 дней. При каждом запросе автоматически
+ * обновляется время жизни куки и поле ttl на 30 дней.
+ */
+async function updateSessionMaxAge(session, rememberMe) {
+    logger.debug("updateSessionMaxAge [session=%j, rememberMe=%s]", session, rememberMe);
+    /**
+     * Если для этого пользователя был установлен флаг "Запомнить меня" - обновляем время жизни куки сессии и
+     * времени ее же жизни в RedisStore на 30 дней.
+     * Иначе обновляем до первого выхода или закрытия окна/вкладки и время ее же жизни в RedisStore в 60 минут.
+     */
+    const maxAge = rememberMe ? datetime_1.oneMonth : undefined;
+    session.cookie.maxAge = maxAge;
+    session.save();
+}
+//# sourceMappingURL=session.js.map

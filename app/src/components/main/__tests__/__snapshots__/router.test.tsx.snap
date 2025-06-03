@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Router Component Authenticated Routes redirects to profile on not exists route 1`] = `<div />`;
+
+exports[`Router Component Navigation Behavior does not navigate when already on sign up page and redirecting to sign in 1`] = `<div />`;
+
+exports[`Router Component Navigation Behavior navigates to sign in when on profile page and not authenticated 1`] = `<div />`;
+
+exports[`Router Component Navigation Behavior navigates when redirectTo is set and path is different 1`] = `<div />`;
+
+exports[`Router Component Unauthenticated Routes redirects to sign in on not exists route 1`] = `<div />`;
