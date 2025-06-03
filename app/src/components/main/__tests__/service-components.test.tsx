@@ -19,7 +19,7 @@ describe("ServiceComponents", () => {
 	it("shows confirm modal when confirmModal is set in store", () => {
 		const store = mockUIStore.getState();
 		store.error = "";
-		store.confirmModal = { text: "test confirm", onConfirm: () => {} };
+		store.confirmModal = { text: "test confirm", btnActionTitle: "Confirm", cb: () => {} };
     
 		const { container } = render(<ServiceComponents isAuth={false} />);
     

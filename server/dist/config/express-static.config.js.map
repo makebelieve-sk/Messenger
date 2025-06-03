@@ -1,1 +1,0 @@
-{"version":3,"file":"express-static.config.js","sourceRoot":"","sources":["../../config/express-static.config.ts"],"names":[],"mappings":";;AAAA,uDAAuD;AACvD,MAAM,mBAAmB,GAAG;IAC3B,oFAAoF;IACpF,QAAQ,EAAE,QAAQ;IAClB,iHAAiH;IACjH,MAAM,EAAE,IAAI;IACZ,yEAAyE;IACzE,WAAW,EAAE,IAAI;IACjB,oEAAoE;IACpE,YAAY,EAAE,IAAI;CAClB,CAAC;AAEF,kBAAe,mBAAmB,CAAC"}

@@ -51,3 +51,5 @@ server/certs
 
 # Сборка статичных артефактов Storubook
 app/storybook-static/
+
+.husky/_

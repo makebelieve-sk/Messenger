@@ -5,7 +5,6 @@ import CatchErrors from "@core/CatchErrors";
 import { type Profile } from "@core/models/Profile";
 import type { AxiosErrorType } from "@custom-types/axios.types";
 import { ErrorCodes, Pages } from "@custom-types/enums";
-import { type IUser } from "@custom-types/models.types";
 import useAuthStore from "../../__mocks__/@store/auth";
 import useGlobalStore from "../../__mocks__/@store/global";
 import resetAllStores from "../../__mocks__/@store/index";
@@ -41,7 +40,7 @@ const mockAuthStore = {
 const mockGlobalStore = {
 	setRedirectTo: jest.fn(),
 	redirectTo: Pages.signIn,
-	onlineUsers: new Map<string, IUser>(),
+	onlineUsers: new Set<string>(),
 	addOnlineUsers: jest.fn(),
 	setOnlineUsers: jest.fn(),
 	deleteOnlineUser: jest.fn(),

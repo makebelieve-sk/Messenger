@@ -5,7 +5,7 @@ import { type IUser } from "@custom-types/models.types";
 
 interface GlobalStore {
 	redirectTo: Pages;
-	onlineUsers: Map<string, IUser>;
+	onlineUsers: Set<string>;
 	setRedirectTo: (page: Pages) => void;
 	addOnlineUsers: (users: IUser[]) => void;
 	setOnlineUsers: (users: IUser[]) => void;
@@ -16,7 +16,7 @@ interface GlobalStore {
 
 const mockGlobalStore: GlobalStore = {
 	redirectTo: Pages.signIn,
-	onlineUsers: new Map<string, IUser>(),
+	onlineUsers: new Set<string>(),
 	setRedirectTo: jest.fn(),
 	addOnlineUsers: jest.fn(),
 	setOnlineUsers: jest.fn(),
@@ -25,7 +25,10 @@ const mockGlobalStore: GlobalStore = {
 	getState: () => mockGlobalStore,
 };
 
-const useGlobalStore = jest.fn((selector) => selector(mockGlobalStore)) as unknown as StoreApi<GlobalStore>;
+const useGlobalStore = jest.fn((selector) => selector(mockGlobalStore)) as unknown as StoreApi<GlobalStore> & {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	mockImplementation: (fn: (selector: (state: GlobalStore) => any) => any) => void;
+};
 useGlobalStore.getState = () => mockGlobalStore;
 
 export default useGlobalStore;

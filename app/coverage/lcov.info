@@ -858,7 +858,7 @@ FN:18,(anonymous_2)
 FNF:2
 FNH:2
 FNDA:51,BadgeComponent
-FNDA:42,(anonymous_2)
+FNDA:51,(anonymous_2)
 DA:1,14
 DA:2,14
 DA:4,14
@@ -870,8 +870,8 @@ DA:20,51
 LF:8
 LH:8
 BRDA:17,0,0,42
-BRDA:22,1,0,13
-BRDA:22,1,1,38
+BRDA:22,1,0,12
+BRDA:22,1,1,39
 BRF:3
 BRH:3
 end_of_record
