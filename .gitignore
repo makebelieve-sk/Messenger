@@ -1,0 +1,53 @@
+# Зависимости
+app/node_modules
+server/node_modules
+
+# Сборка production
+app/dist
+server/dist
+
+# .env файлы клиента
+app/.env
+app/.env.development
+app/.env.production
+
+# .env файлы сервера
+server/.env
+server/.env.development
+server/.env.stage
+server/.env.production
+
+# Файлы npm логов
+app/npm-debug.log*
+server/npm-debug.log*
+
+# Пользовательские файлы/изображения
+server/assets
+
+# Файлы отчетов сервера
+server/reports
+
+# Файлы с логами
+server/logs
+
+# Временные и другие файлы nginx
+nginx/logs/
+nginx/cache/
+nginx/tmp/
+
+#jest coverage
+app/coverage
+*storybook.log
+app/.storybook
+
+# Дампы базы данных MS SQL
+server/dumps
+
+# Файл с секретами Docker Secrets
+deploy/sa_password.txt
+
+# Папка с сертификатами для установки https соединения
+server/certs
+
+# Сборка статичных артефактов Storubook
+app/storybook-static/
