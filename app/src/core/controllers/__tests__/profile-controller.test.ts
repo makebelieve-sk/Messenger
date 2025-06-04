@@ -1,9 +1,10 @@
+import type FriendsController from "@core/controllers/FriendsController";
 import ProfilesController from "@core/controllers/ProfilesController";
-import { NotificationSettings } from "@core/models/NotificationSettings";
+import { type NotificationSettings } from "@core/models/NotificationSettings";
 import { type Photos } from "@core/models/Photos";
 import { type User } from "@core/models/User";
-import { UserDetails } from "@core/models/UserDetails";
-import Request from "@core/Request";
+import { type UserDetails } from "@core/models/UserDetails";
+import type Request from "@core/Request";
 import ProfileService from "@core/services/ProfileService";
 import useProfileStore from "@store/profile";
 import { type IUserData } from "@custom-types/api.types";
@@ -39,6 +40,23 @@ describe("ProfilesController", () => {
 			photosService: {} as Photos,
 			detailsService: {} as UserDetails,
 			settingsService: {} as NotificationSettings,
+			friendsService: {
+				friendsController: {} as FriendsController,
+				checkOnlineUsers: jest.fn(),
+				removeOnlineUser: jest.fn(),
+				getFriends: jest.fn(),
+				loadMore: jest.fn(),
+				search: jest.fn(),
+				followFriend: jest.fn(),
+				writeMessage: jest.fn(),
+				addFriend: jest.fn(),
+				accept: jest.fn(),
+				leftInFollowers: jest.fn(),
+				unfollow: jest.fn(),
+				deleteFriend: jest.fn(),
+				blockFriend: jest.fn(),
+				unblock: jest.fn(),
+			},
 			id: "test-user-id",
 			firstName: "Test",
 			thirdName: "User",

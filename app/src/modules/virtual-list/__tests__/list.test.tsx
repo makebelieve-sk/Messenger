@@ -36,6 +36,7 @@ describe("VirtualList", () => {
 		loadMore: jest.fn(),
 		renderCb: ({ item }) => <div data-testid={`item-${item.id}`}>{item.name}</div>,
 		onScroll: jest.fn(),
+		limit: 10,
 	};
 
 	it("renders loading state correctly", () => {

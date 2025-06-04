@@ -1,3 +1,4 @@
+import { type Friends } from "@core/models/Friends";
 import { type NotificationSettings } from "@core/models/NotificationSettings";
 import { type Photos } from "@core/models/Photos";
 import { type UserDetails } from "@core/models/UserDetails";
@@ -6,6 +7,7 @@ import { type IPhoto } from "@custom-types/models.types";
 
 // Контракт модели "Пользователь"
 export interface User {
+	friendsService: Friends;
 	photosService: Photos;
 	detailsService: UserDetails;
 	settingsService?: NotificationSettings;

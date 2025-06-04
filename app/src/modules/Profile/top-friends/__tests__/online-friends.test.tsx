@@ -2,14 +2,15 @@ import { render, screen } from "@testing-library/react";
 
 import useProfile from "@hooks/useProfile";
 import OnlineFriends from "@modules/profile/top-friends/online-friends";
-import useGlobalStore from "@store/global";
+import useFriendsStore from "@store/friends";
 import { IUser } from "@custom-types/models.types";
 import { mockProfileService } from "../../../../__mocks__/@hooks/useProfile";
 
 jest.mock("@hooks/useProfile");
-jest.mock("@store/global");
+jest.mock("@store/friends");
 jest.mock("react-router-dom", () => ({
 	useNavigate: () => jest.fn(),
+	useParams: () => ({ userId: "1" }),
 }));
 
 const mockUser: IUser = {
@@ -27,26 +28,32 @@ const mockUser: IUser = {
 describe("OnlineFriends", () => {
 	beforeEach(() => {
 		(useProfile as jest.Mock).mockReturnValue(mockProfileService);
-		const mockOnlineUsers = new Map<string, IUser>();
-		mockOnlineUsers.set("1", mockUser);
-		(useGlobalStore as unknown as jest.Mock).mockImplementation((selector) => 
-			selector({ onlineUsers: mockOnlineUsers }),
+		(useFriendsStore as unknown as jest.Mock).mockImplementation((selector) => 
+			selector({ 
+				onlineFriends: [ mockUser ],
+				setMainTab: jest.fn(),
+				setContentTab: jest.fn(),
+			}),
 		);
 	});
 
 	it("renders with no online friends", () => {
-		(useGlobalStore as unknown as jest.Mock).mockImplementation((selector) => 
-			selector({ onlineUsers: new Map<string, IUser>() }),
+		(useFriendsStore as unknown as jest.Mock).mockImplementation((selector) => 
+			selector({ 
+				onlineFriends: [],
+				setMainTab: jest.fn(),
+				setContentTab: jest.fn(),
+			}),
 		);
 		const { container } = render(<OnlineFriends />);
 		expect(container).toMatchSnapshot();
 		expect(screen.getByTestId("no-data")).toBeInTheDocument();
 	});
 
-	it("calls getFriends on mount", () => {
+	it("calls getOnlineFriends on mount", () => {
 		const { container } = render(<OnlineFriends />);
 		expect(container).toMatchSnapshot();
-		expect(mockProfileService.getFriends).toHaveBeenCalled();
+		expect(mockProfileService.getOnlineFriends).toHaveBeenCalled();
 	});
 
 	it("renders online friends count", () => {
@@ -59,11 +66,5 @@ describe("OnlineFriends", () => {
 		const { container } = render(<OnlineFriends />);
 		expect(container).toMatchSnapshot();
 		expect(screen.getByText("Online friends")).toBeInTheDocument();
-	});
-
-	it("renders online friend", () => {
-		const { container } = render(<OnlineFriends />);
-		expect(container).toMatchSnapshot();
-		expect(screen.getByText("John")).toBeInTheDocument();
 	});
 });

@@ -51,7 +51,6 @@ exports[`Carousel Component Snapshot Tests should match snapshot with large numb
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ccsd5i-MuiButtonBase-root-MuiButton-root"
-          id=":rc:"
           tabindex="0"
           type="button"
         >
@@ -79,7 +78,6 @@ exports[`Carousel Component Snapshot Tests should match snapshot with large numb
         10
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ccsd5i-MuiButtonBase-root-MuiButton-root"
-          id=":rd:"
           tabindex="0"
           type="button"
         >
@@ -135,7 +133,6 @@ exports[`Carousel Component Snapshot Tests should match snapshot with multiple i
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ccsd5i-MuiButtonBase-root-MuiButton-root"
           disabled=""
-          id=":r6:"
           tabindex="-1"
           type="button"
         >
@@ -163,7 +160,6 @@ exports[`Carousel Component Snapshot Tests should match snapshot with multiple i
         3
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ccsd5i-MuiButtonBase-root-MuiButton-root"
-          id=":r7:"
           tabindex="0"
           type="button"
         >
@@ -218,7 +214,6 @@ exports[`Carousel Component Snapshot Tests should match snapshot with multiple i
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ccsd5i-MuiButtonBase-root-MuiButton-root"
-          id=":ra:"
           tabindex="0"
           type="button"
         >
@@ -247,7 +242,6 @@ exports[`Carousel Component Snapshot Tests should match snapshot with multiple i
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ccsd5i-MuiButtonBase-root-MuiButton-root"
           disabled=""
-          id=":rb:"
           tabindex="-1"
           type="button"
         >
@@ -302,7 +296,6 @@ exports[`Carousel Component Snapshot Tests should match snapshot with multiple i
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ccsd5i-MuiButtonBase-root-MuiButton-root"
-          id=":r8:"
           tabindex="0"
           type="button"
         >
@@ -330,7 +323,6 @@ exports[`Carousel Component Snapshot Tests should match snapshot with multiple i
         3
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ccsd5i-MuiButtonBase-root-MuiButton-root"
-          id=":r9:"
           tabindex="0"
           type="button"
         >

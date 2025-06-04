@@ -6,7 +6,10 @@ import { Pages } from "@custom-types/enums";
 export default function useUserIdFromPath() {
 	const location = useLocation();
 
-	const match = matchPath(Pages.profileUser, location.pathname) || matchPath(Pages.photosUser, location.pathname);
+	const match = 
+		matchPath(Pages.profileUser, location.pathname) || 
+		matchPath(Pages.photosUser, location.pathname) || 
+		matchPath(Pages.friendsUser, location.pathname);
 
 	return match?.params.userId;
 };

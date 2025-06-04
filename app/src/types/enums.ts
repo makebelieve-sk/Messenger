@@ -14,6 +14,7 @@ export enum Pages {
 	edit = "/edit",
 	messages = "/messages",
 	friends = "/friends",
+	friendsUser = "/friends/:userId?",
 	photos = "/photos",
 	photosUser = "/photos/:userId?",
 	calls = "/calls",

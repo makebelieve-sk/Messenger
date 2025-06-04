@@ -37,7 +37,7 @@ exports[`FriendsBlock calls onClickBlock when title is clicked 1`] = `
                 id="user-avatar"
               >
                 <img
-                  alt="John Smith"
+                  alt="John Doe Smith"
                   class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
                   src="avatar1.jpg"
                 />
@@ -63,7 +63,7 @@ exports[`FriendsBlock calls onClickBlock when title is clicked 1`] = `
                 id="user-avatar"
               >
                 <img
-                  alt="Jane Doe"
+                  alt="Jane Smith Doe"
                   class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
                   src="avatar2.jpg"
                 />
@@ -195,7 +195,7 @@ exports[`FriendsBlock renders users list when users are provided 1`] = `
                 id="user-avatar"
               >
                 <img
-                  alt="John Smith"
+                  alt="John Doe Smith"
                   class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
                   src="avatar1.jpg"
                 />
@@ -221,7 +221,7 @@ exports[`FriendsBlock renders users list when users are provided 1`] = `
                 id="user-avatar"
               >
                 <img
-                  alt="Jane Doe"
+                  alt="Jane Smith Doe"
                   class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
                   src="avatar2.jpg"
                 />
@@ -276,7 +276,7 @@ exports[`FriendsBlock renders with title and count 1`] = `
                 id="user-avatar"
               >
                 <img
-                  alt="John Smith"
+                  alt="John Doe Smith"
                   class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
                   src="avatar1.jpg"
                 />
@@ -302,7 +302,7 @@ exports[`FriendsBlock renders with title and count 1`] = `
                 id="user-avatar"
               >
                 <img
-                  alt="Jane Doe"
+                  alt="Jane Smith Doe"
                   class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
                   src="avatar2.jpg"
                 />

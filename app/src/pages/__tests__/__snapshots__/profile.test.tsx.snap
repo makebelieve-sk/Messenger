@@ -6,7 +6,7 @@ exports[`Profile Component matches snapshot in initial state 1`] = `
     class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
   >
     <div
-      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 grid-item-style css-17yh78r-MuiGrid2-root"
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 profile__left-side css-17yh78r-MuiGrid2-root"
     >
       <div
         class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
@@ -79,7 +79,7 @@ exports[`Profile Component matches snapshot in initial state 1`] = `
               class="opacity-text no-items"
               data-testid="no-data"
             >
-              На данный момент список онлайн друзей пуст.
+              At the moment, the list of online friends is empty.
             </div>
           </div>
         </div>

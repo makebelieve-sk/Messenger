@@ -2,11 +2,13 @@
 app/node_modules
 server/node_modules
 /packages/common-types/node_modules
+/packages/validation/node_modules
 
 # Сборка production
 app/dist
 server/dist
 /packages/common-types/dist
+/packages/validation/dist
 
 # .env файлы сервера (они копируются в момент запуска сервиса сервера)
 server/.env

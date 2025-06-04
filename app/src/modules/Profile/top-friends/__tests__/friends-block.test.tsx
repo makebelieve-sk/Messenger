@@ -35,7 +35,7 @@ describe("FriendsBlock", () => {
 				state={{
 					title: "Friends",
 					count: 2,
-					users: mockUsers,
+					friends: mockUsers,
 				}}
 				onClickBlock={() => {}}
 			>
@@ -53,7 +53,7 @@ describe("FriendsBlock", () => {
 				state={{
 					title: "Friends",
 					count: 2,
-					users: mockUsers,
+					friends: mockUsers,
 				}}
 				isLoading={true}
 				onClickBlock={() => {}}
@@ -71,7 +71,7 @@ describe("FriendsBlock", () => {
 				state={{
 					title: "Friends",
 					count: 2,
-					users: mockUsers,
+					friends: mockUsers,
 				}}
 				onClickBlock={() => {}}
 			>
@@ -89,7 +89,7 @@ describe("FriendsBlock", () => {
 				state={{
 					title: "Friends",
 					count: 0,
-					users: [],
+					friends: [],
 				}}
 				onClickBlock={() => {}}
 			>
@@ -107,7 +107,7 @@ describe("FriendsBlock", () => {
 				state={{
 					title: "Friends",
 					count: 2,
-					users: mockUsers,
+					friends: mockUsers,
 				}}
 				onClickBlock={handleClick}
 			>

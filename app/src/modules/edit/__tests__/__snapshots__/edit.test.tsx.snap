@@ -320,8 +320,8 @@ exports[`EditTabsModule matches snapshot for Main tab 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-113d811-MuiFormLabel-root-MuiInputLabel-root"
         data-shrink="true"
-        for=":rn:"
-        id=":rn:-label"
+        for="«rn»"
+        id="«rn»-label"
       >
         Birthday
       </label>
@@ -332,7 +332,7 @@ exports[`EditTabsModule matches snapshot for Main tab 1`] = `
           aria-invalid="false"
           autocomplete="off"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1dune0f-MuiInputBase-input-MuiOutlinedInput-input"
-          id=":rn:"
+          id="«rn»"
           inputmode="text"
           placeholder="Enter date"
           type="text"
@@ -344,7 +344,6 @@ exports[`EditTabsModule matches snapshot for Main tab 1`] = `
           <button
             aria-label="Choose date, selected date is 1 янв. 1990 г."
             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1ysp02-MuiButtonBase-root-MuiIconButton-root"
-            id=":rp:"
             tabindex="0"
             type="button"
           >

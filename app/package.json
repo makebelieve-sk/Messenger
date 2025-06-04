@@ -14,7 +14,7 @@
     "start": "vite",
     "preview": "vite preview",
     "build": "rimraf dist && tsc && vite build",
-    "prepare": "cd .. && husky",
+    "prepare": "cd .. && husky && cd ./packages/common-types && npm install && cd ../validation && npm install",
     "lint": "tsc --noEmit && eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "test": "jest",
@@ -26,7 +26,6 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.3.1",
-    "@mui/lab": "^6.0.0-beta.22",
     "@mui/material": "^6.3.1",
     "@mui/x-date-pickers": "^7.24.0",
     "axios": "^1.7.9",
@@ -42,7 +41,7 @@
     "react-window-infinite-loader": "^1.0.10",
     "socket.io-client": "^4.8.1",
     "uuid": "^11.0.5",
-    "zod": "^3.24.1",
+    "validation": "file:../packages/validation",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
@@ -87,6 +86,10 @@
     "typescript": "^5.7.3",
     "vite": "^6.0.7",
     "vite-plugin-checker": "^0.9.1"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "overrides": {
     "storybook": "$storybook"

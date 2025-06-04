@@ -1,4 +1,5 @@
 import useAuthStore from "@store/auth";
+import useFriendsStore from "@store/friends";
 import useGlobalStore from "@store/global";
 import useImagesCarouselStore from "@store/images-carousel";
 import usePhotosStore from "@store/photos";
@@ -15,6 +16,7 @@ const resetAllStores = () => {
 	useAuthStore.getState().reset();
 	useProfileStore.getState().reset();
 	usePhotosStore.getState().reset();
+	useFriendsStore.getState().reset();
 };
 
 export default resetAllStores;

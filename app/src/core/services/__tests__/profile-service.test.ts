@@ -12,6 +12,12 @@ jest.mock("@store/profile");
 jest.mock("@store/ui");
 jest.mock("@store/images-carousel");
 jest.mock("@core/CatchErrors");
+jest.mock("@utils/constants", () => ({
+	FRIENDS_DEBOUNCE_TIMEOUT: {
+		LOAD_MORE: 100,
+		SEARCH: 300,
+	},
+}));
 
 describe("ProfileService", () => {
 	let mockRequest: Request;

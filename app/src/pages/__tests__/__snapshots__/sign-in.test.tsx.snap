@@ -190,7 +190,7 @@ exports[`SignIn Page Snapshot tests matches snapshot in initial state 1`] = `
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r2:"
+            id="«r2»"
             tabindex="-1"
             type="submit"
           >
@@ -432,7 +432,7 @@ exports[`SignIn Page Snapshot tests matches snapshot with error state 1`] = `
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r8:"
+            id="«r8»"
             tabindex="-1"
             type="submit"
           >
@@ -674,7 +674,7 @@ exports[`SignIn Page Snapshot tests matches snapshot with loading state 1`] = `
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r5:"
+            id="«r5»"
             tabindex="-1"
             type="submit"
           >

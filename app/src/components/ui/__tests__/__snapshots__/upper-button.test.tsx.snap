@@ -4,7 +4,6 @@ exports[`UpperButton matches snapshot 1`] = `
 <DocumentFragment>
   <button
     class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary upper-button css-74d805-MuiButtonBase-root-MuiButton-root"
-    id=":r4:"
     tabindex="0"
     type="button"
   >

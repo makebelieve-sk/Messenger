@@ -33,7 +33,17 @@ describe("UsersController", () => {
 			},
 			disconnect: jest.fn(),
 		};
-		profilesControllerMock = { removeProfile: jest.fn() };
+		profilesControllerMock = { 
+			removeProfile: jest.fn(),
+			getProfile: jest.fn().mockReturnValue({
+				userService: {
+					friendsService: {
+						removeOnlineUser: jest.fn(),
+						checkOnlineUsers: jest.fn(),
+					},
+				},
+			}),
+		};
 		ackCallback = jest.fn();
 	});
 

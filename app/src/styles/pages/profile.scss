@@ -3,3 +3,9 @@
     color: $profile-counter-color;
     padding-left: 5px;
 }
+
+.profile {
+    &__left-side {
+        margin-bottom: 10px;
+    }
+}

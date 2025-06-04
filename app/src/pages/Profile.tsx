@@ -20,7 +20,7 @@ export default function Profile() {
 	}
 
 	return <GridComponent container spacing={2}>
-		<GridComponent xs={4}>
+		<GridComponent xs={4} className="profile__left-side">
 			<GridComponent container spacing={2}>
 				{/* Блок моей фотографии */}
 				<MainPhoto />

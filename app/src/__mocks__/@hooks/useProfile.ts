@@ -53,7 +53,9 @@ const mockProfileService = {
 	onDeleteAvatar: jest.fn(),
 	onClickAvatar: jest.fn(),
 	getFriends: jest.fn(),
+	getOnlineFriends: jest.fn(),
 	editInfo: jest.fn(),
+	getFriendsAndFollowers: jest.fn(),
 };
 
 const useProfile = jest.fn().mockReturnValue(mockProfileService);

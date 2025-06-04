@@ -1,0 +1,33 @@
+.friend-actions {
+    &__write-message {
+        width: max-content;
+        min-width: 25px;
+
+        &__loading {
+            height: 25px;
+            width: 100%;
+            position: relative;
+        }
+    }
+
+    &__action {
+        font-size: 12px;
+    }
+
+    &__accept {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    &__add-icon {
+        height: 20px;
+        width: 20px;
+    }
+}

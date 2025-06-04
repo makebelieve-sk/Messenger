@@ -12,13 +12,25 @@ jest.mock("@service/i18n", () => ({
 }));
 jest.mock("@store/auth");
 
+const mockMainClient = {
+	mainApi: {
+		signUp: jest.fn().mockImplementation(() => Promise.resolve()),
+		signIn: jest.fn().mockImplementation(() => Promise.resolve()),
+		logout: jest.fn().mockImplementation(() => Promise.resolve()),
+		getAnotherUser: jest.fn().mockImplementation(() => Promise.resolve()),
+		getFriendsNotification: jest.fn().mockImplementation(() => Promise.resolve()),
+		getMessageNotification: jest.fn().mockImplementation(() => Promise.resolve()),
+		openFile: jest.fn().mockImplementation(() => Promise.resolve()),
+		uploadAvatarAuth: jest.fn().mockImplementation(() => Promise.resolve()),
+	},
+	removeProfile: jest.fn().mockImplementation(() => Promise.resolve()),
+	getProfile: jest.fn().mockImplementation(() => Promise.resolve()),
+	existProfile: jest.fn().mockImplementation(() => Promise.resolve()),
+	lifeTimeExpire: jest.fn().mockImplementation(() => Promise.resolve()),
+	downloadLogFile: jest.fn().mockImplementation(() => Promise.resolve()),
+};
+
 describe("SignUp Page", () => {
-	const mockMainClient = {
-		mainApi: {
-			signUp: jest.fn(),
-		},
-		removeProfile: jest.fn(),
-	};
 	beforeEach(() => {
 		jest.clearAllMocks();
 		(useMainClient as jest.Mock).mockReturnValue(mockMainClient);
@@ -199,13 +211,13 @@ describe("SignUp Page", () => {
 			expect(mockMainClient.mainApi.signUp).not.toHaveBeenCalled();
 		});
 
-		it("removes profile on component mount", async () => {
+		it("calls lifeTimeExpire on component mount", async () => {
 			await act(async () => {
 				render(<SignUp />);
 			});
 
 			await waitFor(() => {
-				expect(mockMainClient.removeProfile).toHaveBeenCalled();
+				expect(mockMainClient.lifeTimeExpire).toHaveBeenCalled();
 			});
 		});
 

@@ -9,9 +9,11 @@ COPY server/package*.json ./
 
 # Копируем локальные пакеты
 COPY packages/common-types /packages/common-types
+COPY packages/validation /packages/validation
 
-# Устанавливаем зависимости для модуля packages/common-types
+# Устанавливаем зависимости для модулей пакетов
 RUN cd /packages/common-types && npm install && cd ..
+RUN cd /packages/validation && npm install && cd ..
 
 # Устанавливаем зависимости (запрещаем изменять версии пакетов. Строгое соответствие версий пакетов из package и package-lock)
 RUN npm install --frozen-lockfile

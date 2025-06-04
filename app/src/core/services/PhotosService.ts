@@ -37,7 +37,7 @@ export default class PhotosService implements Photos {
 	}
 
 	// Получение всех фотографий на странице фотографий
-	getAllPhotos() {
+	getAllPhotos(resolve?: () => void) {
 		// На всякий случай добавляем ограничение на запрос, если получили все фотографии
 		if (!this._hasMore) {
 			this._syncStorePhotos();
@@ -63,6 +63,7 @@ export default class PhotosService implements Photos {
 				logger.debug(`get all photos [current count: ${this._photos.length}, all count: ${count}]`);
 
 				this._syncStorePhotos();
+				resolve?.();
 			},
 		});
 	}

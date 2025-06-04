@@ -39,7 +39,7 @@ export default memo(function ListRow<T extends { id: string }>({ index, style, d
 		</div>;
 	}
 
-	// Обычная строка с картинками
+	// Обычная строка с элементами
 	return <div className="list__row" style={{ ...style, gap }}>
 		{rowItems.map(item => (
 			<div key={item.id}>

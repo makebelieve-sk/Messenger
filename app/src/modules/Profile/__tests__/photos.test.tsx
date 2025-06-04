@@ -6,6 +6,14 @@ import useProfile from "../../../__mocks__/@hooks/useProfile";
 import useUser from "../../../__mocks__/@hooks/useUser";
 import usePhotosStore from "../../../__mocks__/@store/photos";
 
+class ResizeObserver {
+	observe() {}
+	unobserve() {}
+	disconnect() {}
+}
+
+global.ResizeObserver = ResizeObserver;
+
 jest.mock("@service/i18n", () => ({
 	t: (key: string) => key,
 }));

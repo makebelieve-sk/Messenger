@@ -9,12 +9,12 @@ interface INotificationBadge extends BadgeProps {
 };
 
 // Общий компонент значка уведомления в виде Badge
-export default memo(function NotificationBadge({ content = undefined, className = "", ...props }: INotificationBadge) {
+export default memo(function NotificationBadge({ content = "", className = "", ...props }: INotificationBadge) {
 	return <Badge
 		{ ...props }
 		className={`notification-badge ${className}`}
 		color="default"
-		badgeContent={content}
+		badgeContent={content || undefined}
 		data-testid="notification-badge"
 	/>;
 });

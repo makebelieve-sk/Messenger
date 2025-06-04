@@ -1,6 +1,7 @@
 import type { CreationOptional, ForeignKey, InferAttributes, InferCreationAttributes, NonAttribute, Sequelize } from "sequelize";
 import { DataTypes, Model } from "sequelize";
 
+import { type FriendAction } from "@core/database/models/friend-action";
 import { Photo } from "@core/database/models/photo";
 import { type ISafeUser } from "@custom-types/user.types";
 
@@ -21,6 +22,10 @@ export class User extends Model<InferAttributes<User, { omit: "avatarUrl" | "ava
 	// Данных полей в модели нет, но они нужны для отрисовки аватара пользователя (а он используется вообще везде, где только можно) и времени его добавления
 	declare avatarUrl: NonAttribute<string | null>;
 	declare avatarCreateDate: NonAttribute<string | null>;
+
+	declare UserWithAvatar: NonAttribute<{ path: string; createdAt: string; }>;
+	declare SentFriendRequestsLog: NonAttribute<FriendAction[]>;
+	declare ReceivedFriendRequestsLog: NonAttribute<FriendAction[]>;
 
 	getEntity(): ISafeUser {
 		return {

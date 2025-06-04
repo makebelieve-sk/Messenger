@@ -66,7 +66,7 @@ exports[`ChooseAvatar calls onChange with empty string when deleteAvatar is call
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r3:"
+            id="«r3»"
             tabindex="-1"
             type="button"
           >
@@ -78,7 +78,7 @@ exports[`ChooseAvatar calls onChange with empty string when deleteAvatar is call
                 class="MuiButton-loadingIndicator css-14m8o6v-MuiButton-loadingIndicator"
               >
                 <span
-                  aria-labelledby=":r3:"
+                  aria-labelledby="«r3»"
                   class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorInherit css-gxw4l9-MuiCircularProgress-root"
                   role="progressbar"
                   style="width: 16px; height: 16px;"
@@ -178,7 +178,7 @@ exports[`ChooseAvatar calls onChangeAvatar when changeAvatar is called 1`] = `
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r4:"
+            id="«r4»"
             tabindex="-1"
             type="button"
           >
@@ -190,7 +190,7 @@ exports[`ChooseAvatar calls onChangeAvatar when changeAvatar is called 1`] = `
                 class="MuiButton-loadingIndicator css-14m8o6v-MuiButton-loadingIndicator"
               >
                 <span
-                  aria-labelledby=":r4:"
+                  aria-labelledby="«r4»"
                   class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorInherit css-gxw4l9-MuiCircularProgress-root"
                   role="progressbar"
                   style="width: 16px; height: 16px;"
@@ -280,7 +280,6 @@ exports[`ChooseAvatar displays avatar image when avatarUrl is provided 1`] = `
           />
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
-            id=":r1:"
             tabindex="0"
             type="button"
           >
@@ -347,7 +346,6 @@ exports[`ChooseAvatar renders with username and generates avatar letters 1`] = `
           />
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
-            id=":r0:"
             tabindex="0"
             type="button"
           >
@@ -434,7 +432,7 @@ exports[`ChooseAvatar shows loading spinner when loading is true 1`] = `
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r2:"
+            id="«r2»"
             tabindex="-1"
             type="button"
           >
@@ -446,7 +444,7 @@ exports[`ChooseAvatar shows loading spinner when loading is true 1`] = `
                 class="MuiButton-loadingIndicator css-14m8o6v-MuiButton-loadingIndicator"
               >
                 <span
-                  aria-labelledby=":r2:"
+                  aria-labelledby="«r2»"
                   class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorInherit css-gxw4l9-MuiCircularProgress-root"
                   role="progressbar"
                   style="width: 16px; height: 16px;"

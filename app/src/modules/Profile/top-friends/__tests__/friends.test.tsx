@@ -7,6 +7,7 @@ import { mockProfileService } from "../../../../__mocks__/@hooks/useProfile";
 jest.mock("@hooks/useProfile");
 jest.mock("react-router-dom", () => ({
 	useNavigate: () => jest.fn(),
+	useParams: () => ({ userId: "1" }),
 }));
 
 describe("Friends", () => {
@@ -22,11 +23,11 @@ describe("Friends", () => {
 		expect(screen.getByTestId("no-data")).toBeInTheDocument();
 	});
 
-	it("calls getFriends on mount", async () => {
+	it("calls getFriendsAndFollowers on mount", async () => {
 		await act(async () => {
 			render(<Friends />);
 		});
-		expect(mockProfileService.getFriends).toHaveBeenCalled();
+		expect(mockProfileService.getFriendsAndFollowers).toHaveBeenCalled();
 	});
 
 	it("renders loading state", async () => {

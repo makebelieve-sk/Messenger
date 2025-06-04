@@ -10,6 +10,12 @@ import useUserStore from "../../../__mocks__/@store/user";
 jest.mock("@core/services/NotificationSettingsService");
 jest.mock("@core/services/PhotosService");
 jest.mock("@core/services/UserDetailsService");
+jest.mock("@utils/constants", () => ({
+	FRIENDS_DEBOUNCE_TIMEOUT: {
+		LOAD_MORE: 100,
+		SEARCH: 300,
+	},
+}));
 
 describe("UserService", () => {
 	let requestMock: Request;
@@ -24,7 +30,9 @@ describe("UserService", () => {
 		setUserMock = store.setUser as jest.Mock;
 		setMyAvatarMock = store.setMyAvatar as jest.Mock;
 
-		requestMock = {} as Request;
+		requestMock = {
+			post: jest.fn(),
+		} as unknown as Request;
 
 		userData = {
 			user: {

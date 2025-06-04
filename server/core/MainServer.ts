@@ -2,6 +2,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Express } from "express";
 import session from "express-session";
+import helmet from "helmet";
 import path from "path";
 
 import corsConfig from "@config/cors.config";
@@ -54,6 +55,12 @@ export default class MainServer {
 		// Инициализируем express-сессию для пользователей с хранилищем в Redis
 		this._session = session(expressSessionConfig(this._redisWork.redisStore));
 
+		this._app.use(helmet({
+			crossOriginResourcePolicy: {
+				// теперь браузер не будет блокировать картинки с "других" origin, например localhost:8008
+				policy: "cross-origin",
+			},
+		})); // Используем helmet, как дополнительный слой защиты приложения
 		this._app.use(cors(corsConfig)); // Инициализируем политику CORS
 		this._app.use(express.json()); // Для парсинга json строки
 		this._app.use(cookieParser()); // Парсим cookie (позволяет получить доступ к куки через req.cookie)

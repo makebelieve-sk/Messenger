@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 
 import PersonalInfo from "@modules/profile/personal-info";
-import { MainFriendTabs, Pages } from "@custom-types/enums";
+import { Pages } from "@custom-types/enums";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
 import useProfile from "../../../__mocks__/@hooks/useProfile";
 import usePhotosStore from "../../../__mocks__/@store/photos";
@@ -99,9 +99,7 @@ describe("PersonalInfo", () => {
 			fireEvent.click(friendsCount);
 		});
     
-		expect(mockNavigate).toHaveBeenCalledWith(Pages.friends, {
-			state: { mainTab: MainFriendTabs.allFriends },
-		});
+		expect(mockNavigate).toHaveBeenCalledWith("/friends/123");
 	});
 
 	it("navigates to photos page when photos count is clicked", async () => {

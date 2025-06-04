@@ -73,19 +73,17 @@ export default class Relations {
 	 * При ассоциации A.hasMany(B) foreignKey находится в целевой модели B
 	 */
 	private _oneToMany() {
-		// Ассоциация одного пользователя и всех его отправленных/принятых запросов дружбы (блокировка/подписывания/отписывание и тд)
+		// Ассоциация одного пользователя и истории всех его отправленных/принятых запросов дружбы (блокировка/подписывания/отписывание и тд)
 		this._repo.users.model.hasMany(this._repo.friendActions.model, {
 			foreignKey: "sourceUserId",
 			onDelete: "CASCADE",
 			as: AliasAssociations.SENT_FRIEND_REQUESTS,
 		});
-		// Пример для as: const action = await FriendAction.findByPk(actionId, { include: ['SourceUser', 'TargetUser'] }); - получаем запросы с юзерами
 		this._repo.friendActions.model.belongsTo(this._repo.users.model, {
 			foreignKey: "sourceUserId",
 			onDelete: "CASCADE",
 			as: AliasAssociations.SOURCE_USER,
 		});
-		// Пример для as: const user = await User.findByPk(userId, { include: ['SentFriendRequests', 'ReceivedFriendRequests'] }); - получаем юзеров с запросами
 		// Если здесь работать не будет, переделать на no action
 		this._repo.users.model.hasMany(this._repo.friendActions.model, {
 			foreignKey: "targetUserId",
@@ -97,30 +95,6 @@ export default class Relations {
 			foreignKey: "targetUserId",
 			onDelete: "CASCADE",
 			as: AliasAssociations.TARGET_USER,
-		});
-
-		// Ассоциация одного пользователя и истории всех его отправленных/принятых запросов дружбы (блокировка/подписывания/отписывание и тд)
-		this._repo.users.model.hasMany(this._repo.friendActionsLog.model, {
-			foreignKey: "sourceUserId",
-			onDelete: "CASCADE",
-			as: AliasAssociations.SENT_FRIEND_REQUESTS_LOG,
-		});
-		this._repo.friendActionsLog.model.belongsTo(this._repo.users.model, {
-			foreignKey: "sourceUserId",
-			onDelete: "CASCADE",
-			as: AliasAssociations.SOURCE_USER_LOG,
-		});
-		// Если здесь работать не будет, переделать на no action
-		this._repo.users.model.hasMany(this._repo.friendActionsLog.model, {
-			foreignKey: "targetUserId",
-			onDelete: "CASCADE",
-			as: AliasAssociations.RECEIVED_FRIEND_REQUESTS_LOG,
-		});
-		// Если здесь работать не будет, переделать на no action
-		this._repo.friendActionsLog.model.belongsTo(this._repo.users.model, {
-			foreignKey: "targetUserId",
-			onDelete: "CASCADE",
-			as: AliasAssociations.TARGET_USER_LOG,
 		});
 
 		// Ассоциация одного пользователя и всех его сообщений во всех чатах

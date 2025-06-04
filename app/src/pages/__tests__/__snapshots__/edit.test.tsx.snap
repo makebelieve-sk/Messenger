@@ -16,7 +16,7 @@ exports[`Edit Component matches snapshot in initial state 1`] = `
         <div
           aria-label="Edit tabs"
           aria-orientation="vertical"
-          class="MuiTabs-flexContainer MuiTabs-flexContainerVertical css-9dkxpx-MuiTabs-flexContainer"
+          class="MuiTabs-list MuiTabs-flexContainer MuiTabs-flexContainerVertical MuiTabs-vertical css-1ondbrm-MuiTabs-list"
           role="tablist"
         >
           <button
@@ -227,8 +227,8 @@ exports[`Edit Component matches snapshot in initial state 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-113d811-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="true"
-              for=":r5:"
-              id=":r5:-label"
+              for="«r5»"
+              id="«r5»-label"
             >
               Birthday
             </label>
@@ -239,7 +239,7 @@ exports[`Edit Component matches snapshot in initial state 1`] = `
                 aria-invalid="false"
                 autocomplete="off"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1dune0f-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r5:"
+                id="«r5»"
                 inputmode="text"
                 placeholder="Enter date"
                 type="text"
@@ -251,7 +251,6 @@ exports[`Edit Component matches snapshot in initial state 1`] = `
                 <button
                   aria-label="Choose date, selected date is 1 янв. 1990 г."
                   class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1ysp02-MuiButtonBase-root-MuiIconButton-root"
-                  id=":r7:"
                   tabindex="0"
                   type="button"
                 >
@@ -323,7 +322,6 @@ exports[`Edit Component matches snapshot in initial state 1`] = `
         </div>
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth edit-container__module__form__loading-button css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
-          id=":r4:"
           tabindex="0"
           type="submit"
         >
@@ -355,7 +353,7 @@ exports[`Edit Component matches snapshot with error state 1`] = `
         <div
           aria-label="Edit tabs"
           aria-orientation="vertical"
-          class="MuiTabs-flexContainer MuiTabs-flexContainerVertical css-9dkxpx-MuiTabs-flexContainer"
+          class="MuiTabs-list MuiTabs-flexContainer MuiTabs-flexContainerVertical MuiTabs-vertical css-1ondbrm-MuiTabs-list"
           role="tablist"
         >
           <button
@@ -566,8 +564,8 @@ exports[`Edit Component matches snapshot with error state 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-113d811-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="true"
-              for=":rr:"
-              id=":rr:-label"
+              for="«rr»"
+              id="«rr»-label"
             >
               Birthday
             </label>
@@ -578,7 +576,7 @@ exports[`Edit Component matches snapshot with error state 1`] = `
                 aria-invalid="false"
                 autocomplete="off"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1dune0f-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":rr:"
+                id="«rr»"
                 inputmode="text"
                 placeholder="Enter date"
                 type="text"
@@ -590,7 +588,6 @@ exports[`Edit Component matches snapshot with error state 1`] = `
                 <button
                   aria-label="Choose date, selected date is 1 янв. 1990 г."
                   class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1ysp02-MuiButtonBase-root-MuiIconButton-root"
-                  id=":rt:"
                   tabindex="0"
                   type="button"
                 >
@@ -662,7 +659,6 @@ exports[`Edit Component matches snapshot with error state 1`] = `
         </div>
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth edit-container__module__form__loading-button css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
-          id=":rv:"
           tabindex="0"
           type="submit"
         >
@@ -694,7 +690,7 @@ exports[`Edit Component matches snapshot with loading state 1`] = `
         <div
           aria-label="Edit tabs"
           aria-orientation="vertical"
-          class="MuiTabs-flexContainer MuiTabs-flexContainerVertical css-9dkxpx-MuiTabs-flexContainer"
+          class="MuiTabs-list MuiTabs-flexContainer MuiTabs-flexContainerVertical MuiTabs-vertical css-1ondbrm-MuiTabs-list"
           role="tablist"
         >
           <button
@@ -907,8 +903,8 @@ exports[`Edit Component matches snapshot with loading state 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-113d811-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="true"
-              for=":rb:"
-              id=":rb:-label"
+              for="«rb»"
+              id="«rb»-label"
             >
               Birthday
             </label>
@@ -919,7 +915,7 @@ exports[`Edit Component matches snapshot with loading state 1`] = `
                 aria-invalid="false"
                 autocomplete="off"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1dune0f-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":rb:"
+                id="«rb»"
                 inputmode="text"
                 placeholder="Enter date"
                 type="text"
@@ -931,7 +927,6 @@ exports[`Edit Component matches snapshot with loading state 1`] = `
                 <button
                   aria-label="Choose date, selected date is 1 янв. 1990 г."
                   class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1ysp02-MuiButtonBase-root-MuiIconButton-root"
-                  id=":rd:"
                   tabindex="0"
                   type="button"
                 >
@@ -1004,7 +999,7 @@ exports[`Edit Component matches snapshot with loading state 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter edit-container__module__form__loading-button css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
           disabled=""
-          id=":rf:"
+          id="«rf»"
           tabindex="-1"
           type="submit"
         >
@@ -1016,7 +1011,7 @@ exports[`Edit Component matches snapshot with loading state 1`] = `
               class="MuiButton-loadingIndicator css-14m8o6v-MuiButton-loadingIndicator"
             >
               <span
-                aria-labelledby=":rf:"
+                aria-labelledby="«rf»"
                 class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorInherit css-gxw4l9-MuiCircularProgress-root"
                 role="progressbar"
                 style="width: 16px; height: 16px;"
@@ -1061,7 +1056,7 @@ exports[`Edit Component matches snapshot with success alert 1`] = `
         <div
           aria-label="Edit tabs"
           aria-orientation="vertical"
-          class="MuiTabs-flexContainer MuiTabs-flexContainerVertical css-9dkxpx-MuiTabs-flexContainer"
+          class="MuiTabs-list MuiTabs-flexContainer MuiTabs-flexContainerVertical MuiTabs-vertical css-1ondbrm-MuiTabs-list"
           role="tablist"
         >
           <button
@@ -1272,8 +1267,8 @@ exports[`Edit Component matches snapshot with success alert 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-113d811-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="true"
-              for=":rj:"
-              id=":rj:-label"
+              for="«rj»"
+              id="«rj»-label"
             >
               Birthday
             </label>
@@ -1284,7 +1279,7 @@ exports[`Edit Component matches snapshot with success alert 1`] = `
                 aria-invalid="false"
                 autocomplete="off"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1dune0f-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":rj:"
+                id="«rj»"
                 inputmode="text"
                 placeholder="Enter date"
                 type="text"
@@ -1296,7 +1291,6 @@ exports[`Edit Component matches snapshot with success alert 1`] = `
                 <button
                   aria-label="Choose date, selected date is 1 янв. 1990 г."
                   class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1ysp02-MuiButtonBase-root-MuiIconButton-root"
-                  id=":rl:"
                   tabindex="0"
                   type="button"
                 >
@@ -1368,7 +1362,6 @@ exports[`Edit Component matches snapshot with success alert 1`] = `
         </div>
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth edit-container__module__form__loading-button css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
-          id=":rn:"
           tabindex="0"
           type="submit"
         >

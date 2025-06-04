@@ -469,7 +469,6 @@ exports[`SignUp Page Snapshot tests matches snapshot in initial state 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
           disabled=""
-          id=":r5:"
           tabindex="-1"
           type="button"
         >
@@ -478,7 +477,7 @@ exports[`SignUp Page Snapshot tests matches snapshot in initial state 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
           disabled=""
-          id=":r6:"
+          id="«r6»"
           tabindex="-1"
           type="button"
         >
@@ -977,7 +976,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with email exists error 1`]
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
               disabled=""
-              id=":r18:"
               tabindex="-1"
               type="button"
             >
@@ -986,7 +984,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with email exists error 1`]
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
               disabled=""
-              id=":r19:"
+              id="«r19»"
               tabindex="-1"
               type="button"
             >
@@ -1480,7 +1478,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with email exists error 1`]
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r18:"
             tabindex="-1"
             type="button"
           >
@@ -1489,7 +1486,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with email exists error 1`]
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r19:"
+            id="«r19»"
             tabindex="-1"
             type="button"
           >
@@ -2037,7 +2034,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with error state 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
           disabled=""
-          id=":rj:"
           tabindex="-1"
           type="button"
         >
@@ -2046,7 +2042,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with error state 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
           disabled=""
-          id=":rk:"
+          id="«rk»"
           tabindex="-1"
           type="button"
         >
@@ -2566,7 +2562,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with form validation errors
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
               disabled=""
-              id=":rq:"
               tabindex="-1"
               type="button"
             >
@@ -2575,7 +2570,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with form validation errors
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
               disabled=""
-              id=":rr:"
+              id="«rr»"
               tabindex="-1"
               type="button"
             >
@@ -3090,7 +3085,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with form validation errors
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":rq:"
             tabindex="-1"
             type="button"
           >
@@ -3099,7 +3093,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with form validation errors
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":rr:"
+            id="«rr»"
             tabindex="-1"
             type="button"
           >
@@ -3647,7 +3641,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with loading state 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
           disabled=""
-          id=":rc:"
           tabindex="-1"
           type="button"
         >
@@ -3656,7 +3649,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with loading state 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
           disabled=""
-          id=":rd:"
+          id="«rd»"
           tabindex="-1"
           type="button"
         >
@@ -4157,7 +4150,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with network error state 1`
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
               disabled=""
-              id=":r11:"
               tabindex="-1"
               type="button"
             >
@@ -4166,7 +4158,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with network error state 1`
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
               disabled=""
-              id=":r12:"
+              id="«r12»"
               tabindex="-1"
               type="button"
             >
@@ -4662,7 +4654,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with network error state 1`
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r11:"
             tabindex="-1"
             type="button"
           >
@@ -4671,7 +4662,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with network error state 1`
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r12:"
+            id="«r12»"
             tabindex="-1"
             type="button"
           >
@@ -5224,7 +5215,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with successful sign up sta
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
               disabled=""
-              id=":r1f:"
               tabindex="-1"
               type="button"
             >
@@ -5233,7 +5223,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with successful sign up sta
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
               disabled=""
-              id=":r1g:"
+              id="«r1g»"
               tabindex="-1"
               type="button"
             >
@@ -5729,7 +5719,6 @@ exports[`SignUp Page Snapshot tests matches snapshot with successful sign up sta
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-uf9a8-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r1f:"
             tabindex="-1"
             type="button"
           >
@@ -5738,7 +5727,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with successful sign up sta
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id=":r1g:"
+            id="«r1g»"
             tabindex="-1"
             type="button"
           >

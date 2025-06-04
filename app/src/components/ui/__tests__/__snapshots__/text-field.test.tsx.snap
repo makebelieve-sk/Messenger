@@ -12,7 +12,7 @@ exports[`Text-field matches snapshot 1`] = `
       <input
         aria-invalid="false"
         class="MuiInputBase-input MuiOutlinedInput-input css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input"
-        id=":r2:"
+        id="«r2»"
         type="text"
       />
       <fieldset

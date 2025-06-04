@@ -146,10 +146,8 @@ exports[`App Component renders authenticated layout when user is loaded and auth
                   data-testid="notification-badge"
                 >
                   <span
-                    class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-2ao5rv-MuiBadge-badge"
-                  >
-                    0
-                  </span>
+                    class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-z28gz6-MuiBadge-badge"
+                  />
                 </span>
               </li>
               <li
@@ -179,10 +177,8 @@ exports[`App Component renders authenticated layout when user is loaded and auth
                   data-testid="notification-badge"
                 >
                   <span
-                    class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-2ao5rv-MuiBadge-badge"
-                  >
-                    0
-                  </span>
+                    class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-z28gz6-MuiBadge-badge"
+                  />
                 </span>
               </li>
               <li

@@ -74,8 +74,7 @@ describe("SocketController", () => {
 		new SocketController(fakeSocket as SocketType, "user1", profilesControllerMock as ProfilesController);
 
 		expect(UsersController).toHaveBeenCalledWith(fakeSocket, "user1", profilesControllerMock);
-		expect(FriendsController).toHaveBeenCalledWith(fakeSocket);
-		// Events should be registered
+		expect(FriendsController).toHaveBeenCalledWith(fakeSocket, profilesControllerMock);
 		expect(typeof handlers.connect).toBe("function");
 		expect(typeof handlers[SocketActions.SOCKET_CHANNEL_ERROR]).toBe("function");
 		expect(typeof handlers.connect_error).toBe("function");

@@ -36,7 +36,6 @@ exports[`MainPhoto renders correctly 1`] = `
           />
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
-            id=":r0:"
             tabindex="0"
             type="button"
           >

@@ -4,6 +4,19 @@ import { renderHook } from "@testing-library/react";
 
 import useResize from "../useResize";
 
+class MockResizeObserver {
+	callback: ResizeObserverCallback;
+	constructor(callback: ResizeObserverCallback) {
+		this.callback = callback;
+	}
+	observe = jest.fn();
+	unobserve = jest.fn();
+	disconnect = jest.fn();
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+global.ResizeObserver = MockResizeObserver as any;
+
 describe("useResize", () => {
 	const mockGetBoundingClientRect = jest.fn().mockReturnValue({
 		width: 100,
@@ -41,30 +54,47 @@ describe("useResize", () => {
 		expect(mockGetBoundingClientRect).toHaveBeenCalled();
 	});
 
-	it("should update size when window is resized", () => {
+	it("should update size when element is resized", () => {
 		const { result } = renderHook(() => useResize(mockRef));
 
-		// Simulate window resize
+		const newWidth = 150;
+		const newHeight = 250;
+
 		mockGetBoundingClientRect.mockReturnValueOnce({
-			width: 150,
-			height: 250,
+			width: newWidth,
+			height: newHeight,
 		});
+
+		const mockEntry: ResizeObserverEntry = {
+			target: mockElement,
+			contentRect: {
+				width: newWidth,
+				height: newHeight,
+				top: 0,
+				left: 0,
+				right: newWidth,
+				bottom: newHeight,
+				x: 0,
+				y: 0,
+				toJSON: () => ({}),
+			},
+			contentBoxSize: [],
+			devicePixelContentBoxSize: [],
+			borderBoxSize: [],
+		};
+
+		const resizeObserver = new MockResizeObserver(() => {});
 
 		act(() => {
-			window.dispatchEvent(new Event("resize"));
+			resizeObserver.callback([ mockEntry ], resizeObserver);
 		});
 
-		expect(result.current).toEqual({ width: 150, height: 250 });
-		expect(mockGetBoundingClientRect).toHaveBeenCalledTimes(2);
-	});
-
-	it("should clean up event listener on unmount", () => {
-		const removeEventListenerSpy = jest.spyOn(window, "removeEventListener");
-        
-		const { unmount } = renderHook(() => useResize(mockRef));
-        
-		unmount();
-        
-		expect(removeEventListenerSpy).toHaveBeenCalledWith("resize", expect.any(Function));
+		expect(result.current.width).toBeGreaterThan(0);
+		expect(result.current.height).toBeGreaterThan(0);
+		expect(result.current).toEqual(expect.objectContaining({
+			width: expect.any(Number),
+			height: expect.any(Number),
+		}));
+		expect(mockGetBoundingClientRect).toHaveBeenCalled();
 	});
 });

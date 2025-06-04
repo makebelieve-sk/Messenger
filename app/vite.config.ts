@@ -47,7 +47,7 @@ export default defineConfig(({ mode }) => {
                         // Вынесем React и ReactDOM
                         react: ["react", "react-dom", "react-dom/client"],
                         // Вынесем MUI и Emotion
-                        mui: ["@mui/material", "@emotion/react", "@emotion/styled", "@mui/icons-material", "@mui/lab"],
+                        mui: ["@mui/material", "@emotion/react", "@emotion/styled", "@mui/icons-material"],
                         // Вынесем Zustand
                         zustand: ["zustand"],
                         // Вынесем WebSocket клиент
@@ -58,8 +58,6 @@ export default defineConfig(({ mode }) => {
                         router: ["react-router-dom"],
                         // Вынесем Axios
                         axios: ["axios"],
-                        // Вынесем Zod
-                        zod: ["zod"]
                     }   // Разбиваем большой чанк на более мелкие по размерности (с помощью плагина visualizer)
                 }
             },                  // Опции для разбиения основного чанка на более мелкие чанки
@@ -80,6 +78,8 @@ export default defineConfig(({ mode }) => {
             } : undefined,
         },
         resolve: {
+            // Чтобы Vite не «разрезолвивал» симлинки по пути и отслеживал реальные файлы пакета
+            preserveSymlinks: true,
             alias: {
                 "@components": path.resolve(__dirname, "src/components"),  // Короткий путь для папки component
                 "@core": path.resolve(__dirname, "src/core"),              // Короткий путь для папки core
@@ -106,7 +106,7 @@ export default defineConfig(({ mode }) => {
         },
         // Отдаем на перекодирование commonjs модуль в ESM модуль
         optimizeDeps: {
-            include: ["common-types"]
+            include: ["common-types", "validation"]
         },
     }
 });

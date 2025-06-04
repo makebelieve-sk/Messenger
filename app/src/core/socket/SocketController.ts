@@ -23,7 +23,7 @@ export default class SocketController {
 		this._socketManagerListeners();
 
 		new UsersController(this._socket, this._myId, this._profilesController);
-		new FriendsController(this._socket);
+		new FriendsController(this._socket, this._profilesController);
 	}
 
 	private _init() {

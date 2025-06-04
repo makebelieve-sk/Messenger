@@ -2,16 +2,16 @@ import type { Express } from "express";
 import type { PassportStatic } from "passport";
 
 import AuthController from "@core/api/controllers/Auth";
+// import FilesController from "@core/api/controllers/Files";
+import FriendsController from "@core/api/controllers/Friends";
 import ImagesController from "@core/api/controllers/Images";
 import MainController from "@core/api/controllers/Main";
-// import FilesController from "@core/api/controllers/Files";
-// import FriendsController from "@core/api/controllers/Friends";
 // import MessagesController from "@core/api/controllers/Messages";
 import UserController from "@core/api/controllers/User";
 import Middleware from "@core/api/Middleware";
-import UsersController from "@core/controllers/UsersController";
-import Database from "@core/database/Database";
-import RedisWorks from "@core/Redis";
+import type UsersController from "@core/controllers/UsersController";
+import type Database from "@core/database/Database";
+import type RedisWorks from "@core/Redis";
 import Logger from "@service/logger";
 
 const logger = Logger("ApiServer");
@@ -44,7 +44,7 @@ export default class ApiServer {
 		new MainController(this._app, this._middleware, this._database);
 		new ImagesController(this._app, this._middleware, this._database);
 		// new FilesController(this._app, this._middleware, this._database);
-		// new FriendsController(this._app, this._middleware, this._database, this._users);
+		new FriendsController(this._app, this._middleware, this._database, this._users);
 		// new MessagesController(this._app, this._middleware, this._database);
 		new UserController(this._app, this._middleware, this._database);
 
