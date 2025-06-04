@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PossibleFriends Component should match snapshot 1`] = `
+<div>
+  <div
+    class="block-title"
+  >
+    friends-module.possible_friends
+  </div>
+  <div
+    class="possible-container__block"
+    data-testid="possible-friends-container"
+  >
+    <ul
+      class="MuiList-root MuiList-padding possible-container__list css-b7dj7n-MuiList-root"
+    >
+      <li
+        class="MuiListItem-root MuiListItem-gutters possible-container__item css-19f6boz-MuiListItem-root"
+      >
+        <div
+          class="MuiListItemAvatar-root possible-container__item-avatar css-1ulznza-MuiListItemAvatar-root"
+        >
+          <span
+            class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+          >
+            <div
+              class="MuiAvatar-root MuiAvatar-circular avatar user-avatar big-avatar css-fmeqll-MuiAvatar-root"
+              id="user-avatar"
+            >
+              <img
+                alt="John Doe"
+                class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                src="avatar1.jpg"
+              />
+            </div>
+            <span
+              class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+            />
+          </span>
+        </div>
+        <div
+          class="MuiListItemText-root MuiListItemText-multiline possible-container__item-block css-14ln1j6-MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-rizt0-MuiTypography-root"
+          >
+            John Doe
+          </span>
+          <p
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary css-1a1whku-MuiTypography-root"
+          >
+            <span
+              class="possible-container__action"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium possible-container__action-icon css-1umw9bq-MuiSvgIcon-root"
+                data-testid="AddIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
+                />
+              </svg>
+              <span
+                class="possible-container__action-text"
+              >
+                friends-module.add_to_friends
+              </span>
+            </span>
+          </p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+`;

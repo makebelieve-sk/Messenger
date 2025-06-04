@@ -11,7 +11,7 @@ import { getFriendEntity } from "@utils/friends";
 type GetAllGeneric = { blockedFriends: IUser[]; count: number; hasMore: boolean; };
 
 // Сервис для управления заблокированными пользователями
-export default class BlockedUsersService extends BaseFriendsService implements BaseFriends {
+export default class BlockedFriendsService extends BaseFriendsService implements BaseFriends {
 	constructor(protected readonly _request: Request) {
 		super(_request);
 	}

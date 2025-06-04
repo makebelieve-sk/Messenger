@@ -4,6 +4,7 @@ import PersonalInfo from "@modules/profile/personal-info";
 import { Pages } from "@custom-types/enums";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
 import useProfile from "../../../__mocks__/@hooks/useProfile";
+import useFriendsStore from "../../../__mocks__/@store/friends";
 import usePhotosStore from "../../../__mocks__/@store/photos";
 import useUserStore from "../../../__mocks__/@store/user";
 
@@ -37,6 +38,8 @@ describe("PersonalInfo", () => {
 		} as IUserDetails;
 		usePhotosStore.getState().isPhotosLoading = false;
 		usePhotosStore.getState().count = 0;
+		useFriendsStore.getState().countMyFriends = 0;
+		useFriendsStore.getState().countFollowers = 0;
 		(useProfile as jest.Mock).mockReturnValue(mockProfile);
 		jest.spyOn(require("react-router-dom"), "useNavigate").mockReturnValue(mockNavigate);
 	});
@@ -92,8 +95,9 @@ describe("PersonalInfo", () => {
 	});
 
 	it("navigates to friends page when friends count is clicked", async () => {
+		useFriendsStore.getState().countMyFriends = 5;
 		render(<PersonalInfo />);
-		const friendsCount = screen.getAllByText("0")[0];
+		const friendsCount = screen.getByText("5");
     
 		await act(async () => {
 			fireEvent.click(friendsCount);
@@ -120,13 +124,19 @@ describe("PersonalInfo", () => {
 
 	it("displays correct counts for all sections", () => {
 		usePhotosStore.getState().count = 5;
+		useFriendsStore.getState().countMyFriends = 3;
+		useFriendsStore.getState().countFollowers = 2;
 		render(<PersonalInfo />);
     
 		const counts = screen.getAllByText("0");
-		expect(counts).toHaveLength(4); // Friends, Subscribers, Audios, Videos
+		expect(counts).toHaveLength(2); // Only audios and videos should be 0
     
 		const photoCount = screen.getByText("5");
+		const friendsCount = screen.getByText("3");
+		const followersCount = screen.getByText("2");
 		expect(photoCount).toBeInTheDocument();
+		expect(friendsCount).toBeInTheDocument();
+		expect(followersCount).toBeInTheDocument();
 	});
 
 	it("handles empty user details gracefully", () => {

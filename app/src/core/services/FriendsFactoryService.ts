@@ -1,6 +1,6 @@
 import { type FriendsFactory } from "@core/models/FriendsFactory";
 import type Request from "@core/Request";
-import BlockedUsersService from "@core/services/friends/BlockedUsersService";
+import BlockedFriendsService from "@core/services/friends/BlockedFriendsService";
 import CommonFriendsService from "@core/services/friends/CommonFriendsService";
 import FollowersService from "@core/services/friends/FollowersService";
 import IncomingRequestsService from "@core/services/friends/IncomingService";
@@ -38,7 +38,7 @@ export default class FriendsFactoryService implements FriendsFactory {
 	}
 
 	createBlockedUsersManager() {
-		return new BlockedUsersService(this._request);
+		return new BlockedFriendsService(this._request);
 	}
 
 	createCommonFriendsManager() {

@@ -1,4 +1,5 @@
 import useAuthStore from "../auth";
+import useFriendsStore from "../friends";
 import useGlobalStore from "../global";
 import useImagesCarouselStore from "../images-carousel";
 import resetAllStores from "../index";
@@ -10,7 +11,6 @@ import useUserStore from "../user";
 describe("resetAllStores", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		// Mock reset functions for each store
 		useUserStore.getState().reset = jest.fn();
 		useGlobalStore.getState().reset = jest.fn();
 		useUIStore.getState().reset = jest.fn();
@@ -18,6 +18,7 @@ describe("resetAllStores", () => {
 		useAuthStore.getState().reset = jest.fn();
 		useProfileStore.getState().reset = jest.fn();
 		usePhotosStore.getState().reset = jest.fn();
+		useFriendsStore.getState().reset = jest.fn();
 	});
 
 	test("calls reset on each store", () => {
@@ -30,5 +31,6 @@ describe("resetAllStores", () => {
 		expect(useAuthStore.getState().reset).not.toHaveBeenCalled();
 		expect(useProfileStore.getState().reset).not.toHaveBeenCalled();
 		expect(usePhotosStore.getState().reset).not.toHaveBeenCalled();
+		expect(useFriendsStore.getState().reset).not.toHaveBeenCalled();
 	});
 });

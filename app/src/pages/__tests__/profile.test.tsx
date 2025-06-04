@@ -1,6 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 
 import Profile from "@pages/Profile";
+import mockFriendsStore from "../../__mocks__/@store/friends";
 import mockProfileStore from "../../__mocks__/@store/profile";
 import mockUserStore from "../../__mocks__/@store/user";
 
@@ -42,6 +43,9 @@ describe("Profile Component", () => {
 		const profileStore = mockProfileStore.getState();
 		profileStore.isPrepareAnotherUser = false;
 		profileStore.isMe = true;
+
+		const friendsStore = mockFriendsStore.getState();
+		friendsStore.onlineFriends = [];
 	});
 
 	it("matches snapshot in initial state", async () => {

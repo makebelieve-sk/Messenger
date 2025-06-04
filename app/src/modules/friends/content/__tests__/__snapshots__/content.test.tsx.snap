@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Content Component renders correctly with other user's profile 1`] = `
+<div>
+  <div
+    class="content"
+  >
+    <div
+      class="MuiTabs-root css-jhczcq-MuiTabs-root"
+    >
+      <div
+        class="MuiTabs-scroller MuiTabs-fixed css-s2t35c-MuiTabs-scroller"
+        style="overflow: hidden; margin-bottom: 0px;"
+      >
+        <div
+          aria-label="content-tabs"
+          class="MuiTabs-list MuiTabs-flexContainer css-hzcega-MuiTabs-list"
+          role="tablist"
+        >
+          <button
+            aria-controls="my-friends"
+            aria-selected="true"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+            id="my-friends"
+            role="tab"
+            tabindex="0"
+            type="button"
+          >
+            friends-module.all_friends 10
+          </button>
+          <button
+            aria-controls="online-friends"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+            id="online-friends"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            friends-module.online_friends 5
+          </button>
+          <button
+            aria-controls="followers"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+            id="followers"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            friends-module.followers 3
+          </button>
+          <button
+            aria-controls="common"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+            id="common"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            friends-module.common_friends 4
+          </button>
+        </div>
+        <span
+          class="MuiTabs-indicator css-1qltlow-MuiTabs-indicator"
+          style="left: 0px; width: 0px;"
+        />
+      </div>
+    </div>
+    <div
+      data-testid="friends-list"
+    >
+      Friends List
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Content Component renders correctly with own profile 1`] = `
+<div>
+  <div
+    class="content"
+  >
+    <div
+      class="MuiTabs-root css-jhczcq-MuiTabs-root"
+    >
+      <div
+        class="MuiTabs-scroller MuiTabs-fixed css-s2t35c-MuiTabs-scroller"
+        style="overflow: hidden; margin-bottom: 0px;"
+      >
+        <div
+          aria-label="content-tabs"
+          class="MuiTabs-list MuiTabs-flexContainer css-hzcega-MuiTabs-list"
+          role="tablist"
+        >
+          <button
+            aria-controls="my-friends"
+            aria-selected="true"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+            id="my-friends"
+            role="tab"
+            tabindex="0"
+            type="button"
+          >
+            friends-module.my_friends 10
+          </button>
+          <button
+            aria-controls="online-friends"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+            id="online-friends"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            friends-module.online_friends 5
+          </button>
+          <button
+            aria-controls="followers"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+            id="followers"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            friends-module.followers 3
+          </button>
+          <button
+            aria-controls="blocked"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+            id="blocked"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            friends-module.blocked 2
+          </button>
+        </div>
+        <span
+          class="MuiTabs-indicator css-1qltlow-MuiTabs-indicator"
+          style="left: 0px; width: 0px;"
+        />
+      </div>
+    </div>
+    <div
+      data-testid="friends-list"
+    >
+      Friends List
+    </div>
+  </div>
+</div>
+`;

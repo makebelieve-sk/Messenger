@@ -49,9 +49,51 @@ describe("Utils Helpers", () => {
 			expect(result).toBe("John Doe");
 		});
 
-		test("returns empty string for undefined user", () => {
+		test("returns empty string for empty user", () => {
 			const result = getFullName({ firstName: "", thirdName: "" } as IUser);
 			expect(result).toBe(" ");
+		});
+
+		test("returns empty string for null user", () => {
+			const result = getFullName(null as unknown as IUser);
+			expect(result).toBe("");
+		});
+
+		test("returns empty string for undefined user", () => {
+			const result = getFullName(undefined as unknown as IUser);
+			expect(result).toBe("");
+		});
+
+		test("handles user with only firstName", () => {
+			const user: IUser = {
+				id: "1",
+				firstName: "John",
+				secondName: "",
+				thirdName: "",
+				email: "john@example.com",
+				phone: "1234567890",
+				fullName: "John",
+				avatarUrl: "",
+				avatarCreateDate: "",
+			};
+			const result = getFullName(user);
+			expect(result).toBe("John ");
+		});
+
+		test("handles user with only thirdName", () => {
+			const user: IUser = {
+				id: "1",
+				firstName: "",
+				secondName: "",
+				thirdName: "Doe",
+				email: "john@example.com",
+				phone: "1234567890",
+				fullName: "Doe",
+				avatarUrl: "",
+				avatarCreateDate: "",
+			};
+			const result = getFullName(user);
+			expect(result).toBe(" Doe");
 		});
 	});
 

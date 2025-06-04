@@ -1,6 +1,6 @@
 import { FriendsTab } from "common-types";
 
-import type BlockedUsersService from "@core/services/friends/BlockedUsersService";
+import type BlockedFriendsService from "@core/services/friends/BlockedFriendsService";
 import type CommonFriendsService from "@core/services/friends/CommonFriendsService";
 import type FollowersService from "@core/services/friends/FollowersService";
 import type IncomingRequestsService from "@core/services/friends/IncomingService";
@@ -20,7 +20,7 @@ export default class FriendsController {
         private readonly _outgoingRequests: OutgoingRequestsService,
         private readonly _incomingRequests: IncomingRequestsService,
         private readonly _searchFriends: SearchService,
-        private readonly _blockedUsers: BlockedUsersService,
+        private readonly _blockedUsers: BlockedFriendsService,
 		private readonly _commonFriends: CommonFriendsService,
 	) {}
 

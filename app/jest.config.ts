@@ -38,7 +38,7 @@ const config: Config = {
     collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts"], // собираем покрытие только для исходных файлов
 
     // Игнорируем папки и файлы, которые не должны попадать в coverage
-    coveragePathIgnorePatterns: ["/node_modules/", "/dist/", "/src/index.tsx", "/*.stories.tsx", "/utils/constants.ts"],
+    coveragePathIgnorePatterns: ["/node_modules/", "/dist/", "/src/index.tsx", "/*.stories.tsx", "/utils/constants.ts", "/types/*.ts"],
 
     // Добавляем игнорирование файлов
     testPathIgnorePatterns: ["/node_modules/", "/dist/"],

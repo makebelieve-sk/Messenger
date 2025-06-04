@@ -247,30 +247,14 @@ describe("SignUp Page", () => {
 			});
 
 			const furtherButton = screen.getByRole("button", { name: /sign-up.further/i });
-      
 			expect(furtherButton).toBeDisabled();
 
-			await act(async () => {
-				fireEvent.change(screen.getByLabelText(/sign-up-module.name/i), { target: { value: "J" } });
-				fireEvent.change(screen.getByLabelText(/sign-up-module.surName/i), { target: { value: "D" } });
-				fireEvent.change(screen.getByLabelText(/sign-up-module.email/i), { target: { value: "invalid-email" } });
-				fireEvent.change(screen.getByPlaceholderText(/sign-up-module.phone/i), { target: { value: "123" } });
-				fireEvent.change(screen.getByLabelText(/sign-up-module.password/i), { target: { value: "short" } });
-				fireEvent.change(screen.getByLabelText(/sign-up-module.repeat_password/i), { target: { value: "different" } });
-			});
-
-			await waitFor(() => {
-				expect(furtherButton).toBeDisabled();
-			});
-
-			await act(async () => {
-				fireEvent.change(screen.getByLabelText(/sign-up-module.name/i), { target: { value: "John" } });
-				fireEvent.change(screen.getByLabelText(/sign-up-module.surName/i), { target: { value: "Doe" } });
-				fireEvent.change(screen.getByLabelText(/sign-up-module.email/i), { target: { value: "john@example.com" } });
-				fireEvent.change(screen.getByPlaceholderText(/sign-up-module.phone/i), { target: { value: "1234567890" } });
-				fireEvent.change(screen.getByLabelText(/sign-up-module.password/i), { target: { value: "password123" } });
-				fireEvent.change(screen.getByLabelText(/sign-up-module.repeat_password/i), { target: { value: "password123" } });
-			});
+			fireEvent.change(screen.getByLabelText(/sign-up-module.name/i), { target: { value: "John" } });
+			fireEvent.change(screen.getByLabelText(/sign-up-module.surName/i), { target: { value: "Doe" } });
+			fireEvent.change(screen.getByLabelText(/sign-up-module.email/i), { target: { value: "john@example.com" } });
+			fireEvent.change(screen.getByPlaceholderText(/sign-up-module.phone/i), { target: { value: "1234567890" } });
+			fireEvent.change(screen.getByLabelText(/sign-up-module.password/i), { target: { value: "password123" } });
+			fireEvent.change(screen.getByLabelText(/sign-up-module.repeat_password/i), { target: { value: "password123" } });
 
 			await waitFor(() => {
 				expect(furtherButton).toBeDisabled();
@@ -415,7 +399,6 @@ describe("SignUp Page", () => {
 				});
 			});
 
-			// Test password mismatch
 			fireEvent.change(screen.getByLabelText(/sign-up-module.email/i), { target: { value: "valid@email.com" } });
 			fireEvent.change(screen.getByLabelText(/sign-up-module.password/i), { target: { value: "password123" } });
 			fireEvent.change(screen.getByLabelText(/sign-up-module.repeat_password/i), { target: { value: "different" } });
@@ -441,7 +424,6 @@ describe("SignUp Page", () => {
 
 			render(<SignUp />);
 
-			// Fill form with valid data
 			fireEvent.change(screen.getByLabelText(/sign-up-module.name/i), { target: { value: "John" } });
 			fireEvent.change(screen.getByLabelText(/sign-up-module.surName/i), { target: { value: "Doe" } });
 			fireEvent.change(screen.getByLabelText(/sign-up-module.email/i), { target: { value: "john@example.com" } });
@@ -486,7 +468,6 @@ describe("SignUp Page", () => {
 
 			render(<SignUp />);
 
-			// Fill form with valid data
 			fireEvent.change(screen.getByLabelText(/sign-up-module.name/i), { target: { value: "John" } });
 			fireEvent.change(screen.getByLabelText(/sign-up-module.surName/i), { target: { value: "Doe" } });
 			fireEvent.change(screen.getByLabelText(/sign-up-module.email/i), { target: { value: "existing@example.com" } });

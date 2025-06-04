@@ -47,7 +47,9 @@ describe("Friends", () => {
 			const { container } = render(<Friends />);
 			expect(container).toMatchSnapshot();
 		});
-		expect(screen.getByText("0")).toBeInTheDocument();
+		const counter = screen.getByText("Friends").closest(".block-title")?.querySelector(".counter");
+		expect(counter).toHaveClass("counter");
+		expect(counter).toHaveTextContent("0");
 	});
 
 	it("renders friends title", async () => {

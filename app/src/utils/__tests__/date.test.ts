@@ -46,6 +46,26 @@ describe("date utils", () => {
 			expect(result).toMatch(/^.+ utils\.months\..+$/);
 			expect(result).not.toMatch(/\d{4}$/);
 		});
+
+		it("returns date with year if more than 6 months old", () => {
+			const date = dayjs().subtract(7, "month").toISOString();
+			const result = transformDate(date);
+			expect(result).toMatch(/^.+ utils\.months\..+$/);
+			expect(result).toBe("4 utils.months.november");
+		});
+
+		it("returns date with year if getYear is true regardless of date", () => {
+			const date = dayjs().subtract(1, "month").toISOString();
+			const result = transformDate(date, true);
+			expect(result).toMatch(/\d{4}$/);
+		});
+
+		it("returns date without year if exactly 6 months old", () => {
+			const date = dayjs().subtract(6, "month").toISOString();
+			const result = transformDate(date);
+			expect(result).toMatch(/^.+ utils\.months\..+$/);
+			expect(result).not.toMatch(/\d{4}$/);
+		});
 	});
 
 	describe("getTime", () => {
@@ -75,6 +95,16 @@ describe("date utils", () => {
 		it("returns only time if today", () => {
 			const date = "2025-06-01T08:00:00Z";
 			expect(getTime(date)).toBe("13:00");
+		});
+
+		it("returns yesterday time without 'yesterday' text when withoutYesterday is true", () => {
+			const date = "2025-05-31T08:15:00Z";
+			expect(getTime(date, { withoutYesterday: true })).toBe("13:15");
+		});
+
+		it("returns yesterday time with 'yesterday' text when withoutYesterday is false", () => {
+			const date = "2025-05-31T08:15:00Z";
+			expect(getTime(date, { withoutYesterday: false })).toBe("utils.yesterday13:15");
 		});
 
 		it("returns empty if nothing matches", () => {

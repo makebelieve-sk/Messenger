@@ -47,7 +47,7 @@ export default memo(function PossibleFriends({ virtualRef }: IPossibleFriends) {
 	return <>
 		<div className="block-title" onClick={onChangeMainTab}>{i18next.t("friends-module.possible_friends")}</div>
 
-		<div className="possible-container__block">
+		<div className="possible-container__block" data-testid="possible-friends-container">
 			{isLoading && (!possibleFriends || !possibleFriends.length)
 				? <div className="possible-container__loading">
 					<SpinnerComponent />

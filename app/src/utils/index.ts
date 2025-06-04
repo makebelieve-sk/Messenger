@@ -15,7 +15,7 @@ export const muchSelected = (number: number, txt: string[]) => {
 
 // Получить полное имя пользователя (Имя + Фамилия)
 export const getFullName = (user: IUser) => {
-	logger.debug(`getFullName [firstName=${user.firstName}, thirdName=${user.thirdName}]`);
+	logger.debug(`getFullName [firstName=${user?.firstName}, thirdName=${user?.thirdName}]`);
 	return user ? user.firstName + " " + user.thirdName : "";
 };
 
