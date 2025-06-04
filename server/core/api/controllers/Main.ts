@@ -1,16 +1,18 @@
 import { ApiRoutes, HTTPStatuses } from "common-types";
 import type { Express, NextFunction, Request, Response } from "express";
+import fs from "fs/promises";
+import path from "path";
 
 import swaggerConfig from "@config/swagger/swaggerConfig";
 import AuthController from "@core/api/controllers/Auth";
 import type Middleware from "@core/api/Middleware";
-import swaggerWork from "@core/api/swagger/Swagger";
-import { generateMermaidDiagram } from "@core/api/swagger/SwaggerDiagramGenerator";
+import type swaggerWork from "@core/api/swagger/Swagger";
 import type Database from "@core/database/Database";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { MainError } from "@errors/controllers";
 import { COOKIE_NAME } from "@utils/constants";
+
 
 const logger = Logger("MainController");
 
@@ -31,7 +33,10 @@ export default class MainController {
 		this._app.get(ApiRoutes.checkHealth, this._checkHealth);
 
 
-		this._app.get("/api-docs/diagram", (_, res) => {
+		this._app.get("/api-docs/diagram", this._middleware.mustAuthenticated.bind(this._middleware), async (_, res) => {
+			const filePath = path.join(process.cwd(), "public", "diagram.html");
+			let html = await fs.readFile(filePath, "utf-8");
+
 			const endpoints = Object.entries(swaggerConfig.paths)
 				.map(([ path, methods ]) => {
 					const ops = Object.keys(methods).map(
@@ -40,55 +45,30 @@ export default class MainController {
 					return ops;
 				}).join("\n");
 
-			const html = `
-  <!DOCTYPE html>
-  <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Все эндпоинты</title>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script>
-      mermaid.initialize({ startOnLoad: false });
-
-      async function renderDiagram(method, path) {
-        const response = await fetch(\`/api-docs/diagram-api?path=\${encodeURIComponent(path)}&method=\${method}\`);
-        const { diagram } = await response.json();
-        document.getElementById("diagram").innerHTML = diagram;
-        mermaid.init(undefined, "#diagram");
-      }
-    </script>
-    <style>
-      body { font-family: sans-serif; padding: 2em; }
-      ul { list-style: none; padding: 0; }
-      li { margin-bottom: 0.5em; }
-    </style>
-  </head>
-  <body>
-    <h1>Список всех endpoint’ов</h1>
-    <ul>
-      ${endpoints}
-    </ul>
-    <div id="diagram" class="mermaid"></div>
-  </body>
-  </html>
-  `;
-
+			html = html.replace("{{endpoints}}", endpoints);
+	
 			res.send(html);
 		});
 
 
-		this._app.get("/api-docs/diagram-api", (req, res) => {
-			const { path, method } = req.query;
+		this._app.get("/api-docs/diagram-api", this._middleware.mustAuthenticated.bind(this._middleware), (req, res, next) => {
+			try {
+				const { path, method } = req.query;
 
-			if (typeof path === "string" && method && typeof method === "string") {
-				const diagram = generateMermaidDiagram(path, method.toLowerCase());
+				if (typeof path !== "string" || typeof method !== "string") {
+					throw new MainError(
+						t("mermaid.error.invalid_path_or_method"),
+						HTTPStatuses.BadRequest,
+					);
+				}
+				const diagram = this._swagger.generateMermaidDiagram(path, method.toLowerCase());
 				res.json({ diagram });
-			} else {
-				res.status(400).json({ error: "Invalid path parameter" });
+			} catch (error) {
+				next(error);
 			}
 		});
-		// хз почему но через 	ApiRoutes.apiDocs не работает, хотя я там добавил
-		this._app.use("/api-docs", this._swagger.serve, this._swagger.setup);
+
+		this._app.use(ApiRoutes.apiDocs, this._middleware.mustAuthenticated.bind(this._middleware), this._swagger.serve, this._swagger.setup);
 
 		this._app.get(
 			ApiRoutes.deleteAccount,

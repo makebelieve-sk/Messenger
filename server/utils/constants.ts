@@ -1,5 +1,6 @@
 // Устанавливаем необязательным env переменным значения по умолчанию
 export const PORT = process.env.PORT as "8008";
+export const HOST = process.env.HOST as "localhost";
 export const NODE_ENV = process.env.NODE_ENV as "development" | "production" | "test";
 export const MESSANGER_ENV = process.env.MESSANGER_ENV as "development" | "stage" | "production";
 export const CLIENT_URL = process.env.CLIENT_URL as string;

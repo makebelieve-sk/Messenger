@@ -187,5 +187,7 @@
 	
 	"process.close_server": "Сервер остановлен с кодом {{code}}.",
 	"process.get_signal_before_close": "Получен сигнал {{signal}}, выполняется остановка сервера...",
-	"process.error.close_server": "Произошла ошибка во время остановки сервера: {{error}}"
+	"process.error.close_server": "Произошла ошибка во время остановки сервера: {{error}}",
+
+	"mermaid.error.invalid_path_or_method": "Неверный путь или метод"
 }

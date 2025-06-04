@@ -8,7 +8,7 @@ import corsConfig from "@config/cors.config";
 import expressSessionConfig from "@config/express-session.config";
 import expressStaticConfig from "@config/express-static.config";
 import ApiServer from "@core/api/ApiServer";
-import swaggerWork from "@core/api/swagger/Swagger";
+import SwaggerWork from "@core/api/swagger/Swagger";
 import UsersController from "@core/controllers/UsersController";
 import Database from "@core/database/Database";
 import PassportWorks from "@core/Passport";
@@ -28,7 +28,7 @@ export default class MainServer {
 	private readonly _passport: PassportWorks;
 	private readonly _socket: SocketWorks;
 	private _session!: express.RequestHandler;
-	private readonly _swagger: swaggerWork;
+	private readonly _swagger: SwaggerWork;
 
 	constructor(
 		private readonly _app: Express,
@@ -36,7 +36,7 @@ export default class MainServer {
 	) {
 		logger.debug("init");
 
-		this._swagger = new swaggerWork();
+		this._swagger = new SwaggerWork();
 		// Инициализация контроллера управления пользователями на сервере
 		this._users = new UsersController();
 		// Инициализируем работу базы данных (модели, отношения)

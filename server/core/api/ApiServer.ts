@@ -9,7 +9,7 @@ import MainController from "@core/api/controllers/Main";
 // import MessagesController from "@core/api/controllers/Messages";
 import UserController from "@core/api/controllers/User";
 import Middleware from "@core/api/Middleware";
-import swaggerWork from "@core/api/swagger/Swagger";
+import SwaggerWork from "@core/api/swagger/Swagger";
 import UsersController from "@core/controllers/UsersController";
 import Database from "@core/database/Database";
 import RedisWorks from "@core/Redis";
@@ -27,7 +27,7 @@ export default class ApiServer {
 		private readonly _users: UsersController,
 		private readonly _database: Database,
 		private readonly _passport: PassportStatic,
-		private readonly _swagger: swaggerWork,
+		private readonly _swagger: SwaggerWork,
 	) {
 		this._middleware = new Middleware(this._redisWork, this._app);
 

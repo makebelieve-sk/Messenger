@@ -1,6 +1,7 @@
 // API маршруты
 enum ApiRoutes {
 	//----main-----------
+	apiDocs = "/api-docs",
 	checkHealth = "/check-health",
 	soundNotifications = "/sound-notifications",
 	deleteAccount = "/delete-account",

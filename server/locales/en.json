@@ -187,5 +187,7 @@
 
 	"process.close_server": "Server closed, exiting with code {{code}}.",
 	"process.get_signal_before_close": "Received {{signal}}, initiating shutdown...",
-	"process.error.close_server": "Error during shutdown: {{error}}"
+	"process.error.close_server": "Error during shutdown: {{error}}",
+
+	"mermaid.error.invalid_path_or_method": "Invalid path or method"
 }

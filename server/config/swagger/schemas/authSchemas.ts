@@ -17,12 +17,12 @@ export const authSchemas = {
 			email: {
 				type: "string",
 				format: "email",
-				example: "user99@example.com",
+				example: "user9@example.com",
 			},
 			phone: {
 				type: "string",
 				pattern: "^\\+7\\d{10}$",
-				example: "+79681185557",
+				example: "+79681185558",
 			},
 			password: {
 				type: "string",
