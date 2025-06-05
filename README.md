@@ -222,11 +222,11 @@ npm install
 ```bash
 # Запуск бэкенда
 cd server
-npm run dev
+npm run start
 
 # Запуск фронтенда (в отдельном терминале)
 cd app
-npm run dev
+npm run start
 ```
 
 ### Запуск через Docker
