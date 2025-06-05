@@ -1,9 +1,13 @@
+import { SocketActions } from "common-types";
+
 import { getBaseUrl } from "@utils/swagger";
 
 import { authPath } from "./paths/authPath";
+import { friendsPaths } from "./paths/friendsPath";
 import { imagesPaths } from "./paths/imagesPaths ";
 import { userPaths } from "./paths/userPaths";
 import { authSchemas } from "./schemas/authSchemas";
+import { friendsSchemas } from "./schemas/friendsSchemas";
 import { imagesSchemas } from "./schemas/imagesSchemas ";
 import { userSchemas } from "./schemas/userSchemas";
 
@@ -19,6 +23,7 @@ const swaggerConfig = {
 		...userPaths,
 		...authPath,
 		...imagesPaths,
+		...friendsPaths,
 	},
 
 	components: {
@@ -33,6 +38,21 @@ const swaggerConfig = {
 			...userSchemas,
 			...authSchemas,
 			...imagesSchemas,
+			...friendsSchemas,
+			    SocketEvent: {
+				type: "object",
+				properties: {
+					event: {
+						type: "string",
+						enum: Object.values(SocketActions),
+						example: "FOLLOW_FRIEND",
+					},
+					payload: {
+						type: "object",
+						additionalProperties: true,
+					},
+				},
+			},
 		},
 	},
 	security: [
