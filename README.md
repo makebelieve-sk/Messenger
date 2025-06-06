@@ -12,7 +12,7 @@
 - Axios для HTTP запросов
 - Zustand для управления состоянием
 - Material-UI для компонентов интерфейса
-- React-testing-library, Jest + Vitest для тестирования
+- React-testing-library, Jest для тестирования
 - Storybook для документации компонентов
 
 ### Backend
@@ -188,7 +188,7 @@ classDiagram
         +cancelOutgoingRequest()
     }
     
-    class BlockedUsersService {
+    class BlockedFriendsService {
         +getBlockedUsers()
         +blockUser()
         +unblockUser()
@@ -211,7 +211,7 @@ classDiagram
     BaseFriendsService <|-- SearchService
     BaseFriendsService <|-- IncomingRequestsService
     BaseFriendsService <|-- OutgoingRequestsService
-    BaseFriendsService <|-- BlockedUsersService
+    BaseFriendsService <|-- BlockedFriendsService
 ```
 
 #### Архитектура Backend
@@ -320,7 +320,7 @@ classDiagram
     - `OutgoingRequestsService` - Сервис для работы с исходящими заявками
       - Управление отправленными заявками
       - Отмена заявок
-    - `BlockedUsersService` - Сервис для работы со списком заблокированных
+    - `BlockedFriendsService` - Сервис для работы со списком заблокированных
       - Управление заблокированными пользователями
       - Блокировка/разблокировка
 

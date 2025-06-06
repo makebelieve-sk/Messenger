@@ -1,0 +1,137 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListRow applies correct styles to row 1`] = `
+<div>
+  <div
+    class="list__row"
+    style="top: 0px; height: 100px; gap: 10px;"
+  >
+    <div>
+      <div
+        data-testid="item-1"
+      >
+        Item 1
+         (
+        300
+        x
+        200
+        )
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListRow renders correct number of items based on cols 1`] = `
+<div>
+  <div
+    class="list__row"
+    style="top: 0px; height: 100px; gap: 10px;"
+  >
+    <div>
+      <div
+        data-testid="item-1"
+      >
+        Item 1
+         (
+        300
+        x
+        200
+        )
+      </div>
+    </div>
+    <div>
+      <div
+        data-testid="item-2"
+      >
+        Item 2
+         (
+        300
+        x
+        200
+        )
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListRow renders items row correctly 1`] = `
+<div>
+  <div
+    class="list__row"
+    style="top: 0px; height: 100px; gap: 10px;"
+  >
+    <div>
+      <div
+        data-testid="item-1"
+      >
+        Item 1
+         (
+        300
+        x
+        200
+        )
+      </div>
+    </div>
+    <div>
+      <div
+        data-testid="item-2"
+      >
+        Item 2
+         (
+        300
+        x
+        200
+        )
+      </div>
+    </div>
+    <div>
+      <div
+        data-testid="item-3"
+      >
+        Item 3
+         (
+        300
+        x
+        200
+        )
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListRow renders loading row when no items and hasMore is true 1`] = `
+<div>
+  <div
+    class="list__loading-row"
+    style="top: 0px; height: 100px;"
+  >
+    <div
+      class="spinner"
+      data-testid="spinner"
+    >
+      <span
+        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+        role="progressbar"
+        style="width: 40px; height: 40px;"
+      >
+        <svg
+          class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+          viewBox="22 22 44 44"
+        >
+          <circle
+            class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+            cx="44"
+            cy="44"
+            fill="none"
+            r="20.2"
+            stroke-width="3.6"
+          />
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+`;

@@ -18,6 +18,10 @@ export default [
 			ecmaVersion: "latest",                                      // Уровень ECMAScript
 			sourceType: "module",                                       // Используем модули
 			parser: tsParser, // Указываем TypeScript как парсер
+			parserOptions: {
+				project: "./tsconfig.json", // Используем tsconfig.json (для активации проверки tsc при линтинге)
+				tsconfigRootDir: __dirname, // Чтобы ESLint знал, откуда искать tsconfig
+			},
 		},
 		plugins: {
 			"@typescript-eslint": tsPlugin, // Подключение плагина для Typescript

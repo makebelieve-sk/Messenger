@@ -18,7 +18,8 @@
 		"build": "rimraf dist && tsc && copyfiles -u 1 sql/**/*.sql dist/sql",
 		"build:local": "cross-env NODE_ENV=production npm run check-certs && npm run build && cross-env NODE_ENV=production npm run start:production",
 		"test": "jest",
-		"lint": "eslint .",
+		"test:coverage": "jest --coverage",
+		"lint": "tsc --noEmit && eslint .",
 		"lint:fix": "eslint . --ext .ts --fix",
 		"migrate-dev:undo": "ts-node -r tsconfig-paths/register scripts/migration-undo.ts",
 		"migrate-prod:undo": "node -r module-alias/register dist/scripts/migration-undo.js",
@@ -52,8 +53,7 @@
 		"tedious": "^18.1.0",
 		"uuid": "^11.1.0",
 		"validation": "file:../packages/validation",
-		"winston": "^3.17.0",
-		"zod": "^3.24.1"
+		"winston": "^3.17.0"
 	},
 	"devDependencies": {
 		"@types/cookie-parser": "^1.4.7",

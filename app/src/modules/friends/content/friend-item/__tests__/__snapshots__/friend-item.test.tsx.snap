@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FriendItem matches snapshot 1`] = `
+<div>
+  <li
+    class="MuiListItem-root MuiListItem-gutters MuiListItem-padding friend-item css-cfd5wn-MuiListItem-root"
+  >
+    <div
+      class="MuiListItemAvatar-root friend-item__avatar css-1ulznza-MuiListItemAvatar-root"
+    >
+      <span
+        class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+      >
+        <div
+          class="MuiAvatar-root MuiAvatar-circular avatar user-avatar big-avatar css-fmeqll-MuiAvatar-root"
+          id="user-avatar"
+        >
+          <img
+            alt="John Doe"
+            class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+            src="https://example.com/avatar.jpg"
+          />
+        </div>
+        <span
+          class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+        />
+      </span>
+    </div>
+    <div
+      class="MuiListItemText-root MuiListItemText-multiline friend-item__info css-14ln1j6-MuiListItemText-root"
+    >
+      John Doe
+      <span
+        class="friend-actions__write-message"
+      >
+        friends-module.actions.write_message
+      </span>
+    </div>
+    <svg
+      aria-describedby="popover-list-item-123"
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium friend-item__more css-1umw9bq-MuiSvgIcon-root"
+      data-testid="MoreHorizIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2m12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2m-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2"
+      />
+    </svg>
+  </li>
+</div>
+`;
+
+exports[`FriendItem matches snapshot when viewing other user's profile 1`] = `
+<div>
+  <li
+    class="MuiListItem-root MuiListItem-gutters MuiListItem-padding friend-item css-cfd5wn-MuiListItem-root"
+  >
+    <div
+      class="MuiListItemAvatar-root friend-item__avatar css-1ulznza-MuiListItemAvatar-root"
+    >
+      <span
+        class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+      >
+        <div
+          class="MuiAvatar-root MuiAvatar-circular avatar user-avatar big-avatar css-fmeqll-MuiAvatar-root"
+          id="user-avatar"
+        >
+          <img
+            alt="John Doe"
+            class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+            src="https://example.com/avatar.jpg"
+          />
+        </div>
+        <span
+          class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+        />
+      </span>
+    </div>
+    <div
+      class="MuiListItemText-root friend-item__info css-cfq8qh-MuiListItemText-root"
+    >
+      John Doe
+    </div>
+  </li>
+</div>
+`;

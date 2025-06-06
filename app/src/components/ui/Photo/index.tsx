@@ -74,12 +74,12 @@ export default memo(function PhotoComponent({
 
 	return <div className="photo" onClick={onClick} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut}>
 		{visibleCloseIcon 
-			? <div className="photo__close-icon" onClick={onDelete}>
+			? <div className="photo__close-icon" onClick={onDelete} data-testid="close-icon">
 				<CloseIconComponent size="16" />
 			</div>
 			: null
 		}
 
-		<img src={srcImage} alt={alt} className="photo__image" loading={isLazy ? "lazy" : "eager"} />
+		<img src={srcImage} alt={alt} className="photo__image" loading={isLazy ? "lazy" : "eager"} data-testid="image" />
 	</div>;
 });

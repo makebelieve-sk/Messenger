@@ -13,9 +13,7 @@ export default [
 	// Общая конфигурация для файлов Storybook
 	{
 		files: ["**/*.stories.@(js|jsx|ts|tsx)"],
-		plugins: {
-			storybook: storybookPlugin
-		},
+		...storybookPlugin,
 	},
 	// Общая конфигурация для всех файлов
 	{
@@ -31,6 +29,8 @@ export default [
 				ecmaFeatures: {
 					jsx: true, // Поддержка JSX
 				},
+				project: "./tsconfig.json", // Используем tsconfig.json (для активации проверки tsc при линтинге)
+				tsconfigRootDir: __dirname, // Чтобы ESLint знал, откуда искать tsconfig
 			}, // Добавляем поддержку браузерных глобальных объектов
 		},
 		plugins: {

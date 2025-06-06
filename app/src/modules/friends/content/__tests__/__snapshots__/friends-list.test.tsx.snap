@@ -1,0 +1,439 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FriendsList Component should handle different friend list types correctly 1`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+    <ul
+      class="MuiList-root friends-list__container css-54zhjy-MuiList-root"
+    >
+      <div
+        class="friends-list__container__list MuiBox-root css-0"
+        data-testid="box-component"
+      >
+        <div
+          data-testid="virtual-list"
+        >
+          <div>
+            <div
+              data-testid="friend-item"
+            >
+              John Doe
+            </div>
+          </div>
+        </div>
+      </div>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`FriendsList Component should handle different friend list types correctly 2`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      data-testid="empty-friends"
+    >
+      No friends
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsList Component should handle different friend list types correctly 3`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      data-testid="empty-friends"
+    >
+      No friends
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsList Component should handle different friend list types correctly 4`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      data-testid="empty-friends"
+    >
+      No friends
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsList Component should handle different friend list types correctly 5`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      data-testid="empty-friends"
+    >
+      No friends
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsList Component should handle different friend list types correctly 6`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      data-testid="empty-friends"
+    >
+      No friends
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsList Component should handle different friend list types correctly 7`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      data-testid="empty-friends"
+    >
+      No friends
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsList Component should handle loading state correctly 1`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+    <ul
+      class="MuiList-root friends-list__container css-54zhjy-MuiList-root"
+    >
+      <div
+        class="friends-list__container__list MuiBox-root css-0"
+        data-testid="box-component"
+      >
+        <div
+          data-testid="virtual-list"
+        />
+      </div>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`FriendsList Component should render empty state correctly 1`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      data-testid="empty-friends"
+    >
+      No friends
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsList Component should render list of friends correctly 1`] = `
+<div>
+  <div
+    class="friends-list"
+  >
+    <div
+      class="input-search input-search__field-with-border"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+        />
+      </svg>
+      <div
+        class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+      >
+        <input
+          class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+          id="standard-input"
+          placeholder="friends-module.search_placeholder"
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+    <ul
+      class="MuiList-root friends-list__container css-54zhjy-MuiList-root"
+    >
+      <div
+        class="friends-list__container__list MuiBox-root css-0"
+        data-testid="box-component"
+      >
+        <div
+          data-testid="virtual-list"
+        >
+          <div>
+            <div
+              data-testid="friend-item"
+            >
+              John Doe
+            </div>
+          </div>
+          <div>
+            <div
+              data-testid="friend-item"
+            >
+              Jane Smith
+            </div>
+          </div>
+        </div>
+      </div>
+    </ul>
+  </div>
+</div>
+`;

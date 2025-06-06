@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <ul
+    class="MuiList-root MuiList-padding custom-class css-b7dj7n-MuiList-root"
+  >
+    <div>
+      Test Child
+    </div>
+  </ul>
+</DocumentFragment>
+`;

@@ -55,6 +55,7 @@ export default memo(function ModalComponent({
 			role="dialog"
 			aria-labelledby={title}
 			aria-describedby={description}
+			data-testid="modal-root"
 		>
 			{
 				extraContent && 

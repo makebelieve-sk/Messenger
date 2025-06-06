@@ -23,6 +23,7 @@ export default memo(function SnackbarComponent({ anchor, message, open, handleCl
 		onClose={handleClose} 
 		message={message} 
 		autoHideDuration={SNACKBAR_TIMEOUT}
+		data-testid="snackbar-component"
 	>
 		{children}
 	</Snackbar>;

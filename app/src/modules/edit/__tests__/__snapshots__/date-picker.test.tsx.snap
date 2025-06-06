@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DatePickerComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="lazy-date-picker"
+  >
+    <label
+      for="birthday-input"
+    >
+      Birthday
+    </label>
+    <input
+      id="birthday-input"
+      placeholder="Enter date"
+      type="date"
+      value="1990-01-01"
+    />
+  </div>
+</DocumentFragment>
+`;

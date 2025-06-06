@@ -1,20 +1,21 @@
+import enTranslations from "@locales/en.json";
+
 export const useTranslation = () => ({
 	t: (key: string) => {
-		const dictionary: Record<string, string> = {
-			"menu.profile": " My profile",
-			"menu.messanger": "Messenger",
-			"menu.friends": "Friends",
-			"menu.to-developers": "To developers",
-			"header.settings": "Settings",
-			"header.help": "Help",
-			"header.logout": "Log Out",
-		};
-		return dictionary[key];
+		const keys = key.split(".");
+		let value = enTranslations;
+		
+		for (const k of keys) {
+			value = value[k];
+			if (value === undefined) return key;
+		}
+		
+		return value;
 	},
 	i18n: {
 		changeLanguage: jest.fn(),
-		use: jest.fn().mockReturnThis(), // Мок для вызова use()
-		init: jest.fn(), // Мок для вызова init()
+		use: jest.fn().mockReturnThis(),
+		init: jest.fn(),
 	},
 });
 

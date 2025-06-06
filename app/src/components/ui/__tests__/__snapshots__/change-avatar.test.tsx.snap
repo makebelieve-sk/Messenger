@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChangeAvatarComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <label
+    class="input-label"
+    for="change-avatar-Change Avatar"
+  >
+    <input
+      accept="image/*"
+      data-testid="input-image"
+      hidden=""
+      id="change-avatar-Change Avatar"
+      type="file"
+    />
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiButton-loadingWrapper"
+        style="display: contents;"
+      />
+      <p
+        class="MuiTypography-root MuiTypography-caption input-label__button__text css-mpaqru-MuiTypography-root"
+      >
+        Change Avatar
+      </p>
+    </button>
+  </label>
+</DocumentFragment>
+`;

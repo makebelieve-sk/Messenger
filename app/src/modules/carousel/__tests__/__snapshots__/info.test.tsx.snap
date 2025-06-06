@@ -1,0 +1,161 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Info Component Snapshot Tests should match snapshot when user is not the author 1`] = `
+<div>
+  <div
+    class="info"
+  >
+    <span
+      class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+    >
+      <div
+        class="MuiAvatar-root MuiAvatar-circular avatar user-avatar css-fmeqll-MuiAvatar-root"
+        id="user-avatar"
+      >
+        <img
+          alt="Test Image"
+          class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+          src="avatar.jpg"
+        />
+      </div>
+      <span
+        class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+      />
+    </span>
+    <div
+      class="info__container"
+    >
+      <div
+        class="info__container__user-name"
+      >
+        John Doe
+      </div>
+      <div
+        class="info__container__date-time"
+      >
+        20 march 2024
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Info Component Snapshot Tests should match snapshot when user is the author 1`] = `
+<div>
+  <div
+    class="info"
+  >
+    <span
+      class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+    >
+      <div
+        class="MuiAvatar-root MuiAvatar-circular avatar user-avatar css-fmeqll-MuiAvatar-root"
+        id="user-avatar"
+      >
+        <img
+          alt="Test Image"
+          class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+          src="avatar.jpg"
+        />
+      </div>
+      <span
+        class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+      />
+    </span>
+    <div
+      class="info__container"
+    >
+      <div
+        class="info__container__user-name"
+      >
+        You
+      </div>
+      <div
+        class="info__container__date-time"
+      >
+        20 march 2024
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Info Component Snapshot Tests should match snapshot with different author name 1`] = `
+<div>
+  <div
+    class="info"
+  >
+    <span
+      class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+    >
+      <div
+        class="MuiAvatar-root MuiAvatar-circular avatar user-avatar css-fmeqll-MuiAvatar-root"
+        id="user-avatar"
+      >
+        <img
+          alt="Test Image"
+          class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+          src="avatar.jpg"
+        />
+      </div>
+      <span
+        class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+      />
+    </span>
+    <div
+      class="info__container"
+    >
+      <div
+        class="info__container__user-name"
+      >
+        Jane Doe
+      </div>
+      <div
+        class="info__container__date-time"
+      >
+        20 march 2024
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Info Component Snapshot Tests should match snapshot with different date 1`] = `
+<div>
+  <div
+    class="info"
+  >
+    <span
+      class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+    >
+      <div
+        class="MuiAvatar-root MuiAvatar-circular avatar user-avatar css-fmeqll-MuiAvatar-root"
+        id="user-avatar"
+      >
+        <img
+          alt="Test Image"
+          class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+          src="avatar.jpg"
+        />
+      </div>
+      <span
+        class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+      />
+    </span>
+    <div
+      class="info__container"
+    >
+      <div
+        class="info__container__user-name"
+      >
+        You
+      </div>
+      <div
+        class="info__container__date-time"
+      >
+        21 march 2024
+      </div>
+    </div>
+  </div>
+</div>
+`;

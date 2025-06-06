@@ -118,7 +118,7 @@
 	"modals.settings": "App settings",
 	"modals.soundEnabled": "All sound notifications",
 	"modals.messageSound": "Sound notifications when receiving a message",
-	"modals.friendRequestSound": "Sound notifucations when receiving a friend's request",
+	"modals.friendRequestSound": "Sound notifications when receiving a friend's request",
 	"modals.delete-account-title": "Deleting your profile.",
 	"modals.delete-account-text": "Please note that deleting your profile will delete all your data from the database. You can create a new profile at any time, but all the data that has been deleted will be lost.",
 	"modals.delete-account": "Delete profile",

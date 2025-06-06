@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArrowLeftIcon matches snapshot with custom className 1`] = `
+<div>
+  <svg
+    class="custom-class"
+    data-testid="arrow-left-icon"
+    height="24px"
+    viewBox="0 0 24 24"
+    width="24px"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6z"
+      fill="currentColor"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="0"
+    />
+  </svg>
+</div>
+`;
+
+exports[`ArrowLeftIcon matches snapshot with custom size as number 1`] = `
+<div>
+  <svg
+    data-testid="arrow-left-icon"
+    height="32px"
+    viewBox="0 0 24 24"
+    width="32px"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6z"
+      fill="currentColor"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="0"
+    />
+  </svg>
+</div>
+`;
+
+exports[`ArrowLeftIcon matches snapshot with custom size as string 1`] = `
+<div>
+  <svg
+    data-testid="arrow-left-icon"
+    height="48px"
+    viewBox="0 0 24 24"
+    width="48px"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6z"
+      fill="currentColor"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="0"
+    />
+  </svg>
+</div>
+`;
+
+exports[`ArrowLeftIcon matches snapshot with default props 1`] = `
+<div>
+  <svg
+    data-testid="arrow-left-icon"
+    height="24px"
+    viewBox="0 0 24 24"
+    width="24px"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6z"
+      fill="currentColor"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="0"
+    />
+  </svg>
+</div>
+`;

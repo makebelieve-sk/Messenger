@@ -14,7 +14,7 @@ export default function App() {
 	const user = useUserStore(state => state.user);
 
 	return <div className="root">
-		<ServiceComponents isAuth={Boolean(user)} />
+		<ServiceComponents data-testid="service-components" isAuth={Boolean(user)} />
 
 		{isLoading
 			? <SpinnerComponent />

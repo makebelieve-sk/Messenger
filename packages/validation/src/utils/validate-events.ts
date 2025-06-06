@@ -28,7 +28,6 @@ export const validateClientEmitEvent = <E extends (...args: any[]) => void>(
     type: EmitServerEventSchemasType | EmitClientEventSchemasType,
     data: HandleArgsType<E>
 ): ValidateServerEmitReturnType | ValidateClientEmitReturnType => {
-    console.log(type, data, emitClientEventSchemas)
     return validateEmitEvent(type, data, emitClientEventSchemas);
 };
 

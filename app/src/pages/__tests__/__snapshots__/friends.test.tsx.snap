@@ -1,0 +1,841 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Friends Component hides possible friends section when on SEARCH tab 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 friends-container css-ubb9a5-MuiGrid2-root"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 friends-container__content css-1cdctrw-MuiGrid2-root"
+    >
+      <div
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block friends-container__content__wrapper css-1gtchvp-MuiPaper-root"
+        style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+      >
+        <div
+          class="content"
+        >
+          <div
+            class="friends-list"
+          >
+            <div
+              class="input-search input-search__field-with-border"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+                data-testid="SearchIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+                />
+              </svg>
+              <div
+                class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+              >
+                <input
+                  class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+                  id="standard-input"
+                  placeholder="Search"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              class="empty-friends"
+            >
+              <div
+                class="opacity-text"
+              >
+                The suggested friends list is empty at the moment.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-column MuiGrid2-grid-xs-4 grid-item-style css-17yh78r-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+      >
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              class="MuiTabs-root MuiTabs-vertical css-12t6o4w-MuiTabs-root"
+            >
+              <div
+                class="MuiTabs-scroller MuiTabs-fixed css-s2t35c-MuiTabs-scroller"
+                style="overflow: hidden; margin-right: 0px;"
+              >
+                <div
+                  aria-label="main-tabs"
+                  aria-orientation="vertical"
+                  class="MuiTabs-list MuiTabs-flexContainer MuiTabs-flexContainerVertical MuiTabs-vertical css-1ondbrm-MuiTabs-list"
+                  role="tablist"
+                >
+                  <button
+                    aria-controls="all-friends"
+                    aria-selected="false"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="all-friends"
+                    role="tab"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    All Friends
+                  </button>
+                  <button
+                    aria-controls="incoming-requests"
+                    aria-selected="false"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="incoming-requests"
+                    role="tab"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    Friend Requests undefined
+                  </button>
+                  <button
+                    aria-controls="outgoing-requests"
+                    aria-selected="false"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="outgoing-requests"
+                    role="tab"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    Outgoing Requests undefined
+                  </button>
+                  <button
+                    aria-controls="search"
+                    aria-selected="true"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="search"
+                    role="tab"
+                    tabindex="0"
+                    type="button"
+                  >
+                    Search undefined
+                  </button>
+                </div>
+                <span
+                  class="MuiTabs-indicator css-oewvya-MuiTabs-indicator"
+                  style="top: 0px; height: 0px;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Friends Component matches snapshot in initial state 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 friends-container css-ubb9a5-MuiGrid2-root"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 friends-container__content css-1cdctrw-MuiGrid2-root"
+    >
+      <div
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block friends-container__content__wrapper css-1gtchvp-MuiPaper-root"
+        style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+      >
+        <div
+          class="content"
+        >
+          <div
+            class="MuiTabs-root css-jhczcq-MuiTabs-root"
+          >
+            <div
+              class="MuiTabs-scroller MuiTabs-fixed css-s2t35c-MuiTabs-scroller"
+              style="overflow: hidden; margin-bottom: 0px;"
+            >
+              <div
+                aria-label="content-tabs"
+                class="MuiTabs-list MuiTabs-flexContainer css-hzcega-MuiTabs-list"
+                role="tablist"
+              >
+                <button
+                  aria-controls="my-friends"
+                  aria-selected="true"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="my-friends"
+                  role="tab"
+                  tabindex="0"
+                  type="button"
+                >
+                  My Friends 0
+                </button>
+                <button
+                  aria-controls="online-friends"
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="online-friends"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  Online Friends undefined
+                </button>
+                <button
+                  aria-controls="followers"
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="followers"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  Followers 0
+                </button>
+                <button
+                  aria-controls="blocked"
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="blocked"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  Blocked undefined
+                </button>
+              </div>
+              <span
+                class="MuiTabs-indicator css-1qltlow-MuiTabs-indicator"
+                style="left: 0px; width: 0px;"
+              />
+            </div>
+          </div>
+          <div
+            class="friends-list"
+          >
+            <div
+              class="input-search input-search__field-with-border"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+                data-testid="SearchIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+                />
+              </svg>
+              <div
+                class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+              >
+                <input
+                  class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+                  id="standard-input"
+                  placeholder="Search"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              class="empty-friends"
+            >
+              <div
+                class="opacity-text"
+              >
+                The friends list is empty at the moment.
+              </div>
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary empty-friends__search css-1blvszr-MuiButtonBase-root-MuiButton-root"
+                tabindex="0"
+                type="button"
+              >
+                Find friends
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-column MuiGrid2-grid-xs-4 grid-item-style css-17yh78r-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+      >
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              class="MuiTabs-root MuiTabs-vertical css-12t6o4w-MuiTabs-root"
+            >
+              <div
+                class="MuiTabs-scroller MuiTabs-fixed css-s2t35c-MuiTabs-scroller"
+                style="overflow: hidden; margin-right: 0px;"
+              >
+                <div
+                  aria-label="main-tabs"
+                  aria-orientation="vertical"
+                  class="MuiTabs-list MuiTabs-flexContainer MuiTabs-flexContainerVertical MuiTabs-vertical css-1ondbrm-MuiTabs-list"
+                  role="tablist"
+                >
+                  <button
+                    aria-controls="all-friends"
+                    aria-selected="true"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="all-friends"
+                    role="tab"
+                    tabindex="0"
+                    type="button"
+                  >
+                    All Friends
+                  </button>
+                  <button
+                    aria-controls="incoming-requests"
+                    aria-selected="false"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="incoming-requests"
+                    role="tab"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    Friend Requests undefined
+                  </button>
+                  <button
+                    aria-controls="outgoing-requests"
+                    aria-selected="false"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="outgoing-requests"
+                    role="tab"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    Outgoing Requests undefined
+                  </button>
+                  <button
+                    aria-controls="search"
+                    aria-selected="false"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="search"
+                    role="tab"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    Search undefined
+                  </button>
+                </div>
+                <span
+                  class="MuiTabs-indicator css-oewvya-MuiTabs-indicator"
+                  style="top: 0px; height: 0px;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row friends-container__possible-friends css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              data-testid="possible-friends-container"
+            >
+              <div
+                class="block-title"
+              >
+                Suggested Friends
+              </div>
+              <div
+                class="possible-container__block"
+              >
+                <div
+                  class="opacity-text"
+                >
+                  There are no other users in the system at the moment.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Friends Component shows another user info when viewing someone else's friends 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 friends-container css-ubb9a5-MuiGrid2-root"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 friends-container__content css-1cdctrw-MuiGrid2-root"
+    >
+      <div
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block friends-container__content__wrapper css-1gtchvp-MuiPaper-root"
+        style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+      >
+        <div
+          class="content"
+        >
+          <div
+            class="MuiTabs-root css-jhczcq-MuiTabs-root"
+          >
+            <div
+              class="MuiTabs-scroller MuiTabs-fixed css-s2t35c-MuiTabs-scroller"
+              style="overflow: hidden; margin-bottom: 0px;"
+            >
+              <div
+                aria-label="content-tabs"
+                class="MuiTabs-list MuiTabs-flexContainer css-hzcega-MuiTabs-list"
+                role="tablist"
+              >
+                <button
+                  aria-controls="my-friends"
+                  aria-selected="true"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="my-friends"
+                  role="tab"
+                  tabindex="0"
+                  type="button"
+                >
+                  All Friends 0
+                </button>
+                <button
+                  aria-controls="online-friends"
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="online-friends"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  Online Friends undefined
+                </button>
+                <button
+                  aria-controls="followers"
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="followers"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  Followers 0
+                </button>
+                <button
+                  aria-controls="common"
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="common"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  Common Friends undefined
+                </button>
+              </div>
+              <span
+                class="MuiTabs-indicator css-1qltlow-MuiTabs-indicator"
+                style="left: 0px; width: 0px;"
+              />
+            </div>
+          </div>
+          <div
+            class="friends-list"
+          >
+            <div
+              class="input-search input-search__field-with-border"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+                data-testid="SearchIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+                />
+              </svg>
+              <div
+                class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+              >
+                <input
+                  class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+                  id="standard-input"
+                  placeholder="Search"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              class="empty-friends"
+            >
+              <div
+                class="opacity-text"
+              >
+                The friends list is empty at the moment.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-column MuiGrid2-grid-xs-4 grid-item-style css-17yh78r-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+      >
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              class="friends-container__another-user"
+            >
+              <div
+                data-testid="user-avatar"
+              />
+              <div
+                class="friends-container__another-user__info"
+              >
+                John Doe
+                <button
+                  class="friends-container__another-user__info__link"
+                >
+                  Перейти к странице
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Friends Component shows loading spinner when profile does not exist 1`] = `
+<div>
+  <div
+    class="user-profile-page-spinner"
+  >
+    <div
+      class="spinner"
+      data-testid="spinner"
+    >
+      <span
+        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+        role="progressbar"
+        style="width: 40px; height: 40px;"
+      >
+        <svg
+          class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+          viewBox="22 22 44 44"
+        >
+          <circle
+            class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+            cx="44"
+            cy="44"
+            fill="none"
+            r="20.2"
+            stroke-width="3.6"
+          />
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Friends Component shows loading spinner when profile is loading 1`] = `
+<div>
+  <div
+    class="user-profile-page-spinner"
+  >
+    <div
+      class="spinner"
+      data-testid="spinner"
+    >
+      <span
+        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+        role="progressbar"
+        style="width: 40px; height: 40px;"
+      >
+        <svg
+          class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+          viewBox="22 22 44 44"
+        >
+          <circle
+            class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+            cx="44"
+            cy="44"
+            fill="none"
+            r="20.2"
+            stroke-width="3.6"
+          />
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Friends Component shows possible friends section when on ALL tab and viewing own profile 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 friends-container css-ubb9a5-MuiGrid2-root"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 friends-container__content css-1cdctrw-MuiGrid2-root"
+    >
+      <div
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block friends-container__content__wrapper css-1gtchvp-MuiPaper-root"
+        style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+      >
+        <div
+          class="content"
+        >
+          <div
+            class="MuiTabs-root css-jhczcq-MuiTabs-root"
+          >
+            <div
+              class="MuiTabs-scroller MuiTabs-fixed css-s2t35c-MuiTabs-scroller"
+              style="overflow: hidden; margin-bottom: 0px;"
+            >
+              <div
+                aria-label="content-tabs"
+                class="MuiTabs-list MuiTabs-flexContainer css-hzcega-MuiTabs-list"
+                role="tablist"
+              >
+                <button
+                  aria-controls="my-friends"
+                  aria-selected="true"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="my-friends"
+                  role="tab"
+                  tabindex="0"
+                  type="button"
+                >
+                  My Friends 0
+                </button>
+                <button
+                  aria-controls="online-friends"
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="online-friends"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  Online Friends undefined
+                </button>
+                <button
+                  aria-controls="followers"
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="followers"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  Followers 0
+                </button>
+                <button
+                  aria-controls="blocked"
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary content__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                  id="blocked"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  Blocked undefined
+                </button>
+              </div>
+              <span
+                class="MuiTabs-indicator css-1qltlow-MuiTabs-indicator"
+                style="left: 0px; width: 0px;"
+              />
+            </div>
+          </div>
+          <div
+            class="friends-list"
+          >
+            <div
+              class="input-search input-search__field-with-border"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium input-search__icon css-1umw9bq-MuiSvgIcon-root"
+                data-testid="SearchIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+                />
+              </svg>
+              <div
+                class="MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused input-search__field css-1i4yu0n-MuiInputBase-root"
+              >
+                <input
+                  class="MuiInputBase-input css-yimnyd-MuiInputBase-input"
+                  id="standard-input"
+                  placeholder="Search"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              class="empty-friends"
+            >
+              <div
+                class="opacity-text"
+              >
+                The friends list is empty at the moment.
+              </div>
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary empty-friends__search css-1blvszr-MuiButtonBase-root-MuiButton-root"
+                tabindex="0"
+                type="button"
+              >
+                Find friends
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-column MuiGrid2-grid-xs-4 grid-item-style css-17yh78r-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
+      >
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              class="MuiTabs-root MuiTabs-vertical css-12t6o4w-MuiTabs-root"
+            >
+              <div
+                class="MuiTabs-scroller MuiTabs-fixed css-s2t35c-MuiTabs-scroller"
+                style="overflow: hidden; margin-right: 0px;"
+              >
+                <div
+                  aria-label="main-tabs"
+                  aria-orientation="vertical"
+                  class="MuiTabs-list MuiTabs-flexContainer MuiTabs-flexContainerVertical MuiTabs-vertical css-1ondbrm-MuiTabs-list"
+                  role="tablist"
+                >
+                  <button
+                    aria-controls="all-friends"
+                    aria-selected="true"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="all-friends"
+                    role="tab"
+                    tabindex="0"
+                    type="button"
+                  >
+                    All Friends
+                  </button>
+                  <button
+                    aria-controls="incoming-requests"
+                    aria-selected="false"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="incoming-requests"
+                    role="tab"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    Friend Requests undefined
+                  </button>
+                  <button
+                    aria-controls="outgoing-requests"
+                    aria-selected="false"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="outgoing-requests"
+                    role="tab"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    Outgoing Requests undefined
+                  </button>
+                  <button
+                    aria-controls="search"
+                    aria-selected="false"
+                    class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary main-tabs__tab label-tab css-1usuzwp-MuiButtonBase-root-MuiTab-root"
+                    id="search"
+                    role="tab"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    Search undefined
+                  </button>
+                </div>
+                <span
+                  class="MuiTabs-indicator css-oewvya-MuiTabs-indicator"
+                  style="top: 0px; height: 0px;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid2-root MuiGrid2-direction-xs-row friends-container__possible-friends css-1fzlhpv-MuiGrid2-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 paper-block css-1gtchvp-MuiPaper-root"
+            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          >
+            <div
+              data-testid="possible-friends-container"
+            >
+              <div
+                class="block-title"
+              >
+                Suggested Friends
+              </div>
+              <div
+                class="possible-container__block"
+              >
+                <div
+                  class="opacity-text"
+                >
+                  There are no other users in the system at the moment.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

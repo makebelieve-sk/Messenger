@@ -39,15 +39,19 @@ nginx/tmp/
 
 # Файлы линтеров клиента и сервера
 .eslint.config.ts
-/app/eslint.config.ts
-/server/eslint.config.ts
+app/eslint.config.ts
+server/eslint.config.ts
 
 # Файл единой конфигурации для разных IDE
 .editorconfig
 
-#jest coverage
+# Файлы тестирования
 app/coverage
-*storybook.log
+
+# Файлы Storybook
+app/*storybook.log
+app/.storybook
+app/storybook-static/
 
 # Файл глобального описания проекта
 README.md
@@ -60,3 +64,18 @@ README.md
 
 # Папка с сертификатами для установки https соединения
 /server/certs
+
+# Исключаем папку с тестами
+**/__tests__/
+**/__mocks__/ 
+
+# Исключаем все файлы *.test.ts и *.test.tsx
+*.test.ts
+*.test.tsx
+
+# Исключаем конфигурацию Jest
+app/jest.config.js
+app/jest.setup.ts
+
+# Файлы настройка Husky
+.husky

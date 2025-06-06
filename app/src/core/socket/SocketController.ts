@@ -2,7 +2,6 @@ import { SocketActions } from "common-types";
 
 import type ProfilesController from "@core/controllers/ProfilesController";
 import FriendsController from "@core/socket/controllers/Friends";
-import MessangesController from "@core/socket/controllers/Messages";
 import UsersController from "@core/socket/controllers/Users";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
@@ -25,7 +24,6 @@ export default class SocketController {
 
 		new UsersController(this._socket, this._myId, this._profilesController);
 		new FriendsController(this._socket, this._profilesController);
-		new MessangesController(this._socket);
 	}
 
 	private _init() {

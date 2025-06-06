@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Friends renders friends count 1`] = `<div />`;
+
+exports[`Friends renders friends title 1`] = `<div />`;
+
+exports[`Friends renders loading state 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 friends-container paper-block css-1gtchvp-MuiPaper-root"
+      style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="block-title"
+      >
+        Friends
+         
+        <span
+          class="counter"
+        >
+          0
+        </span>
+      </div>
+      <div
+        class="opacity-text no-items"
+        data-testid="no-data"
+      >
+        The friends list is empty at the moment.
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Friends renders with no friends 1`] = `<div />`;

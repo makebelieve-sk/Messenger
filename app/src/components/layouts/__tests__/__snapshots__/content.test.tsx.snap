@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContentComponent matches snapshot with complex content 1`] = `
+<div>
+  <div
+    class="main-content MuiBox-root css-0"
+    data-testid="box-component"
+  >
+    <div
+      data-testid="complex-child"
+    >
+      <h1>
+        Title
+      </h1>
+      <p>
+        Paragraph
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ContentComponent matches snapshot with default content 1`] = `
+<div>
+  <div
+    class="main-content MuiBox-root css-0"
+    data-testid="box-component"
+  >
+    Test Content
+  </div>
+</div>
+`;
+
+exports[`ContentComponent matches snapshot with empty content 1`] = `
+<div>
+  <div
+    class="main-content MuiBox-root css-0"
+    data-testid="box-component"
+  />
+</div>
+`;
