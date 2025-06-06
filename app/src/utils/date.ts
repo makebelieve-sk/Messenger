@@ -72,7 +72,6 @@ dayjs.extend(utc);
 export const getTime = (createDate: string, options: { withoutYesterday?: boolean } = {}) => {
   const { withoutYesterday } = options;
 
-  // parse дату в UTC
   const date = dayjs.utc(createDate);
   const now = dayjs.utc();
 
@@ -91,7 +90,6 @@ export const getTime = (createDate: string, options: { withoutYesterday?: boolea
   }
 
   if (diff <= Times.TODAY) {
-    // Если дата вчера, добавим "вчера" если нужно
     const isYesterday = now.startOf("day").diff(date.startOf("day")) === 1;
     return `${isYesterday && !withoutYesterday ? i18next.t("utils.yesterday") : ""}${date.format("HH:mm")}`;
   }
