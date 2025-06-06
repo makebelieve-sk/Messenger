@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MainTabs matches snapshot 1`] = `
+<div>
+  <div
+    role="tablist"
+  >
+    <button
+      aria-controls="all-friends"
+      data-value="0"
+      id="all-friends"
+      role="tab"
+    >
+      friends-module.all_friends
+    </button>
+    <button
+      aria-controls="incoming-requests"
+      data-value="5"
+      id="incoming-requests"
+      role="tab"
+    >
+      <div
+        data-testid="notification-badge"
+        role="badge"
+      >
+        <span>
+           
+        </span>
+        friends-module.friend_requests
+      </div>
+    </button>
+    <button
+      aria-controls="outgoing-requests"
+      data-value="4"
+      id="outgoing-requests"
+      role="tab"
+    >
+      friends-module.outgoing_requests [object Object]
+    </button>
+    <button
+      aria-controls="search"
+      data-value="6"
+      id="search"
+      role="tab"
+    >
+      friends-module.search [object Object]
+    </button>
+  </div>
+</div>
+`;

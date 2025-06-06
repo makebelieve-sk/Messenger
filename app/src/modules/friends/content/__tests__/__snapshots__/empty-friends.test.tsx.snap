@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmptyFriends Component should render correctly 1`] = `
+<div>
+  <div
+    class="empty-friends"
+  >
+    <div
+      class="opacity-text"
+    />
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary empty-friends__search css-1blvszr-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="button"
+    >
+      friends-module.actions.find_friends
+    </button>
+  </div>
+</div>
+`;

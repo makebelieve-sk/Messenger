@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PhotosCarousel should match snapshot when no photo is selected 1`] = `<div />`;
+
+exports[`PhotosCarousel should match snapshot when photo is selected 1`] = `
+<div>
+  <div
+    class="carousel"
+    data-testid="carousel"
+  >
+    <div
+      class="carousel__photo"
+    >
+      <div
+        class="photo"
+      >
+        <img
+          alt="1"
+          class="photo__image"
+          data-testid="image"
+          loading="eager"
+          src="/photo1.jpg"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

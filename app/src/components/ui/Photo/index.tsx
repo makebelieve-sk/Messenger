@@ -34,11 +34,11 @@ export default memo(function PhotoComponent({
 	const { userId } = useParams();
 
 	const srcImage = useImage(src);
-	const profile = useProfile(userId);
+	const profile = showDeleteIcon ? useProfile(userId) : null;
 
 	// Если текущий профиль не мой, то скрываем кнопку удаления
 	useEffect(() => {
-		if (!profile.isMe) {
+		if (!profile || !profile.isMe) {
 			setNeverShowCloseIcon(true);
 		}
 	}, [ userId ]);
@@ -74,12 +74,12 @@ export default memo(function PhotoComponent({
 
 	return <div className="photo" onClick={onClick} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut}>
 		{visibleCloseIcon 
-			? <div className="photo__close-icon" onClick={onDelete}>
+			? <div className="photo__close-icon" onClick={onDelete} data-testid="close-icon">
 				<CloseIconComponent size="16" />
 			</div>
 			: null
 		}
 
-		<img src={srcImage} alt={alt} className="photo__image" loading={isLazy ? "lazy" : "eager"} />
+		<img src={srcImage} alt={alt} className="photo__image" loading={isLazy ? "lazy" : "eager"} data-testid="image" />
 	</div>;
 });

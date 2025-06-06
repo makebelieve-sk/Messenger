@@ -1,4 +1,4 @@
-export const DEV = true;
+export const DEV = false;
 export const BASE_URL = "https://mocked-url.com";
 export const API_URL = "https://mocked-api-url.com";
 export const SOCKET_URL = "wss://mocked-socket-url.com";

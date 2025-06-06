@@ -6,6 +6,7 @@ import SequelizeError from "@errors/sequelize";
 import initSchema from "@migrations/04.03.2025-init-schema";
 import addIsDeletedToUsers from "@migrations/05.05.2025-add-is-deleted-to-users";
 import changeIndexesInUsers from "@migrations/07.05.2025-change-indexes-in-users";
+import deleteFriendActions from "@migrations/26.05.2025-delete-friend-actions";
 
 const logger = Logger("Migrations");
 
@@ -25,6 +26,7 @@ export default class Migrations {
 			await initSchema.up(this._sequelize, transaction);
 			await addIsDeletedToUsers.up(this._sequelize, transaction);
 			await changeIndexesInUsers.up(this._sequelize, transaction);
+			await deleteFriendActions.up(this._sequelize, transaction);
 
 			await transaction.commit();
 
@@ -51,6 +53,7 @@ export default class Migrations {
 			await initSchema.down(this._sequelize, transaction);
 			await changeIndexesInUsers.down(this._sequelize, transaction);
 			await addIsDeletedToUsers.down(this._sequelize, transaction);
+			await deleteFriendActions.down(this._sequelize, transaction);
 
 			await transaction.commit();
 

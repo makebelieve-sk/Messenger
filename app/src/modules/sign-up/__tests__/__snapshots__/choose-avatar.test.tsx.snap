@@ -1,0 +1,479 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChooseAvatar calls onChange with empty string when deleteAvatar is called 1`] = `
+<div>
+  <div
+    class="choose-avatar MuiBox-root css-0"
+    data-testid="box-component"
+    id="choose-avatar"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 choose-avatar__container css-ubb9a5-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 grid-item-style css-1cdctrw-MuiGrid2-root"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 choose-avatar__container__main-text css-rizt0-MuiTypography-root"
+        >
+          John Doe
+          , 
+          profile-module.how_like_avatar
+        </p>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__avatar-wrapper css-1cdctrw-MuiGrid2-root"
+      >
+        <div
+          class="spinner"
+          data-testid="spinner"
+        >
+          <span
+            class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+            role="progressbar"
+            style="width: 40px; height: 40px;"
+          >
+            <svg
+              class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+                cx="44"
+                cy="44"
+                fill="none"
+                r="20.2"
+                stroke-width="3.6"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__change-photo css-1cdctrw-MuiGrid2-root"
+      >
+        <label
+          class="input-label"
+          for="change-avatar-profile-module.choose_another_photo"
+        >
+          <input
+            accept="image/*"
+            data-testid="input-image"
+            hidden=""
+            id="change-avatar-profile-module.choose_another_photo"
+            type="file"
+          />
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id="«r3»"
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="MuiButton-loadingWrapper"
+              style="display: contents;"
+            >
+              <span
+                class="MuiButton-loadingIndicator css-14m8o6v-MuiButton-loadingIndicator"
+              >
+                <span
+                  aria-labelledby="«r3»"
+                  class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorInherit css-gxw4l9-MuiCircularProgress-root"
+                  role="progressbar"
+                  style="width: 16px; height: 16px;"
+                >
+                  <svg
+                    class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+                    viewBox="22 22 44 44"
+                  >
+                    <circle
+                      class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+                      cx="44"
+                      cy="44"
+                      fill="none"
+                      r="20.2"
+                      stroke-width="3.6"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </span>
+            <p
+              class="MuiTypography-root MuiTypography-caption input-label__button__text css-mpaqru-MuiTypography-root"
+            >
+              profile-module.choose_another_photo
+            </p>
+          </button>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ChooseAvatar calls onChangeAvatar when changeAvatar is called 1`] = `
+<div>
+  <div
+    class="choose-avatar MuiBox-root css-0"
+    data-testid="box-component"
+    id="choose-avatar"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 choose-avatar__container css-ubb9a5-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 grid-item-style css-1cdctrw-MuiGrid2-root"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 choose-avatar__container__main-text css-rizt0-MuiTypography-root"
+        >
+          John Doe
+          , 
+          profile-module.how_like_avatar
+        </p>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__avatar-wrapper css-1cdctrw-MuiGrid2-root"
+      >
+        <div
+          class="spinner"
+          data-testid="spinner"
+        >
+          <span
+            class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+            role="progressbar"
+            style="width: 40px; height: 40px;"
+          >
+            <svg
+              class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+                cx="44"
+                cy="44"
+                fill="none"
+                r="20.2"
+                stroke-width="3.6"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__change-photo css-1cdctrw-MuiGrid2-root"
+      >
+        <label
+          class="input-label"
+          for="change-avatar-profile-module.choose_another_photo"
+        >
+          <input
+            accept="image/*"
+            data-testid="input-image"
+            hidden=""
+            id="change-avatar-profile-module.choose_another_photo"
+            type="file"
+          />
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id="«r4»"
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="MuiButton-loadingWrapper"
+              style="display: contents;"
+            >
+              <span
+                class="MuiButton-loadingIndicator css-14m8o6v-MuiButton-loadingIndicator"
+              >
+                <span
+                  aria-labelledby="«r4»"
+                  class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorInherit css-gxw4l9-MuiCircularProgress-root"
+                  role="progressbar"
+                  style="width: 16px; height: 16px;"
+                >
+                  <svg
+                    class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+                    viewBox="22 22 44 44"
+                  >
+                    <circle
+                      class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+                      cx="44"
+                      cy="44"
+                      fill="none"
+                      r="20.2"
+                      stroke-width="3.6"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </span>
+            <p
+              class="MuiTypography-root MuiTypography-caption input-label__button__text css-mpaqru-MuiTypography-root"
+            >
+              profile-module.choose_another_photo
+            </p>
+          </button>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ChooseAvatar displays avatar image when avatarUrl is provided 1`] = `
+<div>
+  <div
+    class="choose-avatar MuiBox-root css-0"
+    data-testid="box-component"
+    id="choose-avatar"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 choose-avatar__container css-ubb9a5-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 grid-item-style css-1cdctrw-MuiGrid2-root"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 choose-avatar__container__main-text css-rizt0-MuiTypography-root"
+        >
+          John Doe
+          , 
+          profile-module.how_like_avatar
+        </p>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__avatar-wrapper css-1cdctrw-MuiGrid2-root"
+      >
+        <div
+          class="choose-avatar__container__avatar"
+        >
+          <div
+            class="photo"
+          >
+            <img
+              alt="user-avatar"
+              class="photo__image"
+              data-testid="image"
+              loading="eager"
+              src="test-url"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__change-photo css-1cdctrw-MuiGrid2-root"
+      >
+        <label
+          class="input-label"
+          for="change-avatar-profile-module.choose_another_photo"
+        >
+          <input
+            accept="image/*"
+            data-testid="input-image"
+            hidden=""
+            id="change-avatar-profile-module.choose_another_photo"
+            type="file"
+          />
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-loadingWrapper"
+              style="display: contents;"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-caption input-label__button__text css-mpaqru-MuiTypography-root"
+            >
+              profile-module.choose_another_photo
+            </p>
+          </button>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ChooseAvatar renders with username and generates avatar letters 1`] = `
+<div>
+  <div
+    class="choose-avatar MuiBox-root css-0"
+    data-testid="box-component"
+    id="choose-avatar"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 choose-avatar__container css-ubb9a5-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 grid-item-style css-1cdctrw-MuiGrid2-root"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 choose-avatar__container__main-text css-rizt0-MuiTypography-root"
+        >
+          John Doe
+          , 
+          profile-module.how_like_avatar
+        </p>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__avatar-wrapper css-1cdctrw-MuiGrid2-root"
+      >
+        <div
+          class="choose-avatar__container__avatar-without-user"
+        >
+          JD
+        </div>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__change-photo css-1cdctrw-MuiGrid2-root"
+      >
+        <label
+          class="input-label"
+          for="change-avatar-profile-module.choose_another_photo"
+        >
+          <input
+            accept="image/*"
+            data-testid="input-image"
+            hidden=""
+            id="change-avatar-profile-module.choose_another_photo"
+            type="file"
+          />
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-loadingWrapper"
+              style="display: contents;"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-caption input-label__button__text css-mpaqru-MuiTypography-root"
+            >
+              profile-module.choose_another_photo
+            </p>
+          </button>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ChooseAvatar shows loading spinner when loading is true 1`] = `
+<div>
+  <div
+    class="choose-avatar MuiBox-root css-0"
+    data-testid="box-component"
+    id="choose-avatar"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 choose-avatar__container css-ubb9a5-MuiGrid2-root"
+    >
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 grid-item-style css-1cdctrw-MuiGrid2-root"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 choose-avatar__container__main-text css-rizt0-MuiTypography-root"
+        >
+          John Doe
+          , 
+          profile-module.how_like_avatar
+        </p>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__avatar-wrapper css-1cdctrw-MuiGrid2-root"
+      >
+        <div
+          class="spinner"
+          data-testid="spinner"
+        >
+          <span
+            class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+            role="progressbar"
+            style="width: 40px; height: 40px;"
+          >
+            <svg
+              class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+                cx="44"
+                cy="44"
+                fill="none"
+                r="20.2"
+                stroke-width="3.6"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 choose-avatar__container__change-photo css-1cdctrw-MuiGrid2-root"
+      >
+        <label
+          class="input-label"
+          for="change-avatar-profile-module.choose_another_photo"
+        >
+          <input
+            accept="image/*"
+            data-testid="input-image"
+            hidden=""
+            id="change-avatar-profile-module.choose_another_photo"
+            type="file"
+          />
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-loadingPositionCenter input-label__button css-wyro15-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id="«r2»"
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="MuiButton-loadingWrapper"
+              style="display: contents;"
+            >
+              <span
+                class="MuiButton-loadingIndicator css-14m8o6v-MuiButton-loadingIndicator"
+              >
+                <span
+                  aria-labelledby="«r2»"
+                  class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorInherit css-gxw4l9-MuiCircularProgress-root"
+                  role="progressbar"
+                  style="width: 16px; height: 16px;"
+                >
+                  <svg
+                    class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+                    viewBox="22 22 44 44"
+                  >
+                    <circle
+                      class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+                      cx="44"
+                      cy="44"
+                      fill="none"
+                      r="20.2"
+                      stroke-width="3.6"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </span>
+            <p
+              class="MuiTypography-root MuiTypography-caption input-label__button__text css-mpaqru-MuiTypography-root"
+            >
+              profile-module.choose_another_photo
+            </p>
+          </button>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;

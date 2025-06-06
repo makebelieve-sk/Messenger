@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CopyrightComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="copyright"
+    data-testid="copyright"
+  >
+    Copyright ©
+    <a
+      class="MuiTypography-root MuiTypography-body2 MuiLink-root MuiLink-underlineAlways css-1gs95s9-MuiTypography-root-MuiLink-root"
+      data-testid="link"
+      href="/about-us"
+    >
+       VK-CLON 
+    </a>
+    2025.
+  </div>
+</DocumentFragment>
+`;

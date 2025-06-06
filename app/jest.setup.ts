@@ -1,5 +1,13 @@
-import "@testing-library/jest-dom"
+import "@testing-library/jest-dom";
 import { TextEncoder, TextDecoder } from "util";
 
-global.TextEncoder = TextEncoder as any;
+global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder as any;
+
+class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+}
+
+global.ResizeObserver = ResizeObserverMock;

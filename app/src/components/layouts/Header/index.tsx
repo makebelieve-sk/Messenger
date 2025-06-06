@@ -23,7 +23,7 @@ export default function HeaderComponent() {
 	const mainClient = useMainClient();
 	const navigate = useNavigate();
 
-	const [ anchorElUser, setAnchorElUser ] = useState<null | HTMLElement>(null);
+	const [ anchorElUser, setAnchorElUser ] = useState<undefined | Element>(undefined);
 
 	const myAvatar = useUserStore(state => state.myAvatar);
 
@@ -59,7 +59,7 @@ export default function HeaderComponent() {
 	};
 
 	// Закрытие меню
-	const closeMenu = () => setAnchorElUser(null);
+	const closeMenu = () => setAnchorElUser(undefined);
 
 	// Выход
 	const logout = () => {
@@ -67,7 +67,7 @@ export default function HeaderComponent() {
 		mainClient.mainApi.logout();
 	};
 
-	return <header className="header">
+	return <header className="header" data-testid="header">
 		<div className="header-container">
 			<div className="header-container__toolbar">
 				<div className="header-container__toolbar__logo" onClick={() => goTo(Pages.profile)} onMouseDown={onMouseDown}>

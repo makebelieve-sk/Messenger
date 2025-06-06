@@ -5,7 +5,7 @@ export interface Photos {
 	photos: IPhoto[];
 	count: number;
 
-	getAllPhotos: () => void;
+	getAllPhotos: (resolve?: () => void) => void;
 	onClickPhoto: (photoId: string) => void;
 	addPhotoFromAvatar: (photo: IPhoto) => void;
 	addPhotos: (data: FormData) => void;

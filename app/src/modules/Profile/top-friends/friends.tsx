@@ -1,45 +1,46 @@
-import { memo, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FriendsTab } from "common-types";
+import { memo, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import NoDataComponent from "@components/ui/no-data";
 import useProfile from "@hooks/useProfile";
 import FriendsBlock from "@modules/profile/top-friends/friends-block";
 import i18next from "@service/i18n";
-import { MainFriendTabs, Pages } from "@custom-types/enums";
+import useFriendsStore from "@store/friends";
+import { Pages } from "@custom-types/enums";
+import { goToAnotherProfile } from "@utils/index";
 
 // Компонент, отрисовывающий блок друзей
 export default memo(function Friends() {
-	// TODO заменить loading на загрузку друзей из стора
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [ loading, setLoading ] = useState(false);
+	const friends = useFriendsStore(state => state.myFriends);
+	const count = useFriendsStore(state => state.countMyFriends);
+	const isLoading = useFriendsStore(state => state.isLoadingMyFriends);
 
-	const profile = useProfile();
+	const { userId } = useParams();
 	const navigate = useNavigate();
 
-	const topFriends = [];
-	const friendsCount = 0;
+	const profile = useProfile(userId);
 
 	useEffect(() => {
-		// Получаем количество друзей, подписчиков и подгружаем первые 6 из них
-		profile.getFriends();
+		// Получаем количество друзей и подписчиков
+		profile.getFriendsAndFollowers();
 	}, []);
 
 	// Обрабока клика по блоку
 	const blockHandler = () => {
-		navigate(Pages.friends, {
-			state: {
-				mainTab: MainFriendTabs.allFriends,
-			},
-		});
+		useFriendsStore.getState().setMainTab(FriendsTab.ALL);
+		useFriendsStore.getState().setContentTab(FriendsTab.MY);
+
+		navigate(goToAnotherProfile(Pages.friends, userId));
 	};
 
 	return <FriendsBlock
 		state={{
 			title: i18next.t("profile-module.friends"),
-			count: friendsCount,
-			users: topFriends,
+			count: count,
+			friends: friends,
 		}}
-		isLoading={loading}
+		isLoading={isLoading}
 		onClickBlock={blockHandler}
 	>
 		<NoDataComponent text={i18next.t("profile-module.no_friends")} />

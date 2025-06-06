@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ModalWithConfirm should call callback and close modal when confirm button is clicked 1`] = `<div />`;
+
+exports[`ModalWithConfirm should close modal when cancel button is clicked 1`] = `<div />`;
+
+exports[`ModalWithConfirm should not call callback if it is not provided 1`] = `<div />`;
+
+exports[`ModalWithConfirm should not render when confirmModal is null 1`] = `<div />`;
+
+exports[`ModalWithConfirm should render with custom button text 1`] = `<div />`;
+
+exports[`ModalWithConfirm should render with text 1`] = `<div />`;

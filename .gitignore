@@ -35,9 +35,13 @@ nginx/logs/
 nginx/cache/
 nginx/tmp/
 
-#jest coverage
+# Файлы тестирования
 app/coverage
-*storybook.log
+
+# Файлы Storybook
+app/*storybook.log
+app/.storybook
+app/storybook-static/
 
 # Дампы базы данных MS SQL
 server/dumps
@@ -47,3 +51,6 @@ deploy/sa_password.txt
 
 # Папка с сертификатами для установки https соединения
 server/certs
+
+# Файлы настройка Husky
+.husky/_

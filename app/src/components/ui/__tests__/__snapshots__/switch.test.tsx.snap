@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwitchComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <span
+    class="MuiSwitch-root MuiSwitch-sizeMedium css-rehya9-MuiSwitch-root"
+  >
+    <span
+      class="MuiButtonBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary Mui-checked PrivateSwitchBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary Mui-checked Mui-checked css-161ms7l-MuiButtonBase-root-MuiSwitch-switchBase"
+    >
+      <input
+        checked=""
+        class="PrivateSwitchBase-input MuiSwitch-input css-j8yymo"
+        name="test-switch"
+        type="checkbox"
+      />
+      <span
+        class="MuiSwitch-thumb css-17jyosd-MuiSwitch-thumb"
+      />
+    </span>
+    <span
+      class="MuiSwitch-track css-tj8d99-MuiSwitch-track"
+    />
+  </span>
+</DocumentFragment>
+`;

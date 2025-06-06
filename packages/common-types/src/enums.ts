@@ -25,18 +25,25 @@ enum ApiRoutes {
 	downloadFile = "/download-file",
 	deleteFiles = "/delete-files",
 	//----friends--------
-	friends = "/friends",
-	getFriends = "/get-friends",
+	getAllCounts = "/get-all-counts",
+	getMyFriends = "/get-my-friends",
+	checkOnlineUser = "/check-online-user",
+	getFollowers = "/get-followers",
+	getBlockedFriends = "/get-blocked-friends",
+	getCommonFriends = "/get-common-friends",
 	getFriendInfo = "/get-friend-info",
-	getCountFriends = "/get-count-friends",
-	getPossibleUsers = "/get-possible-users",
-	addToFriend = "/add-to-friend",
-	unsubscribeUser = "/unsubscribe-user",
-	acceptUser = "/accept-user",
-	leftInSubscribers = "/left-in-subscribers",
+	getPossibleFriends = "/get-possible-friends",
+	followFriend = "/follow-friend",
+	getIncomingRequests = "/get-incoming-requests",
+	getOutgoingRequests = "/get-outgoing-requests",
+	unfollow = "/unfollow",
+	addFriend = "/add-friend",
+	leftInFollowers = "/left-in-followers",
+	acceptFriendRequest = "/accept-friend-request",
 	deleteFriend = "/delete-friend",
 	getFriendsNotification = "/get-friends-notification",
 	blockFriend = "/block-friend",
+	unblockFriend = "/unblock-friend",
 	checkBlockStatus = "/check-block-status",
 	//----messages--------
 	getDialogs = "/get-dialogs",
@@ -87,11 +94,23 @@ enum SocketActions {
 	USER_DISCONNECT = "USER_DISCONNECT",
 	LOG_OUT = "LOG_OUT",
 	//----------------FRIENDS----------------
-	ADD_TO_FRIENDS = "ADD_TO_FRIENDS",
 	ACCEPT_FRIEND = "ACCEPT_FRIEND",
-	UNSUBSCRIBE = "UNSUBSCRIBE",
-	FRIENDS = "FRIENDS",
+	FOLLOW_FRIEND = "FOLLOW_FRIEND",
+	ADD_OUTGOING_REQUEST = "ADD_OUTGOING_REQUEST",
+	UNFOLLOW_FRIEND = "UNFOLLOW_FRIEND",
+	REMOVE_OUTGOING_REQUEST = "REMOVE_OUTGOING_REQUEST",
+	ADD_TO_FRIEND = "ADD_TO_FRIEND",
+	REMOVE_FOLLOWER = "REMOVE_FOLLOWER",
+	ADD_FRIEND_REQUEST = "ADD_FRIEND_REQUEST",
+	REMOVE_FRIEND_REQUEST = "REMOVE_FRIEND_REQUEST",
+	REJECT_FRIEND_REQUEST = "REJECT_FRIEND_REQUEST",
+	ADD_TO_FOLLOWER = "ADD_TO_FOLLOWER",
+	DELETE_FRIEND = "DELETE_FRIEND",
+	DELETING_FRIEND = "DELETING_FRIEND",
 	BLOCK_FRIEND = "BLOCK_FRIEND",
+	BLOCKING_FRIEND = "BLOCKING_FRIEND",
+	UNBLOCK_FRIEND = "UNBLOCK_FRIEND",
+	UNBLOCKING_FRIEND = "UNBLOCKING_FRIEND",
 	// ---------------MESSAGES---------------
 	MESSAGE = "MESSAGE",
 	SEND_MESSAGE = "SEND_MESSAGE",
@@ -110,12 +129,15 @@ enum SocketActions {
 
 // Вкладки друзей
 enum FriendsTab {
-	all = 0,
-	online = 1,
-	subscribers = 2,
-	friendRequests = 3,
-	incomingRequests = 4,
-	search = 5,
+	ALL = 0,
+	MY = 1,
+	ONLINE = 2,
+	FOLLOWERS = 3,
+	OUTGOING_REQUESTS = 4,
+	INCOMING_REQUESTS = 5,
+	SEARCH = 6,
+	BLOCKED = 7,
+	COMMON = 8,
 };
 
 // Типы сообщений
@@ -149,8 +171,3 @@ export {
 	MessageReadStatus,
 	FileVarieties,
 };
-
-// TODO 
-// 1) заменить все енамы на фронте и беке
-// 2) удалить те енамы, которые вынес в отдельный модуль, из сервера и клиента
-// 3) сделат ьто же самое с типами

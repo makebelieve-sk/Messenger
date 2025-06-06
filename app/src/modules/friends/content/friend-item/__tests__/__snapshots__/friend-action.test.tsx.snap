@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FriendActions Component should match snapshot for FOLLOWERS tab 1`] = `
+<div>
+  <button
+    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSuccess MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorSuccess MuiButton-root MuiButton-outlined MuiButton-outlinedSuccess MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorSuccess friend-actions__action css-1b1lt30-MuiButtonBase-root-MuiButton-root"
+    tabindex="0"
+    type="button"
+  >
+    friends-module.actions.add_friend
+  </button>
+</div>
+`;
+
+exports[`FriendActions Component should match snapshot for INCOMING_REQUESTS tab 1`] = `
+<div>
+  <span
+    class="friend-actions__accept"
+  >
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSuccess MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorSuccess MuiButton-root MuiButton-outlined MuiButton-outlinedSuccess MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorSuccess friend-actions__action css-1b1lt30-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="button"
+    >
+      friends-module.actions.accept
+    </button>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedError MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorError MuiButton-root MuiButton-outlined MuiButton-outlinedError MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorError friend-actions__action css-1vvreb9-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="button"
+    >
+      friends-module.actions.decline
+    </button>
+  </span>
+</div>
+`;
+
+exports[`FriendActions Component should match snapshot for MY tab 1`] = `
+<div>
+  <span
+    class="friend-actions__write-message"
+  >
+    friends-module.actions.write_message
+  </span>
+</div>
+`;

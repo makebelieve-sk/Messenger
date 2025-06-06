@@ -9,9 +9,11 @@ COPY app/package*.json ./
 
 # Копируем локальные пакеты
 COPY packages/common-types /packages/common-types
+COPY packages/validation /packages/validation
 
-# Устанавливаем зависимости для модуля packages/common-types
+# Устанавливаем зависимости для модулей пакетов
 RUN cd /packages/common-types && npm install && cd ..
+RUN cd /packages/validation && npm install && cd ..
 
 # Устанавливаем зависимости
 RUN npm install

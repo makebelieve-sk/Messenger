@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MainClientProvider should provide MainClient instance via context 1`] = `<div />`;
+
+exports[`MainClientProvider should render App component inside provider 1`] = `
+<div>
+  <div
+    class="root"
+  >
+    <div
+      class="root__wrapper root__no-auth"
+    >
+      <div
+        class="root__wrapper__container"
+      >
+        <div
+          class="main-content MuiBox-root css-0"
+          data-testid="box-component"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

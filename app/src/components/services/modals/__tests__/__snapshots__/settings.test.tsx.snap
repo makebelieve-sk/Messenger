@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ModalWithSettings should match snapshot when deleting account 1`] = `<div />`;
+
+exports[`ModalWithSettings should match snapshot when modal is closed 1`] = `<div />`;
+
+exports[`ModalWithSettings should match snapshot when modal is open 1`] = `<div />`;
+
+exports[`ModalWithSettings should match snapshot when saving 1`] = `<div />`;

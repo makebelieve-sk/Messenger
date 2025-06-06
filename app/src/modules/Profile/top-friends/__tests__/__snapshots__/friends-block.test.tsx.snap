@@ -1,0 +1,321 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FriendsBlock calls onClickBlock when title is clicked 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 friends-container paper-block css-1gtchvp-MuiPaper-root"
+      style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="block-title"
+      >
+        Friends
+         
+        <span
+          class="counter"
+        >
+          2
+        </span>
+      </div>
+      <ul
+        class="MuiList-root MuiList-padding friends-container__top-friends__list css-b7dj7n-MuiList-root"
+      >
+        <li
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding friends-container__top-friends__item css-cfd5wn-MuiListItem-root"
+        >
+          <div
+            class="MuiListItemAvatar-root friends-container__top-friends__item__avatar-block css-1ulznza-MuiListItemAvatar-root"
+          >
+            <span
+              class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+            >
+              <div
+                class="MuiAvatar-root MuiAvatar-circular avatar user-avatar big-avatar css-fmeqll-MuiAvatar-root"
+                id="user-avatar"
+              >
+                <img
+                  alt="John Doe Smith"
+                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  src="avatar1.jpg"
+                />
+              </div>
+              <span
+                class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+              />
+            </span>
+          </div>
+          John
+        </li>
+        <li
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding friends-container__top-friends__item css-cfd5wn-MuiListItem-root"
+        >
+          <div
+            class="MuiListItemAvatar-root friends-container__top-friends__item__avatar-block css-1ulznza-MuiListItemAvatar-root"
+          >
+            <span
+              class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+            >
+              <div
+                class="MuiAvatar-root MuiAvatar-circular avatar user-avatar big-avatar css-fmeqll-MuiAvatar-root"
+                id="user-avatar"
+              >
+                <img
+                  alt="Jane Smith Doe"
+                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  src="avatar2.jpg"
+                />
+              </div>
+              <span
+                class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+              />
+            </span>
+          </div>
+          Jane
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsBlock renders children when no users are provided 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 friends-container paper-block css-1gtchvp-MuiPaper-root"
+      style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="block-title"
+      >
+        Friends
+         
+        <span
+          class="counter"
+        >
+          0
+        </span>
+      </div>
+      <div>
+        No friends
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsBlock renders loading state 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 friends-container paper-block css-1gtchvp-MuiPaper-root"
+      style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="block-title"
+      >
+        Friends
+         
+        <span
+          class="counter"
+        >
+          2
+        </span>
+      </div>
+      <div
+        class="spinner"
+        data-testid="spinner"
+      >
+        <span
+          class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wxecgq-MuiCircularProgress-root"
+          role="progressbar"
+          style="width: 40px; height: 40px;"
+        >
+          <svg
+            class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
+            viewBox="22 22 44 44"
+          >
+            <circle
+              class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
+              cx="44"
+              cy="44"
+              fill="none"
+              r="20.2"
+              stroke-width="3.6"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsBlock renders users list when users are provided 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 friends-container paper-block css-1gtchvp-MuiPaper-root"
+      style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="block-title"
+      >
+        Friends
+         
+        <span
+          class="counter"
+        >
+          2
+        </span>
+      </div>
+      <ul
+        class="MuiList-root MuiList-padding friends-container__top-friends__list css-b7dj7n-MuiList-root"
+      >
+        <li
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding friends-container__top-friends__item css-cfd5wn-MuiListItem-root"
+        >
+          <div
+            class="MuiListItemAvatar-root friends-container__top-friends__item__avatar-block css-1ulznza-MuiListItemAvatar-root"
+          >
+            <span
+              class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+            >
+              <div
+                class="MuiAvatar-root MuiAvatar-circular avatar user-avatar big-avatar css-fmeqll-MuiAvatar-root"
+                id="user-avatar"
+              >
+                <img
+                  alt="John Doe Smith"
+                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  src="avatar1.jpg"
+                />
+              </div>
+              <span
+                class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+              />
+            </span>
+          </div>
+          John
+        </li>
+        <li
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding friends-container__top-friends__item css-cfd5wn-MuiListItem-root"
+        >
+          <div
+            class="MuiListItemAvatar-root friends-container__top-friends__item__avatar-block css-1ulznza-MuiListItemAvatar-root"
+          >
+            <span
+              class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+            >
+              <div
+                class="MuiAvatar-root MuiAvatar-circular avatar user-avatar big-avatar css-fmeqll-MuiAvatar-root"
+                id="user-avatar"
+              >
+                <img
+                  alt="Jane Smith Doe"
+                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  src="avatar2.jpg"
+                />
+              </div>
+              <span
+                class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+              />
+            </span>
+          </div>
+          Jane
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FriendsBlock renders with title and count 1`] = `
+<div>
+  <div
+    class="MuiGrid2-root MuiGrid2-direction-xs-row grid-item-style css-1fzlhpv-MuiGrid2-root"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 friends-container paper-block css-1gtchvp-MuiPaper-root"
+      style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+    >
+      <div
+        class="block-title"
+      >
+        Friends
+         
+        <span
+          class="counter"
+        >
+          2
+        </span>
+      </div>
+      <ul
+        class="MuiList-root MuiList-padding friends-container__top-friends__list css-b7dj7n-MuiList-root"
+      >
+        <li
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding friends-container__top-friends__item css-cfd5wn-MuiListItem-root"
+        >
+          <div
+            class="MuiListItemAvatar-root friends-container__top-friends__item__avatar-block css-1ulznza-MuiListItemAvatar-root"
+          >
+            <span
+              class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+            >
+              <div
+                class="MuiAvatar-root MuiAvatar-circular avatar user-avatar big-avatar css-fmeqll-MuiAvatar-root"
+                id="user-avatar"
+              >
+                <img
+                  alt="John Doe Smith"
+                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  src="avatar1.jpg"
+                />
+              </div>
+              <span
+                class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+              />
+            </span>
+          </div>
+          John
+        </li>
+        <li
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding friends-container__top-friends__item css-cfd5wn-MuiListItem-root"
+        >
+          <div
+            class="MuiListItemAvatar-root friends-container__top-friends__item__avatar-block css-1ulznza-MuiListItemAvatar-root"
+          >
+            <span
+              class="MuiBadge-root avatar-badge css-63ezxx-MuiBadge-root"
+            >
+              <div
+                class="MuiAvatar-root MuiAvatar-circular avatar user-avatar big-avatar css-fmeqll-MuiAvatar-root"
+                id="user-avatar"
+              >
+                <img
+                  alt="Jane Smith Doe"
+                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  src="avatar2.jpg"
+                />
+              </div>
+              <span
+                class="MuiBadge-badge MuiBadge-dot MuiBadge-anchorOriginBottomRight MuiBadge-anchorOriginBottomRightCircular MuiBadge-overlapCircular css-aa1yeu-MuiBadge-badge"
+              />
+            </span>
+          </div>
+          Jane
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;

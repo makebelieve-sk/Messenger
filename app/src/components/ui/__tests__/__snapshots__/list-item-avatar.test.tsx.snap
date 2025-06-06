@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItemAvatarComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="MuiListItemAvatar-root custom-class css-1ulznza-MuiListItemAvatar-root"
+  >
+    <div>
+      Test Avatar
+    </div>
+  </div>
+</DocumentFragment>
+`;

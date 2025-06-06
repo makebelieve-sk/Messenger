@@ -3,21 +3,21 @@ echo "Running pre-commit hook"
 # Заходим в папку app из корневой папки проекта
 cd app
 
-# Проверка тестов на клиенте с покрытием
-echo "Running client tests with coverage..."
-if npm run test:coverage; then
-  echo "✅ Client tests passed with coverage!"
-else
-  echo "❌ Tests failed with coverage. Fix errors before committing."
-  exit 1
-fi
-
 # Проверка линтера для клиента
 echo "Linting client..."
 if npm run lint; then
   echo "✅ Client code passed linting!"
 else
   echo "❌ Client code failed linting. Fix errors before committing."
+  exit 1
+fi
+
+# Проверка тестов на клиенте с покрытием
+echo "Running client tests with coverage..."
+if npm run test:coverage; then
+  echo "✅ Client tests passed with coverage!"
+else
+  echo "❌ Tests failed with coverage. Fix errors before committing."
   exit 1
 fi
 

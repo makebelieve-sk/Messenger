@@ -7,7 +7,6 @@
     font-size: 15px;
 }
 
-// =============================================================================
 // Добавляем стиль для контейнеров на странице профиля
 .profile-container__grid.MuiGrid2-container {
     flex-wrap: nowrap;
@@ -17,4 +16,9 @@
 .MuiGrid2-container.column__grid {
     flex-direction: column;
 }
-// =============================================================================
+
+// Добавляем стиль для вкладок в разделе "Друзья"
+.MuiTab-root.main-tabs__tab {
+    align-items: flex-start;
+    padding: 10px 20px;
+}
