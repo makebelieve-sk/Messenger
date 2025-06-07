@@ -16,12 +16,12 @@ export default defineConfig(({ mode }) => {
     return {
         plugins: [
             // Формирует отчеты статистики о размерах чанков итоговой сборки
-            visualizer({
+            mode === "development" ? visualizer({
                 filename: "dist/stats.html",    // Путь для отчёта
                 open: true,                     // Автоматически открывает отчёт после сборки
                 gzipSize: true,                 // Показывает gzip размеры
                 brotliSize: true,               // Показывает brotli размеры
-            }),
+            }) : undefined,
             react({
                 jsxImportSource: "@emotion/react",
                 babel: {

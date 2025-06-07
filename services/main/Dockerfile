@@ -2,27 +2,27 @@
 FROM node:22
 
 # Устанавливаем рабочую директорию в контейнере
-WORKDIR /server
+WORKDIR /main-server
 
-# Копируем package.json и устанавливаем зависимости
-COPY services/main/package*.json ./
-
-# Копируем локальные пакеты
-COPY packages/common-types /packages/common-types
-COPY packages/validation /packages/validation
+# Копируем package.json и общие пакеты
+COPY services/main/package*.json    ./services/main/
+COPY packages/common-types          ./packages/common-types/
+COPY packages/validation            ./packages/validation/
 
 # Устанавливаем зависимости для модулей пакетов
-RUN cd /packages/common-types && npm install && cd ..
-RUN cd /packages/validation && npm install && cd ..
+RUN cd packages/common-types && npm install && cd ../validation && npm install
 
 # Устанавливаем зависимости (запрещаем изменять версии пакетов. Строгое соответствие версий пакетов из package и package-lock)
-RUN npm install --frozen-lockfile
+RUN cd services/main && npm install --frozen-lockfile
 
 # Устанавливаем curl (необходим для healthcheck контейнера)
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 # Копируем серверный код
-COPY services/main/. .
+COPY . .
+
+# Уходим в рабочую директорию
+WORKDIR /main-server/services/main
 
 # Запускаем сборку сервера (без запуска сервера)
 RUN npm run build
