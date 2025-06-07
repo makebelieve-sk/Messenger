@@ -18,8 +18,8 @@ services:
     secrets:
       - sa_password                       # Определяет секрет и указывает путь к файлу, содержащему секрет
     env_file:
-      - ./server/.env                     # Копируем .env файлы. Для сервиса MS SQL Server они необходимы для замены переменных окружения в init.sql (см. ниже)
-      - ./server/.env.production
+      - ./services/main/.env              # Копируем .env файлы. Для сервиса MS SQL Server они необходимы для замены переменных окружения в init.sql (см. ниже)
+      - ./services/main/.env.production
     volumes:
       - ./deploy/entrypoint-mssql.sh:/docker-entrypoint-initdb.d/entrypoint-mssql.sh  # Исполняемый скрипт .sh, который прокидывает .env переменные в init.sql (см. ниже)
       - ./deploy/check-mssql-health.sh:/docker-entrypoint-initdb.d/check-mssql-health.sh # Исполняемый скрипт .sh, который проверяет здоровье сервера MSSQL
@@ -89,31 +89,31 @@ services:
       retries: 3                          # Количество неудачных попыток, после которых контейнер считается нездоровым
       start_period: 10s                   # Время, которое должно пройти после запуска контейнера, прежде чем будет выполнена первая проверка
 
-  # Сервис сервера (запускает файл конфигурации в папке server/Dockerfile)
-  server:
+  # Сервис сервера (запускает файл конфигурации в папке services/main/Dockerfile)
+  main-server:
     build:
       context: .                          # Указываем текущую рабочую директорию. Необходимо, чтобы можно было без проблем копировать отдельные модули папки packages
-      dockerfile: server/Dockerfile       # Наименование файла конфигурации докера на сервере (происходит его автоматический запуск)
-    container_name: server                # Наименование контейнера докера на сервере (для последующей отладки)
+      dockerfile: services/main/Dockerfile # Наименование файла конфигурации докера на сервере (происходит его автоматический запуск)
+    container_name: main-server           # Наименование контейнера докера на сервере (для последующей отладки)
     ports:
       - "5051:5050"                       # Указываем соответствие между портами: 5051 (внешний порт сервера), 5050 - внутренний порт контейнера
     networks:
       - app_network                       # Указываем способ общения с другими сервисами
     env_file:
-      - ./server/.env                     # Копируем .env файлы (также их можно копировать в Dockerfile, но тогда они будут зашиты в образ сборки докера)
-      - ./server/.env.stage               # В данном случае мы можем с легкостью менять env переменные в файлах и только перезапускать сервис (пересборки образа не будет)
+      - ./services/main/.env              # Копируем .env файлы (также их можно копировать в Dockerfile, но тогда они будут зашиты в образ сборки докера)
+      - ./services/main/.env.stage        # В данном случае мы можем с легкостью менять env переменные в файлах и только перезапускать сервис (пересборки образа не будет)
     environment:
       - MESSANGER_ENV=stage               # Указываем переменную MESSANGER_ENV (отвечает за режим работы приложения)
       - NODE_ENV=production               # Указываем переменную NODE_ENV (она указывается в package.json при команде npm run build + её необходимо указать для других npm пакетов)
     volumes:
-      - ./server/certs:/server/certs:ro   # Указываем путь к папке с сертификатами (сертификаты для development режима)
+      - ./services/main/certs:/main-server/certs:ro   # Указываем путь к папке с сертификатами (сертификаты для development режима)
     depends_on:                           # Указываем порядок запуска сервисов (но это не 100% гарантия запуска, но не готовности контейнеров - кроме исключения: condition: service_healthy)
       mssql:
-        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис server будет запущен только после того, как mssql пройдет все проверки здоровья и будет считаться "здоровым"
+        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис main-server будет запущен только после того, как mssql пройдет все проверки здоровья и будет считаться "здоровым"
       redis:                              # Запускаем данный сервис только после успешного запуска сервиса redis
-        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис server будет запущен только после того, как redis пройдет все проверки здоровья и будет считаться "здоровым"
+        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис main-server будет запущен только после того, как redis пройдет все проверки здоровья и будет считаться "здоровым"
       redisinsight:                       # Запускаем данный сервис только после успешного запуска сервиса redisinsight
-        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис server будет запущен только после того, как redis пройдет все проверки здоровья и будет считаться "здоровым"
+        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис main-server будет запущен только после того, как redis пройдет все проверки здоровья и будет считаться "здоровым"
     restart: on-failure                   # Перезапускать контейнер только в случаях возникновения ошибок (Количество перезапуском невозможно ограничить в Docker compose - зато можно в Docker Swarm - это оркестратор, как Ansible/Kubernetes)
     healthcheck:                          # Проверка здоровья контейнера
       test: [
@@ -139,10 +139,10 @@ services:
     networks:
       - app_network                       # Указываем способ общения с другими сервисами
     volumes:
-      - ./server/certs:/etc/nginx/certs     # Указываем путь к папке с сертификатами (сертификаты для development режима)
+      - ./services/main/certs:/etc/nginx/certs     # Указываем путь к папке с сертификатами (сертификаты для development режима)
     restart: on-failure                   # Перезапускать контейнер только в случаях возникновения ошибок (Количество перезапуском невозможно ограничить в Docker compose - зато можно в Docker Swarm - это оркестратор, как Ansible/Kubernetes)
     depends_on:                           # Указываем порядок запуска сервисов (но это не 100% гарантия запуска, но не готовности контейнеров - кроме исключения: condition: service_healthy)
-      server:                             # Запускаем данный сервис только после успешного запуска сервиса server
+      main-server:                             # Запускаем данный сервис только после успешного запуска сервиса main-server
         condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис nginx будет запущен только после того, как redis пройдет все проверки здоровья и будет считаться "здоровым"
 
 # Данное поле необходимо для установки общения между сервисами

@@ -380,7 +380,7 @@ cd my-messenger
 
 2. Настройка переменных окружения:
    - Скопируйте `app/env_template` в `app/.env`
-   - Скопируйте `server/env_template` в `server/.env`
+   - Скопируйте `services/main/env_template` в `services/main/.env`
    - Заполните необходимые переменные окружения (при старте в консоль будут выведены те переменные, которые оказались пропущенными)
 
 3. Установка зависимостей:
@@ -390,19 +390,19 @@ cd app
 npm install
 
 # Установка зависимостей бэкенда
-cd ../server
+cd ../services/main
 npm install
 ```
 
 4. Запуск в режиме разработки:
 ```bash
 # Запуск бэкенда
-cd server
-npm run dev
+cd services/main
+npm run start
 
 # Запуск фронтенда (в отдельном терминале)
 cd app
-npm run dev
+npm run start
 ```
 
 ### Запуск через Docker

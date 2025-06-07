@@ -27,7 +27,7 @@ ENVIRONMENT="${MESSANGER_ENV:-stage}"
 echo "MESSANGER_ENV=$ENVIRONMENT"
 
 if [ "$ENVIRONMENT" != "production" ]; then
-  CERT_DIR="../server/certs"
+  CERT_DIR="../services/main/certs"
   CERT_CHAIN="$CERT_DIR/localhost.pem"
   CERT_KEY="$CERT_DIR/localhost-key.pem"
 
@@ -44,7 +44,7 @@ if [ "$ENVIRONMENT" != "production" ]; then
     done
 
     echo
-    echo "В папке server сгенерируйте локальные сертификаты командой:" >&2
+    echo "В папке services/main сгенерируйте локальные сертификаты командой:" >&2
     echo " cd $CERT_DIR && mkcert -cert-file localhost.pem -key-file localhost-key.pem localhost 127.0.0.1 ::1" >&2
     exit 1
   fi

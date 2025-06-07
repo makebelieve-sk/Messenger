@@ -16,12 +16,12 @@ export default defineConfig(({ mode }) => {
     return {
         plugins: [
             // Формирует отчеты статистики о размерах чанков итоговой сборки
-            visualizer({
+            mode === "development" ? visualizer({
                 filename: "dist/stats.html",    // Путь для отчёта
                 open: true,                     // Автоматически открывает отчёт после сборки
                 gzipSize: true,                 // Показывает gzip размеры
                 brotliSize: true,               // Показывает brotli размеры
-            }),
+            }) : undefined,
             react({
                 jsxImportSource: "@emotion/react",
                 babel: {
@@ -73,8 +73,8 @@ export default defineConfig(({ mode }) => {
             open: true,         // Автоматически открывает браузер при запуске проекта
             port: 3000,         // Порт локального сервера для разработки клиента
             https: mode === "development" ? {
-                key: fs.readFileSync("../server/certs/localhost-key.pem"),
-                cert: fs.readFileSync("../server/certs/localhost.pem"),
+                key: fs.readFileSync("../services/main/certs/localhost-key.pem"),
+                cert: fs.readFileSync("../services/main/certs/localhost.pem"),
             } : undefined,
         },
         resolve: {
