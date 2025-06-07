@@ -1,6 +1,11 @@
+import { HTTPStatuses } from "common-types";
+import fs from "fs/promises";
+import path from "path";
 import swaggerUi from "swagger-ui-express";
 
-import swaggerConfig from "@config/swagger/swaggerConfig";
+import swaggerConfig from "@config/swagger.config";
+import { t } from "@service/i18n";
+import { MainError } from "@errors/controllers";
 
 interface Response {
 	description: string;
@@ -22,22 +27,48 @@ export default class SwaggerWork {
 		const pathObj = swaggerConfig.paths[swaggerPath];
 
 		if (!pathObj || !pathObj[method]) {
-			return `sequenceDiagram\n  Note over Клиент: Endpoint ${swaggerPath} не найден`;
+			return `sequenceDiagram\n  Note over ${t("diagram.client")}: Endpoint ${swaggerPath} ${t("diagram.not_found")}`;
 		}
 
 		const op = pathObj[method];
 
-		let diagram = "sequenceDiagram\n  participant Клиент\n  participant Сервер";
+		let diagram = `sequenceDiagram\n  participant ${t("diagram.client")}\n  participant ${t("diagram.server")}`;
 
-		diagram += `\n  Клиент->>Сервер: ${method.toUpperCase()} ${swaggerPath}`;
+		diagram += `\n ${t("diagram.client")} ->> ${t("diagram.server")}: ${method.toUpperCase()} ${swaggerPath}`;
 
 		const responses: { [code: string]: Response } = op.responses || {};
 
 		for (const [ code, res ] of Object.entries(responses)) {
 			const desc = typeof res === "string" ? res : res.description ?? "";
-			diagram += `\n  Сервер-->>Клиент: ${code} ${desc}`;
+			diagram += `\n  ${t("diagram.server")} <-->>${t("diagram.client")}: ${code} ${desc}`;
 		}
 
 		return diagram;
+	}
+
+	async generateDiagramPage(): Promise<string> {
+		const filePath = path.join(__dirname, "../../../public/diagram.html");
+		try {
+			await fs.access(filePath);
+		} catch {
+			throw new MainError(
+				t("main.error.diagram_file_not_found"),
+				HTTPStatuses.NotFound,
+			);
+		}
+
+		let html = await fs.readFile(filePath, "utf-8");
+
+		const endpoints = Object.entries(swaggerConfig.paths)
+			.map(([ path, methods ]) => {
+				const ops = Object.keys(methods).map(
+					(method) => `<li><a href="#" onclick="renderDiagram('${method}', '${path}')">${method.toUpperCase()} ${path}</a></li>`,
+				).join("\n");
+				return ops;
+			}).join("\n");
+
+		html = html.replace("{{endpoints}}", endpoints);
+
+		return html;
 	}
 }

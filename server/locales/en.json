@@ -151,5 +151,11 @@
 	"process.get_signal_before_close": "Received {{signal}}, initiating shutdown...",
 	"process.error.close_server": "Error during shutdown: {{error}}",
 
-	"mermaid.error.invalid_path_or_method": "Invalid path or method"
+	"mermaid.error.invalid_path_or_method": "Invalid path or method",
+	"main.error.diagram_file_not_found": "Diagram file not found",
+	"diagram.client":"Client",
+	"diagram.server":"Server",
+	"diagram.not_found":"not found",
+	"diagram.all_endpoints":"List of all endpoints",
+	"diagram.all_endpoints.ru":"Все эндпоинты"
 }

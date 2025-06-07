@@ -9,7 +9,6 @@ import corsConfig from "@config/cors.config";
 import expressSessionConfig from "@config/express-session.config";
 import expressStaticConfig from "@config/express-static.config";
 import ApiServer from "@core/api/ApiServer";
-import SwaggerWork from "@core/api/swagger/Swagger";
 import UsersController from "@core/controllers/UsersController";
 import Database from "@core/database/Database";
 import PassportWorks from "@core/Passport";
@@ -29,7 +28,6 @@ export default class MainServer {
 	private readonly _passport: PassportWorks;
 	private readonly _socket: SocketWorks;
 	private _session!: express.RequestHandler;
-	private readonly _swagger: SwaggerWork;
 
 	constructor(
 		private readonly _app: Express,
@@ -37,7 +35,6 @@ export default class MainServer {
 	) {
 		logger.debug("init");
 
-		this._swagger = new SwaggerWork();
 		// Инициализация контроллера управления пользователями на сервере
 		this._users = new UsersController();
 		// Инициализируем работу базы данных (модели, отношения)
@@ -49,7 +46,7 @@ export default class MainServer {
 		// Инициализируем работу Passport (мидлвары)
 		this._passport = new PassportWorks(this._app, this._database, this._users);
 		// Инициализируем работу API
-		new ApiServer(this._redisWork, this._app, this._users, this._database, this._passport.passport, this._swagger);
+		new ApiServer(this._redisWork, this._app, this._users, this._database, this._passport.passport);
 		// Инициализируем работу socket.io
 		this._socket = new SocketWorks(this._server, this._users, this._database, this._redisWork, this._session);
 	}

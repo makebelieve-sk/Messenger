@@ -2,14 +2,14 @@ import { SocketActions } from "common-types";
 
 import { getBaseUrl } from "@utils/swagger";
 
-import { authPath } from "./paths/authPath";
-import { friendsPaths } from "./paths/friendsPath";
-import { imagesPaths } from "./paths/imagesPaths ";
-import { userPaths } from "./paths/userPaths";
-import { authSchemas } from "./schemas/authSchemas";
-import { friendsSchemas } from "./schemas/friendsSchemas";
-import { imagesSchemas } from "./schemas/imagesSchemas ";
-import { userSchemas } from "./schemas/userSchemas";
+import { authPath } from "./swagger/paths/authPath";
+import { friendsPaths } from "./swagger/paths/friendsPath";
+import { imagesPaths } from "./swagger/paths/imagesPaths ";
+import { userPaths } from "./swagger/paths/userPaths";
+import { authSchemas } from "./swagger/schemas/authSchemas";
+import { friendsSchemas } from "./swagger/schemas/friendsSchemas";
+import { imagesSchemas } from "./swagger/schemas/imagesSchemas ";
+import { userSchemas } from "./swagger/schemas/userSchemas";
 
 const baseUrl = getBaseUrl();
 

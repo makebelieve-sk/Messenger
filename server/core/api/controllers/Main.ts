@@ -1,12 +1,10 @@
 import { ApiRoutes, HTTPStatuses } from "common-types";
 import type { Express, NextFunction, Request, Response } from "express";
-import fs from "fs/promises";
-import path from "path";
 
-import swaggerConfig from "@config/swagger/swaggerConfig";
 import AuthController from "@core/api/controllers/Auth";
 import type Middleware from "@core/api/Middleware";
 import type swaggerWork from "@core/api/swagger/Swagger";
+import SwaggerWork from "@core/api/swagger/Swagger";
 import type Database from "@core/database/Database";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
@@ -18,12 +16,13 @@ const logger = Logger("MainController");
 
 // Класс, отвечающий за основное/внешнее API
 export default class MainController {
+	private readonly _swagger: swaggerWork;
 	constructor(
 		private readonly _app: Express,
 		private readonly _middleware: Middleware,
 		private readonly _database: Database,
-		private readonly _swagger: swaggerWork,
 	) {
+		this._swagger = new SwaggerWork();
 		this._init();
 	}
 
@@ -33,25 +32,17 @@ export default class MainController {
 		this._app.get(ApiRoutes.checkHealth, this._checkHealth);
 
 
-		this._app.get("/api-docs/diagram", this._middleware.mustAuthenticated.bind(this._middleware), async (_, res) => {
-			const filePath = path.join(process.cwd(), "public", "diagram.html");
-			let html = await fs.readFile(filePath, "utf-8");
-
-			const endpoints = Object.entries(swaggerConfig.paths)
-				.map(([ path, methods ]) => {
-					const ops = Object.keys(methods).map(
-						(method) => `<li><a href="#" onclick="renderDiagram('${method}', '${path}')">${method.toUpperCase()} ${path}</a></li>`,
-					).join("\n");
-					return ops;
-				}).join("\n");
-
-			html = html.replace("{{endpoints}}", endpoints);
-	
-			res.send(html);
+		this._app.get(ApiRoutes.diagram, this._middleware.mustAuthenticated.bind(this._middleware), async (_, res, next) => {
+			try {
+				const html = await this._swagger.generateDiagramPage();
+				res.send(html);
+			} catch (error) {
+				next(error);
+			}
 		});
 
 
-		this._app.get("/api-docs/diagram-api", this._middleware.mustAuthenticated.bind(this._middleware), (req, res, next) => {
+		this._app.get(ApiRoutes.diagram_api, this._middleware.mustAuthenticated.bind(this._middleware), (req, res, next) => {
 			try {
 				const { path, method } = req.query;
 

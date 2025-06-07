@@ -2,6 +2,8 @@
 enum ApiRoutes {
 	//----main-----------
 	apiDocs = "/api-docs",
+	diagram = "/api-docs/diagram",
+	diagram_api = "/api-docs/diagram-api",
 	checkHealth = "/check-health",
 	soundNotifications = "/sound-notifications",
 	deleteAccount = "/delete-account",

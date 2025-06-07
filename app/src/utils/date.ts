@@ -5,7 +5,6 @@ import utc from "dayjs/plugin/utc";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import { Times } from "@custom-types/enums";
-import { getHoursOrMinutes } from "@utils/time";
 
 const logger = Logger.init("utils/date");
 
@@ -70,31 +69,31 @@ export const transformDate = (d: string, getYear = false) => {
 dayjs.extend(utc);
 
 export const getTime = (createDate: string, options: { withoutYesterday?: boolean } = {}) => {
-  const { withoutYesterday } = options;
+	const { withoutYesterday } = options;
 
-  const date = dayjs.utc(createDate);
-  const now = dayjs.utc();
+	const date = dayjs.utc(createDate);
+	const now = dayjs.utc();
 
-  const diff = now.diff(date);
+	const diff = now.diff(date);
 
-  if (diff > Times.HALF_YEAR) {
-    return `${date.date()}${getMonthName(date.month())} ${date.year()}`;
-  }
+	if (diff > Times.HALF_YEAR) {
+		return `${date.date()}${getMonthName(date.month())} ${date.year()}`;
+	}
 
-  if (diff > Times.YESTERDAY && diff <= Times.HALF_YEAR) {
-    return `${date.date()}${getMonthName(date.month())}`;
-  }
+	if (diff > Times.YESTERDAY && diff <= Times.HALF_YEAR) {
+		return `${date.date()}${getMonthName(date.month())}`;
+	}
 
-  if (diff > Times.TODAY && diff <= Times.YESTERDAY) {
-    return `${withoutYesterday ? "" : i18next.t("utils.yesterday")}${date.format("HH:mm")}`;
-  }
+	if (diff > Times.TODAY && diff <= Times.YESTERDAY) {
+		return `${withoutYesterday ? "" : i18next.t("utils.yesterday")}${date.format("HH:mm")}`;
+	}
 
-  if (diff <= Times.TODAY) {
-    const isYesterday = now.startOf("day").diff(date.startOf("day")) === 1;
-    return `${isYesterday && !withoutYesterday ? i18next.t("utils.yesterday") : ""}${date.format("HH:mm")}`;
-  }
+	if (diff <= Times.TODAY) {
+		const isYesterday = now.startOf("day").diff(date.startOf("day")) === 1;
+		return `${isYesterday && !withoutYesterday ? i18next.t("utils.yesterday") : ""}${date.format("HH:mm")}`;
+	}
 
-  return null;
+	return null;
 };
 
 // Форматирование даты

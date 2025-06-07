@@ -9,7 +9,6 @@ import MainController from "@core/api/controllers/Main";
 // import MessagesController from "@core/api/controllers/Messages";
 import UserController from "@core/api/controllers/User";
 import Middleware from "@core/api/Middleware";
-import SwaggerWork from "@core/api/swagger/Swagger";
 import UsersController from "@core/controllers/UsersController";
 import Database from "@core/database/Database";
 import RedisWorks from "@core/Redis";
@@ -27,7 +26,6 @@ export default class ApiServer {
 		private readonly _users: UsersController,
 		private readonly _database: Database,
 		private readonly _passport: PassportStatic,
-		private readonly _swagger: SwaggerWork,
 	) {
 		this._middleware = new Middleware(this._redisWork, this._app);
 
@@ -44,7 +42,7 @@ export default class ApiServer {
 
 		new AuthController(this._app, this._middleware, this._database, this._redisWork, this._passport, this._users);
 		// Обязательно объявляем MainController позже AuthController, чтобы был доступен нормально статичный метод logout
-		new MainController(this._app, this._middleware, this._database, this._swagger);
+		new MainController(this._app, this._middleware, this._database);
 		new ImagesController(this._app, this._middleware, this._database);
 		// new FilesController(this._app, this._middleware, this._database);
 		new FriendsController(this._app, this._middleware, this._database, this._users);
