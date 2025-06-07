@@ -155,7 +155,5 @@
 	"main.error.diagram_file_not_found": "Diagram file not found",
 	"diagram.client":"Client",
 	"diagram.server":"Server",
-	"diagram.not_found":"not found",
-	"diagram.all_endpoints":"List of all endpoints",
-	"diagram.all_endpoints.ru":"Все эндпоинты"
+	"diagram.not_found":"not found"
 }
