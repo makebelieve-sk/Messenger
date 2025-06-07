@@ -23,6 +23,7 @@ if [ ! -f $SECRET_FILE ]; then
 fi
 
 # Выбираем compose-файл по MESSANGER_ENV (по умолчанию stage)
+# Для запуска в режиме production использовать команду MESSANGER_ENV=production ./docker-compose-start.sh
 ENVIRONMENT="${MESSANGER_ENV:-stage}"
 echo "MESSANGER_ENV=$ENVIRONMENT"
 

@@ -7,7 +7,7 @@ import Repository from "@core/database/Repository";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import SequelizeError from "@errors/sequelize";
-import { DATEBASE_DOWN_MIGRATIONS } from "@utils/constants";
+import { DATABASE_DOWN_MIGRATIONS } from "@utils/constants";
 
 const logger = Logger("Database");
 
@@ -63,7 +63,7 @@ export default class Database {
 			this._migrations = new Migrations(this._sequelize);
 
 			// Запуск откатов миграций при установке env переменной
-			if (DATEBASE_DOWN_MIGRATIONS) {
+			if (DATABASE_DOWN_MIGRATIONS) {
 				const isSuccess = await this._migrations.down();
 
 				if (!isSuccess) {

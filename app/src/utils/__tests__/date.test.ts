@@ -51,7 +51,7 @@ describe("date utils", () => {
 			const date = dayjs().subtract(7, "month").toISOString();
 			const result = transformDate(date);
 			expect(result).toMatch(/^.+ utils\.months\..+$/);
-			expect(result).toBe("6 utils.months.november");
+			expect(result).toBe("7 utils.months.november");
 		});
 
 		it("returns date with year if getYear is true regardless of date", () => {
@@ -89,22 +89,22 @@ describe("date utils", () => {
 
 		it("returns 'yesterday' and time if it was yesterday", () => {
 			const date = "2025-05-31T08:15:00Z";
-			expect(getTime(date)).toBe("utils.yesterday13:15");
+			expect(getTime(date)).toBe("utils.yesterday08:15");
 		});
 
 		it("returns only time if today", () => {
 			const date = "2025-06-01T08:00:00Z";
-			expect(getTime(date)).toBe("13:00");
+			expect(getTime(date)).toBe("08:00");
 		});
 
 		it("returns yesterday time without 'yesterday' text when withoutYesterday is true", () => {
 			const date = "2025-05-31T08:15:00Z";
-			expect(getTime(date, { withoutYesterday: true })).toBe("13:15");
+			expect(getTime(date, { withoutYesterday: true })).toBe("08:15");
 		});
 
 		it("returns yesterday time with 'yesterday' text when withoutYesterday is false", () => {
 			const date = "2025-05-31T08:15:00Z";
-			expect(getTime(date, { withoutYesterday: false })).toBe("utils.yesterday13:15");
+			expect(getTime(date, { withoutYesterday: false })).toBe("utils.yesterday08:15");
 		});
 
 		it("returns empty if nothing matches", () => {

@@ -67,9 +67,9 @@ export default class MainServer {
 		this._app.use(this._session); // Используем конфигурацию сессии express-session
 
 		/**
-		 * Указываем Express использовать папку assets для обслуживания статических файлов
-		 * (опции express.static необходимо прописывать каждому мидлвару в отдельности).
-		 */
+			* Указываем Express использовать папку assets для обслуживания статических файлов
+			* (опции express.static необходимо прописывать каждому мидлвару в отдельности).
+			*/
 		this._app.use(express.static(path.join(__dirname, "../", ASSETS_DIR), expressStaticConfig));
 	}
 

@@ -9,9 +9,9 @@ import MainController from "@core/api/controllers/Main";
 // import MessagesController from "@core/api/controllers/Messages";
 import UserController from "@core/api/controllers/User";
 import Middleware from "@core/api/Middleware";
-import type UsersController from "@core/controllers/UsersController";
-import type Database from "@core/database/Database";
-import type RedisWorks from "@core/Redis";
+import UsersController from "@core/controllers/UsersController";
+import Database from "@core/database/Database";
+import RedisWorks from "@core/Redis";
 import Logger from "@service/logger";
 
 const logger = Logger("ApiServer");
@@ -28,6 +28,7 @@ export default class ApiServer {
 		private readonly _passport: PassportStatic,
 	) {
 		this._middleware = new Middleware(this._redisWork, this._app);
+
 
 		this._init();
 	}
