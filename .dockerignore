@@ -1,81 +1,37 @@
 # Зависимости
-app/node_modules
-server/node_modules
-/packages/common-types/node_modules
-/packages/validation/node_modules
+**/node_modules
 
 # Сборка production
-app/dist
-server/dist
-/packages/common-types/dist
-/packages/validation/dist
-
-# .env файлы сервера (они копируются в момент запуска сервиса сервера)
-server/.env
-server/.env.development
-server/.env.stage
-server/.env.production
+**/dist
 
 # Файлы npm логов
-app/npm-debug.log*
-server/npm-debug.log*
-
-# Пользовательские файлы/изображения
-server/assets
-
-# Файлы отчетов сервера
-server/reports
-
-# Файлы с логами
-server/logs
+**/npm-debug.log*
 
 # Временные и другие файлы nginx (они копируются в момент запуска сервисов)
-nginx/logs/
-nginx/cache/
-nginx/tmp/
+**/nginx/logs/
+**/nginx/cache/
+**/nginx/tmp/
 
-# Пример запросов HTTP к серверу
-/server/requests.http
-
-# Файлы линтеров клиента и сервера
-.eslint.config.ts
-app/eslint.config.ts
-server/eslint.config.ts
+# Файлы линтеров
+**/.eslint.config.ts
 
 # Файл единой конфигурации для разных IDE
-.editorconfig
-
-# Файлы тестирования
-app/coverage
-
-# Файлы Storybook
-app/*storybook.log
-app/.storybook
-app/storybook-static/
+**/.editorconfig
 
 # Файл глобального описания проекта
 README.md
-
-# Дампы базы данных MS SQL
-/server/dumps
-
-# Файлы конфигурации nodemon
-/server/nodemon*.json
-
-# Папка с сертификатами для установки https соединения
-/server/certs
 
 # Исключаем папку с тестами
 **/__tests__/
 **/__mocks__/ 
 
 # Исключаем все файлы *.test.ts и *.test.tsx
-*.test.ts
-*.test.tsx
+**/*.test.ts
+**/*.test.tsx
 
 # Исключаем конфигурацию Jest
-app/jest.config.js
-app/jest.setup.ts
+**/jest.config.js
+**/jest.setup.ts
 
 # Файлы настройка Husky
 .husky

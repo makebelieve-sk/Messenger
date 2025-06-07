@@ -73,8 +73,8 @@ export default defineConfig(({ mode }) => {
             open: true,         // Автоматически открывает браузер при запуске проекта
             port: 3000,         // Порт локального сервера для разработки клиента
             https: mode === "development" ? {
-                key: fs.readFileSync("../server/certs/localhost-key.pem"),
-                cert: fs.readFileSync("../server/certs/localhost.pem"),
+                key: fs.readFileSync("../services/main/certs/localhost-key.pem"),
+                cert: fs.readFileSync("../services/main/certs/localhost.pem"),
             } : undefined,
         },
         resolve: {

@@ -1,0 +1,7 @@
+# Файлы тестирования
+coverage
+
+# Файлы Storybook
+*storybook.log
+.storybook
+storybook-static/
