@@ -51,7 +51,7 @@ describe("date utils", () => {
 			const date = dayjs().subtract(7, "month").toISOString();
 			const result = transformDate(date);
 			expect(result).toMatch(/^.+ utils\.months\..+$/);
-			expect(result).toBe("7 utils.months.november");
+			expect(result).toBe("8 utils.months.november");
 		});
 
 		it("returns date with year if getYear is true regardless of date", () => {

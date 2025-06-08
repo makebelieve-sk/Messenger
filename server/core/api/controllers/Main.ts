@@ -35,6 +35,7 @@ export default class MainController {
 		this._app.get(ApiRoutes.diagram, this._middleware.mustAuthenticated.bind(this._middleware), async (_, res, next) => {
 			try {
 				const html = await this._swagger.generateDiagramPage();
+				res.removeHeader("Content-Security-Policy");
 				res.send(html);
 			} catch (error) {
 				next(error);

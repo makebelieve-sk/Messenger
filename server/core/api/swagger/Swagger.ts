@@ -40,7 +40,7 @@ export default class SwaggerWork {
 
 		for (const [ code, res ] of Object.entries(responses)) {
 			const desc = typeof res === "string" ? res : res.description ?? "";
-			diagram += `\n  ${t("diagram.server")} <-->>${t("diagram.client")}: ${code} ${desc}`;
+			diagram += `\n  ${t("diagram.server")} -->>${t("diagram.client")}: ${code} ${desc}`;
 		}
 
 		return diagram;
