@@ -1,0 +1,11 @@
+{
+	"errors": {
+		"config_unavailable": "MS SQL configuration is unavailable",
+		"connection_failed": "Database connection error"
+	},
+	"success": {
+		"connected": "Successfully connected to database",
+		"closed": "Database connection closed",
+		"migrations_applied": "Database migrations applied"
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"subscribing_new_channel": "Subscribing to {channel}",
+	"handling_message": "Handling message: {data}",
+	"failed_proceed_message": "Failed to proceed message [{message}]: {error}",
+	"subscribe": {
+		"error": "Failed to subscribe to channel \"{channel}\": {error}",
+		"success": "Subscribed to \"{channel}\" ({count} channels)"
+	},
+	"heartbeat": "Heartbeat sent: {payload}",
+	"publish": "Message: {data} have been sent to channel: {channel}",
+	"close": {
+		"unsubscribe": "Unsubscribed from \"{channel}\" and closed Redis subscribe connection",
+		"success": "Redis connections closed"
+	},
+	"config_error": {
+		"global": "Global Redis configuration is unavailable",
+		"options": "Global Redis options configuration is unavailable"
+	}
+}

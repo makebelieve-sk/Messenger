@@ -1,0 +1,8 @@
+{
+	"graceful_shutdown": {
+		"signal_received": "Shutdown signal received: {signal}",
+		"error_message": {
+			"at": "Occurred at"
+		}
+	}
+}

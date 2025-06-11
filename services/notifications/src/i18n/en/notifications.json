@@ -1,0 +1,22 @@
+{
+	"sent_notifications": {
+		"find_all": "Finding all sent notifications",
+		"find_one": "Finding sent notification with id: {id}",
+		"create": "Creating new sent notification",
+		"update": "Updating sent notification with id: {id}",
+		"remove": "Removing sent notification with id: {id}",
+		"close": "Closing database connection"
+	},
+	"pincodes": {
+		"find_all": "Finding all pincodes",
+		"find_one": "Finding pincode with id: {id}",
+		"create": "Creating new pincode",
+		"update": "Updating pincode with id: {id}",
+		"remove": "Removing pincode with id: {id}",
+		"close": "Closing database connection"
+	},
+	"notification": {
+		"notify": "Sending notification: [recipient={recipient}, type={type}, payload={payload}, action={action}]",
+		"unknown_type": "Unknown notification type: {type}"
+	}
+}
