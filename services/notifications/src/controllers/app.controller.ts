@@ -1,16 +1,26 @@
-import { Controller, Get, HttpCode, HttpStatus } from "@nestjs/common";
-
-import { AppService } from "../services/app.service";
+import HTTPExceptionFilter from "src/filters/http.filter";
+import AppService from "src/services/app.service";
+import {
+	Controller,
+	Get,
+	HttpCode,
+	HttpStatus,
+	UseFilters,
+} from "@nestjs/common";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 // Контроллер, управляет сервисом в зависимости от основных HTTP запросов
+@ApiTags()
 @Controller()
-export class AppController {
+@UseFilters(HTTPExceptionFilter)
+export default class AppController {
 	constructor(private readonly appService: AppService) {}
 
-	@Get('healthcheck')
+	@ApiOperation({ summary: "Статус доступности сервиса" })
+	@ApiResponse({ status: 204 })
+	@Get("healthcheck")
 	@HttpCode(HttpStatus.NO_CONTENT)
 	healthcheck() {
-		console.log("healthcheck");
 		this.appService.healthcheck();
 	}
 }

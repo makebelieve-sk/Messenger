@@ -1,0 +1,19 @@
+{
+	"subscribing_new_channel": "Подписываемся на канал {channel}",
+	"handling_message": "ОБработка сообщения: {data}",
+	"failed_proceed_message": "Обработка сообщения завершилас не удачно[{message}]: {error}",
+	"subscribe": {
+		"error": "Не удалось подписаться на канал \"{channel}\": {error}",
+		"success": "Подписка на \"{channel}\" успешно выполнена ({count} каналов)"
+	},
+	"heartbeat": "Отправлен сигнал работоспособности: {payload}",
+	"publish": "Сообщение: {data} отправлено в канал: {channel}",
+	"close": {
+		"unsubscribe": "Отписка от \"{channel}\" выполнена и соединение Redis закрыто",
+		"success": "Соединения Redis закрыты"
+	},
+	"config_error": {
+		"global": "Глобальная конфигурация Redis недоступна",
+		"options": "Глобальные настройки Redis недоступны"
+	}
+}

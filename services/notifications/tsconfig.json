@@ -18,5 +18,5 @@
 		"strictBindCallApply": false,
 		"noFallthroughCasesInSwitch": false
 	},
-	"exclude": ["./node_modules", "./dist", "./coverage"],
+	"exclude": ["./node_modules", "./dist", "./coverage"]
 }
