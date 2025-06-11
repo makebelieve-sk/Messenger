@@ -21,15 +21,15 @@ else
   exit 1
 fi
 
-# Выходим из папки app и заходим в папку server
-cd ../server
+# Выходим из папки app и заходим в папку services/main
+cd ../services/main
 
-# Проверка линтера для сервера
-echo "Linting server..."
+# Проверка линтера для основного сервера
+echo "Linting main-server..."
 if npm run lint; then
-  echo "✅ Server code passed linting!"
+  echo "✅ Main server code passed linting!"
 else
-  echo "❌ Server code failed linting. Fix errors before committing."
+  echo "❌ Main server code failed linting. Fix errors before committing."
   exit 1
 fi
 

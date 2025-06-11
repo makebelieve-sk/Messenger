@@ -1,56 +1,25 @@
 # Зависимости
-app/node_modules
-server/node_modules
+**/node_modules
 
 # Сборка production
-app/dist
-server/dist
+**/dist
 
-# .env файлы клиента
-app/.env
-app/.env.development
-app/.env.production
-
-# .env файлы сервера
-server/.env
-server/.env.development
-server/.env.stage
-server/.env.production
+# .env файлы
+**/.env
+**/.env.development
+**/.env.production
+**/.env.stage
 
 # Файлы npm логов
-app/npm-debug.log*
-server/npm-debug.log*
-
-# Пользовательские файлы/изображения
-server/assets
-
-# Файлы отчетов сервера
-server/reports
-
-# Файлы с логами
-server/logs
+**/npm-debug.log*
 
 # Временные и другие файлы nginx
-nginx/logs/
-nginx/cache/
-nginx/tmp/
-
-# Файлы тестирования
-app/coverage
-
-# Файлы Storybook
-app/*storybook.log
-app/.storybook
-app/storybook-static/
-
-# Дампы базы данных MS SQL
-server/dumps
+**/nginx/logs/
+**/nginx/cache/
+**/nginx/tmp/
 
 # Файл с секретами Docker Secrets
 deploy/sa_password.txt
-
-# Папка с сертификатами для установки https соединения
-server/certs
 
 # Файлы настройка Husky
 .husky/_

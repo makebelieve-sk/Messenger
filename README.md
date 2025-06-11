@@ -380,7 +380,7 @@ cd my-messenger
 
 2. Настройка переменных окружения:
    - Скопируйте `app/env_template` в `app/.env`
-   - Скопируйте `server/env_template` в `server/.env`
+   - Скопируйте `services/main/env_template` в `services/main/.env`
    - Заполните необходимые переменные окружения (при старте в консоль будут выведены те переменные, которые оказались пропущенными)
 
 3. Установка зависимостей:
@@ -390,14 +390,14 @@ cd app
 npm install
 
 # Установка зависимостей бэкенда
-cd ../server
+cd ../services/main
 npm install
 ```
 
 4. Запуск в режиме разработки:
 ```bash
 # Запуск бэкенда
-cd server
+cd services/main
 npm run start
 
 # Запуск фронтенда (в отдельном терминале)
@@ -489,13 +489,13 @@ COOKIE_NAME                      # имя cookie для сессии
 SECRET_KEY                       # секретный ключ для сессий
 
 # Настройки базы данных
-DATEBASE_DOWN_MIGRATIONS         # разрешить откат миграций
-DATEBASE_NAME                    # имя базы данных
-DATEBASE_USERNAME                # имя пользователя БД
-DATEBASE_PASSWORD                # пароль БД
-DATEBASE_DIALECT                 # диалект БД
+DATABASE_DOWN_MIGRATIONS         # разрешить откат миграций
+DATABASE_NAME                    # имя базы данных
+DATABASE_USERNAME                # имя пользователя БД
+DATABASE_PASSWORD                # пароль БД
+DATABASE_DIALECT                 # диалект БД
 DATABASE_DIALECT_REQUEST_TIMEOUT # таймаут запросов к БД (мс)
-DATEBASE_HOST                    # хост БД
+DATABASE_HOST                    # хост БД
 DATABASE_PORT                    # порт БД
 DATABASE_SHOW_DEV_LOGS           # показывать логи БД в dev режиме
 DATABASE_RETRY_ATTEMPTS          # количество попыток подключения
