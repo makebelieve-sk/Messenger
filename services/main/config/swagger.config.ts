@@ -2,10 +2,10 @@ import { SocketActions } from "common-types";
 
 import { getBaseUrl } from "@utils/swagger";
 
-import { authPath } from "./swagger/paths/authPath";
-import { friendsPaths } from "./swagger/paths/friendsPath";
-import { imagesPaths } from "./swagger/paths/imagesPaths ";
-import { userPaths } from "./swagger/paths/userPaths";
+import authPath from "./swagger/paths/authPath";
+import friendsPaths from "./swagger/paths/friendsPath";
+import imagesPaths from "./swagger/paths/imagesPaths ";
+import userPaths from "./swagger/paths/userPaths";
 import authSchemas from "./swagger/schemas/authSchemas";
 import friendsSchemas from "./swagger/schemas/friendsSchemas";
 import imagesSchemas from "./swagger/schemas/imagesSchemas ";

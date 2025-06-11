@@ -1,4 +1,4 @@
-export const userPaths = {
+const userPaths = {
 	"/get-me": {
 		get: {
 			summary: "Инфа о текущем юзере",
@@ -147,3 +147,5 @@ export const userPaths = {
 		},
 	},
 };
+
+export default userPaths;

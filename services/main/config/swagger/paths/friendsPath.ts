@@ -1,4 +1,4 @@
-export const friendsPaths = {
+const friendsPaths = {
 	"/friends/notification": {
 		get: {
 			summary: "Получить количество новых заявок в друзья",
@@ -561,3 +561,5 @@ export const friendsPaths = {
 		},
 	},
 };
+
+export default friendsPaths;

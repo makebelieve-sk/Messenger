@@ -1,4 +1,4 @@
-export const authPath = {
+const authPath = {
 	"/sign-up": {
 		post: {
 			summary: "Регистрация пользователя",
@@ -209,3 +209,5 @@ export const authPath = {
 		},
 	},
 };
+
+export default authPath;

@@ -1,4 +1,4 @@
-export const imagesPaths = {
+const imagesPaths = {
 	"/upload-avatar": {
 		post: {
 			summary: "Загрузка аватара при регистрации",
@@ -209,3 +209,5 @@ export const imagesPaths = {
 		},
 	},
 };
+
+export default imagesPaths;
