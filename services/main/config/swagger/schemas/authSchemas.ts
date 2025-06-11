@@ -1,4 +1,4 @@
-export const authSchemas = {
+ const authSchemas = {
 	SignUpRequest: {
 		type: "object",
 		properties: {
@@ -94,5 +94,6 @@ export const authSchemas = {
 		},
 		required: [ "email", "password" ],
 	},
-
 };
+
+export default authSchemas;

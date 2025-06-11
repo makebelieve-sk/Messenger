@@ -1,4 +1,4 @@
-export const userSchemas = {
+const userSchemas = {
 	User: {
 		type: "object",
 		properties: {
@@ -33,3 +33,5 @@ export const userSchemas = {
 		required: [ "name", "surName", "email", "phone" ],
 	},
 };
+
+export default userSchemas;

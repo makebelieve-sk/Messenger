@@ -10,7 +10,7 @@ import { MainError } from "@errors/controllers";
 interface Response {
 	description: string;
 }
-
+// Класс, отвечающий за работу с swagger
 export default class SwaggerWork {
 	private readonly _serve = swaggerUi.serve;
 	private readonly _setup = swaggerUi.setup(swaggerConfig);

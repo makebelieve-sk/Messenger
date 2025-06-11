@@ -1,4 +1,4 @@
-export const imagesSchemas = {
+const imagesSchemas = {
 	// Обработанное изображение
 	ProcessedImage: {
 		type: "object",
@@ -125,3 +125,5 @@ export const imagesSchemas = {
 		},
 	},
 };
+
+export default imagesSchemas;

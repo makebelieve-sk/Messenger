@@ -6,10 +6,10 @@ import { authPath } from "./swagger/paths/authPath";
 import { friendsPaths } from "./swagger/paths/friendsPath";
 import { imagesPaths } from "./swagger/paths/imagesPaths ";
 import { userPaths } from "./swagger/paths/userPaths";
-import { authSchemas } from "./swagger/schemas/authSchemas";
-import { friendsSchemas } from "./swagger/schemas/friendsSchemas";
-import { imagesSchemas } from "./swagger/schemas/imagesSchemas ";
-import { userSchemas } from "./swagger/schemas/userSchemas";
+import authSchemas from "./swagger/schemas/authSchemas";
+import friendsSchemas from "./swagger/schemas/friendsSchemas";
+import imagesSchemas from "./swagger/schemas/imagesSchemas ";
+import userSchemas from "./swagger/schemas/userSchemas";
 
 const baseUrl = getBaseUrl();
 
@@ -39,7 +39,7 @@ const swaggerConfig = {
 			...authSchemas,
 			...imagesSchemas,
 			...friendsSchemas,
-			    SocketEvent: {
+			SocketEvent: {
 				type: "object",
 				properties: {
 					event: {

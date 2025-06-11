@@ -1,4 +1,4 @@
-export const friendsSchemas = {
+const friendsSchemas = {
 	// Основная схема для параметров запроса
 	FriendsData: {
 		type: "object",
@@ -152,3 +152,5 @@ export const friendsSchemas = {
 		},
 	},
 };
+
+export default friendsSchemas;
