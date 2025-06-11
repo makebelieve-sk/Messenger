@@ -13,7 +13,9 @@ export default [
 	// Общая конфигурация для файлов Storybook
 	{
 		files: ["**/*.stories.@(js|jsx|ts|tsx)"],
-		...storybookPlugin,
+		plugins: {
+			storybook: storybookPlugin,
+		},
 	},
 	// Общая конфигурация для всех файлов
 	{
@@ -41,7 +43,7 @@ export default [
 		},
 		settings: {
 			react: {
-			  	version: "detect" // Автоматически определяет версию React
+				version: "detect" // Автоматически определяет версию React
 			}
 		},
 		rules: {
@@ -51,18 +53,18 @@ export default [
 			"react/jsx-key": "warn",					// Убеждается, что элементы в массивах имеют уникальный key
 			"react/jsx-fragments": "warn",				// Убеждается, что JSX-фрагменты используются правильно
 			"react/jsx-no-duplicate-props": "warn",		// Обнаруживает дублирующиеся свойства в JSX
-			"@typescript-eslint/no-unused-vars": [ 
-				"warn", 
-				{ 
+			"@typescript-eslint/no-unused-vars": [
+				"warn",
+				{
 					"argsIgnorePattern": "_",                          // Игнорировать аргументы, начинающиеся с _
 					"varsIgnorePattern": "_",                          // Игнорировать переменные, начинающиеся с _
-				},      
+				},
 			],                                                         // Предупреждать о неиспользуемых переменных
 			"@typescript-eslint/no-explicit-any": "warn",              // Предупреждать об использовании "any"
 			"@typescript-eslint/ban-ts-comment": "warn",               // Предупреждать о лишних комментариях "@ts-ignore"
 			"@typescript-eslint/explicit-function-return-type": "off", // Не требовать явного указания возвращаемого типа
-			"import/newline-after-import": [ "warn", { count: 1 } ],   // Обязательная пустая строка после импорта
-        	"import/first": "warn",                                    // Вынос строк импортов в начало файла
+			"import/newline-after-import": ["warn", { count: 1 }],   // Обязательная пустая строка после импорта
+			"import/first": "warn",                                    // Вынос строк импортов в начало файла
 			"simple-import-sort/imports": [
 				"warn",
 				{
@@ -71,20 +73,20 @@ export default [
 						["^[a-z0-9]", "^@?\\w"], // react, zustand и т.д.
 						// 2. Алиасы всех указанных файлов. Также, относительные импорты (../components, ./utils)
 						[
-							"^@components", 
-							"^@core", 
-							"^@hooks", 
-							"^@locales", 
-							"^@modules", 
-							"^@pages", 
-							"^@service", 
-							"^@store", 
-							"^@custom-types", 
-							"^@utils", 
+							"^@components",
+							"^@core",
+							"^@hooks",
+							"^@locales",
+							"^@modules",
+							"^@pages",
+							"^@service",
+							"^@store",
+							"^@custom-types",
+							"^@utils",
 							"^\\.\\.?/",
 						],
 						// 3. Стили
-						[ "^@styles" ],
+						["^@styles"],
 					],
 				},
 			],

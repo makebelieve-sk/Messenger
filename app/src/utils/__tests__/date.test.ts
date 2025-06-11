@@ -88,22 +88,22 @@ describe("date utils", () => {
 
 		it("returns 'yesterday' and time if it was yesterday", () => {
 			const date = "2025-05-31T08:15:00Z";
-			expect(getTime(date)).toBe("utils.yesterday13:15");
+			expect(getTime(date)).toBe("utils.yesterday08:15");
 		});
 
 		it("returns only time if today", () => {
 			const date = "2025-06-01T08:00:00Z";
-			expect(getTime(date)).toBe("13:00");
+			expect(getTime(date)).toBe("08:00");
 		});
 
 		it("returns yesterday time without 'yesterday' text when withoutYesterday is true", () => {
 			const date = "2025-05-31T08:15:00Z";
-			expect(getTime(date, { withoutYesterday: true })).toBe("13:15");
+			expect(getTime(date, { withoutYesterday: true })).toBe("08:15");
 		});
 
 		it("returns yesterday time with 'yesterday' text when withoutYesterday is false", () => {
 			const date = "2025-05-31T08:15:00Z";
-			expect(getTime(date, { withoutYesterday: false })).toBe("utils.yesterday13:15");
+			expect(getTime(date, { withoutYesterday: false })).toBe("utils.yesterday08:15");
 		});
 
 		it("returns empty if nothing matches", () => {
