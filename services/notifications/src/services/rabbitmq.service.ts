@@ -36,9 +36,15 @@ export default class RabbitMQService implements OnModuleInit {
 		// TODO для теста, удалить
 		setTimeout(() => {
 			this.sendNotificationMessage(RABBITMQ_QUEUE.NOTIFICATION_QUEUE, {
-				type: NOTIFICATION_TYPE.SMS,
-				recipient: "06FA94E1-1194-4FD7-A6B8-01A8C24EBF05",
-				payload: "1488",
+				type: NOTIFICATION_TYPE.TELEGRAM,
+				recipient: "FC1999C3-6CC1-4A1D-A95E-1279B141CE32",
+				payload: {
+					userName: "Алексей",
+					avatarUrl: "https://avatars.mds.yandex.net/i",
+					title: "Заявка в друзья",
+					mainText: "Алексей отправил Вам заявку в друзья",
+					text: "Текст сообщения",
+				},
 				action: STRATEGY_ACTION.PINCODE,
 			});
 		}, 1000);

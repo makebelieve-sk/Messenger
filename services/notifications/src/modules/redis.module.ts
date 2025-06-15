@@ -1,8 +1,10 @@
+import Redis from "ioredis";
 import { I18nService } from "nestjs-i18n";
 import { RedisConfig } from "src/configs/redis.config";
 import RedisController from "src/controllers/redis.controller";
 import ConfigError from "src/errors/config.error";
 import { NotificationModule } from "src/modules/notification.module";
+import PincodesModule from "src/modules/tables/pincodes.module";
 import RedisService from "src/services/redis.service";
 import { CONFIG_TYPE, INJECTION_KEYS } from "src/types/enums";
 import { Global, Module } from "@nestjs/common";
@@ -33,20 +35,21 @@ import { ClientsModule } from "@nestjs/microservices";
 			},
 		]),
 		NotificationModule,
+		PincodesModule,
 	],
 	providers: [
 		RedisService,
-		// Необходимо провайдер для предоставления опций Redis (используется для создания новых инстансов Redis для подписок на каналы)
+		// Генерируем низкоуровневый ioredis сервер для более детального контроля над каналами, подписками и методами
 		{
-			provide: INJECTION_KEYS.REDIS_OPTIONS,
+			provide: INJECTION_KEYS.IOREDIS_OPTIONS,
 			useFactory: (config: ConfigService, i18n: I18nService) => {
 				const redisConfig = config.get<RedisConfig>(CONFIG_TYPE.REDIS);
 
 				if (!redisConfig) {
-					throw new ConfigError(i18n.t("redis.config_error.options"));
+					throw new ConfigError(i18n.t("redis.config_error.ioredis"));
 				}
 
-				return redisConfig.options;
+				return new Redis(redisConfig.options);
 			},
 			inject: [ConfigService, I18nService],
 		},

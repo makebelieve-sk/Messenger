@@ -12,3 +12,13 @@ DATABASE_USERNAME="your database user name here"
 DATABASE_PASSWORD="your database password here"
 DATABASE_HOST="localhost"
 DATABASE_PORT=1433
+
+SMTP_HOST="smtp.<your mail domain here>.com"
+SMTP_PORT=465
+SMTP_USER="your mail address here"
+SMTP_PASSWORD="your password here"
+SMTP_FROM_NAME="your from-name here"
+SMTP_FROM_EMAIL="your mail from-address here"
+
+TELEGRAM_BOT_TOKEN="your telegram bot token here"
+TELEGRAM_CHANNEL_NAME="@messanger_notifications"

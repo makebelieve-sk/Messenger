@@ -5,7 +5,7 @@ import {
 	BadRequestException,
 	Injectable,
 	PipeTransform,
-	Type,
+	type Type,
 } from "@nestjs/common";
 
 // Валидация полученного сообщения по очереди нотификаций

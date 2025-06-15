@@ -1,98 +1,162 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Notification Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Сервис уведомлений на базе NestJS, который обрабатывает и отправляет различные типы уведомлений через разные каналы связи.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Описание
 
-## Description
+Сервис уведомлений является микросервисом, который отвечает за отправку уведомлений пользователям через различные каналы связи. Сервис поддерживает отправку уведомлений через email, SMS и Telegram.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Технологии
 
-## Project setup
+- NestJS
+- Redis
+- RabbitMQ
+- NodeMailer
+- TypeScript
+- MS SQL Server
+- TypeOrm
+- Swagger
 
+## Запуск сервиса
+
+1. Установите зависимости:
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+1. Создайте файлы `.env`, `.env.development` и `.env.production` на основе `env_template`
 
+2. Запустите сервис:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start
 ```
 
-## Run tests
+Сервис запускается на порту 8009 по умолчанию.
 
-```bash
-# unit tests
-$ npm run test
+## Архитектура
 
-# e2e tests
-$ npm run test:e2e
+### Основные компоненты
 
-# test coverage
-$ npm run test:cov
+1. **Модули**:
+   - `NotificationModule` - основной модуль обработки уведомлений
+   - `DatabaseModule` - работа с базой данных
+   - `RedisModule` - интеграция с Redis
+   - `RabbitMQModule` - интеграция с RabbitMQ
+   - `NodeMailerModule` - отправка email
+   - `NodeTelegramModule` - отправка сообщений в Telegram
+   - `CheckHealthDbModule` - проверка состояния базы данных
+   - `LoggerModule` - система логирования
+
+2. **Стратегии уведомлений**:
+   - Email уведомления
+   - SMS уведомления
+   - Telegram уведомления
+
+### Сервисы мониторинга и поддержки
+
+1. **Система логирования**:
+   - Файловое логирование через `FileLogger`
+   - Логирование критических ошибок
+   - Логирование состояния сервисов
+   - Логирование входящих/исходящих сообщений
+
+2. **Мониторинг состояния**:
+   - Проверка состояния базы данных через `CheckHealthDbModule`
+   - Мониторинг Redis соединения
+   - Мониторинг RabbitMQ соединения
+   - Heartbeat проверки
+
+3. **Обработка ошибок**:
+   - Глобальный обработчик ошибок (`GlobalFilter`)
+   - Обработка необработанных исключений
+   - Обработка необработанных отклонений промисов
+   - Отправка критических ошибок в Redis
+
+4. **Критический Redis**:
+   - Отдельное соединение для критических ошибок
+   - Публикация ошибок в канал `CRITICAL_ERRORS`
+   - Мониторинг состояния сервера
+   - Graceful shutdown при критических ошибках
+
+5. **Проверка зависимостей**:
+   - Валидация конфигураций при старте
+   - Проверка доступности внешних сервисов
+   - Мониторинг состояния очередей
+   - Проверка соединений с базой данных
+
+### Интеграции
+
+#### Redis
+- Обработка критических ошибок
+- Каналы для сообщений
+- Мониторинг heartbeat
+
+#### RabbitMQ
+- Получение сообщений для уведомлений
+- Подтверждение доставки (acknowledgment)
+- Очереди для данных уведомлений
+
+#### База данных
+- Управление пинкодами
+- Отслеживание отправленных уведомлений
+- Информация о пользователях
+- Информация о пользователях Telegram
+
+## API Documentation
+
+Swagger документация доступна по адресу: `http://localhost:8009/api-docs`
+
+## Обработка ошибок
+
+Сервис включает в себя:
+- Глобальный обработчик ошибок
+- Отправку критических ошибок в Redis
+- Логирование всех ошибок
+- Graceful shutdown при критических ошибках
+- Валидацию входящих данных
+- Восстановление после сбоев
+- Автоматическое переподключение к внешним сервисам
+
+## Мониторинг
+
+- Отслеживание состояния базы данных
+- Мониторинг критических ошибок
+- Логирование всех важных событий
+- Проверка состояния внешних сервисов
+- Мониторинг очередей сообщений
+- Отслеживание производительности
+- Мониторинг использования ресурсов
+
+## Разработка
+
+### Структура проекта
+
+```
+src/
+├── configs/         # Конфигурации
+├── controllers/     # Контроллеры
+├── dto/            # Data Transfer Objects
+├── errors/         # Обработка ошибок
+├── filters/        # Фильтры
+├── i18n/           # Интернационализация
+├── interceptors/   # Интерцепторы
+├── interfaces/     # Интерфейсы
+├── modules/        # Модули приложения
+├── pipes/          # Pipes
+├── services/       # Сервисы
+├── types/          # Типы
+└── utils/          # Утилиты
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Тестирование
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run test:cov    # запуск тестов с покрытием
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Безопасность
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Валидация входящих данных
+- Безопасное хранение конфигураций
+- Обработка критических ошибок
+- Защита от необработанных исключений

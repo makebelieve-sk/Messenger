@@ -1,8 +1,13 @@
 import { I18nService } from "nestjs-i18n";
+import { PayloadNotificationDto } from "src/dto/rabbitmq.dto";
 import AppError from "src/errors/app.error";
 import NotificationStrategy from "src/interfaces/notification.interface";
 import FileLogger from "src/services/logger.service";
-import { INJECTION_KEYS, NOTIFICATION_TYPE, STRATEGY_ACTION } from "src/types/enums";
+import {
+	INJECTION_KEYS,
+	NOTIFICATION_TYPE,
+	STRATEGY_ACTION,
+} from "src/types/enums";
 import { Inject, Injectable } from "@nestjs/common";
 
 // Сервис, содержит методы реализации управления стратегией
@@ -21,8 +26,8 @@ export default class NotificationService {
 	async notify(
 		type: NOTIFICATION_TYPE,
 		recipient: string,
-		payload: unknown,
-		action: STRATEGY_ACTION
+		payload: PayloadNotificationDto,
+		action: STRATEGY_ACTION,
 	): Promise<void> {
 		this.logger.debug(
 			this.i18n.t("notifications.notification.notify", {

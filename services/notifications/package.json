@@ -24,6 +24,7 @@
 		"lint:fix": "eslint . --ext .ts --fix",
 		"format": "prettier --check .",
 		"format:fix": "prettier --write .",
+		"format-and-lint": "npm run format:fix && npm run lint",
 		"test": "jest",
 		"test:coverage": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -46,6 +47,8 @@
 		"ioredis": "^5.6.1",
 		"mssql": "^11.0.1",
 		"nestjs-i18n": "^10.5.1",
+		"node-telegram-bot-api": "^0.63.0",
+		"nodemailer": "^7.0.3",
 		"reflect-metadata": "^0.2.2",
 		"rxjs": "^7.8.1",
 		"swagger-ui-express": "^5.0.1",
@@ -64,6 +67,8 @@
 		"@types/jest": "^29.5.14",
 		"@types/js-yaml": "^4.0.9",
 		"@types/node": "^22.10.7",
+		"@types/node-telegram-bot-api": "^0.64.9",
+		"@types/nodemailer": "^6.4.17",
 		"@types/supertest": "^6.0.2",
 		"@typescript-eslint/parser": "^8.33.1",
 		"cross-env": "^7.0.3",
@@ -85,21 +90,5 @@
 		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.7.3",
 		"typescript-eslint": "^8.20.0"
-	},
-	"jest": {
-		"moduleFileExtensions": [
-			"json",
-			"ts"
-		],
-		"rootDir": "src",
-		"testRegex": ".*\\.spec\\.ts$",
-		"transform": {
-			"^.+\\.ts$": "ts-jest"
-		},
-		"collectCoverageFrom": [
-			"**/*.ts"
-		],
-		"coverageDirectory": "../coverage",
-		"testEnvironment": "node"
 	}
 }

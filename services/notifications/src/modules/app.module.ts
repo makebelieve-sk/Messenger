@@ -1,12 +1,15 @@
 import databaseConfig from "src/configs/database.config";
+import nodemailerConfig from "src/configs/nodemailer.config";
 import {
 	rabbitErrorConfig,
 	rabbitErrorNotificationConfig,
 	rabbitNotificationConfig,
 } from "src/configs/rabbitmq.config";
 import redisConfig from "src/configs/redis.config";
+import nodeTelegramConfig from "src/configs/telegram.config";
 import AppController from "src/controllers/app.controller";
 import GlobalFilter from "src/filters/global.filter";
+import CheckHealthDatabaseModule from "src/modules/check-health-db.module";
 import DatabaseModule from "src/modules/database.module";
 import GlobalI18nModule from "src/modules/i18n.module";
 import LoggerModule from "src/modules/logger.module";
@@ -35,6 +38,8 @@ import { ScheduleModule } from "@nestjs/schedule";
 				rabbitErrorConfig,
 				redisConfig,
 				databaseConfig,
+				nodemailerConfig,
+				nodeTelegramConfig,
 			], // загружаем конфиг RabbitMQ (потому что в нем используются env переменные)
 			validate: validateEnv, // Добавляем валидацию env переменным
 		}),
@@ -43,6 +48,7 @@ import { ScheduleModule } from "@nestjs/schedule";
 		RedisModule,
 		RabbitMQModule,
 		DatabaseModule,
+		CheckHealthDatabaseModule,
 	],
 	controllers: [AppController],
 	providers: [GracefulShutdownService, GlobalFilter, AppService],

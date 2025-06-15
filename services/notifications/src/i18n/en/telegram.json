@@ -1,0 +1,31 @@
+{
+	"config_error": "Telegram configuration error: failed to get bot settings",
+	"message_sent": "Message sent: {messageId}",
+	"tg-send": "Sending Telegram message: recipient: {recipient}, payload: {payload}, action: {action}",
+	"channel_message_sent": "Message sent to channel: {text}",
+	"private_message_sent": "Message sent to user {userChatId}: {message}",
+	"send_error": "Error sending message to Telegram: {error}",
+	"password_recovery": {
+		"title": "Password Recovery",
+		"pincode": "Use this PIN code to recover access to your account",
+		"your_pincode": "Your PIN code",
+		"thanks": "Thank you for using our service!"
+	},
+	"security_notification": {
+		"title": "Security Notification",
+		"message": "Your account was accessed from a new device",
+		"contact_support": "If this wasn't you, please contact"
+	},
+	"new_notification": {
+		"team": "Support Team",
+		"from": "From",
+		"best_regards": "Best regards"
+	},
+	"channel_error": "Error sending message to Telegram channel",
+	"private_message_error": "Error sending private message to Telegram",
+	"contact_shared": "User {username} shared phone number: {phone}",
+	"contact_error": "An error occurred while processing the contact. Please verify your phone number in the system and try again. If the problem persists, choose another verification method, such as email.",
+	"share_phone": "Share phone number",
+	"share_phone_message": "Please share your phone number",
+	"thanks_for_sharing": "Thank you, you will now receive notifications for your account!"
+}

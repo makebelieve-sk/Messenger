@@ -1,70 +1,60 @@
 import { I18nService } from "nestjs-i18n";
 import PincodesDto from "src/dto/tables/pincodes.dto";
 import FileLogger from "src/services/logger.service";
-import { INJECTION_KEYS } from "src/types/enums";
+import BaseRepositoryService from "src/services/tables/base.service";
 import { Repository } from "typeorm";
-import { DataSource } from "typeorm";
-import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 
 // Сервис для управления репозиторием TypeOrm таблицы Pincodes
 @Injectable()
-export default class PincodesService implements OnModuleInit {
-    private pincodesRepository: Repository<PincodesDto>;
+export default class PincodesService extends BaseRepositoryService<PincodesDto> {
+	constructor(
+		@InjectRepository(PincodesDto)
+		protected readonly pincodesRepository: Repository<PincodesDto>,
+		protected readonly logger: FileLogger,
+		protected readonly i18n: I18nService,
+	) {
+		super(pincodesRepository);
 
-    constructor(
-        @Inject(INJECTION_KEYS.DATABASE)
-        private readonly dataSource: DataSource,
-        private readonly logger: FileLogger,
-        private readonly i18n: I18nService,
-    ) {
-        this.logger.setContext(PincodesService.name);
-    }
+		this.logger.setContext(PincodesService.name);
+	}
 
-    onModuleInit() {
-        this.pincodesRepository = this.dataSource.getRepository(PincodesDto);
-    }
+	override create(
+		data: Omit<PincodesDto, "id" | "createdAt">,
+	): Promise<PincodesDto> {
+		this.logger.debug(this.i18n.t("notifications.pincodes.create"));
+		return super.create(data);
+	}
 
-    async findAll(): Promise<PincodesDto[]> {
-        this.logger.debug(this.i18n.t("notifications.pincodes.find_all"));
-        return this.pincodesRepository.find();
-    }
+	async removeBy(data: Partial<PincodesDto>) {
+		this.logger.debug(
+			this.i18n.t("notifications.pincodes.remove_by", {
+				args: { data: JSON.stringify(data) },
+			}),
+		);
 
-    async findOne(id: number): Promise<PincodesDto | null> {
-        this.logger.debug(
-            this.i18n.t("notifications.pincodes.find_one", {
-                args: { id },
-            }),
-        );
-        return this.pincodesRepository.findOneBy({ id });
-    }
+		const foundPincode = await super.findOneBy(data);
 
-    async create(
-        data: Omit<PincodesDto, "id">,
-    ): Promise<PincodesDto> {
-        this.logger.debug(this.i18n.t("notifications.pincodes.create"));
-        const pincode = this.pincodesRepository.create(data);
-        return this.pincodesRepository.save(pincode);
-    }
+		return this.remove(foundPincode.id);
+	}
 
-    async update(
-        id: number,
-        data: Partial<PincodesDto>,
-    ): Promise<PincodesDto> {
-        this.logger.debug(
-            this.i18n.t("notifications.pincodes.update", {
-                args: { id },
-            }),
-        );
-        await this.pincodesRepository.update(id, data);
-        return this.findOne(id) as Promise<PincodesDto>;
-    }
+	override remove(id: number) {
+		this.logger.debug(
+			this.i18n.t("notifications.pincodes.remove", {
+				args: { id },
+			}),
+		);
 
-    async remove(id: number): Promise<void> {
-        this.logger.debug(
-            this.i18n.t("notifications.pincodes.remove", {
-                args: { id },
-            }),
-        );
-        await this.pincodesRepository.delete(id);
-    }
+		return super.remove(id);
+	}
+
+	async deleteOldPincodes() {
+		await this.pincodesRepository
+			.createQueryBuilder()
+			.delete()
+			.from("Pincodes")
+			.where("created_at < DATEADD(MINUTE, -1, SYSDATETIME())")
+			.execute();
+	}
 }

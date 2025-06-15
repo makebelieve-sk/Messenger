@@ -2,7 +2,7 @@
 	"sent_notifications": {
 		"find_all": "Finding all sent notifications",
 		"find_one": "Finding sent notification with id: {id}",
-		"create": "Creating new sent notification",
+		"create": "Creating new record in Sent_Notifications table",
 		"update": "Updating sent notification with id: {id}",
 		"remove": "Removing sent notification with id: {id}",
 		"close": "Closing database connection"
@@ -10,13 +10,25 @@
 	"pincodes": {
 		"find_all": "Finding all pincodes",
 		"find_one": "Finding pincode with id: {id}",
-		"create": "Creating new pincode",
+		"create": "Creating new PIN code",
 		"update": "Updating pincode with id: {id}",
-		"remove": "Removing pincode with id: {id}",
-		"close": "Closing database connection"
+		"remove": "Removing PIN code with ID: {id}",
+		"close": "Closing database connection",
+		"remove_by": "Removing PIN code by parameters: {data}"
 	},
 	"notification": {
 		"notify": "Sending notification: [recipient={recipient}, type={type}, payload={payload}, action={action}]",
 		"unknown_type": "Unknown notification type: {type}"
+	},
+	"users": {
+		"find_all": "Finding all users",
+		"find_one": "Finding user by ID: {id}",
+		"create": "Creating new user",
+		"update": "Updating user with id: {id}",
+		"remove": "Removing user with id: {id}",
+		"find_one_by": "Finding user by parameters: {data}"
+	},
+	"telegram_users": {
+		"create": "Creating new record in Telegram_Users table"
 	}
 }

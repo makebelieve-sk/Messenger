@@ -1,10 +1,15 @@
+import NodeTelegramModule from "src/modules/node-telegram.module";
+import NodeMailerModule from "src/modules/nodemailer.module";
+import PincodesModule from "src/modules/tables/pincodes.module";
+import SentNotificationsModule from "src/modules/tables/sent-notifications.module";
+import TelegramUsersModule from "src/modules/tables/telegram-users.module";
+import UsersModule from "src/modules/tables/users.module";
 import NotificationService from "src/services/notification.service";
 import EmailService from "src/services/strategies/email.service";
 import SMSService from "src/services/strategies/sms.service";
 import TelegramService from "src/services/strategies/telegram.service";
 import { INJECTION_KEYS, NOTIFICATION_TYPE } from "src/types/enums";
 import { Module, Provider } from "@nestjs/common";
-import PincodesModule from "src/modules/tables/pincodes.module";
 
 // Список всех применяемых стратегий нотификации
 const strategyProviders: Provider[] = [
@@ -28,7 +33,14 @@ export interface NotificationModuleOptions {
 
 // Точка входа в модуль нотификации. Этот модуль управляет поиском нужной стратегии отправки уведомления.
 @Module({
-	imports: [PincodesModule],
+	imports: [
+		PincodesModule,
+		NodeMailerModule,
+		NodeTelegramModule,
+		UsersModule,
+		SentNotificationsModule,
+		TelegramUsersModule,
+	],
 	providers: [
 		...strategyProviders,
 		{

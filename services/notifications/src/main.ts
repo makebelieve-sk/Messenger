@@ -1,5 +1,6 @@
 import Redis from "ioredis";
 import { RabbitMQConfig } from "src/configs/rabbitmq.config";
+import { RedisConfig } from "src/configs/redis.config";
 import AppError from "src/errors/app.error";
 import ConfigError from "src/errors/config.error";
 import GlobalFilter from "src/filters/global.filter";
@@ -62,20 +63,35 @@ async function bootstrap() {
 		// Инициализируем глобальный обработчик всех HTTP ошибок
 		app.useGlobalFilters(app.get(GlobalFilter));
 
+		// Получаем конфиг Redis
+		const configRedis: RedisConfig | undefined = app
+			.get(ConfigService)
+			.get(CONFIG_TYPE.REDIS);
+
+		if (!configRedis) {
+			throw new ConfigError("unavailable recieved IORedis config");
+		}
+
+		// Подключаем Redis-микросервис для приема сообщений в каналах Redis
+		app.connectMicroservice<MicroserviceOptions>({
+			transport: configRedis.transport,
+			options: configRedis.options,
+		});
+
 		// Получаем конфиг RabbitMQ
-		const config: RabbitMQConfig | undefined = app
+		const configRabbit: RabbitMQConfig | undefined = app
 			.get(ConfigService)
 			.get(CONFIG_TYPE.RABBITMQ_NOTIFICATION);
 
-		if (!config) {
+		if (!configRabbit) {
 			throw new ConfigError("unavailable recieved RabbitMQNotification config");
 		}
 
 		// Подключаем RabbitMQ-микросервис (это используется только для приема сообщений)
 		app.connectMicroservice<MicroserviceOptions>({
-			transport: config.transport,
+			transport: configRabbit.transport,
 			options: {
-				...config.options,
+				...configRabbit.options,
 				noAck: false,
 			},
 		});
@@ -119,7 +135,7 @@ async function sendCriticalError(
 			pid: process.pid,
 		});
 
-		await redisClient.publish(REDIS_CHANNEL.CRITICAL_ERRORS, data);
+		redisClient.publish(REDIS_CHANNEL.CRITICAL_ERRORS, data);
 	} catch (error) {
 		logger.error(
 			`Failed to send critical error to Redis by channel "${REDIS_CHANNEL.CRITICAL_ERRORS}": ${error.message}`,
@@ -129,9 +145,10 @@ async function sendCriticalError(
 
 bootstrap();
 
-// TODO:
-// 1) дописать readme
-// 2) реализовать отправку письма на почту (после успеха записать результат в БД)
-// 3) реализовать отправку уведомления в телеграмм канал (также записать в БД)
-// 4) реализовать отправку уведомления по СМС (также запись в БД - вынести этот метод в родитель - BaseService)
-// 5) Написать чедулер на удаление неиспользуемых пинкодов (1 раз в день можно - проверять по времени).
+// На основном сервере:
+// 0) Реализовать в задачке инструкцию как заходить к боту (оставить ссылку на него) и отправлять ему свой номер телефона (нажать на старт)
+// 1) подписаться на критичные ошибки реббита (логировать их, вывести snackbar на клиенте)
+// 2) подписаться на heartbeat редиса (логировать их, вывести snackbar на клиенте)
+// 3) создать очереди для реббита для отправки данных нотификации
+// 4) вынести общшие енамы в packages/common-types
+// 5) после успешной смены пароля только что использованный пинкод удалять из редиса по каналу удаления пинкода

@@ -42,11 +42,12 @@ export default class RabbitLoggingInterceptor implements NestInterceptor {
 		// Получаем низкоуровневый RmqContext (контекст RabbitMQ внутри Nest.js), чтобы вытащить routingKey
 		const rmqCtx = rpcContext.getContext<RmqContext>();
 		const msg = rmqCtx.getMessage();
-		const routingKey = msg.fields?.routingKey ?? "<unknown>";
+		const routingKey =
+			msg.fields?.routingKey ?? this.i18n.t("rabbitmq.unknown_queue");
 
 		const now = Date.now();
 		this.logger.log(
-			this.i18n.translate("rabbitmq.message-received", {
+			this.i18n.t("rabbitmq.message-received", {
 				args: { routingKey, data: JSON.stringify(data) },
 			}),
 		);
@@ -55,14 +56,14 @@ export default class RabbitLoggingInterceptor implements NestInterceptor {
 			tap({
 				next: () => {
 					this.logger.log(
-						this.i18n.translate("rabbitmq.message-processed", {
+						this.i18n.t("rabbitmq.message-processed", {
 							args: { time: Date.now() - now },
 						}),
 					);
 				},
 				error: (error: Error) => {
 					this.logger.error(
-						this.i18n.translate("rabbitmq.message-error", {
+						this.i18n.t("rabbitmq.message-error", {
 							args: { time: Date.now() - now, error: error.message },
 						}),
 					);

@@ -11,5 +11,6 @@
 		"notification": "RabbitMQ notification configuration is unavailable",
 		"error_notification": "RabbitMQ error notification configuration is unavailable",
 		"error": "RabbitMQ error configuration is unavailable"
-	}
+	},
+	"unknown_queue": "Unknown queue"
 }

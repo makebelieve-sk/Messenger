@@ -38,7 +38,6 @@ export default class RabbitMQExceptionFilter extends BaseRpcExceptionFilter {
 		// Удаляем задачу из очереди при ошибке
 		channel.nack(msg, false, false);
 
-		const timestamp = Date.now();
 		const error = exception.message || exception.stack || exception.toString();
 
 		// Записываем упавшую задачу в канал Redis для последующей обработки (еще один шанс даем на выполнение)
@@ -48,11 +47,10 @@ export default class RabbitMQExceptionFilter extends BaseRpcExceptionFilter {
 		this.sentNotificationsService.create({
 			recipientId: data.recipient,
 			type: data.type,
-			payload: data.payload as any,
+			payload: JSON.stringify(data.payload),
 			action: data.action,
 			success: false,
 			errorMessage: error,
-			createdAt: new Date(timestamp),
 		});
 
 		// Отправляем сообщение в очередь ошибочно завершенных задач (упавшая задача)

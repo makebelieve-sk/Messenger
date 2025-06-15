@@ -1,5 +1,4 @@
 import { I18nService } from "nestjs-i18n";
-import DatabaseService from "src/services/database.service";
 import FileLogger from "src/services/logger.service";
 import RabbitMQService from "src/services/rabbitmq.service";
 import RedisService from "src/services/redis.service";
@@ -13,7 +12,6 @@ export default class GracefulShutdownService implements OnApplicationShutdown {
 		private readonly logger: FileLogger,
 		private readonly rabbitMQService: RabbitMQService,
 		private readonly redis: RedisService,
-		private readonly databaseService: DatabaseService,
 		private readonly i18n: I18nService,
 	) {
 		// Устанавливаем логгеру корректный контекст
@@ -42,7 +40,7 @@ export default class GracefulShutdownService implements OnApplicationShutdown {
 		// Закрываем все соединения
 		await this.rabbitMQService.close();
 		await this.redis.close();
-		await this.databaseService.close();
+		// Помним, что Nest.js автоматически подключается и отключается от базы данных (+ запускает все миграции)
 
 		this.logger.close();
 	}

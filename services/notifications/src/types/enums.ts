@@ -8,8 +8,9 @@ export enum INJECTION_KEYS {
 	TELEGRAM_STRATEGY = "TelegramStrategy",
 	NOTIFICATION_STRATEGIES = "NotificationStrategies",
 	REDIS_SERVER = "RedisServer",
-	REDIS_OPTIONS = "RedisOptions",
-	DATABASE = "Database",
+	IOREDIS_OPTIONS = "IORedisOptions",
+	NODEMAILER_SERVER = "NodemailerServer",
+	NODE_TELEGRAM = "NodeTelegram",
 }
 
 // Типы нотификаций (возможные типы стратегий)
@@ -26,6 +27,8 @@ export enum CONFIG_TYPE {
 	RABBITMQ_ERROR = "rabbitmq_error",
 	REDIS = "redis",
 	DATABASE = "database",
+	NODEMAILER = "nodemailer",
+	NODE_TELEGRAM = "node_telegram",
 }
 
 // Типы очередей RabbitMQ
@@ -37,7 +40,10 @@ export enum RABBITMQ_QUEUE {
 
 // Типы ошибок в пользовательских ошибках
 export enum ERRORS {
+	APP_ERROR = "APP_ERROR",
 	ERROR_CONFIG = "ERROR_CONFIG",
+	STRATEGY_ERROR = "STRATEGY_ERROR",
+	DATABASE_ERROR = "DATABASE_ERROR",
 }
 
 // Возможные отправляемые типы сообщений в ошибочной очереди RabbitMQ
@@ -58,6 +64,8 @@ export enum REDIS_CHANNEL {
 	HEARTBEAT = "heartbeat_channel",
 	FAILED_NOTIFICATIONS = "failed_notifications_channel",
 	CRITICAL_ERRORS = "critical_errors_channel",
+	PINCODE_SET = "pincode_set_channel",
+	PINCODE_DELETE = "pincode_delete_channel",
 }
 
 // Типы действия стратегии
