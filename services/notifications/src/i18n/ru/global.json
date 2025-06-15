@@ -1,0 +1,8 @@
+{
+	"graceful_shutdown": {
+		"signal_received": "Получен сигнал завершения работы: {signal}",
+		"error_message": {
+			"at": "Произошло в"
+		}
+	}
+}

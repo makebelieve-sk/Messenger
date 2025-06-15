@@ -1,0 +1,18 @@
+{
+	"handling_message": "ОБработка сообщения: {data}",
+	"failed_proceed_message": "Обработка сообщения завершилас не удачно[{data}]: {error}",
+	"heartbeat": "Отправлен сигнал работоспособности: {payload}",
+	"publish": "Сообщение: {data} отправлено в канал: {channel}",
+	"publish_with_ack": "Сообщение с подтверждением: {data} отправлено в канал: {channel}",
+	"failed_pincode_handle": "Не удалось обработать пинкод [{data}]: {error}",
+	"pincode_deleted": "Пинкод {pincode} удален для пользователя {userId}",
+	"pincode_not_found": "Пинкод {pincode} не найден для пользователя {userId}",
+	"failed_pincode_delete": "Не удалось удалить пинкод [{data}]: {error}",
+	"close": {
+		"success": "Соединения Redis закрыты"
+	},
+	"config_error": {
+		"global": "Глобальная конфигурация Redis недоступна",
+		"ioredis": "Глобальные настройки IORedis недоступны"
+	}
+}

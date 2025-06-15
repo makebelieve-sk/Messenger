@@ -1,0 +1,16 @@
+{
+	"recieved-message": "Recieved message from {queue} queue: [type={type}, recipient={recipient}, payload={payload}]",
+	"message-received": "Received message with routing key {routingKey}: {data}",
+	"message-processed": "Message processed in {time}ms",
+	"message-error": "Error after {time}ms: {error}",
+	"send_notification": "Sending notification message: [pattern={pattern}, data={data}]",
+	"send_error_notification": "Sending error notification message: [pattern={{pattern}, data={data}]",
+	"send_error": "Sending error message: [pattern={pattern}, data={data}]",
+	"close": "Closing RabbitMQ connections",
+	"config_error": {
+		"notification": "RabbitMQ notification configuration is unavailable",
+		"error_notification": "RabbitMQ error notification configuration is unavailable",
+		"error": "RabbitMQ error configuration is unavailable"
+	},
+	"unknown_queue": "Unknown queue"
+}

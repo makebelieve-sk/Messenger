@@ -1,0 +1,15 @@
+{
+	"email-send": "Отправка email: получатель: {recipient}, данные: {payload}, действие: {action}",
+	"email_not_found": "Email пользователя не найден",
+	"phone_not_found": "Номер телефона пользователя не найден",
+	"incorrect_strategy": "Некорректная стратегия",
+	"pin_generation_failed": "Не удалось сгенерировать PIN-код после {attempts} попыток{error}",
+	"max_attempts_exceeded": "Превышено максимальное количество попыток генерации PIN-кода",
+	"sms-send": "Отправка SMS: получатель: {recipient}, данные: {payload}, действие: {action}",
+	"sms-not-implemented": "SMS стратегия не реализована",
+	"telegram": {
+		"send_error": "Ошибка при отправке сообщения в Telegram: {error}"
+	},
+	"telegram_id_not_found": "Telegram ID пользователя не найден",
+	"not_implemented": "Стратегия не реализована"
+}

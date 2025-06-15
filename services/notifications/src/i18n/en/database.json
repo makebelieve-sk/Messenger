@@ -1,0 +1,18 @@
+{
+	"errors": {
+		"config_unavailable": "MS SQL configuration is unavailable",
+		"connection_failed": "Database connection error",
+		"entity_not_found": "Record with ID {id} not found"
+	},
+	"success": {
+		"connected": "Successfully connected to database",
+		"closed": "Database connection closed",
+		"migrations_applied": "Database migrations applied"
+	},
+	"ping_database": "Pinging database...",
+	"delete_old_pincodes": {
+		"start": "Running scheduled task to delete old records...",
+		"success": "Deleted records successfully",
+		"error": "Error deleting old records: {error}"
+	}
+}

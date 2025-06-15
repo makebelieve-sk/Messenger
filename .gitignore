@@ -23,3 +23,25 @@ deploy/sa_password.txt
 
 # Файлы настройка Husky
 .husky/_
+
+# Файлы операционной системы
+.DS_Store
+
+# Покрытие тестами
+**/coverage
+
+# IDE - VSCode
+**/.vscode/*
+**/!.vscode/settings.json
+**/!.vscode/tasks.json
+**/!.vscode/launch.json
+**/!.vscode/extensions.json
+
+# Отчеты ноды
+**/report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Данные рантайма
+**/pids
+**/*.pid
+**/*.seed
+**/*.pid.lock
