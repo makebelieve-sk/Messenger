@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Все эндпоинты</title>
+	<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+	<script>
+		mermaid.initialize({ startOnLoad: false });
+		async function renderDiagram(method, path) {
+			const response = await fetch(`/api-docs/diagram-api?path=${encodeURIComponent(path)}&method=${method}`);
+			const { diagram } = await response.json();
+			const container = document.getElementById("diagram")
+			container.removeAttribute("data-processed");
+			container.innerHTML = diagram;
+			mermaid.init(undefined, "#diagram");
+		}
+	</script>
+	<style>
+		body {
+			font-family: sans-serif;
+			padding: 2em;
+		}
+
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		li {
+			margin-bottom: 0.5em;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Список всех endpoint’ов</h1>
+	<ul>
+		{{endpoints}}
+	</ul>
+	<div id="diagram" class="mermaid" data-processed="true"></div>
+</body>
+
+</html>

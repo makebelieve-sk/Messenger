@@ -58,11 +58,11 @@ export default class UserController {
 
 			await transaction.commit();
 
-			res.json({ 
-				success: true, 
-				user, 
+			res.json({
+				success: true,
+				user,
 				userDetails: userDetails.getEntity(),
-				notificationSettings: notificationSettings.getEntity(), 
+				notificationSettings: notificationSettings.getEntity(),
 			});
 		} catch (error) {
 			await transaction.rollback();
@@ -118,7 +118,6 @@ export default class UserController {
 		try {
 			const fields: IEditInfoBody = req.body;
 			const { id: userId } = req.user;
-
 			// Формируем те поля из объекта req.body, которые остались пусты
 			const missingFields = Object.entries(fields)
 				.filter(([ key, value ]) => !value && !NOT_REQUIRED_EDIT_INFO_FIELDS.includes(key))
@@ -127,8 +126,8 @@ export default class UserController {
 			// Проверка обязательных полей пользователя
 			if (missingFields.length) {
 				throw new UsersError(
-					t("users.error.edit_incorrect_data", { fields: missingFields.join(", ") }), 
-					HTTPStatuses.BadRequest, 
+					t("users.error.edit_incorrect_data", { fields: missingFields.join(", ") }),
+					HTTPStatuses.BadRequest,
 					{
 						type: HTTPErrorTypes.EDIT_INFO,
 						fields: missingFields,
@@ -137,14 +136,13 @@ export default class UserController {
 			}
 
 			const { name, surName, sex, birthday, work, city, phone, email } = fields;
-
 			// Валидация введенной почты
 			const validationEmail = validateEmail(email);
 
 			if (!validationEmail) {
 				throw new UsersError(
-					t("users.error.edit_incorrect_format", { fields: "email" }), 
-					HTTPStatuses.BadRequest, 
+					t("users.error.edit_incorrect_format", { fields: "email" }),
+					HTTPStatuses.BadRequest,
 					{
 						type: HTTPErrorTypes.EDIT_INFO,
 						field: "email",
@@ -157,8 +155,8 @@ export default class UserController {
 
 			if (!validationPhone) {
 				throw new UsersError(
-					t("users.error.edit_incorrect_format", { fields: "phone" }), 
-					HTTPStatuses.BadRequest, 
+					t("users.error.edit_incorrect_format", { fields: "phone" }),
+					HTTPStatuses.BadRequest,
 					{
 						type: HTTPErrorTypes.EDIT_INFO,
 						field: "phone",
@@ -206,13 +204,12 @@ export default class UserController {
 
 			await transaction.commit();
 
-			res.json({ 
-				success: true, 
-				user: foundUser.getEntity(), 
-				userDetails: foundUserDetails.getEntity(), 
+			res.json({
+				success: true,
+				user: foundUser.getEntity(),
+				userDetails: foundUserDetails.getEntity(),
 			});
 		} catch (error) {
-			await transaction.rollback();
 			next(error);
 		}
 	}

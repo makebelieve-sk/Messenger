@@ -1,9 +1,10 @@
 import { type Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import { Times } from "@custom-types/enums";
-import { getHoursOrMinutes } from "@utils/time";
 
 const logger = Logger.init("utils/date");
 
@@ -65,28 +66,34 @@ export const transformDate = (d: string, getYear = false) => {
 };
 
 // Получение даты сообщения в списке диалогов
+dayjs.extend(utc);
+
 export const getTime = (createDate: string, options: { withoutYesterday?: boolean } = {}) => {
-	logger.debug(`getTime [createDate=${createDate}, withoutYesterday=${options.withoutYesterday}]`);
-
 	const { withoutYesterday } = options;
-	const date = Date.parse(createDate);
-	const beforeMidnight = new Date().getDate() - new Date(createDate).getDate() > 0;
 
-	return Date.now() - date > Times.HALF_YEAR
-		? new Date(createDate).getDate() + getMonthName(new Date(createDate).getMonth()) + " " + new Date(createDate).getFullYear()
-		: Date.now() - date > Times.YESTERDAY && Date.now() - date < Times.HALF_YEAR
-			? new Date(createDate).getDate() + getMonthName(new Date(createDate).getMonth())
-			: Date.now() - date > Times.TODAY && Date.now() - date < Times.YESTERDAY
-				? `${withoutYesterday ? "" : i18next.t("utils.yesterday")}` +
-					getHoursOrMinutes(new Date(createDate).getHours()) +
-					":" +
-					getHoursOrMinutes(new Date(createDate).getMinutes())
-				: Date.now() - date < Times.TODAY
-					? `${beforeMidnight ? i18next.t("utils.yesterday") : ""}` +
-						getHoursOrMinutes(new Date(createDate).getHours()) +
-						":" +
-						getHoursOrMinutes(new Date(createDate).getMinutes())
-					: null;
+	const date = dayjs.utc(createDate);
+	const now = dayjs.utc();
+
+	const diff = now.diff(date);
+
+	if (diff > Times.HALF_YEAR) {
+		return `${date.date()}${getMonthName(date.month())} ${date.year()}`;
+	}
+
+	if (diff > Times.YESTERDAY && diff <= Times.HALF_YEAR) {
+		return `${date.date()}${getMonthName(date.month())}`;
+	}
+
+	if (diff > Times.TODAY && diff <= Times.YESTERDAY) {
+		return `${withoutYesterday ? "" : i18next.t("utils.yesterday")}${date.format("HH:mm")}`;
+	}
+
+	if (diff <= Times.TODAY) {
+		const isYesterday = now.startOf("day").diff(date.startOf("day")) === 1;
+		return `${isYesterday && !withoutYesterday ? i18next.t("utils.yesterday") : ""}${date.format("HH:mm")}`;
+	}
+
+	return null;
 };
 
 // Форматирование даты

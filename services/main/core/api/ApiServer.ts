@@ -31,6 +31,7 @@ export default class ApiServer {
 	) {
 		this._middleware = new Middleware(this._redisWork, this._app);
 
+
 		this._init();
 	}
 

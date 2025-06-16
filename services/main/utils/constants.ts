@@ -1,20 +1,21 @@
 // Устанавливаем необязательным env переменным значения по умолчанию
 export const PORT = process.env.PORT as "8008";
+export const HOST = process.env.HOST as "localhost";
 export const NODE_ENV = process.env.NODE_ENV as "development" | "production" | "test";
 export const MESSANGER_ENV = process.env.MESSANGER_ENV as "development" | "stage" | "production";
 export const CLIENT_URL = process.env.CLIENT_URL as string;
 export const COOKIE_NAME = process.env.COOKIE_NAME as string;
 export const SECRET_KEY = process.env.SECRET_KEY as string;
 
-export const DATEBASE_DOWN_MIGRATIONS = process.env.DATEBASE_DOWN_MIGRATIONS === "true";
+export const DATABASE_DOWN_MIGRATIONS = process.env.DATABASE_DOWN_MIGRATIONS === "true";
 export const DATABASE_SHOW_DEV_LOGS = process.env.DATABASE_SHOW_DEV_LOGS === "true";
 
-export const DATEBASE_NAME = process.env.DATEBASE_NAME as string;
-export const DATEBASE_USERNAME = process.env.DATEBASE_USERNAME as string;
-export const DATEBASE_PASSWORD = process.env.DATEBASE_PASSWORD as string;
-export const DATEBASE_DIALECT = process.env.DATEBASE_DIALECT as "mysql" | "postgres" | "sqlite" | "mssql";
+export const DATABASE_NAME = process.env.DATABASE_NAME as string;
+export const DATABASE_USERNAME = process.env.DATABASE_USERNAME as string;
+export const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD as string;
+export const DATABASE_DIALECT = process.env.DATABASE_DIALECT as "mysql" | "postgres" | "sqlite" | "mssql";
 export const DATABASE_DIALECT_REQUEST_TIMEOUT = process.env.DATABASE_DIALECT_REQUEST_TIMEOUT ? Number(process.env.DATABASE_DIALECT_REQUEST_TIMEOUT) : 15000;
-export const DATEBASE_HOST = process.env.DATEBASE_HOST as string;
+export const DATABASE_HOST = process.env.DATABASE_HOST as string;
 export const DATABASE_PORT = Number(process.env.DATABASE_PORT);
 export const DATABASE_RETRY_ATTEMPTS = process.env.DATABASE_RETRY_ATTEMPTS ? Number(process.env.DATABASE_RETRY_ATTEMPTS) : 1;
 export const DATABASE_POOL_MAX = process.env.DATABASE_POOL_MAX ? Number(process.env.DATABASE_POOL_MAX) : 20;

@@ -3,8 +3,8 @@ import * as constants from "@utils/constants";
 
 const logger = Logger("Database");
 const {
-	DATEBASE_PASSWORD,
-	DATEBASE_USERNAME,
+	DATABASE_PASSWORD,
+	DATABASE_USERNAME,
 	DATABASE_PORT,
 	DATABASE_DIALECT_REQUEST_TIMEOUT,
 	DATABASE_POOL_ACQUIRE,
@@ -13,9 +13,9 @@ const {
 	DATABASE_POOL_MIN,
 	DATABASE_RETRY_ATTEMPTS,
 	DATABASE_SHOW_DEV_LOGS,
-	DATEBASE_DIALECT,
-	DATEBASE_HOST,
-	DATEBASE_NAME,
+	DATABASE_DIALECT,
+	DATABASE_HOST,
+	DATABASE_NAME,
 } = constants;
 
 const loggerFunction = DATABASE_SHOW_DEV_LOGS ? logger.info : logger.debug;
@@ -27,10 +27,10 @@ function showLogs(logMessage: string) {
 
 // Конфигурация MS SQL
 const mssqlConfig = {
-	username: DATEBASE_USERNAME, // Имя пользователя для подключения к базе данных
-	password: DATEBASE_PASSWORD, // Пароль пользователя для подключения к базе данных
-	database: DATEBASE_NAME, // Наименование базы данных
-	dialect: DATEBASE_DIALECT, // Диалект базы данных (mysql/sqlite/postgres/mssql) - то есть настройки для драйвера
+	username: DATABASE_USERNAME, // Имя пользователя для подключения к базе данных
+	password: DATABASE_PASSWORD, // Пароль пользователя для подключения к базе данных
+	database: DATABASE_NAME, // Наименование базы данных
+	dialect: DATABASE_DIALECT, // Диалект базы данных (mysql/sqlite/postgres/mssql) - то есть настройки для драйвера
 	dialectOptions: {
 		options: {
 			encrypt: true, // Шифрует соединение между сервером и БД (обязателен в Azure SQL Server)
@@ -40,7 +40,7 @@ const mssqlConfig = {
 		},
 		useUTC: true, // Гарантирует, что время сохраняется в БД и возвращается из БД в UTC
 	}, // Опции диалекта
-	host: DATEBASE_HOST, // Адрес сервера базы данных
+	host: DATABASE_HOST, // Адрес сервера базы данных
 	port: DATABASE_PORT, // Порт для подключения к базе данных
 	define: {
 		freezeTableName: true, // Отключение автоматических имен таблиц

@@ -6,33 +6,33 @@ USE [master];
 GO
 
 -- Создаем логин (серверный уровень)
-IF NOT EXISTS (SELECT * FROM sys.sql_logins WHERE name = '${DATEBASE_USERNAME}')
+IF NOT EXISTS (SELECT * FROM sys.sql_logins WHERE name = '${DATABASE_USERNAME}')
 BEGIN
-    CREATE LOGIN [${DATEBASE_USERNAME}] 
-    WITH PASSWORD = '${DATEBASE_PASSWORD}', 
+    CREATE LOGIN [${DATABASE_USERNAME}] 
+    WITH PASSWORD = '${DATABASE_PASSWORD}', 
     CHECK_POLICY = OFF;  -- Отключаем проверку политики паролей
 END;
 GO
 
 -- Права на подключение к серверу
-GRANT CONNECT SQL TO [${DATEBASE_USERNAME}];
+GRANT CONNECT SQL TO [${DATABASE_USERNAME}];
 GO
 
 -- Создаем базу данных
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '${DATEBASE_NAME}')
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '${DATABASE_NAME}')
 BEGIN
-    CREATE DATABASE [${DATEBASE_NAME}];
+    CREATE DATABASE [${DATABASE_NAME}];
 END;
 GO
 
 -- Переключаемся на целевую БД
-USE [${DATEBASE_NAME}];
+USE [${DATABASE_NAME}];
 GO
 
 -- Создаем пользователя (уровень БД)
-CREATE USER [${DATEBASE_USERNAME}] FOR LOGIN [${DATEBASE_USERNAME}];
+CREATE USER [${DATABASE_USERNAME}] FOR LOGIN [${DATABASE_USERNAME}];
 GO
 
 -- Назначаем права
-ALTER ROLE [db_owner] ADD MEMBER [${DATEBASE_USERNAME}];
+ALTER ROLE [db_owner] ADD MEMBER [${DATABASE_USERNAME}];
 GO
