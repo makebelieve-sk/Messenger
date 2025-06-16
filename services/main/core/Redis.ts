@@ -118,7 +118,7 @@ export default class RedisWorks {
 			if (delta > HEARTBEAT_TIMEOUT_MS) {
 				logger.warn(t("redis.error.no_heartbeat", {
 					seconds: (delta / 1000).toFixed(0),
-					treshold: HEARTBEAT_TIMEOUT_MS.toString(),
+					treshold: (HEARTBEAT_TIMEOUT_MS / 1000).toFixed(0),
 				}));
 			}
 		}, HEARTBEAT_TIMEOUT_MS);

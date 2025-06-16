@@ -144,6 +144,10 @@
 	"rabbitmq.error_close_connection": "Error closing RabbitMQ connection: {{error}}",
 	"rabbitmq.message_not_published": "RabbitMQ temporary cannot receive data into the buffer",
 
+	"notifications.new_notification.title": "Friend request",
+	"notifications.new_notification.mainText": "A friend request has been received",
+	"notifications.new_notification.text": "{{username}} wants to add you as a friend.",
+
 	"server_started": "The server instance is running on port: {{port}} in mode: {{mode}}.",
 	"start_server_error": "An error occurred when starting the server instance",
 

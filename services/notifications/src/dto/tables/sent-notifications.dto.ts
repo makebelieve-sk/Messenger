@@ -20,7 +20,7 @@ export default class SentNotificationsDto {
 	@Column({ name: "type", type: "varchar", length: 255 })
 	type: NOTIFICATION_TYPE;
 
-	@Column({ name: "payload", type: "nvarchar", length: 255, nullable: true })
+	@Column({ name: "payload", type: "nvarchar", length: 2048, nullable: true })
 	payload: string;
 
 	@Column({ name: "action", type: "nvarchar", length: 255 })

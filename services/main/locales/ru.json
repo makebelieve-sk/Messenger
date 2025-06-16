@@ -144,6 +144,10 @@
 	"rabbitmq.error_close_connection": "Ошибка при закрытии соединения RabbitMQ: {{error}}",
 	"rabbitmq.message_not_published": "RabbitMQ временно не может принять данные в буфер",
 
+	"notifications.new_notification.title": "Заявка в друзья",
+	"notifications.new_notification.mainText": "Поступило предложение дружбы",
+	"notifications.new_notification.text": "{{username}} хочет добавить Вас в друзья.",
+
 	"server_started": "Экземпляр сервера запущен на порту: {{port}} в режиме: {{mode}}.",
 	"start_server_error": "Возникла ошибка при запуске экземпляра сервера",
 

@@ -6,8 +6,13 @@ WORKDIR /notifications-server
 
 RUN mkdir -p /notifications-server/services/notifications
 
-# Копируем package.json
+# Копируем package.json и общие пакеты
 COPY services/notifications/package*.json    ./services/notifications/
+COPY packages/common-types          ./packages/common-types/
+COPY packages/validation            ./packages/validation/
+
+# Устанавливаем зависимости для модулей пакетов
+RUN cd packages/common-types && npm install && cd ../validation && npm install
 
 # Устанавливаем зависимости (запрещаем изменять версии пакетов. Строгое соответствие версий пакетов из package и package-lock)
 RUN cd services/notifications && npm install --frozen-lockfile

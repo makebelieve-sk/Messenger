@@ -30,7 +30,7 @@ export class SentNotifications1749659426291 implements MigrationInterface {
 					{
 						name: "payload",
 						type: "nvarchar",
-						length: "255",
+						length: "2048",
 						isNullable: true,
 					},
 					{

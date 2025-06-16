@@ -11,6 +11,7 @@ import UserController from "@core/api/controllers/User";
 import Middleware from "@core/api/Middleware";
 import type UsersController from "@core/controllers/UsersController";
 import type Database from "@core/database/Database";
+import type RabbitMQWorks from "@core/RabbitMQ";
 import type RedisWorks from "@core/Redis";
 import Logger from "@service/logger";
 
@@ -26,6 +27,7 @@ export default class ApiServer {
 		private readonly _users: UsersController,
 		private readonly _database: Database,
 		private readonly _passport: PassportStatic,
+		private readonly _rabbitMQ: RabbitMQWorks,
 	) {
 		this._middleware = new Middleware(this._redisWork, this._app);
 
@@ -44,7 +46,7 @@ export default class ApiServer {
 		new MainController(this._app, this._middleware, this._database);
 		new ImagesController(this._app, this._middleware, this._database);
 		// new FilesController(this._app, this._middleware, this._database);
-		new FriendsController(this._app, this._middleware, this._database, this._users);
+		new FriendsController(this._app, this._middleware, this._database, this._users, this._rabbitMQ);
 		// new MessagesController(this._app, this._middleware, this._database);
 		new UserController(this._app, this._middleware, this._database);
 

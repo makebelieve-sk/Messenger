@@ -47,32 +47,12 @@ export default class MainServer {
 		this._useExpressMiddlewares();
 		// Инициализируем работу Passport (мидлвары)
 		this._passport = new PassportWorks(this._app, this._database, this._users);
-		// Инициализируем работу API
-		new ApiServer(this._redisWork, this._app, this._users, this._database, this._passport.passport);
-		// Инициализируем работу socket.io
-		this._socket = new SocketWorks(this._server, this._users, this._database, this._redisWork, this._session);
 		// Инициализируем работу RabbitMQ
 		this._rabbitMQ = new RabbitMQWorks();
-
-		// TODO: Никитос, для тебя пример отправки в реббит и редис:
-		// setTimeout(() => {
-		// 	this._rabbitMQ.publish(RABBITMQ_QUEUE.NOTIFICATION_QUEUE, {
-		// 		type: NOTIFICATION_TYPE.TELEGRAM,
-		// 		recipient: "FC1999C3-6CC1-4A1D-A95E-1279B141CE32",
-		// 		payload: {
-		// 			userName: "Алексей",
-		// 			avatarUrl: "https://avatars.mds.yandex.net/i",
-		// 			title: "Заявка в друзья",
-		// 			mainText: "Алексей отправил Вам заявку в друзья",
-		// 			text: "Текст сообщения",
-		// 		},
-		// 		action: STRATEGY_ACTION.PINCODE,
-		// 	});
-		// }, 2000);
-
-		// setTimeout(async () => {
-		// 	await this._redisWork.publish(REDIS_CHANNEL.PINCODE_DELETE, { userId: "FC1999C3-6CC1-4A1D-A95E-1279B141CE32", pincode: 624456 });
-		// }, 15000);
+		// Инициализируем работу API
+		new ApiServer(this._redisWork, this._app, this._users, this._database, this._passport.passport, this._rabbitMQ);
+		// Инициализируем работу socket.io
+		this._socket = new SocketWorks(this._server, this._users, this._database, this._redisWork, this._session);
 	}
 
 	private _useExpressMiddlewares() {
