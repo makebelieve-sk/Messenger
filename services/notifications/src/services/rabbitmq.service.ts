@@ -1,12 +1,9 @@
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
+import { RABBITMQ_QUEUE } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { ErrorQueueDto, NotificationQueueDto } from "src/dto/rabbitmq.dto";
 import FileLogger from "src/services/logger.service";
-import {
-	INJECTION_KEYS,
-	NOTIFICATION_TYPE,
-	RABBITMQ_QUEUE,
-	STRATEGY_ACTION,
-} from "src/types/enums";
+import { INJECTION_KEYS } from "src/types/enums";
 import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 
@@ -32,22 +29,6 @@ export default class RabbitMQService implements OnModuleInit {
 		await this.clientNotification.connect();
 		await this.clientErrorNotification.connect();
 		await this.clientError.connect();
-
-		// TODO для теста, удалить
-		setTimeout(() => {
-			this.sendNotificationMessage(RABBITMQ_QUEUE.NOTIFICATION_QUEUE, {
-				type: NOTIFICATION_TYPE.TELEGRAM,
-				recipient: "FC1999C3-6CC1-4A1D-A95E-1279B141CE32",
-				payload: {
-					userName: "Алексей",
-					avatarUrl: "https://avatars.mds.yandex.net/i",
-					title: "Заявка в друзья",
-					mainText: "Алексей отправил Вам заявку в друзья",
-					text: "Текст сообщения",
-				},
-				action: STRATEGY_ACTION.PINCODE,
-			});
-		}, 1000);
 	}
 
 	sendNotificationMessage(pattern: string, data: NotificationQueueDto) {

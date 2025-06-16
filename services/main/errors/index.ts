@@ -87,6 +87,14 @@ export class RedisError extends BaseError {
 	}
 }
 
+export class RabbitMQError extends BaseError {
+	constructor(readonly message: string) {
+		super(message);
+
+		this.name = "RabbitMQ error";
+	}
+}
+
 export class SocketError extends BaseError {
 	constructor(readonly message: string) {
 		super(message);

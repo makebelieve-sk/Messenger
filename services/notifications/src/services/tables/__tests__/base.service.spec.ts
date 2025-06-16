@@ -41,6 +41,7 @@ describe("BaseRepositoryService", () => {
 		const mockRepository = {
 			find: jest.fn(),
 			findOneBy: jest.fn(),
+			findAllBy: jest.fn(),
 			create: jest.fn(),
 			save: jest.fn(),
 			delete: jest.fn(),
@@ -113,15 +114,6 @@ describe("BaseRepositoryService", () => {
 			const result = await service["findOneBy"]({ firstName: "Test" });
 			expect(result).toEqual(mockTestDto);
 			expect(repository.findOneBy).toHaveBeenCalledWith({ firstName: "Test" });
-		});
-
-		it("should throw DatabaseError when entity not found", async () => {
-			jest.spyOn(repository, "findOneBy").mockResolvedValue(null);
-
-			await expect(service["findOneBy"]({ firstName: "Test" })).rejects.toThrow(
-				DatabaseError,
-			);
-			expect(i18nService.t).toHaveBeenCalled();
 		});
 	});
 

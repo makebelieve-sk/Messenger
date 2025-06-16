@@ -1,10 +1,11 @@
+import { RABBITMQ_QUEUE } from "common-types";
+import { NOTIFICATION_TYPE } from "common-types";
+import { REDIS_CHANNEL } from "common-types";
 import { NotificationQueueDto } from "src/dto/rabbitmq.dto";
 import RabbitMQExceptionFilter from "src/filters/rabbitmq.filter";
 import RabbitMQService from "src/services/rabbitmq.service";
 import RedisService from "src/services/redis.service";
 import SentNotificationsService from "src/services/tables/sent-notifications.service";
-import { RABBITMQ_QUEUE, REDIS_CHANNEL } from "src/types/enums";
-import { NOTIFICATION_TYPE } from "src/types/enums";
 import { ArgumentsHost } from "@nestjs/common";
 import { RmqContext } from "@nestjs/microservices";
 import { Test, TestingModule } from "@nestjs/testing";

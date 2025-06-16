@@ -1,4 +1,4 @@
-import { TimeoutType } from "common-types";
+import { REDIS_CHANNEL, TimeoutType } from "common-types";
 import { RedisStore } from "connect-redis";
 import { createClient, RedisClientType } from "redis";
 
@@ -7,15 +7,19 @@ import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { RedisError } from "@errors/index";
 import { RedisKeys } from "@custom-types/enums";
-import { REDIS_TIMEOUT_RECONNECTION, REDIS_TTL } from "@utils/constants";
+import { HEARTBEAT_TIMEOUT_MS, REDIS_TIMEOUT_RECONNECTION, REDIS_TTL } from "@utils/constants";
 
 const logger = Logger("Redis");
+const CHANNELS = [ REDIS_CHANNEL.HEARTBEAT, REDIS_CHANNEL.CRITICAL_ERRORS ];
 
 // Класс, отвечает за работу с клиентом Redis. Также, содержит внутри себя сущность хранилища RedisStore
 export default class RedisWorks {
 	private _client!: RedisClientType;
+	private _subscriber!: RedisClientType;
 	private _redisStore!: RedisStore;
+	private _lastHeartbeat: number = Date.now();
 	private _timeoutReconnect!: TimeoutType;
+	private _heartbeatMonitor!: TimeoutType;
 
 	constructor() {
 		this._connectRedis();
@@ -38,6 +42,8 @@ export default class RedisWorks {
 		this._redisStore = new RedisStore(redisConfig.store(this._client));
 
 		this._bindListeners();
+
+		this._createSubscriber();
 	}
 
 	private _bindListeners() {
@@ -45,6 +51,83 @@ export default class RedisWorks {
 		this.redisClient.on("ready", this._readyHandler);
 		this.redisClient.on("error", async (error: Error) => await this._connectErrorHandler(t("redis.error.client_work") + error.message));
 		this.redisClient.on("end", this._endHandler);
+	}
+
+	async publish(channel: REDIS_CHANNEL, data: Object) {
+		const message = JSON.stringify(data);
+		const receivers = await this._client.publish(channel, message);
+
+		logger.debug(t("redis.message_published", { message, channel, receivers: receivers.toString() }));
+	}
+
+	private _createSubscriber() {
+		logger.info(t("redis.subsciber_create"));
+
+		this._subscriber = this.redisClient.duplicate();
+
+		this._subscriber
+			.connect()
+			.then(() => {
+				logger.info(t("redis.subscriber_connect_successfull"));
+
+				this._subscribeToChannels();
+				this._startHeartbeatMonitor();
+			})
+			.catch(async (error: Error) => await this._connectErrorHandler(t("redis.error.subscriber_connect", { error: error.message }) ));
+	}
+
+	private _subscribeToChannels() {
+		for (const channel of CHANNELS) {
+			this._subscriber.subscribe(channel, message => {
+				switch (channel) {
+				case REDIS_CHANNEL.HEARTBEAT: {
+					logger.debug(t("redis.subscriber_ping_successful"));
+
+					this._lastHeartbeat = Date.now();
+
+					break;
+				}
+				case REDIS_CHANNEL.CRITICAL_ERRORS: {
+					const parsedData = JSON.parse(message);
+
+					logger.error(t("redis.subscriber_critical_error", {
+						type: parsedData.type,
+						error: parsedData.error,
+						timestamp: parsedData.timestamp,
+						pid: parsedData.pid,
+					}));
+
+					break;
+				}
+				default:
+					logger.error(t("redis.error.subscriber_unknown_channel", { channel }));
+				}
+			});
+		}
+	}
+
+	private async _unsubscribeFromChannels() {
+		await Promise.all(
+			CHANNELS.map(async channel => await this._subscriber.unsubscribe(channel)),
+		);
+	}
+
+	private _startHeartbeatMonitor() {
+		this._heartbeatMonitor = setInterval(() => {
+			const delta = Date.now() - this._lastHeartbeat;
+			if (delta > HEARTBEAT_TIMEOUT_MS) {
+				logger.warn(t("redis.error.no_heartbeat", {
+					seconds: (delta / 1000).toFixed(0),
+					treshold: HEARTBEAT_TIMEOUT_MS.toString(),
+				}));
+			}
+		}, HEARTBEAT_TIMEOUT_MS);
+	}
+
+	private _stopHeartbeatMonitor() {
+		if (this._heartbeatMonitor) {
+			clearInterval(this._heartbeatMonitor);
+		}
 	}
 
 	private _connectHandler() {
@@ -63,6 +146,8 @@ export default class RedisWorks {
 			clearTimeout(this._timeoutReconnect);
 		}
 
+		this._stopHeartbeatMonitor();
+
 		this._timeoutReconnect = setTimeout(() => {
 			logger.info(t("redis.reconnection"));
 			this._connectRedis();
@@ -79,7 +164,10 @@ export default class RedisWorks {
 
 	async close() {
 		logger.debug("close");
+
+		await this._unsubscribeFromChannels();
 		await this._client.disconnect();
+		await this._subscriber.disconnect();
 	}
 
 	// Получить полный ключ сохраненного значения

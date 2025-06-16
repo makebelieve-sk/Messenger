@@ -29,6 +29,7 @@
 		"restore:prod": "node -r module-alias/register dist/scripts/db-restore.js"
 	},
 	"dependencies": {
+		"amqplib": "^0.10.8",
 		"connect-redis": "^8.0.1",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
@@ -56,6 +57,7 @@
 		"winston": "^3.17.0"
 	},
 	"devDependencies": {
+		"@types/amqplib": "^0.10.7",
 		"@types/cookie-parser": "^1.4.7",
 		"@types/express": "^5.0.1",
 		"@types/express-session": "^1.18.0",

@@ -1,3 +1,4 @@
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { PayloadNotificationDto } from "src/dto/rabbitmq.dto";
 import NotificationStrategy from "src/interfaces/notification.interface";
@@ -10,7 +11,6 @@ import PincodesService from "src/services/tables/pincodes.service";
 import SentNotificationsService from "src/services/tables/sent-notifications.service";
 import TelegramUsersService from "src/services/tables/telegram-users.service";
 import UsersService from "src/services/tables/users.service";
-import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "src/types/enums";
 import { Injectable } from "@nestjs/common";
 
 // Сервис, содержит методы реализации со стратегией отправки уведомлений в телеграмм канал

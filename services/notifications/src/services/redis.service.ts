@@ -1,9 +1,10 @@
+import { REDIS_CHANNEL } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { firstValueFrom } from "rxjs";
 import { NotificationQueueDto } from "src/dto/rabbitmq.dto";
 import { PincodeDto } from "src/dto/redis.dto";
 import FileLogger from "src/services/logger.service";
-import { INJECTION_KEYS, REDIS_CHANNEL } from "src/types/enums";
+import { INJECTION_KEYS } from "src/types/enums";
 import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { Cron } from "@nestjs/schedule";

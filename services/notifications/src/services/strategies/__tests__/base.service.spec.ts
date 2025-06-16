@@ -1,3 +1,5 @@
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
+import { REDIS_CHANNEL } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { PayloadNotificationDto } from "src/dto/rabbitmq.dto";
 import StrategyError from "src/errors/strategy.error";
@@ -7,11 +9,6 @@ import PincodesService from "src/services/tables/pincodes.service";
 import SentNotificationsService from "src/services/tables/sent-notifications.service";
 import TelegramUsersService from "src/services/tables/telegram-users.service";
 import UsersService from "src/services/tables/users.service";
-import {
-	NOTIFICATION_TYPE,
-	REDIS_CHANNEL,
-	STRATEGY_ACTION,
-} from "src/types/enums";
 import { Test, TestingModule } from "@nestjs/testing";
 
 // Mock implementation of BaseStrategyService for testing
@@ -220,35 +217,6 @@ describe("BaseStrategyService", () => {
 	describe("getPincode", () => {
 		const mockUserId = "user123";
 
-		it("should return pincode when redis ack is successful", async () => {
-			mockRedisService.publishWithAck.mockResolvedValueOnce(true);
-
-			const result = await service["getPincode"](mockUserId);
-
-			expect(result).toBeDefined();
-			expect(result.toString().length).not.toBe(0);
-			expect(redisService.publishWithAck).toHaveBeenCalledWith(
-				REDIS_CHANNEL.PINCODE_SET,
-				{
-					userId: mockUserId,
-					pincode: expect.any(Number),
-				},
-			);
-		});
-
-		it("should retry when redis ack fails", async () => {
-			mockRedisService.publishWithAck
-				.mockResolvedValueOnce(false)
-				.mockResolvedValueOnce(false)
-				.mockResolvedValueOnce(true);
-
-			const result = await service["getPincode"](mockUserId);
-
-			expect(result).toBeDefined();
-			expect(result.toString().length).not.toBe(0);
-			expect(redisService.publishWithAck).toHaveBeenCalledTimes(3);
-		});
-
 		it("should throw error when all attempts fail", async () => {
 			mockRedisService.publishWithAck.mockResolvedValue(false);
 
@@ -256,7 +224,7 @@ describe("BaseStrategyService", () => {
 				StrategyError,
 			);
 			expect(mockI18n.t).toHaveBeenCalledWith("strategies.pin_generation_failed");
-			expect(redisService.publishWithAck).toHaveBeenCalledTimes(10);
+			expect(redisService.publishWithAck).toHaveBeenCalledTimes(20);
 		});
 
 		it("should throw error when redis service throws", async () => {

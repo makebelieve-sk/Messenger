@@ -1,8 +1,9 @@
+import { RABBITMQ_QUEUE } from "common-types";
 import BaseError from "src/errors/base.error";
 import GlobalFilter from "src/filters/global.filter";
 import FileLogger from "src/services/logger.service";
 import RabbitMQService from "src/services/rabbitmq.service";
-import { RABBITMQ_QUEUE, RabbitMQ_SEND_TYPE } from "src/types/enums";
+import { RabbitMQ_SEND_TYPE } from "src/types/enums";
 import { Test, TestingModule } from "@nestjs/testing";
 
 // Concrete implementation of BaseError for testing

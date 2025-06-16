@@ -1,10 +1,10 @@
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { PayloadNotificationDto } from "src/dto/rabbitmq.dto";
 import StrategyError from "src/errors/strategy.error";
 import NotificationStrategy from "src/interfaces/notification.interface";
 import FileLogger from "src/services/logger.service";
 import BaseStrategyService from "src/services/strategies/base.service";
-import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "src/types/enums";
 import { Injectable } from "@nestjs/common";
 
 // Сервис, содержит методы реализации со стратегией отправки уведомлений по СМС

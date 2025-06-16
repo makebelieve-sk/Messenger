@@ -1,3 +1,8 @@
+import {
+	NOTIFICATION_TYPE,
+	REDIS_CHANNEL,
+	STRATEGY_ACTION,
+} from "common-types";
 import { randomInt } from "crypto";
 import { I18nService } from "nestjs-i18n";
 import { PayloadNotificationDto } from "src/dto/rabbitmq.dto";
@@ -7,11 +12,6 @@ import PincodesService from "src/services/tables/pincodes.service";
 import SentNotificationsService from "src/services/tables/sent-notifications.service";
 import TelegramUsersService from "src/services/tables/telegram-users.service";
 import UsersService from "src/services/tables/users.service";
-import {
-	NOTIFICATION_TYPE,
-	REDIS_CHANNEL,
-	STRATEGY_ACTION,
-} from "src/types/enums";
 import { Inject } from "@nestjs/common";
 
 const MAX_ATTEMPTS = 10;
@@ -93,6 +93,13 @@ export default abstract class BaseStrategyService {
 			for (let i = 1; i <= MAX_ATTEMPTS; i++) {
 				const temporaryPincode = this.generatePincode();
 
+				// Сначала удаляем старый пинкод из Redis и таблицы базы данных
+				await this.redisService.publishWithAck(REDIS_CHANNEL.PINCODE_DELETE, {
+					userId: userId,
+					pincode: temporaryPincode,
+				});
+
+				// Потом добавляем новый пинкод
 				const ack = await this.redisService.publishWithAck(
 					REDIS_CHANNEL.PINCODE_SET,
 					{

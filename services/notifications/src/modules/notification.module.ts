@@ -1,3 +1,4 @@
+import { NOTIFICATION_TYPE } from "common-types";
 import NodeTelegramModule from "src/modules/node-telegram.module";
 import NodeMailerModule from "src/modules/nodemailer.module";
 import PincodesModule from "src/modules/tables/pincodes.module";
@@ -8,7 +9,7 @@ import NotificationService from "src/services/notification.service";
 import EmailService from "src/services/strategies/email.service";
 import SMSService from "src/services/strategies/sms.service";
 import TelegramService from "src/services/strategies/telegram.service";
-import { INJECTION_KEYS, NOTIFICATION_TYPE } from "src/types/enums";
+import { INJECTION_KEYS } from "src/types/enums";
 import { Module, Provider } from "@nestjs/common";
 
 // Список всех применяемых стратегий нотификации

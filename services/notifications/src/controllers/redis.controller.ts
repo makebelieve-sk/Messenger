@@ -1,3 +1,4 @@
+import { REDIS_CHANNEL } from "common-types";
 import { Redis } from "ioredis";
 import { I18nService } from "nestjs-i18n";
 import { NotificationQueueDto } from "src/dto/rabbitmq.dto";
@@ -5,7 +6,7 @@ import { PincodeDto } from "src/dto/redis.dto";
 import FileLogger from "src/services/logger.service";
 import NotificationService from "src/services/notification.service";
 import PincodesService from "src/services/tables/pincodes.service";
-import { INJECTION_KEYS, REDIS_CHANNEL } from "src/types/enums";
+import { INJECTION_KEYS } from "src/types/enums";
 import { fiveMinutes } from "src/utils/constants";
 import { Controller, Inject } from "@nestjs/common";
 import { MessagePattern, Payload } from "@nestjs/microservices";
@@ -71,19 +72,19 @@ export default class RedisController {
 			const { userId, pincode } = data;
 			const key = `user:${userId}:pin`;
 
-			// SREM вернёт число удалённых элементов (1 — если элемент был, 0 — если не было)
-			const removed = await this.redis.srem(key, pincode);
+			// Удаляем все ключи из множества по текущему ключу
+			const removedCount = await this.redis.del(key);
 
-			if (removed === 1) {
+			if (removedCount) {
 				this.logger.debug(
 					this.i18n.t("redis.pincode_deleted", { args: { userId, pincode } }),
 				);
 
-				// Удаляем провереный пинкод из базы данных
-				await this.pincodesService.removeBy({ pincode });
+				// Удаляем провереный пинкод из базы данных по пользователю
+				await this.pincodesService.removeBy({ userId });
 				return true; // ACK — пинкод удалён
 			} else {
-				this.logger.warn(
+				this.logger.debug(
 					this.i18n.t("redis.pincode_not_found", { args: { userId, pincode } }),
 				);
 				return false; // NACK — такого пинкода не было во множестве

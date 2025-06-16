@@ -1,3 +1,4 @@
+import { RABBITMQ_QUEUE } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { NotificationQueueDto } from "src/dto/rabbitmq.dto";
 import RabbitMQExceptionFilter from "src/filters/rabbitmq.filter";
@@ -5,7 +6,6 @@ import RabbitLoggingInterceptor from "src/interceptors/rabbitmq.interceptor";
 import RabbitMQNotificationValidationPipe from "src/pipes/rabbitmq-notification.pipe";
 import FileLogger from "src/services/logger.service";
 import NotificationService from "src/services/notification.service";
-import { RABBITMQ_QUEUE } from "src/types/enums";
 import { Controller, UseFilters, UseInterceptors } from "@nestjs/common";
 import { Ctx, EventPattern, Payload, RmqContext } from "@nestjs/microservices";
 import { ApiExcludeController } from "@nestjs/swagger";

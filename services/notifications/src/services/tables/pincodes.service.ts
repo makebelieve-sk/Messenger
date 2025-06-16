@@ -34,9 +34,13 @@ export default class PincodesService extends BaseRepositoryService<PincodesDto> 
 			}),
 		);
 
-		const foundPincode = await super.findOneBy(data);
+		const foundPincodes = await super.findAllBy(data);
 
-		return this.remove(foundPincode.id);
+		if (!foundPincodes || !foundPincodes.length) {
+			return;
+		}
+
+		return super.removeEntities(foundPincodes);
 	}
 
 	override remove(id: number) {

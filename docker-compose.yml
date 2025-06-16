@@ -77,13 +77,79 @@ services:
     networks:
       - app_network                       # Указываем способ общения с другими сервисами
     volumes:
-      - redis-insight:/data
+      - redis-insight_data:/data
     restart: on-failure                   # Перезапускать контейнер только в случаях возникновения ошибок (Количество перезапуском невозможно ограничить в Docker compose - зато можно в Docker Swarm - это оркестратор, как Ansible/Kubernetes)
     depends_on:                           # Указываем порядок запуска сервисов (но это не 100% гарантия запуска, но не готовности контейнеров - кроме исключения: condition: service_healthy)
       redis:                              # Запускаем данный сервис только после успешного запуска сервиса redis
         condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис redisinsight будет запущен только после того, как redis пройдет все проверки здоровья и будет считаться "здоровым"
     healthcheck:                          # Проверка здоровья контейнера
       test: ["CMD", "curl", "-f", "http://localhost:5540/api/health"] # Эта команда отправляет запрос к RedisInsight, и если он отвечает со статусом 200, то проверка считается успешной
+      interval: 30s                       # Интервал между проверками
+      timeout: 10s                        # Максимальное время выполнения проверки
+      retries: 3                          # Количество неудачных попыток, после которых контейнер считается нездоровым
+      start_period: 10s                   # Время, которое должно пройти после запуска контейнера, прежде чем будет выполнена первая проверка
+
+  # Сервис RabbitMQ
+  rabbitmq:
+    build:
+      context: ./deploy                   # Путь к папке, где лежит Dockerfile.rabbitMQ
+      dockerfile: Dockerfile.rabbitMQ     # Наименование файла конфигурации докера для RabbitMQ (происходит его автоматический запуск)
+    container_name: rabbitmq              # Наименование контейнера сервера докера (для последующей отладки)
+    ports:
+      - "5672:5672"                       # основной AMQP-порт (внешний и внутренний)
+      - "15672:15672"                     # веб‑интерфейс управления (внешний и внутренний)
+    networks:
+      - app_network                       # Указываем способ общения с другими сервисами
+    restart: on-failure                   # Перезапускать контейнер только в случаях возникновения ошибок (Количество перезапуском невозможно ограничить в Docker compose - зато можно в Docker Swarm - это оркестратор, как Ansible/Kubernetes)
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      # 1) Проверяем HTTP‑API healthchecks/node (возвращает 200, когда нода здорова)
+      # 2) Если HTTP недоступен, пытаемся rabbitmq-diagnostics status
+      test: >
+        sh -c '\
+          curl -f http://localhost:15672/api/healthchecks/node \
+          || rabbitmq-diagnostics -q status'
+      interval: 30s       # как часто проверять
+      timeout: 10s        # максимальное время одной проверки
+      retries: 3          # число подряд неудач до маркировки контейнера как unhealthy
+      start_period: 15s   # даём RabbitMQ 15 сек на запуск перед первой проверкой
+
+  # Сервис сервера нотификации (запускает файл конфигурации в папке services/notifications/Dockerfile)
+  notifications-server:
+    build:
+      context: .                          # Указываем текущую рабочую директорию. Необходимо, чтобы можно было без проблем копировать отдельные модули папки packages
+      dockerfile: services/notifications/Dockerfile # Наименование файла конфигурации докера на сервере (происходит его автоматический запуск)
+    container_name: notifications-server  # Наименование контейнера докера на сервере (для последующей отладки)
+    ports:
+      - "5052:5051"                       # Указываем соответствие между портами: 5052 (внешний порт сервера), 5051 - внутренний порт контейнера
+    networks:
+      - app_network                       # Указываем способ общения с другими сервисами
+    env_file:
+      - ./services/notifications/.env        # Копируем .env файлы (также их можно копировать в Dockerfile, но тогда они будут зашиты в образ сборки докера)
+      - ./services/notifications/.env.production  # В данном случае мы можем с легкостью менять env переменные в файлах и только перезапускать сервис (пересборки образа не будет)
+    environment:
+      - NODE_ENV=production               # Указываем переменную NODE_ENV (она указывается в package.json при команде npm run build + её необходимо указать для других npm пакетов)
+    depends_on:                           # Указываем порядок запуска сервисов (но это не 100% гарантия запуска, но не готовности контейнеров - кроме исключения: condition: service_healthy)
+      mssql:
+        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис notifications-server будет запущен только после того, как mssql пройдет все проверки здоровья и будет считаться "здоровым"
+      redis:                              # Запускаем данный сервис только после успешного запуска сервиса redis
+        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис notifications-server будет запущен только после того, как redis пройдет все проверки здоровья и будет считаться "здоровым"
+      redisinsight:                       # Запускаем данный сервис только после успешного запуска сервиса redisinsight
+        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис notifications-server будет запущен только после того, как redis пройдет все проверки здоровья и будет считаться "здоровым"
+      rabbitmq:                           # Запускаем данный сервис только после успешного запуска сервиса rabbitmq
+        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис notifications-server будет запущен только после того, как rabbitmq пройдет все проверки здоровья и будет считаться "здоровым"
+      main-server:
+        condition: service_healthy        # depends_on с condition: service_healthy: Гарантирует, что сервис notifications-server будет запущен только после того, как main-server пройдет все проверки здоровья и будет считаться "здоровым"
+    restart: on-failure                   # Перезапускать контейнер только в случаях возникновения ошибок (Количество перезапуском невозможно ограничить в Docker compose - зато можно в Docker Swarm - это оркестратор, как Ansible/Kubernetes)
+    healthcheck:                          # Проверка здоровья контейнера
+      test: [
+        "CMD", 
+        "curl", 
+        "-f", 
+        "--insecure", 
+        "https://localhost:5051/healthcheck"
+      ] # Эта команда отправляет запрос к серверу, и если он отвечает со статусом 204, то проверка считается успешной
       interval: 30s                       # Интервал между проверками
       timeout: 10s                        # Максимальное время выполнения проверки
       retries: 3                          # Количество неудачных попыток, после которых контейнер считается нездоровым
@@ -144,7 +210,8 @@ networks:
 volumes:
   mssql_data:
   redis_data:
-  redis-insight:
+  redis-insight_data:
+  rabbitmq_data:
 
 # Данное поле необходимо для создания секретов (максимально защищенный способ хранения переменных)
 secrets:

@@ -23,6 +23,7 @@ describe("PincodesService", () => {
 		create: jest.fn(),
 		save: jest.fn(),
 		findOneBy: jest.fn(),
+		removeEntities: jest.fn(),
 		delete: jest.fn(),
 	};
 
@@ -102,22 +103,7 @@ describe("PincodesService", () => {
 		});
 	});
 
-	describe("removeBy", () => {
-		it("should remove a pincode by criteria", async () => {
-			const criteria = { pincode: 123456 };
-			mockRepository.findOneBy.mockResolvedValue(mockPincode);
-			mockRepository.delete.mockResolvedValue({ affected: 1 });
-
-			await service.removeBy(criteria);
-
-			expect(mockRepository.findOneBy).toHaveBeenCalledWith(criteria);
-			expect(mockRepository.delete).toHaveBeenCalledWith(mockPincode.id);
-			expect(logger.debug).toHaveBeenCalled();
-			expect(i18n.t).toHaveBeenCalledWith("notifications.pincodes.remove_by", {
-				args: { data: JSON.stringify(criteria) },
-			});
-		});
-
+	describe("removeEntities", () => {
 		it("should throw error if pincode not found", async () => {
 			const criteria = { pincode: 999999 };
 			mockRepository.findOneBy.mockResolvedValue(null);

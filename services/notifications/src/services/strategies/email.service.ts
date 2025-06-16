@@ -1,3 +1,4 @@
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { PayloadNotificationDto } from "src/dto/rabbitmq.dto";
 import NotificationStrategy from "src/interfaces/notification.interface";
@@ -8,7 +9,6 @@ import BaseStrategyService from "src/services/strategies/base.service";
 import PincodesService from "src/services/tables/pincodes.service";
 import SentNotificationsService from "src/services/tables/sent-notifications.service";
 import UsersService from "src/services/tables/users.service";
-import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "src/types/enums";
 import { Injectable } from "@nestjs/common";
 
 // Сервис, содержит методы реализации со стратегией отправки уведомлений на почту

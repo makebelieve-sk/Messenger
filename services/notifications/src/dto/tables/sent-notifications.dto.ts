@@ -1,5 +1,5 @@
 import { IsEnum } from "class-validator";
-import { NOTIFICATION_TYPE } from "src/types/enums";
+import { NOTIFICATION_TYPE } from "common-types";
 import {
 	Column,
 	CreateDateColumn,

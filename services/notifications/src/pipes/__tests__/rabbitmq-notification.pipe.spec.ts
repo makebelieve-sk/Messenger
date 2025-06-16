@@ -1,11 +1,11 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
 import {
 	NotificationQueueDto,
 	PayloadNotificationDto,
 } from "src/dto/rabbitmq.dto";
 import RabbitMQNotificationValidationPipe from "src/pipes/rabbitmq-notification.pipe";
-import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "src/types/enums";
 import { BadRequestException } from "@nestjs/common";
 
 import "reflect-metadata";

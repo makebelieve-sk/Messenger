@@ -1,15 +1,15 @@
+import {
+	NOTIFICATION_TYPE,
+	REDIS_CHANNEL,
+	STRATEGY_ACTION,
+} from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { of } from "rxjs";
 import { NotificationQueueDto } from "src/dto/rabbitmq.dto";
 import { PincodeDto } from "src/dto/redis.dto";
 import FileLogger from "src/services/logger.service";
 import RedisService from "src/services/redis.service";
-import {
-	INJECTION_KEYS,
-	NOTIFICATION_TYPE,
-	REDIS_CHANNEL,
-	STRATEGY_ACTION,
-} from "src/types/enums";
+import { INJECTION_KEYS } from "src/types/enums";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("RedisService", () => {

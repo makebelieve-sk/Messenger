@@ -1,9 +1,10 @@
+import { RABBITMQ_QUEUE } from "common-types";
 import {
 	rabbitErrorConfig,
 	rabbitErrorNotificationConfig,
 	rabbitNotificationConfig,
 } from "src/configs/rabbitmq.config";
-import { INJECTION_KEYS, RABBITMQ_QUEUE } from "src/types/enums";
+import { INJECTION_KEYS } from "src/types/enums";
 import { Transport } from "@nestjs/microservices/enums/transport.enum";
 
 describe("RabbitMQ Config", () => {

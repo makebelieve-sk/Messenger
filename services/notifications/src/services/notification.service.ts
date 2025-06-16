@@ -1,13 +1,10 @@
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { PayloadNotificationDto } from "src/dto/rabbitmq.dto";
 import AppError from "src/errors/app.error";
 import NotificationStrategy from "src/interfaces/notification.interface";
 import FileLogger from "src/services/logger.service";
-import {
-	INJECTION_KEYS,
-	NOTIFICATION_TYPE,
-	STRATEGY_ACTION,
-} from "src/types/enums";
+import { INJECTION_KEYS } from "src/types/enums";
 import { Inject, Injectable } from "@nestjs/common";
 
 // Сервис, содержит методы реализации управления стратегией

@@ -1,3 +1,4 @@
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import RabbitMQController from "src/controllers/rabbitmq.controller";
 import { NotificationQueueDto } from "src/dto/rabbitmq.dto";
@@ -7,7 +8,6 @@ import NotificationService from "src/services/notification.service";
 import RabbitMQService from "src/services/rabbitmq.service";
 import RedisService from "src/services/redis.service";
 import SentNotificationsService from "src/services/tables/sent-notifications.service";
-import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "src/types/enums";
 import { RmqContext } from "@nestjs/microservices";
 import { Test, TestingModule } from "@nestjs/testing";
 

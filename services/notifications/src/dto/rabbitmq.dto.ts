@@ -1,9 +1,6 @@
 import { IsEnum, IsNotEmpty, IsString } from "class-validator";
-import {
-	NOTIFICATION_TYPE,
-	RabbitMQ_SEND_TYPE,
-	STRATEGY_ACTION,
-} from "src/types/enums";
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
+import { RabbitMQ_SEND_TYPE } from "src/types/enums";
 
 // Возможная модель объекта данных в сообщении
 export class PayloadNotificationDto {

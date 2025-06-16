@@ -1,9 +1,10 @@
+import { RABBITMQ_QUEUE } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import GracefulShutdownService from "src/services/graceful-shutdown.service";
 import FileLogger from "src/services/logger.service";
 import RabbitMQService from "src/services/rabbitmq.service";
 import RedisService from "src/services/redis.service";
-import { RABBITMQ_QUEUE, RabbitMQ_SEND_TYPE } from "src/types/enums";
+import { RabbitMQ_SEND_TYPE } from "src/types/enums";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("GracefulShutdownService", () => {

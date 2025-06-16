@@ -1,3 +1,4 @@
+import { REDIS_CHANNEL } from "common-types";
 import Redis from "ioredis";
 import { RabbitMQConfig } from "src/configs/rabbitmq.config";
 import { RedisConfig } from "src/configs/redis.config";
@@ -6,7 +7,7 @@ import ConfigError from "src/errors/config.error";
 import GlobalFilter from "src/filters/global.filter";
 import AppModule from "src/modules/app.module";
 import FileLogger from "src/services/logger.service";
-import { CONFIG_TYPE, REDIS_CHANNEL } from "src/types/enums";
+import { CONFIG_TYPE } from "src/types/enums";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { MicroserviceOptions } from "@nestjs/microservices";
@@ -103,6 +104,12 @@ async function bootstrap() {
 		logger.error("Ошибка во время старта сервера", error);
 
 		if (criticalRedis) {
+			await sendCriticalError(
+				criticalRedis,
+				"unhandledRejection",
+				error?.message || error,
+			);
+
 			await criticalRedis.quit();
 			logger.log("Critical Redis client closed");
 		}
@@ -144,11 +151,3 @@ async function sendCriticalError(
 }
 
 bootstrap();
-
-// На основном сервере:
-// 0) Реализовать в задачке инструкцию как заходить к боту (оставить ссылку на него) и отправлять ему свой номер телефона (нажать на старт)
-// 1) подписаться на критичные ошибки реббита (логировать их, вывести snackbar на клиенте)
-// 2) подписаться на heartbeat редиса (логировать их, вывести snackbar на клиенте)
-// 3) создать очереди для реббита для отправки данных нотификации
-// 4) вынести общшие енамы в packages/common-types
-// 5) после успешной смены пароля только что использованный пинкод удалять из редиса по каналу удаления пинкода

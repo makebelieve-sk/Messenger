@@ -5,7 +5,12 @@ import TelegramUsersDto from "src/dto/tables/telegram-users.dto";
 import UsersDto from "src/dto/tables/users.dto";
 import DatabaseError from "src/errors/database.error";
 import FileLogger from "src/services/logger.service";
-import { DeepPartial, FindOptionsWhere, Repository } from "typeorm";
+import {
+	DeepPartial,
+	FindManyOptions,
+	FindOptionsWhere,
+	Repository,
+} from "typeorm";
 import { Inject, Injectable } from "@nestjs/common";
 
 type DtoType = UsersDto | PincodesDto | SentNotificationsDto | TelegramUsersDto;
@@ -22,22 +27,16 @@ export default abstract class BaseRepositoryService<T extends DtoType> {
 		return this.repository.find();
 	}
 
+	protected findAllBy(data: DeepPartial<T>): Promise<T[]> {
+		return this.repository.find(data as FindManyOptions<T>);
+	}
+
 	protected findOne(id: T["id"]): Promise<T | null> {
 		return this.repository.findOneBy({ id } as FindOptionsWhere<T>);
 	}
 
-	protected async findOneBy(data: DeepPartial<T>): Promise<T> {
-		const entity = await this.repository.findOneBy(data as FindOptionsWhere<T>);
-
-		if (!entity) {
-			throw new DatabaseError(
-				this.i18n.t("database.errors.entity_not_found", {
-					args: { id: data?.id || undefined },
-				}),
-			);
-		}
-
-		return entity;
+	protected findOneBy(data: DeepPartial<T>): Promise<T | null> {
+		return this.repository.findOneBy(data as FindOptionsWhere<T>);
 	}
 
 	protected create(data: DeepPartial<T>): Promise<T> {
@@ -62,5 +61,9 @@ export default abstract class BaseRepositoryService<T extends DtoType> {
 
 	protected remove(id: T["id"]) {
 		return this.repository.delete(id);
+	}
+
+	protected removeEntities(data: T[]) {
+		return this.repository.remove(data);
 	}
 }

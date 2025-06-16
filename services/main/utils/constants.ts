@@ -29,6 +29,8 @@ export const REDIS_PREFIX = process.env.REDIS_PREFIX as string;
 export const REDIS_TTL = process.env.REDIS_TTL ? Number(process.env.REDIS_TTL) : 3600;
 export const REDIS_TIMEOUT_RECONNECTION = process.env.REDIS_TIMEOUT_RECONNECTION ? Number(process.env.REDIS_TIMEOUT_RECONNECTION) : 5000;
 
+export const RABBITMQ_URL = process.env.RABBITMQ_URL as string;
+
 export const SOCKET_METHOD = process.env.SOCKET_METHOD as string;
 export const SOCKET_PING_INTARVAL = process.env.SOCKET_PING_INTARVAL ? Number(process.env.SOCKET_PING_INTARVAL) : 25000;
 export const SOCKET_PING_TIMEOUT = process.env.SOCKET_PING_TIMEOUT ? Number(process.env.SOCKET_PING_TIMEOUT) : 5000;
@@ -61,3 +63,5 @@ export const IS_HTTPS = MESSANGER_ENV !== "production";
 export const MB_1 = 1024 * 1024;
 export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";
 export const BACKUP_ENCYPTED_FILE = "backup.enc";
+export const HEARTBEAT_TIMEOUT_MS = 1000 * 60 + 1000;
+export const RABBITMQ_RECONNECTION = 5000;

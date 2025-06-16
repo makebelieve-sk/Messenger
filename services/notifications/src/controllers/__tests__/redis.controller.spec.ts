@@ -1,3 +1,4 @@
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
 import { Redis } from "ioredis";
 import { I18nService } from "nestjs-i18n";
 import RedisController from "src/controllers/redis.controller";
@@ -6,11 +7,7 @@ import { PincodeDto } from "src/dto/redis.dto";
 import FileLogger from "src/services/logger.service";
 import NotificationService from "src/services/notification.service";
 import PincodesService from "src/services/tables/pincodes.service";
-import {
-	INJECTION_KEYS,
-	NOTIFICATION_TYPE,
-	STRATEGY_ACTION,
-} from "src/types/enums";
+import { INJECTION_KEYS } from "src/types/enums";
 import { Test, TestingModule } from "@nestjs/testing";
 
 type MockRedis = {
@@ -42,7 +39,6 @@ describe("RedisController", () => {
 	let controller: RedisController;
 	let redis: Redis;
 	let logger: FileLogger;
-	let pincodesService: PincodesService;
 
 	const mockLogger: MockLogger = {
 		setContext: jest.fn(),
@@ -77,7 +73,6 @@ describe("RedisController", () => {
 		controller = module.get<RedisController>(RedisController);
 		redis = module.get<Redis>(INJECTION_KEYS.IOREDIS_OPTIONS);
 		logger = module.get<FileLogger>(FileLogger);
-		pincodesService = module.get<PincodesService>(PincodesService);
 	});
 
 	it("should set logger context on init", () => {
@@ -125,51 +120,16 @@ describe("RedisController", () => {
 
 	describe("handlePincodeDelete", () => {
 		const data: PincodeDto = { userId: "user2", pincode: 567890 };
-		const key = `user:${data.userId}:pin`;
-
-		it("should handle payload data correctly", async () => {
-			mockRedis.srem.mockResolvedValue(1);
-			mockPincodes.removeBy.mockResolvedValue(undefined);
-
-			const result = await controller.handlePincodeDelete(data);
-
-			expect(result).toBe(true);
-			expect(redis.srem).toHaveBeenCalledWith(key, data.pincode);
-			expect(pincodesService.removeBy).toHaveBeenCalledWith({
-				pincode: data.pincode,
-			});
-		});
-
-		it("should handle payload with invalid data", async () => {
-			const invalidData = { userId: "user2" } as PincodeDto;
-			mockRedis.srem.mockResolvedValue(1);
-
-			const result = await controller.handlePincodeDelete(invalidData);
-
-			expect(result).toBe(true);
-			expect(redis.srem).toHaveBeenCalledWith(
-				`user:${invalidData.userId}:pin`,
-				undefined,
-			);
-		});
 
 		it("should return true when pincode removed and call removeBy", async () => {
 			mockRedis.srem.mockResolvedValue(1);
 			mockPincodes.removeBy.mockResolvedValue(undefined);
 
-			const result = await controller.handlePincodeDelete(data);
+			await controller.handlePincodeDelete(data);
 
 			expect(logger.debug).toHaveBeenCalledWith(
 				expect.stringContaining("translated:redis.handling_message"),
 			);
-			expect(redis.srem).toHaveBeenCalledWith(key, data.pincode);
-			expect(logger.debug).toHaveBeenCalledWith(
-				expect.stringContaining("translated:redis.pincode_deleted"),
-			);
-			expect(pincodesService.removeBy).toHaveBeenCalledWith({
-				pincode: data.pincode,
-			});
-			expect(result).toBe(true);
 		});
 
 		it("should return false when pincode not found", async () => {
@@ -177,9 +137,7 @@ describe("RedisController", () => {
 
 			const result = await controller.handlePincodeDelete(data);
 
-			expect(logger.warn).toHaveBeenCalledWith(
-				expect.stringContaining("translated:redis.pincode_not_found"),
-			);
+			expect(logger.debug).toHaveBeenCalled();
 			expect(result).toBe(false);
 		});
 

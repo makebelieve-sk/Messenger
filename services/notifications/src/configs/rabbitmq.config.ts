@@ -1,4 +1,5 @@
-import { CONFIG_TYPE, INJECTION_KEYS, RABBITMQ_QUEUE } from "src/types/enums";
+import { RABBITMQ_QUEUE } from "common-types";
+import { CONFIG_TYPE, INJECTION_KEYS } from "src/types/enums";
 import { registerAs } from "@nestjs/config";
 import { Transport } from "@nestjs/microservices/enums/transport.enum";
 

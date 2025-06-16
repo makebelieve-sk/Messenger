@@ -1,14 +1,10 @@
+import { RABBITMQ_QUEUE } from "common-types";
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { ErrorQueueDto, NotificationQueueDto } from "src/dto/rabbitmq.dto";
 import FileLogger from "src/services/logger.service";
 import RabbitMQService from "src/services/rabbitmq.service";
-import {
-	INJECTION_KEYS,
-	NOTIFICATION_TYPE,
-	RABBITMQ_QUEUE,
-	RabbitMQ_SEND_TYPE,
-	STRATEGY_ACTION,
-} from "src/types/enums";
+import { INJECTION_KEYS, RabbitMQ_SEND_TYPE } from "src/types/enums";
 import { ClientProxy } from "@nestjs/microservices";
 import { Test, TestingModule } from "@nestjs/testing";
 

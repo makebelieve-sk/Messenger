@@ -1,3 +1,4 @@
+import { STRATEGY_ACTION } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import { PayloadNotificationDto } from "src/dto/rabbitmq.dto";
 import StrategyError from "src/errors/strategy.error";
@@ -10,7 +11,6 @@ import PincodesService from "src/services/tables/pincodes.service";
 import SentNotificationsService from "src/services/tables/sent-notifications.service";
 import TelegramUsersService from "src/services/tables/telegram-users.service";
 import UsersService from "src/services/tables/users.service";
-import { STRATEGY_ACTION } from "src/types/enums";
 import { Test, TestingModule } from "@nestjs/testing";
 
 // Расширяем тип TelegramService, чтобы включить protected методы

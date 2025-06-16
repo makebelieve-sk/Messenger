@@ -14,5 +14,6 @@
 	"config_error": {
 		"global": "Global Redis configuration is unavailable",
 		"ioredis": "Global IORedis configuration is unavailable"
-	}
+	},
+	"old_pin_deleted": "Delete old pincode for user {userId}"
 }

@@ -1,7 +1,8 @@
+import { RABBITMQ_QUEUE } from "common-types";
 import HTTPExceptionFilter from "src/filters/http.filter";
 import FileLogger from "src/services/logger.service";
 import RabbitMQService from "src/services/rabbitmq.service";
-import { RABBITMQ_QUEUE, RabbitMQ_SEND_TYPE } from "src/types/enums";
+import { RabbitMQ_SEND_TYPE } from "src/types/enums";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 

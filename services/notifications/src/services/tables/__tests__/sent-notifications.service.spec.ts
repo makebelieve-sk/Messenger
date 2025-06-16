@@ -1,8 +1,8 @@
+import { NOTIFICATION_TYPE } from "common-types";
 import { I18nService } from "nestjs-i18n";
 import SentNotificationsDto from "src/dto/tables/sent-notifications.dto";
 import FileLogger from "src/services/logger.service";
 import SentNotificationsService from "src/services/tables/sent-notifications.service";
-import { NOTIFICATION_TYPE } from "src/types/enums";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
