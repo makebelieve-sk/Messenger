@@ -1,15 +1,17 @@
-import { ApiRoutes, HTTPStatuses, SocketActions } from "common-types";
+import { ApiRoutes, HTTPStatuses, NOTIFICATION_TYPE, RABBITMQ_QUEUE, SocketActions, STRATEGY_ACTION } from "common-types";
 import type { Express, NextFunction, Request, Response } from "express";
 import type Transaction from "sequelize/lib/transaction";
 
 import type Middleware from "@core/api/Middleware";
 import type UsersController from "@core/controllers/UsersController";
 import type Database from "@core/database/Database";
+import type RabbitMQWorks from "@core/RabbitMQ";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { FriendsError } from "@errors/controllers";
 import { type ServerToClientEvents } from "@custom-types/socket.types";
 import { type ISafeUser } from "@custom-types/user.types";
+import { IS_HTTPS } from "@utils/constants";
 
 const logger = Logger("FriendsController");
 
@@ -35,6 +37,7 @@ export default class FriendsController {
 		private readonly _middleware: Middleware,
 		private readonly _database: Database,
 		private readonly _users: UsersController,
+		private readonly _rabbitMQ: RabbitMQWorks,
 	) {
 		this._init();
 	}
@@ -339,6 +342,26 @@ export default class FriendsController {
 					to: SocketActions.FOLLOW_FRIEND,
 					broadcast: SocketActions.ADD_OUTGOING_REQUEST,
 				},
+			});
+
+			const parsedUrl = req.user.avatarUrl
+				? req.user.avatarUrl.replace(/\\/g, "/")
+				: null; 
+
+			// Уведомляем сервис нотификации о новом уведомлении
+			await this._rabbitMQ.publish(RABBITMQ_QUEUE.NOTIFICATION_QUEUE, {
+				type: NOTIFICATION_TYPE.EMAIL,
+				recipient: friendId,
+				payload: {
+					userName: req.user.firstName + " " +  req.user.thirdName,
+					avatarUrl: `${IS_HTTPS ? "https" : "http"}://${req.headers.host}${parsedUrl}`,
+					title: t("notifications.new_notification.title"),
+					mainText: t("notifications.new_notification.mainText"),
+					text: t("notifications.new_notification.text", {
+						username: req.user.firstName + " " +  req.user.thirdName,
+					}),
+				},
+				action: STRATEGY_ACTION.NEW_NOTIFICATION,
 			});
 
 			await this._database.repo.friendActions.followFriend({ data: { userId, friendId } });

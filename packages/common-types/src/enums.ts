@@ -163,6 +163,36 @@ enum FileVarieties {
 	FILES = "FILES",
 };
 
+// Каналы Redis
+enum REDIS_CHANNEL {
+	HEARTBEAT = "heartbeat_channel",
+	FAILED_NOTIFICATIONS = "failed_notifications_channel",
+	CRITICAL_ERRORS = "critical_errors_channel",
+	PINCODE_SET = "pincode_set_channel",
+	PINCODE_DELETE = "pincode_delete_channel",
+};
+
+// Типы очередей RabbitMQ
+enum RABBITMQ_QUEUE {
+	NOTIFICATION_QUEUE = "notification_queue",
+	ERROR_NOTIFICATION_QUEUE = "error_notification_queue",
+	ERROR_QUEUE = "error_queue",
+};
+
+// Типы действия стратегии уведомления
+enum STRATEGY_ACTION {
+	NEW_NOTIFICATION = "NEW_NOTIFICATION",
+	PINCODE = "PINCODE",
+	LOGIN = "LOGIN",
+};
+
+// Типы нотификаций (возможные типы стратегий)
+enum NOTIFICATION_TYPE {
+	EMAIL = "EMAIL",
+	SMS = "SMS",
+	TELEGRAM = "TELEGRAM",
+};
+
 export {
 	ApiRoutes,
 	HTTPStatuses,
@@ -172,4 +202,8 @@ export {
 	MessageTypes,
 	MessageReadStatus,
 	FileVarieties,
+	REDIS_CHANNEL,
+	RABBITMQ_QUEUE,
+	STRATEGY_ACTION,
+	NOTIFICATION_TYPE
 };

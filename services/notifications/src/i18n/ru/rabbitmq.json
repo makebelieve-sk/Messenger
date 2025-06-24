@@ -1,0 +1,16 @@
+{
+	"recieved-message": "Получено сообщение из очереди {queue}: [type={type}, recipient={recipient}, payload={payload}]",
+	"message-received": "Получено сообщение с ключом маршрутизации {routingKey}: {data}",
+	"message-processed": "Сообщение обработано за {time}мс",
+	"message-error": "Ошибка после {time}мс: {error}",
+	"send_notification": "Отправка сообщения уведомления: [pattern={pattern}, data={data}]",
+	"send_error_notification": "Отправка сообщения уведомления об ошибке: [pattern={pattern}, data={data}]",
+	"send_error": "Отправка сообщения об ошибке: [pattern={pattern}, data={data}]",
+	"close": "Закрытие соединений RabbitMQ",
+	"config_error": {
+		"notification": "Конфигурация RabbitMQ для уведомлений недоступна",
+		"error_notification": "Конфигурация RabbitMQ для уведомлений об ошибках недоступна",
+		"error": "Конфигурация RabbitMQ для ошибок недоступна"
+	},
+	"unknown_queue": "Неизвестная очередь"
+}

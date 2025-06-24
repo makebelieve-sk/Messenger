@@ -12,6 +12,7 @@ import ApiServer from "@core/api/ApiServer";
 import UsersController from "@core/controllers/UsersController";
 import Database from "@core/database/Database";
 import PassportWorks from "@core/Passport";
+import RabbitMQWorks from "@core/RabbitMQ";
 import RedisWorks from "@core/Redis";
 import SocketWorks from "@core/socket/Socket";
 import Logger from "@service/logger";
@@ -27,6 +28,7 @@ export default class MainServer {
 	private readonly _database: Database;
 	private readonly _passport: PassportWorks;
 	private readonly _socket: SocketWorks;
+	private readonly _rabbitMQ: RabbitMQWorks;
 	private _session!: express.RequestHandler;
 
 	constructor(
@@ -45,8 +47,10 @@ export default class MainServer {
 		this._useExpressMiddlewares();
 		// Инициализируем работу Passport (мидлвары)
 		this._passport = new PassportWorks(this._app, this._database, this._users);
+		// Инициализируем работу RabbitMQ
+		this._rabbitMQ = new RabbitMQWorks();
 		// Инициализируем работу API
-		new ApiServer(this._redisWork, this._app, this._users, this._database, this._passport.passport);
+		new ApiServer(this._redisWork, this._app, this._users, this._database, this._passport.passport, this._rabbitMQ);
 		// Инициализируем работу socket.io
 		this._socket = new SocketWorks(this._server, this._users, this._database, this._redisWork, this._session);
 	}
@@ -80,5 +84,6 @@ export default class MainServer {
 		await this._database.close();
 		await this._redisWork.close();
 		await this._socket.close();
+		await this._rabbitMQ.close();
 	}
 }

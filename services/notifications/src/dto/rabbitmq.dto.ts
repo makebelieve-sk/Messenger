@@ -1,0 +1,55 @@
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { NOTIFICATION_TYPE, STRATEGY_ACTION } from "common-types";
+import { RabbitMQ_SEND_TYPE } from "src/types/enums";
+
+// Возможная модель объекта данных в сообщении
+export class PayloadNotificationDto {
+	@IsString()
+	@IsNotEmpty()
+	userName: string;
+
+	@IsString()
+	@IsNotEmpty()
+	avatarUrl: string;
+
+	@IsString()
+	@IsNotEmpty()
+	title: string;
+
+	@IsString()
+	@IsNotEmpty()
+	mainText: string;
+
+	@IsString()
+	text?: string;
+}
+
+// Модель сообщения из очереди нотификаций
+export class NotificationQueueDto {
+	@IsEnum(NOTIFICATION_TYPE)
+	@IsNotEmpty()
+	type: NOTIFICATION_TYPE;
+
+	@IsString()
+	@IsNotEmpty()
+	recipient: string;
+
+	@IsNotEmpty()
+	payload: PayloadNotificationDto;
+
+	@IsEnum(STRATEGY_ACTION)
+	@IsNotEmpty()
+	action: STRATEGY_ACTION;
+}
+
+// Модель сообщения из очереди критических ошибок
+export class ErrorQueueDto {
+	@IsEnum(RabbitMQ_SEND_TYPE)
+	type: RabbitMQ_SEND_TYPE;
+
+	@IsString()
+	reason: string | undefined;
+
+	@IsString()
+	at: string;
+}

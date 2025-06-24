@@ -1,0 +1,15 @@
+{
+	"email-send": "Sending email: recipient: {recipient}, payload: {payload}, action: {action}",
+	"email_not_found": "User email not found",
+	"phone_not_found": "User phone number not found",
+	"incorrect_strategy": "Incorrect strategy",
+	"pin_generation_failed": "Failed to generate PIN code after {attempts} attempts{error}",
+	"max_attempts_exceeded": "Maximum number of PIN code generation attempts exceeded",
+	"sms-send": "Sending SMS: recipient: {recipient}, payload: {payload}, action: {action}",
+	"sms-not-implemented": "SMS strategy not implemented",
+	"telegram": {
+		"send_error": "Error sending message to Telegram: {error}"
+	},
+	"not_implemented": "Strategy not implemented",
+	"telegram_id_not_found": "User Telegram ID not found"
+}

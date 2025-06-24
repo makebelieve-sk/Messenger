@@ -17,7 +17,7 @@ echo "Running client tests with coverage..."
 if npm run test:coverage; then
   echo "✅ Client tests passed with coverage!"
 else
-  echo "❌ Tests failed with coverage. Fix errors before committing."
+  echo "❌ Tests with coverage failed. Fix errors before committing."
   exit 1
 fi
 
@@ -30,6 +30,27 @@ if npm run lint; then
   echo "✅ Main server code passed linting!"
 else
   echo "❌ Main server code failed linting. Fix errors before committing."
+  exit 1
+fi
+
+# Выходим из папки services/main и заходим в папку services/notifications
+cd ../notifications
+
+# Проверка линтера и форматирования для сервера нотификации
+echo "Linting notifications-server..."
+if npm run format-and-lint; then
+  echo "✅ Notifications server code passed linting!"
+else
+  echo "❌ Notifications server code failed linting. Fix errors before committing."
+  exit 1
+fi
+
+# Проверка тестов на сервере нотификации с покрытием
+echo "Running client tests with coverage..."
+if npm run test:coverage; then
+  echo "✅ Notifications server tests passed with coverage!"
+else
+  echo "❌ Tests with coverage failed. Fix errors before committing."
   exit 1
 fi
 

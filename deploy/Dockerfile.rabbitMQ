@@ -1,0 +1,7 @@
+# Официальный образ RabbitMQ
+FROM rabbitmq:3-management
+
+# Устанавливаем curl в контейнере
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*

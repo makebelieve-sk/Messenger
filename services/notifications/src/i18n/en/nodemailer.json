@@ -1,0 +1,23 @@
+{
+	"config_error": "Global Nodemailer configuration is unavailable",
+	"send-email": "Sending email to {to} with subject {subject}",
+	"password_recovery": {
+		"subject": "Password Recovery",
+		"title": "Account Access Recovery",
+		"pincode": "Use this PIN code to recover access to your account",
+		"regards": "Best regards",
+		"team": "Support Team",
+		"security_notice": "If you did not request a password recovery, please contact us:"
+	},
+	"security_notification": {
+		"subject": "Security Notification",
+		"title": "New Device Login",
+		"message": "Your account was accessed from a new device. If this wasn't you, please contact us.",
+		"security_notice": "If this wasn't you, please contact us:"
+	},
+	"new_notification": {
+		"subject": "New Notification",
+		"regards": "Best regards",
+		"team": "Support Team"
+	}
+}
