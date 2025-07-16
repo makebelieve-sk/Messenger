@@ -36,3 +36,13 @@ export const goToAnotherProfile = (url: Pages, userId?: string) => {
 	// encodeURIComponent необходим, чтобы в URL не было спецсимволов (мало ли в userId что-то подобное есть)
 	return userId ? `${url}/${encodeURIComponent(userId)}` : url;
 };
+
+// Ждем публичного ключа
+export 	async function waitForPublicKeyCookie(): Promise<string | null> {
+	for (let i = 0; i < 100; i++) {
+		const cookie = document.cookie.match(/(^|;) ?publicKey=([^;]*)(;|$)/);
+		if (cookie?.[2]) return decodeURIComponent(cookie[2]);
+		await new Promise((r) => setTimeout(r, 100)); // 100мс
+	}
+	return null;
+}

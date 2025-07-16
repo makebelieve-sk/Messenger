@@ -4,6 +4,8 @@ enum ApiRoutes {
 	apiDocs = "/api-docs",
 	diagram = "/api-docs/diagram",
 	diagram_api = "/api-docs/diagram-api",
+	getPublicKey = "/public-key",
+	savePrivateKey = "/save-private",
 	checkHealth = "/check-health",
 	soundNotifications = "/sound-notifications",
 	deleteAccount = "/delete-account",

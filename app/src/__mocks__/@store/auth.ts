@@ -6,6 +6,7 @@ interface IAuthState {
     signInLoading: boolean;
     signUpLoading: boolean;
     chooseAvatarLoading: boolean;
+				publicKey: string | null;
 };
 
 const initialState: IAuthState = {
@@ -14,6 +15,7 @@ const initialState: IAuthState = {
 	signInLoading: false,
 	signUpLoading: false,
 	chooseAvatarLoading: false,
+	publicKey: null,
 };
 
 let state = { ...initialState };
@@ -34,6 +36,9 @@ const useAuthStore = () => ({
 	},
 	setChooseAvatarLoading: (chooseAvatarLoading: boolean) => {
 		state = { ...state, chooseAvatarLoading };
+	},
+	setPublicKey: (publicKey: string) => {
+		state = { ...state, publicKey };
 	},
 	reset: () => {
 		state = { ...initialState };
@@ -56,6 +61,9 @@ useAuthStore.getState = () => ({
 	},
 	setChooseAvatarLoading: (chooseAvatarLoading: boolean) => {
 		state = { ...state, chooseAvatarLoading };
+	},
+	setPublicKey: (publicKey: string) => {
+		state = { ...state, publicKey };
 	},
 	reset: () => {
 		state = { ...initialState };

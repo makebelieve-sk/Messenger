@@ -57,10 +57,18 @@ export const transformDate = (d: string, getYear = false) => {
 	logger.debug(`transformDate [d=${d}, getYear=${getYear}]`);
 
 	const date = new Date(d);
+	const now = new Date();
 
 	const dayNumber = date.getDate();
 	const month = fullNameMonths[date.getMonth()];
-	const year = getYear ? " " + date.getFullYear() : new Date().getMonth() - date.getMonth() >= 6 ? " " + date.getFullYear() : "";
+
+	// Используем dayjs для корректной разницы в месяцах
+	const diffMonths = dayjs(now).diff(dayjs(date), "month");
+	const year = getYear
+		? " " + date.getFullYear()
+		: diffMonths >= 6
+			? " " + date.getFullYear()
+			: "";
 
 	return dayNumber + " " + month + year;
 };

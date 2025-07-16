@@ -29,12 +29,14 @@ const mockAuthStore = {
 	setSignInLoading: jest.fn(),
 	setSignUpLoading: jest.fn(),
 	setChooseAvatarLoading: jest.fn(),
+	setPublicKey: jest.fn(),
 	reset: jest.fn(),
 	signUpErrors: null,
 	signInErrors: false,
 	signInLoading: false,
 	signUpLoading: false,
 	chooseAvatarLoading: false,
+	publicKey: null,
 };
 
 const mockGlobalStore = {
@@ -107,7 +109,7 @@ describe("CatchErrors", () => {
 					statusText: "Permanent Redirect",
 					headers: {},
 					config: {} as InternalAxiosRequestConfig,
-					data: { 
+					data: {
 						message: "Redirect",
 						success: false,
 						options: {
@@ -241,7 +243,7 @@ describe("CatchErrors", () => {
 					statusText: "Forbidden",
 					headers: {},
 					config: {} as InternalAxiosRequestConfig,
-					data: { 
+					data: {
 						message: "Forbidden",
 						success: false,
 						options: {
@@ -266,7 +268,7 @@ describe("CatchErrors", () => {
 					statusText: "Not Found",
 					headers: {},
 					config: {} as InternalAxiosRequestConfig,
-					data: { 
+					data: {
 						message: "Not Found",
 						success: false,
 						options: {
@@ -321,7 +323,7 @@ describe("CatchErrors", () => {
 					statusText: "Payload Too Large",
 					headers: {},
 					config: {} as InternalAxiosRequestConfig,
-					data: { 
+					data: {
 						message: "File size too large",
 						success: false,
 						options: {
@@ -346,7 +348,7 @@ describe("CatchErrors", () => {
 					statusText: "Too Many Requests",
 					headers: {},
 					config: {} as InternalAxiosRequestConfig,
-					data: { 
+					data: {
 						message: "Too Many Requests",
 						success: false,
 						options: {
@@ -371,7 +373,7 @@ describe("CatchErrors", () => {
 					statusText: "Server Error",
 					headers: {},
 					config: {} as InternalAxiosRequestConfig,
-					data: { 
+					data: {
 						message: "Server Error",
 						success: false,
 						options: {
@@ -448,7 +450,7 @@ describe("CatchErrors", () => {
 					statusText: "Internal Server Error",
 					headers: {},
 					config: {} as InternalAxiosRequestConfig,
-					data: { 
+					data: {
 						message: "System error occurred",
 						success: false,
 						options: {
