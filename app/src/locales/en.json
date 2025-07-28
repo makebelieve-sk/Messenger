@@ -211,5 +211,12 @@
 	"friends-module.empty.outgoing_requests": "There are no outgoing friend requests at the moment.",
 	"friends-module.empty.incoming_requests": "There are no incoming friend requests at the moment.",
 	"friends-module.empty.possible_friends": "The suggested friends list is empty at the moment.",
-	"friends-module.empty.common_friends": "The common friends list is empty at the moment."
+	"friends-module.empty.common_friends": "The common friends list is empty at the moment.",
+
+	"sign-in.error.cypher-error": "An error occurred while encrypting sign in data.",
+	"sign-up.error.cypher-error": "An error occurred while encrypting sign up data.",
+ "utils.import_key_error": "An error occurred while importing the key.",
+	"utils.encrypt_error": "An error occurred while encrypting data.",
+	"utils.no_public_key_error": "The public key is not found.",
+	"request.no_public_key_error": "The public key is not found."
 }
