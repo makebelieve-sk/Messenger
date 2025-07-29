@@ -13,7 +13,8 @@ import useUserStore from "@store/user";
 import { type IUserData } from "@custom-types/api.types";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
 import { encrypt } from "@utils/index";
-import { Cookies } from "../types/enums";
+import { Cookies } from "@custom-types/enums";
+
 const logger = Logger.init("MainApi");
 
 // Класс, содержит все HTTP запросы, которые являются глобальными по отношению к приложению
