@@ -1,4 +1,4 @@
-import { RSAKeyPairOptions } from "crypto";
+import type { RSAKeyPairOptions } from "crypto";
 
 // Конфигурация для гененрации ключей
 export const cryptoConfig: RSAKeyPairOptions<"pem", "pem"> = {

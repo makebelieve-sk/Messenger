@@ -86,3 +86,8 @@ export enum ThemeTypes {
 	LIGHT = "light",
 	DARK = "dark",
 };
+
+// Cookies
+export enum Cookies {
+	PUBLIC_KEY = "publicKey",
+};

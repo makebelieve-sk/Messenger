@@ -70,7 +70,6 @@ export default class Middleware {
 				res.cookie("publicKey", publicKey,
 					{
 						httpOnly: false,
-						//проверить надо ли указывать секур труе если у нас hhtp
 						sameSite: "lax",
 						secure: IS_HTTPS,
 					});

@@ -12,8 +12,8 @@ import useUIStore from "@store/ui";
 import useUserStore from "@store/user";
 import { type IUserData } from "@custom-types/api.types";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
-import { _encrypt } from "@utils/index";
-
+import { encrypt } from "@utils/index";
+import { Cookies } from "../types/enums";
 const logger = Logger.init("MainApi");
 
 // Класс, содержит все HTTP запросы, которые являются глобальными по отношению к приложению
@@ -39,7 +39,7 @@ export default class MainApi {
 	}
 
 	signIn(data: Object) {
-		_encrypt(data).then((encryptedData) => {
+		encrypt(data).then((encryptedData) => {
 			if (!encryptedData) {
 				useUIStore.getState().setError(i18next.t("sign-in.error.cypher-error"));
 				return;
@@ -63,7 +63,7 @@ export default class MainApi {
 	}
 
 	signUp(data: Object) {
-		_encrypt(data).then((encryptedData) => {
+		encrypt(data).then((encryptedData) => {
 			if (!encryptedData) {
 				useUIStore.getState().setError(i18next.t("sign-up.error.cypher-error"));
 				return;
@@ -138,7 +138,7 @@ export default class MainApi {
 				logger.info(`get info about yourself: ${JSON.stringify(userData.user)}`);
 				this._initNewUser({ ...userData, isMe: true });
 			},
-			needCookie: "publicKey",
+			needCookie: Cookies.PUBLIC_KEY,
 		});
 	}
 

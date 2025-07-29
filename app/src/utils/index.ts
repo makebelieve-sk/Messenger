@@ -79,8 +79,8 @@ async function importPublicKey(pem: string): Promise<CryptoKey> {
 	);
 }
 
-//Метод для шифрования, возвращает base64 строку
-export async function _encrypt(data: object): Promise<string | null> {
+// Метод для шифрования, возвращает base64 строку
+export async function encrypt(data: object): Promise<string | null> {
 	const publicKeyPem = useAuthStore.getState().publicKey;
 	if (!publicKeyPem) {
 		useUIStore.getState().setError(i18next.t("utils.no_public_key_error"));
