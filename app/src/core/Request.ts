@@ -4,6 +4,7 @@ import { ApiRoutes, HTTPStatuses } from "common-types";
 import type CatchErrors from "@core/CatchErrors";
 import i18next from "@service/i18n";
 import Logger from "@service/Logger";
+import useAuthStore from "@store/auth";
 import useUIStore from "@store/ui";
 import type { AxiosErrorType, AxiosResponseType } from "@custom-types/axios.types";
 import { API_URL, AXIOS_RESPONSE_ENCODING, AXIOS_TIMEOUT } from "@utils/constants";
@@ -15,6 +16,7 @@ interface IGetRequest {
 	setLoading?: (isLoading: boolean) => void;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	successCb?: (result: any) => void;
+	needCookie?: string;
 };
 
 interface IDownloadFileRequest {
@@ -71,17 +73,27 @@ export default class Request {
 	}
 
 	// GET запрос на сервер
-	get({ route, setLoading, successCb }: IGetRequest): void {
+	get({ route, setLoading, successCb, needCookie }: IGetRequest): void {
 		logger.debug(`get [route=${route}]`);
 
 		setLoading ? setLoading(true) : undefined;
 
 		this._instance
-			.get(route)
+			.get(route, { withCredentials: true })
 			.then((response: AxiosResponseType) => {
 				this._handleSuccessStatuses(response, successCb);
 			})
 			.catch((error: AxiosErrorType) => {
+				if (needCookie) {
+					const cookie = document.cookie.match(/(^|;) ?publicKey=([^;]*)(;|$)/);
+					const cookieValue = cookie ? decodeURIComponent(cookie[2]) : null;
+
+					if (cookieValue) {
+						useAuthStore.getState().setPublicKey(cookieValue);
+					} else {
+						useUIStore.getState().setError(i18next.t("request.no_public_key_error"));
+					}
+				}
 				this._errorHandler(error);
 			})
 			.finally(() => {

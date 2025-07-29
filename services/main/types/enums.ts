@@ -2,6 +2,7 @@
 export enum RedisKeys {
 	SESS = "sess",
 	REMEMBER_ME = "rememberMe",
+	PRIVATE_KEY = "privateKey"
 };
 
 // Типы действий пользователей в разделе "Друзья"

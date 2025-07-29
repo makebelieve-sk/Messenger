@@ -1,15 +1,17 @@
 import { HTTPStatuses } from "common-types";
+import { constants, createPrivateKey, generateKeyPairSync, privateDecrypt } from "crypto";
 import type { Express, NextFunction, Request, Response } from "express";
 import { MulterError } from "multer";
 import path from "path";
 
+import { cryptoConfig, getPrivateKeyConfig } from "@config/crypto.config";
 import { ipLimiter, sessionIdLimiter } from "@config/rate-limiter.config";
 import RedisWorks from "@core/Redis";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { BaseError, MiddlewareError } from "@errors/index";
 import { RedisKeys } from "@custom-types/enums";
-import { MB_1, MULTER_MAX_FILE_SIZE, MULTER_MAX_FILES_COUNT } from "@utils/constants";
+import { IS_HTTPS, MB_1, MULTER_MAX_FILE_SIZE, MULTER_MAX_FILES_COUNT } from "@utils/constants";
 import { createSharpedImage } from "@utils/files";
 import { updateSessionMaxAge } from "@utils/session";
 
@@ -23,7 +25,27 @@ export default class Middleware {
 	constructor(
 		private readonly _redisWork: RedisWorks,
 		private readonly _app: Express,
-	) {}
+	) { }
+
+	// Мидлвар, в котором генерируем пару ключей (приватный/публичный)
+	private async _generateKeyPair(): Promise<string> {
+		const tempId = "hash";
+
+		const existing = await this._redisWork.get(RedisKeys.PRIVATE_KEY, tempId);
+		if (typeof existing === "string" && existing) {
+			return JSON.parse(existing).publicKey;
+		};
+
+		const { publicKey, privateKey } = generateKeyPairSync("rsa", cryptoConfig);
+
+		await this._redisWork.set(RedisKeys.PRIVATE_KEY, tempId, JSON.stringify({
+			publicKey,
+			privateKey,
+			createdAt: Date.now(),
+		}));
+
+		return publicKey;
+	}
 
 	// Общий мидлвар. Ограничение на число запросов на ендпоинт по id сессии или его ip-адресу
 	rateLimiter() {
@@ -37,14 +59,22 @@ export default class Middleware {
 	}
 
 	// Частный мидлвар. Пользователь должен быть авторизован в системе
-	async mustAuthenticated(req: Request, _: Response, next: NextFunction) {
+	async mustAuthenticated(req: Request, res: Response, next: NextFunction) {
 		try {
 			const user = req.user;
 
 			logger.debug("mustAuthenticated [user=%j]", user);
 
 			if (!req.isAuthenticated()) {
+				const publicKey = await this._generateKeyPair();
+				res.cookie("publicKey", publicKey,
+					{
+						httpOnly: false,
+						sameSite: "lax",
+						secure: IS_HTTPS,
+					});
 				throw new MiddlewareError(t("auth.error.not_auth_or_token_expired"), HTTPStatuses.Unauthorized);
+
 			}
 
 			if (!user) {
@@ -74,8 +104,8 @@ export default class Middleware {
 
 		// Для корректного выполнения обработчика ошибки ендпоинтов необходимо всегда указывать 4 параметра (даже если все 4 не используются)
 		this._app.use((error: Error | MulterError, _: Request, res: Response, __: NextFunction) => {
-			const nextError = error instanceof BaseError 
-				? error 
+			const nextError = error instanceof BaseError
+				? error
 				: this._createNewError(error.message, error instanceof MulterError ? error.code : undefined);
 
 			const errorMessage = {
@@ -85,9 +115,9 @@ export default class Middleware {
 			};
 
 			/**
-			 * Поле message в объекте логгера Winston зарезервировано, поэтому невозможно вывести текстовое сообщение,
-			 * приходится изменять выводимый объект.
-			 */
+				* Поле message в объекте логгера Winston зарезервировано, поэтому невозможно вывести текстовое сообщение,
+				* приходится изменять выводимый объект.
+				*/
 			logger.error("catch error middleware [errorMessage=%j]", {
 				status: errorMessage.success,
 				errorText: errorMessage.message,
@@ -199,6 +229,54 @@ export default class Middleware {
 			return path.join(folderPath, outputFile);
 		} catch (error) {
 			throw error;
+		}
+	}
+
+	// Мидлвар для расшифровки приватного ключа
+	async decryptKey(req: Request, _: Response, next: NextFunction) {
+		try {
+			const { encrypted, tempId } = req.body;
+
+			if (!encrypted || typeof encrypted !== "string") {
+				throw new BaseError(
+					t("middleware.error.encrypted_not_found"),
+					HTTPStatuses.BadRequest,
+				);
+			}
+			if (!tempId || typeof tempId !== "string")
+
+				throw new BaseError(
+					t("middleware.error.tempId_not_found"),
+					HTTPStatuses.BadRequest,
+				);
+
+			const record = await this._redisWork.get(RedisKeys.PRIVATE_KEY, tempId) as unknown as { publicKey: string, privateKey: string };
+
+			if (!record) {
+				throw new BaseError(
+					t("middleware.error.private_key_not_found"),
+					HTTPStatuses.BadRequest,
+				);
+			}
+
+			const { privateKey } = record;
+
+			const keyObject = createPrivateKey(getPrivateKeyConfig(privateKey));
+
+			const decryptedBuffer = privateDecrypt(
+				{
+					key: keyObject,
+					padding: constants.RSA_PKCS1_OAEP_PADDING,
+					oaepHash: "sha256",
+				},
+				Buffer.from(encrypted, "base64"),
+			);
+			const decryptedJson = JSON.parse(decryptedBuffer.toString());
+			req.body = decryptedJson;
+
+			next();
+		} catch (error) {
+			next(error);
 		}
 	}
 }

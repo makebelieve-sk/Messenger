@@ -4,24 +4,26 @@ import { type IUpdatedAvatar } from "@components/ui/change-avatar";
 import type ProfilesController from "@core/controllers/ProfilesController";
 import type Request from "@core/Request";
 import type Socket from "@core/socket/Socket";
+import i18next from "@service/i18n";
 import Logger from "@service/Logger";
 import useAuthStore from "@store/auth";
 import useFriendsStore from "@store/friends";
+import useUIStore from "@store/ui";
 import useUserStore from "@store/user";
 import { type IUserData } from "@custom-types/api.types";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
-
+import { encrypt } from "@utils/index";
+import { Cookies } from "../types/enums";
 const logger = Logger.init("MainApi");
 
 // Класс, содержит все HTTP запросы, которые являются глобальными по отношению к приложению
 export default class MainApi {
 	constructor(
-		private readonly _request: Request, 
+		private readonly _request: Request,
 		private readonly _profilesController: ProfilesController,
 		private readonly _socket: Socket,
 	) {
 		logger.debug("init");
-
 		this._getMe();
 	}
 
@@ -37,30 +39,51 @@ export default class MainApi {
 	}
 
 	signIn(data: Object) {
-		this._request.post({
-			route: ApiRoutes.signIn,
-			data,
-			setLoading: (isLoading: boolean) => {
-				useAuthStore.getState().setSignInLoading(isLoading);
-			},
-			successCb: (userData: IUserData) => {
-				logger.debug(`successfully sign in: ${JSON.stringify(userData.user)}`);
-				this._initNewUser({ ...userData, isMe: true });
-			},
+		encrypt(data).then((encryptedData) => {
+			if (!encryptedData) {
+				useUIStore.getState().setError(i18next.t("sign-in.error.cypher-error"));
+				return;
+			}
+			this._request.post({
+				route: ApiRoutes.signIn,
+				data: {
+					...data,
+					encrypted: encryptedData,
+					tempId: "hash",
+				},
+				setLoading: (isLoading: boolean) => {
+					useAuthStore.getState().setSignInLoading(isLoading);
+				},
+				successCb: (userData: IUserData) => {
+					logger.debug(`successfully sign in: ${JSON.stringify(userData.user)}`);
+					this._initNewUser({ ...userData, isMe: true });
+				},
+			});
 		});
 	}
 
 	signUp(data: Object) {
-		this._request.post({
-			route: ApiRoutes.signUp,
-			data,
-			setLoading: (isLoading: boolean) => {
-				useAuthStore.getState().setSignUpLoading(isLoading);
-			},
-			successCb: (userData: IUserData) => {
-				logger.debug(`successfully sing up: ${JSON.stringify(userData.user)}`);
-				this._initNewUser({ ...userData, isMe: true });
-			},
+		encrypt(data).then((encryptedData) => {
+			if (!encryptedData) {
+				useUIStore.getState().setError(i18next.t("sign-up.error.cypher-error"));
+				return;
+			}
+			this._request.post({
+				route: ApiRoutes.signUp,
+				data: {
+					...data,
+					encrypted: encryptedData,
+					tempId: "hash",
+				},
+
+				setLoading: (isLoading: boolean) => {
+					useAuthStore.getState().setSignUpLoading(isLoading);
+				},
+				successCb: (userData: IUserData) => {
+					logger.debug(`successfully sing up: ${JSON.stringify(userData.user)}`);
+					this._initNewUser({ ...userData, isMe: true });
+				},
+			});
 		});
 	}
 
@@ -69,9 +92,9 @@ export default class MainApi {
 	}
 
 	uploadAvatarAuth(
-		route: ApiRoutes, 
-		data: Object, 
-		setLoading: (isLoading: boolean) => void, 
+		route: ApiRoutes,
+		data: Object,
+		setLoading: (isLoading: boolean) => void,
 		cb: (data: IUpdatedAvatar) => void,
 	) {
 		this._request.post({
@@ -115,13 +138,14 @@ export default class MainApi {
 				logger.info(`get info about yourself: ${JSON.stringify(userData.user)}`);
 				this._initNewUser({ ...userData, isMe: true });
 			},
+			needCookie: Cookies.PUBLIC_KEY,
 		});
 	}
 
 	/**
-	 * Обработка добавления нового пользователя в приложении.
-	 * Если это создание моего профиля - инициализируем сокет-соединение и авторизуемся.
-	 */
+		* Обработка добавления нового пользователя в приложении.
+		* Если это создание моего профиля - инициализируем сокет-соединение и авторизуемся.
+		*/
 	private _initNewUser(userData: IUserData) {
 		this._profilesController.createProfile(userData);
 

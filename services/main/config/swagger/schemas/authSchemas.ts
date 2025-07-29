@@ -1,4 +1,4 @@
- const authSchemas = {
+const authSchemas = {
 	SignUpRequest: {
 		type: "object",
 		properties: {

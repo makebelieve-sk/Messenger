@@ -185,5 +185,9 @@
 	"main.error.diagram_file_not_found": "Diagram file not found",
 	"diagram.client":"Client",
 	"diagram.server":"Server",
-	"diagram.not_found":"not found"
+	"diagram.not_found":"not found",
+
+	"middleware.error.encrypted_not_found": "No encrypted data",
+	"middleware.error.tempId_not_found": "No tempId for decription",
+	"middleware.error.private_key_not_found": "No private key in Redis"
 }

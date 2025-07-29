@@ -58,12 +58,32 @@ describe("date utils", () => {
 			const result = transformDate(date, true);
 			expect(result).toMatch(/\d{4}$/);
 		});
+	});
 
-		it("returns date without year if exactly 6 months old", () => {
-			const date = dayjs().subtract(6, "month").toISOString();
+	describe("transformDate (month diff logic)", () => {
+		beforeAll(() => {
+			jest.useFakeTimers().setSystemTime(new Date("2025-06-17T12:00:00Z").getTime());
+		});
+		afterAll(() => {
+			jest.useRealTimers();
+		});
+
+		it("returns date without year if less than 6 months ago", () => {
+			const date = dayjs("2025-03-17T12:00:00Z").toISOString(); // 3 месяца назад
 			const result = transformDate(date);
-			expect(result).toMatch(/^.+ utils\.months\..+$/);
-			expect(result).not.toMatch(/\d{4}$/);
+			expect(result).toBe("17 utils.months.march");
+		});
+
+		it("returns date with year if exactly 6 months ago", () => {
+			const date = dayjs("2024-12-17T12:00:00Z").toISOString(); // ровно 6 месяцев назад
+			const result = transformDate(date);
+			expect(result).toBe("17 utils.months.december 2024");
+		});
+
+		it("returns date with year if more than 6 months ago", () => {
+			const date = dayjs("2024-11-17T12:00:00Z").toISOString(); // 7 месяцев назад
+			const result = transformDate(date);
+			expect(result).toBe("17 utils.months.november 2024");
 		});
 	});
 

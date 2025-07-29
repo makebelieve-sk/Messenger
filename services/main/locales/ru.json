@@ -185,5 +185,9 @@
 	"main.error.diagram_file_not_found": "Файл диаграммы не найден",
 	"diagram.client":"Клиент",
 	"diagram.server":"Сервер",
-	"diagram.not_found":"не найден"
+	"diagram.not_found":"не найден",
+
+	"middleware.error.encrypted_not_found": "Нет зашифрованных данных",
+	"middleware.error.tempId_not_found": "Нет tempId для декодирования",
+	"middleware.error.private_key_not_found": "Нет приватного ключа в Redis"
 }

@@ -38,14 +38,14 @@ describe("DatabaseConfig", () => {
 			username: "test_user",
 			password: "test_password",
 			database: "test_db",
-			migrations: [
-				"D:\\dev\\study\\my-messenger\\services\\notifications\\src\\migrations\\*.ts",
-				"D:\\dev\\study\\my-messenger\\services\\notifications\\src\\migrations\\*.js",
-			],
+			migrations: expect.any(Array),
 			migrationsTableName: "migrations",
 			entities: [SentNotificationsDto, PincodeDto, UsersDto, TelegramUsersDto],
 			options: { trustServerCertificate: true },
 		});
+		expect(config.migrations).toContainEqual(
+			expect.stringMatching(/migrations[\\/]\*\.ts$/),
+		);
 	});
 
 	it("should include all required entities", () => {
@@ -61,11 +61,11 @@ describe("DatabaseConfig", () => {
 		const config = databaseConfig() as DatabaseConfig;
 
 		expect(config.migrations).toHaveLength(2);
-		expect(config.migrations[0]).toContain(
-			"D:\\dev\\study\\my-messenger\\services\\notifications\\src\\migrations\\*.ts",
+		expect(config.migrations).toContainEqual(
+			expect.stringMatching(/migrations[\\/]\*\.ts$/),
 		);
-		expect(config.migrations[1]).toContain(
-			"D:\\dev\\study\\my-messenger\\services\\notifications\\src\\migrations\\*.js",
+		expect(config.migrations).toContainEqual(
+			expect.stringMatching(/migrations[\\/]\*\.js$/),
 		);
 	});
 

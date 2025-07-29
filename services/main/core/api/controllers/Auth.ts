@@ -40,8 +40,12 @@ export default class AuthController {
 
 	// Слушатели запросов контроллера AuthController
 	private _init() {
-		this._app.post(ApiRoutes.signUp, this._isAuthenticated.bind(this), this._signUp.bind(this));
-		this._app.post(ApiRoutes.signIn, this._isAuthenticated.bind(this), this._signIn.bind(this));
+		this._app.post(ApiRoutes.signUp, this._isAuthenticated.bind(this),
+			this._middleware.decryptKey.bind(this._middleware),
+			this._signUp.bind(this));
+		this._app.post(ApiRoutes.signIn, this._isAuthenticated.bind(this),
+		 this._middleware.decryptKey.bind(this._middleware),
+			this._signIn.bind(this));
 		this._app.get(ApiRoutes.logout, this._middleware.mustAuthenticated.bind(this._middleware), this._logout.bind(this));
 	}
 
@@ -132,10 +136,10 @@ export default class AuthController {
 			const saltString = salt.toString("hex");
 
 			/**
-			 * Генерируем хеш пароля, приправленным "солью"
-			 * Важный момент! Даже зная про синхронный метод crypto.pbkdf2Sync все равно лучше оставить так,
-			 * потому что асинхронный метод никогда не заблокирует поток выполнения.
-			 */
+				* Генерируем хеш пароля, приправленным "солью"
+				* Важный момент! Даже зная про синхронный метод crypto.pbkdf2Sync все равно лучше оставить так,
+				* потому что асинхронный метод никогда не заблокирует поток выполнения.
+				*/
 			const hashString = await new Promise<string>((resolve, reject) => {
 				crypto.pbkdf2(password, saltString, 4096, 256, "sha256", (error, hash) => {
 					error ? reject(error) : resolve(hash.toString("hex"));
@@ -165,9 +169,9 @@ export default class AuthController {
 			const { user, userDetails, notificationSettings } = createdUserData;
 
 			/**
-			 * Используем обертку над асинхронным методом для того, чтобы подождать результат выполнения и
-			 * корректно обработать ошибку (работает также, как promisify из пакета node.util)
-			 */
+				* Используем обертку над асинхронным методом для того, чтобы подождать результат выполнения и
+				* корректно обработать ошибку (работает также, как promisify из пакета node.util)
+				*/
 			await new Promise((resolve, reject) => {
 				req.login(user, async (error?: PassportError) => {
 					error ? reject(error) : resolve(true);
@@ -191,7 +195,6 @@ export default class AuthController {
 
 		try {
 			const { rememberMe }: { rememberMe: boolean } = req.body;
-
 			const user = await new Promise<ISafeUser>((resolve, reject) => {
 				this._passport.authenticate("local", { session: true }, (error: PassportError | null, user: ISafeUser) => {
 					// Если ошибка, то она только PassportError, значит просто прокидываем ее во внешний catch как есть

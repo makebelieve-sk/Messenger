@@ -3,20 +3,22 @@ import { create } from "zustand";
 import { type ISignUpErrors } from "@pages/SignUp";
 
 interface IAuthState {
-    signUpErrors: ISignUpErrors | null;
-    signInErrors: boolean;
+	signUpErrors: ISignUpErrors | null;
+	signInErrors: boolean;
 	signInLoading: boolean;
 	signUpLoading: boolean;
 	chooseAvatarLoading: boolean;
+	publicKey: string | null;
 };
 
 interface IAuthActions {
-    setSignUpErrors: (signUpErrors: ISignUpErrors) => void;
-    setSignInErrors: (signInErrors: boolean) => void;
+	setSignUpErrors: (signUpErrors: ISignUpErrors) => void;
+	setSignInErrors: (signInErrors: boolean) => void;
 	setSignInLoading: (signInLoading: boolean) => void;
 	setSignUpLoading: (signUpLoading: boolean) => void;
 	setChooseAvatarLoading: (chooseAvatarLoading: boolean) => void;
-    reset: () => void;
+	setPublicKey: (publicKey: string) => void;
+	reset: () => void;
 };
 
 // Состояние стора для сброса (используется при выходе)
@@ -26,6 +28,7 @@ const resetState = {
 	signInLoading: false,
 	signUpLoading: false,
 	chooseAvatarLoading: false,
+	publicKey: null,
 };
 
 // Состояние глобальных переменных приложения
@@ -37,7 +40,11 @@ const useAuthStore = create<IAuthState & IAuthActions>(set => ({
 	setSignInLoading: signInLoading => set({ signInLoading }),
 	setSignUpLoading: signUpLoading => set({ signUpLoading }),
 	setChooseAvatarLoading: chooseAvatarLoading => set({ chooseAvatarLoading }),
-	reset: () => set({ ...resetState }),
+	setPublicKey: publicKey => set({ publicKey }),
+	reset: () => set((state) => ({
+		...resetState,
+		publicKey: state.publicKey,
+	})),
 }));
 
 export default useAuthStore;
