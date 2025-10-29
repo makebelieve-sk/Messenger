@@ -25,7 +25,7 @@ COPY app/. .
 RUN npm run build --frozen-lockfile
 
 #  Формирование финального образа на базе Nginx
-FROM nginx:alpine
+FROM nginx:1.29.3-alpine3.22
 
 # Устанавливаем рабочую директорию внутри контейнера для Nginx
 WORKDIR /root 
