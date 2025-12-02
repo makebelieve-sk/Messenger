@@ -10,8 +10,8 @@ export class Photo extends Model<InferAttributes<Photo>, CreationAttributes> {
 	declare id: CreationOptional<string>;
 	declare userId: ForeignKey<User["id"]>;
 	declare path: string;
-	declare size: number;
-	declare extension: string;
+	declare size: number | null;
+	declare extension: string | null;
 	declare createdAt: CreationOptional<string>;
 
 	getEntity(): IPhoto {
@@ -51,14 +51,16 @@ export default (sequelize: Sequelize) => {
 			},
 			size: {
 				type: DataTypes.BIGINT,
-				allowNull: false,
-				validate: { min: 1 },
+				allowNull: true,
+				validate: { 
+					min: 1, // Валидация применяется только если значение не null
+				},
 			},
 			extension: {
 				type: DataTypes.STRING(50),
-				allowNull: false,
+				allowNull: true,
 				validate: {
-					isIn: [ [ "jpg", "jpeg", "png", "gif", "bmp", "webp" ] ],
+					isIn: [ [ "jpg", "jpeg", "png", "gif", "bmp", "webp" ] ], // Валидация применяется только если значение не null
 				},
 			},
 			createdAt: {

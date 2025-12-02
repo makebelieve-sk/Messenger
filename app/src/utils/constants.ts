@@ -45,3 +45,5 @@ export const FRIENDS_DEBOUNCE_TIMEOUT = {
 	LOAD_MORE: 100,
 	SEARCH: 300,
 };
+// Временный маркер для пользователей без телефона после OAuth (должен соответствовать CHK_Users_Phone: начинаться с +[1-9])
+export const TEMP_PHONE_PLACEHOLDER = "+10000000000";

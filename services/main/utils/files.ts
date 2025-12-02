@@ -59,12 +59,78 @@ export async function createSharpedImage(file: Express.Multer.File) {
 	return { folderPath, outputFile };
 }
 
-// Получение общей информации о фотографии (путь, размер, расширение)
+/**
+ * Получает информацию о внешнем изображении (extension и size) из HTTP заголовков
+ * Используется для OAuth авторизации (GitHub, Google), когда аватар приходит как внешний URL
+ * 
+ * @param url - URL изображения (например, "https://avatars.githubusercontent.com/u/123")
+ * @returns объект с extension (из MIME type) и size (из Content-Length) или null если не удалось получить
+ */
+async function getExternalImageInfo(url: string): Promise<{ extension: string | null; size: number | null }> {
+	try {
+		// Делаем HEAD запрос для получения только заголовков (не скачиваем файл)
+		const response = await fetch(url, { 
+			method: "HEAD",
+			signal: AbortSignal.timeout(5000), // таймаут 5 секунд
+		});
+		
+		// Получаем Content-Type для определения extension
+		const contentType = response.headers.get("content-type");
+		let extension: string | null = null;
+		
+		if (contentType) {
+			const mimeToExtension: Record<string, string> = {
+				"image/jpeg": "jpeg",
+				"image/jpg": "jpg",
+				"image/png": "png",
+				"image/gif": "gif",
+				"image/bmp": "bmp",
+				"image/webp": "webp",
+			};
+			
+			const mimeType = contentType.split(";")[0].trim().toLowerCase();
+			extension = mimeToExtension[mimeType] || null;
+		}
+		
+		// Получаем размер файла из Content-Length заголовка
+		const contentLength = response.headers.get("content-length");
+		const size = contentLength ? parseInt(contentLength, 10) : null;
+		
+		logger.debug("getExternalImageInfo: URL=%s, extension=%s, size=%s", url, extension, size);
+		
+		return { extension, size };
+	} catch (error) {
+		logger.error("getExternalImageInfo: Failed to fetch info for URL %s: %s", url, (error as Error).message);
+		return { extension: null, size: null };
+	}
+}
+
+/**
+ * Получение общей информации о фотографии (путь, размер файла, расширение)
+ * Поддерживает как локальные пути, так и внешние URL (для OAuth авторизации через GitHub/Google)
+ * 
+ * @param photo - путь к локальному файлу (например, "avatars/avatar-123.jpeg") 
+ *                или внешний URL (например, "https://avatars.githubusercontent.com/u/123")
+ * @returns объект с path, size (в байтах) и extension
+ * @throws ошибку если локальный файл не существует
+ */
 export async function getPhotoInfo(photo: string) {
 	logger.debug("getPhotoInfo [photo=%s]", photo);
 
-	const photoPath = path.join(ROOT_PATH, photo);
+	// Проверка на внешний URL (для OAuth авторизации)
+	if (photo.startsWith("http://") || photo.startsWith("https://")) {
+		const { extension, size } = await getExternalImageInfo(photo);
+		
+		return {
+			path: photo,
+			size: size, // Размер файла из Content-Length заголовка или null
+			extension: extension, // Расширение из MIME type или null
+		};
+	}
 
+	// Существующая логика для локальных путей
+	const photoPath = path.join(ROOT_PATH, photo);
+	
 	if (!fs.existsSync(photoPath)) {
 		throw t("photos.error.photo_does_not_exist");
 	}

@@ -19,6 +19,21 @@
 		}
 	}
 
+	.subtitle {
+		margin-top: 8px;
+		margin-bottom: 24px;
+		text-align: center;
+		color: rgba(0, 0, 0, 0.6);
+
+		@media (max-height: 700px) {
+			margin-bottom: 16px;
+		}
+	}
+
+	.formContainer {
+		width: 100%;
+	}
+
 	.signInArea {
 		margin-bottom: 24px;
 

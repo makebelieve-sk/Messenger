@@ -19,8 +19,8 @@ export interface IPhoto {
 	id: string;
 	userId: string;
 	path: string;
-	size: number;
-	extension: string;
+	size: number | null; // null для внешних URL (OAuth)
+	extension: string | null; // null для внешних URL (OAuth)
 	createdAt: string;
 };
 

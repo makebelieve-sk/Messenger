@@ -47,10 +47,10 @@ export default function SignIn() {
 	const navigate = useNavigate();
 
 	/**
-	 * Если своего пользователя перекинуло на страницу входа (после 401 статуса), его необходимо удалить
-	 * из контроллера профилей. Такое действие необходимо, так как в CatchErrors в обработке _redirect
-	 * нет возможности удалять профиль пользователя (только через Zustand, но это костыль, так как будет использована подписка).
-	 */
+		* Если своего пользователя перекинуло на страницу входа (после 401 статуса), его необходимо удалить
+		* из контроллера профилей. Такое действие необходимо, так как в CatchErrors в обработке _redirect
+		* нет возможности удалять профиль пользователя (только через Zustand, но это костыль, так как будет использована подписка).
+		*/
 	useEffect(() => {
 		mainClient.lifeTimeExpire();
 	}, []);
@@ -81,6 +81,13 @@ export default function SignIn() {
 
 	const disableSave = () => {
 		return loading || !formValues.values.login || !formValues.values.password || Object.values(formValues.errors).some(Boolean);
+	};
+	const onGoogleLogin = () => {
+		 window.location.href = "https://localhost:8008/auth/google";
+	};
+
+	const onGithubLogin = () => {
+		 window.location.href = "https://localhost:8008/auth/github";
 	};
 
 	// Изменение поля
@@ -187,6 +194,26 @@ export default function SignIn() {
 						disabled={saveDisabled}
 					>
 						{i18next.t("sign-in.enter")}
+					</ButtonComponent>
+
+					<ButtonComponent
+						fullWidth
+						onClick= { onGoogleLogin }
+						variant="contained"
+						className={styles.loadingButton}
+						loading={loading}
+					>
+						Sign in with Google
+					</ButtonComponent>
+
+					<ButtonComponent
+						fullWidth
+						onClick= { onGithubLogin }
+						variant="contained"
+						className={styles.loadingButton}
+						loading={loading}
+					>
+						Sign in with GitHub
 					</ButtonComponent>
 
 					<GridComponent container className={styles.signInHelp__grid}>

@@ -12,6 +12,7 @@ enum ApiRoutes {
 	signUp = "/sign-up",
 	signIn = "/sign-in",
 	logout = "/logout",
+	completePhone = "/complete-phone",
 	//----userInfo-------
 	getMe = "/get-me",
 	getUser = "/get-user",

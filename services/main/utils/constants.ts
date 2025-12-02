@@ -66,3 +66,5 @@ export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";
 export const BACKUP_ENCYPTED_FILE = "backup.enc";
 export const HEARTBEAT_TIMEOUT_MS = 1000 * 60 + 1000;
 export const RABBITMQ_RECONNECTION = 5000;
+// Временный маркер для пользователей без телефона после OAuth (должен соответствовать CHK_Users_Phone: начинаться с +[1-9])
+export const TEMP_PHONE_PLACEHOLDER = "+10000000000";

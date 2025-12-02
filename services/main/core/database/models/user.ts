@@ -5,10 +5,13 @@ import { type FriendAction } from "@core/database/models/friend-action";
 import { Photo } from "@core/database/models/photo";
 import { type ISafeUser } from "@custom-types/user.types";
 
-export type CreationAttributes = InferCreationAttributes<User, { omit: "id" | "secondName" | "avatarId" | "avatarUrl" | "avatarCreateDate" | "isDeleted" }>
+// eslint-disable-next-line max-len
+export type CreationAttributes = InferCreationAttributes<User, { omit: "id" | "googleId" | "githubId" | "secondName" | "avatarId" | "avatarUrl" | "avatarCreateDate" | "isDeleted" }>
 
 export class User extends Model<InferAttributes<User, { omit: "avatarUrl" | "avatarCreateDate" }>, CreationAttributes> {
 	declare id: CreationOptional<string>;
+	declare googleId: CreationOptional<string | null>;
+	declare githubId: CreationOptional<string | null>;
 	declare firstName: string;
 	declare secondName: CreationOptional<string | null>;
 	declare thirdName: string;
@@ -54,6 +57,18 @@ export default (sequelize: Sequelize) => {
 				type: DataTypes.STRING(100),
 				allowNull: false,
 				field: "first_name",
+			},
+			googleId: {
+				type: DataTypes.STRING(255),
+				allowNull: true,
+				unique: true,
+				field: "google_id",
+			},
+			githubId: {
+				type: DataTypes.STRING(255),
+				allowNull: true,
+				unique: true,
+				field: "github_id",
 			},
 			secondName: {
 				type: DataTypes.STRING(100),

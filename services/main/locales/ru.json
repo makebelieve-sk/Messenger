@@ -189,5 +189,9 @@
 
 	"middleware.error.encrypted_not_found": "Нет зашифрованных данных",
 	"middleware.error.tempId_not_found": "Нет tempId для декодирования",
-	"middleware.error.private_key_not_found": "Нет приватного ключа в Redis"
+	"middleware.error.private_key_not_found": "Нет приватного ключа в Redis",
+
+	"oauth.google.phone_number.success": "Телефон получен из Google: {{phone}}",
+	"oauth.google.phone_number.not_found": "Телефон не найден или пользователь не предоставил доступ",
+	"oauth.google.phone_number.error": "Не удалось получить номер телефона из Google OAuth: {{error}}"
 }

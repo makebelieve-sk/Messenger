@@ -115,7 +115,7 @@ export default class Users {
 						notificationSettings: newNotificationSettings,
 					};
 				});
-		} catch (error) {
+		} catch (error) {			
 			throw new RepositoryError(t("repository.error.internal_db", { repo: "Users", method: "create" }) + (error as Error).message);
 		}
 	}

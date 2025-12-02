@@ -4,6 +4,7 @@ import PhotosCarousel from "@components/services/carousels/photos-carousel";
 import { type IPhoto } from "@custom-types/models.types";
 import { mockPhotosService } from "../../../../__mocks__/@hooks/useProfile";
 import mockImagesCarouselStore from "../../../../__mocks__/@store/images-carousel";
+import usePhotosStore from "../../../../__mocks__/@store/photos";
 
 describe("PhotosCarousel", () => {
 	const mockPhoto: IPhoto = {
@@ -21,6 +22,9 @@ describe("PhotosCarousel", () => {
 		store.photoIndex = null;
 		mockPhotosService.photos = [];
 		mockPhotosService.count = 0;
+		const photosStore = usePhotosStore.getState();
+		photosStore.photos = [];
+		photosStore.count = 0;
 	});
 
 	it("should match snapshot when no photo is selected", () => {
@@ -31,6 +35,9 @@ describe("PhotosCarousel", () => {
 	it("should match snapshot when photo is selected", async () => {
 		mockPhotosService.photos = [ mockPhoto ];
 		mockPhotosService.count = 1;
+		const photosStore = usePhotosStore.getState();
+		photosStore.photos = [ mockPhoto ];
+		photosStore.count = 1;
 
 		const store = mockImagesCarouselStore.getState();
 		store.photoIndex = 0;
@@ -48,6 +55,9 @@ describe("PhotosCarousel", () => {
 	it("should render carousel when photo is selected and exists in photos service", async () => {
 		mockPhotosService.photos = [ mockPhoto ];
 		mockPhotosService.count = 1;
+		const photosStore = usePhotosStore.getState();
+		photosStore.photos = [ mockPhoto ];
+		photosStore.count = 1;
 
 		const store = mockImagesCarouselStore.getState();
 		store.photoIndex = 0;
@@ -63,7 +73,7 @@ describe("PhotosCarousel", () => {
 	});
 
 	it("should load more photos when reaching threshold", async () => {
-		mockPhotosService.photos = [
+		const photos = [
 			mockPhoto,
 			{
 				...mockPhoto,
@@ -72,7 +82,11 @@ describe("PhotosCarousel", () => {
 				createdAt: "2024-01-02",
 			},
 		];
+		mockPhotosService.photos = photos;
 		mockPhotosService.count = 2;
+		const photosStore = usePhotosStore.getState();
+		photosStore.photos = photos;
+		photosStore.count = 2;
 
 		const store = mockImagesCarouselStore.getState();
 		store.photoIndex = 0;
@@ -91,6 +105,9 @@ describe("PhotosCarousel", () => {
 	it("should not render when selected photo is not found", async () => {
 		mockPhotosService.photos = [ mockPhoto ];
 		mockPhotosService.count = 1;
+		const photosStore = usePhotosStore.getState();
+		photosStore.photos = [ mockPhoto ];
+		photosStore.count = 1;
 
 		const store = mockImagesCarouselStore.getState();
 		store.photoIndex = 999;
@@ -102,6 +119,9 @@ describe("PhotosCarousel", () => {
 	it("should not render when photos array is empty", async () => {
 		mockPhotosService.photos = [];
 		mockPhotosService.count = 0;
+		const photosStore = usePhotosStore.getState();
+		photosStore.photos = [];
+		photosStore.count = 0;
 
 		const store = mockImagesCarouselStore.getState();
 		store.photoIndex = 0;

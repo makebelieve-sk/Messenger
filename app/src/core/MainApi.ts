@@ -11,9 +11,9 @@ import useFriendsStore from "@store/friends";
 import useUIStore from "@store/ui";
 import useUserStore from "@store/user";
 import { type IUserData } from "@custom-types/api.types";
+import { Cookies } from "@custom-types/enums";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
 import { encrypt } from "@utils/index";
-import { Cookies } from "@custom-types/enums";
 
 const logger = Logger.init("MainApi");
 
@@ -36,6 +36,12 @@ export default class MainApi {
 				logger.info(`get info about another user: ${JSON.stringify(user)}`);
 				this._initNewUser({ user, userDetails });
 			},
+		});
+	}
+
+	googleLogin() {
+		this._request.get({
+			route: "/auth/google",
 		});
 	}
 
@@ -90,6 +96,22 @@ export default class MainApi {
 
 	logout() {
 		this._request.get({ route: ApiRoutes.logout });
+	}
+
+	completePhone(phone: string) {
+		this._request.put({
+			route: ApiRoutes.completePhone,
+			data: {
+				phone,
+			},
+			successCb: (userData: { success: boolean; user: IUser; }) => {
+				logger.debug(`successfully complete phone: ${JSON.stringify(userData.user)}`);
+				// Обновляем пользователя в store
+				useUserStore.getState().setUser(userData.user);
+				// Редиректим на профиль
+				window.location.href = "/profile";
+			},
+		});
 	}
 
 	uploadAvatarAuth(

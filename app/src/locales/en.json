@@ -19,6 +19,10 @@
 
 	"sign-up.error.step_unknowed": "An error occurred when generating the content for the step {{step}}.",
 
+	"complete-phone.title": "Complete Registration",
+	"complete-phone.description": "To complete registration, please provide your phone number",
+	"complete-phone.submit": "Continue",
+
 	"images-carousel-module.you": "You",
 	"images-carousel-module.further": "Further",
 	"images-carousel-module.back": "Back",

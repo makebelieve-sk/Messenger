@@ -19,6 +19,10 @@
 
 	"sign-up.error.step_unknowed": "Возникла ошибка при генерации контента для шага {{step}}.",
 
+	"complete-phone.title": "Завершение регистрации",
+	"complete-phone.description": "Для завершения регистрации необходимо указать номер телефона",
+	"complete-phone.submit": "Продолжить",
+
 	"images-carousel-module.you": "Вы",
 	"images-carousel-module.further": "Далее",
 	"images-carousel-module.back": "Назад",

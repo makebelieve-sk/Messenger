@@ -189,5 +189,9 @@
 
 	"middleware.error.encrypted_not_found": "No encrypted data",
 	"middleware.error.tempId_not_found": "No tempId for decription",
-	"middleware.error.private_key_not_found": "No private key in Redis"
+	"middleware.error.private_key_not_found": "No private key in Redis",
+
+	"oauth.google.phone_number.success": "Phone number retrieved from Google: {{phone}}",
+	"oauth.google.phone_number.not_found": "Phone number not found or user did not grant access",
+	"oauth.google.phone_number.error": "Failed to retrieve phone number from Google OAuth: {{error}}"
 }

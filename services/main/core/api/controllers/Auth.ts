@@ -13,7 +13,7 @@ import { AuthError } from "@errors/controllers";
 import { PassportError } from "@errors/index";
 import { RedisKeys } from "@custom-types/enums";
 import { type ISafeUser } from "@custom-types/user.types";
-import { COOKIE_NAME } from "@utils/constants";
+import { COOKIE_NAME, TEMP_PHONE_PLACEHOLDER } from "@utils/constants";
 import { updateSessionMaxAge } from "@utils/session";
 
 const logger = Logger("AuthController");
@@ -40,11 +40,55 @@ export default class AuthController {
 
 	// Слушатели запросов контроллера AuthController
 	private _init() {
+		this._app.get("/auth/google",
+			(_, __, next) => {
+				next();
+			},
+			this._passport.authenticate("google", {
+				scope: [ "profile", "email", "https://www.googleapis.com/auth/user.phonenumbers.read" ],
+				accessType: "offline",
+				prompt: "consent",
+			}));
+		this._app.get("/auth/google/callback",
+			(_, __, next) => {
+				next();
+			},
+			this._passport.authenticate("google", { failureRedirect: "/sign-in" }),
+			function (req, res) {
+				// Проверяем, есть ли у пользователя валидный телефон
+				// Если телефон временный маркер - редиректим на страницу ввода телефона
+				if (req.user && req.user.phone === TEMP_PHONE_PLACEHOLDER) {
+					res.redirect("https://localhost:3000/complete-phone");
+				} else {
+					// Successful authentication, redirect home.
+					res.redirect("https://localhost:3000/profile");
+				}
+			});
+
+		this._app.get("/auth/github",
+			(_, __, next) => {
+				next();
+			},
+			this._passport.authenticate("github", { scope: [ "user:email" ] }));
+
+		this._app.get("/auth/github/callback",
+			this._passport.authenticate("github", { failureRedirect: "/sign-in" }),
+			function (req, res) {
+				// Проверяем, есть ли у пользователя валидный телефон
+				// Если телефон временный маркер - редиректим на страницу ввода телефона
+				if (req.user && req.user.phone === TEMP_PHONE_PLACEHOLDER) {
+					res.redirect("https://localhost:3000/complete-phone");
+				} else {
+					// Successful authentication, redirect home.
+					res.redirect("https://localhost:3000/profile");
+				}
+			});
+
 		this._app.post(ApiRoutes.signUp, this._isAuthenticated.bind(this),
 			this._middleware.decryptKey.bind(this._middleware),
 			this._signUp.bind(this));
 		this._app.post(ApiRoutes.signIn, this._isAuthenticated.bind(this),
-		 this._middleware.decryptKey.bind(this._middleware),
+			this._middleware.decryptKey.bind(this._middleware),
 			this._signIn.bind(this));
 		this._app.get(ApiRoutes.logout, this._middleware.mustAuthenticated.bind(this._middleware), this._logout.bind(this));
 	}

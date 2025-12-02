@@ -196,6 +196,24 @@ exports[`SignIn Page Snapshot tests matches snapshot in initial state 1`] = `
           >
             sign-in.enter
           </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id="«r3»"
+            tabindex="-1"
+            type="button"
+          >
+            Sign in with Google
+          </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id="«r4»"
+            tabindex="-1"
+            type="button"
+          >
+            Sign in with GitHub
+          </button>
           <div
             class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
           >
@@ -432,11 +450,29 @@ exports[`SignIn Page Snapshot tests matches snapshot with error state 1`] = `
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id="«r8»"
+            id="«rc»"
             tabindex="-1"
             type="submit"
           >
             sign-in.enter
+          </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id="«rd»"
+            tabindex="-1"
+            type="button"
+          >
+            Sign in with Google
+          </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id="«re»"
+            tabindex="-1"
+            type="button"
+          >
+            Sign in with GitHub
           </button>
           <div
             class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
@@ -674,11 +710,29 @@ exports[`SignIn Page Snapshot tests matches snapshot with loading state 1`] = `
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
             disabled=""
-            id="«r5»"
+            id="«r7»"
             tabindex="-1"
             type="submit"
           >
             sign-in.enter
+          </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id="«r8»"
+            tabindex="-1"
+            type="button"
+          >
+            Sign in with Google
+          </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            id="«r9»"
+            tabindex="-1"
+            type="button"
+          >
+            Sign in with GitHub
           </button>
           <div
             class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
