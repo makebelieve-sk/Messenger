@@ -1,11 +1,12 @@
-import { HTTPErrorTypes, HTTPStatuses } from "common-types";
+import { ApiRoutes, HTTPErrorTypes, HTTPStatuses } from "common-types";
 import crypto from "crypto";
 import { type Express } from "express";
 import { google } from "googleapis";
 import Passport, { type PassportStatic } from "passport";
 import { Strategy as GitHubStrategy } from "passport-github2";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Profile as GoogleProfile, Strategy as GoogleStrategy, VerifyCallback as GoogleVerifyCallback } from "passport-google-oauth20";
 import { type IVerifyOptions, Strategy } from "passport-local";
+import { VerifyCallback as OAuth2VerifyCallback } from "passport-oauth2";
 
 import type UsersController from "@core/controllers/UsersController";
 import type Database from "@core/database/Database";
@@ -13,10 +14,11 @@ import { type User } from "@core/database/models/user";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { PassportError } from "@errors/index";
-import { type ISafeUser } from "@custom-types/user.types";
+import { type GitHubProfile, type ISafeUser } from "@custom-types/user.types";
 import { validateEmail, validatePhoneNumber } from "@utils/auth";
-import { IS_DEV, TEMP_PHONE_PLACEHOLDER } from "@utils/constants";
+import { GITHUB_API_USER_EMAILS_URL, IS_DEV, TEMP_PHONE_PLACEHOLDER } from "@utils/constants";
 import { getPhoneNumber } from "@utils/get-google-phone-number";
+import { getBaseUrl } from "@utils/swagger";
 
 const logger = Logger("Passport");
 
@@ -52,9 +54,9 @@ export default class PassportWorks {
 		this._passport.use(new GoogleStrategy({
 			clientID: process.env["GOOGLE_CLIENT_ID"] as string,
 			clientSecret: process.env["GOOGLE_CLIENT_SECRET"] as string,
-			callbackURL: "https://localhost:8008/auth/google/callback",
+			callbackURL: `${getBaseUrl()}${ApiRoutes.googleCallback}`,
 		},
-		async (accessToken: string, _: string, profile: any, done: (err: any, user?: any) => void) => {
+		async (accessToken: string, _refreshToken: string, profile: GoogleProfile, done: GoogleVerifyCallback) => {
 			try {
 
 				let modelUser = await this._database.repo.users.findOneBy({ filters: { googleId: profile.id } });
@@ -72,9 +74,11 @@ export default class PassportWorks {
 						if (googlePhone) {
 							phone = googlePhone;
 						}
-					} catch (error) {
-						// Ошибка получения телефона не должна ломать авторизацию
-						// Используем временный маркер, пользователь введет телефон позже
+					} catch (error: Error | unknown) {
+						/* 
+						 * Ошибка получения телефона не должна ломать авторизацию
+						 * Используем временный маркер, пользователь введет телефон позже
+						*/
 						logger.debug("Не удалось получить телефон из Google OAuth, используется временный маркер", error);
 					}
 
@@ -101,15 +105,15 @@ export default class PassportWorks {
 						const created = await this._database.repo.users.create({ creationAttributes, avatarOptions, transaction });
 						await transaction.commit();
 
-						if (!created) throw new Error("Не удалось создать пользователя через Google OAuth");
+						if (!created) throw new Error(t("oauth.error.google_create_user"));
 						// created.user уже содержит данные с аватаром через getUserWithAvatar()
 						return done(null, created.user);
-					} catch (e) {
+					} catch (e: Error | unknown) {
 						await transaction.rollback();
 						return done(e as Error);
 					}
 				}
-			} catch (error) {
+			} catch (error: Error | unknown) {
 				return done(error as Error);
 			}
 		},
@@ -119,11 +123,11 @@ export default class PassportWorks {
 		this._passport.use(new GitHubStrategy({
 			clientID: process.env.GITHUB_CLIENT_ID,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET,
-			callbackURL: "https://localhost:8008/auth/github/callback",
+			callbackURL: `${getBaseUrl()}${ApiRoutes.githubCallback}`,
 		},
-		async (accessToken: string, _, profile: any, done: (err: any, user?: any) => void) => {
+		async (accessToken: string, _refreshToken: string, profile: GitHubProfile, done: OAuth2VerifyCallback) => {
 			try {
-				const emails = await fetch("https://api.github.com/user/emails", {
+				const emails = await fetch(GITHUB_API_USER_EMAILS_URL, {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 						"User-Agent": "Messenger",
@@ -162,16 +166,16 @@ export default class PassportWorks {
 						const created = await this._database.repo.users.create({ creationAttributes, avatarOptions, transaction });
 						await transaction.commit();
 
-						if (!created) throw new Error("Не удалось создать пользователя через GitHub OAuth");
+						if (!created) throw new Error(t("oauth.error.github_create_user"));
 						// created.user уже содержит данные с аватаром через getUserWithAvatar()
 						return done(null, created.user);
-					} catch (e) {
+					} catch (e: Error | unknown) {
 
 						await transaction.rollback();
 						return done(e as Error);
 					}
 				}
-			} catch (error) {
+			} catch (error: Error | unknown) {
 				return done(error as Error);
 			}
 		},
@@ -274,7 +278,7 @@ export default class PassportWorks {
 			}
 
 			throw new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.Unauthorized, { type: HTTPErrorTypes.SIGN_IN });
-		} catch (error) {
+		} catch (error: Error | unknown) {
 			const nextError = error instanceof PassportError ? error : new PassportError((error as Error).message);
 
 			done(nextError);
@@ -305,9 +309,9 @@ export default class PassportWorks {
 			}
 
 			throw new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.Unauthorized, { type: HTTPErrorTypes.SIGN_IN });
-		} catch (error) {
+		} catch (error: Error | unknown) {
 			const nextError = error instanceof PassportError ? error : new PassportError((error as Error).message);
-			throw nextError;
+			done(nextError);
 		}
 	}
 }

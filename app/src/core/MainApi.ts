@@ -41,7 +41,7 @@ export default class MainApi {
 
 	googleLogin() {
 		this._request.get({
-			route: "/auth/google",
+			route: ApiRoutes.googleLogin,
 		});
 	}
 
@@ -99,17 +99,19 @@ export default class MainApi {
 	}
 
 	completePhone(phone: string) {
+		const formattedPhone = this._formatPhoneToE164(phone);
+		
 		this._request.put({
 			route: ApiRoutes.completePhone,
 			data: {
-				phone,
+				phone: formattedPhone,
 			},
 			successCb: (userData: { success: boolean; user: IUser; }) => {
 				logger.debug(`successfully complete phone: ${JSON.stringify(userData.user)}`);
 				// Обновляем пользователя в store
 				useUserStore.getState().setUser(userData.user);
 				// Редиректим на профиль
-				window.location.href = "/profile";
+				window.location.href = ApiRoutes.profile;
 			},
 		});
 	}
@@ -175,5 +177,11 @@ export default class MainApi {
 		if (userData.isMe) {
 			this._socket.init(userData.user.id);
 		}
+	}
+
+	// Форматируем телефон в формат E.164
+	private _formatPhoneToE164(phone: string): string {
+		const digits = phone.replace(/\s/g, "").replace("(", "").replace(")", "");
+		return "+" + digits;
 	}
 };

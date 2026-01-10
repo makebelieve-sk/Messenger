@@ -60,9 +60,7 @@ export default class Request {
 			// Объект заголовков HTTP-запросов
 			headers: {
 				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": 
-				// API_URL
-				"*",
+				"Access-Control-Allow-Origin": "*",
 				"Access-Control-Allow-Methods": "GET,PUT,POST,DELETE",
 			},
 			// Кодировка, используемая для декодирования ответа от сервера

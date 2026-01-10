@@ -304,7 +304,7 @@ export default class UserController {
 				success: true,
 				user,
 			});
-		} catch (error) {
+		} catch (error: Error | unknown) {
 			await transaction.rollback();
 			next(error);
 		}

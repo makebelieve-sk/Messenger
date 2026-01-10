@@ -16,9 +16,9 @@ import { REQUIRED_FIELD } from "@utils/constants";
 
 import styles from "@styles/pages/sign-up.module.scss";
 
-/**
- * Лениво подгружаем компонент и его стили (так как пакет имеет большой вес)
- */
+
+// Лениво подгружаем компонент и его стили (так как пакет имеет большой вес)
+
 const PhoneInput = lazy(() => {
 	import("react-phone-input-2/lib/material.css");
 	return import("react-phone-input-2");
@@ -56,11 +56,8 @@ export default function CompletePhone() {
 			return;
 		}
 
-		// Форматируем телефон в формат E.164
-		const formattedPhone = "+" + phone.replace(/\s/g, "").replace("(", "").replace(")", "");
-		
 		setIsSubmitting(true);
-		mainClient.mainApi.completePhone(formattedPhone);
+		mainClient.mainApi.completePhone(phone);
 	};
 
 	return <BoxComponent className={styles.signUpArea}> 

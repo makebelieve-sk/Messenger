@@ -99,7 +99,7 @@ async function getExternalImageInfo(url: string): Promise<{ extension: string | 
 		logger.debug("getExternalImageInfo: URL=%s, extension=%s, size=%s", url, extension, size);
 		
 		return { extension, size };
-	} catch (error) {
+	} catch (error: Error | unknown) {
 		logger.error("getExternalImageInfo: Failed to fetch info for URL %s: %s", url, (error as Error).message);
 		return { extension: null, size: null };
 	}

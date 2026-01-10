@@ -203,7 +203,7 @@ exports[`SignIn Page Snapshot tests matches snapshot in initial state 1`] = `
             tabindex="-1"
             type="button"
           >
-            Sign in with Google
+            sign-in.sign_in_with_google
           </button>
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
@@ -212,7 +212,7 @@ exports[`SignIn Page Snapshot tests matches snapshot in initial state 1`] = `
             tabindex="-1"
             type="button"
           >
-            Sign in with GitHub
+            sign-in.sign_in_with_github
           </button>
           <div
             class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
@@ -251,7 +251,7 @@ exports[`SignIn Page Snapshot tests matches snapshot in initial state 1`] = `
           >
             ui.product_name
           </a>
-          2025
+          2026
           .
         </div>
       </div>
@@ -463,7 +463,7 @@ exports[`SignIn Page Snapshot tests matches snapshot with error state 1`] = `
             tabindex="-1"
             type="button"
           >
-            Sign in with Google
+            sign-in.sign_in_with_google
           </button>
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
@@ -472,7 +472,7 @@ exports[`SignIn Page Snapshot tests matches snapshot with error state 1`] = `
             tabindex="-1"
             type="button"
           >
-            Sign in with GitHub
+            sign-in.sign_in_with_github
           </button>
           <div
             class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
@@ -511,7 +511,7 @@ exports[`SignIn Page Snapshot tests matches snapshot with error state 1`] = `
           >
             ui.product_name
           </a>
-          2025
+          2026
           .
         </div>
       </div>
@@ -723,7 +723,7 @@ exports[`SignIn Page Snapshot tests matches snapshot with loading state 1`] = `
             tabindex="-1"
             type="button"
           >
-            Sign in with Google
+            sign-in.sign_in_with_google
           </button>
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter Mui-disabled MuiButton-root MuiButton-loading MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-loadingPositionCenter css-1k9hkw1-MuiButtonBase-root-MuiButton-root"
@@ -732,7 +732,7 @@ exports[`SignIn Page Snapshot tests matches snapshot with loading state 1`] = `
             tabindex="-1"
             type="button"
           >
-            Sign in with GitHub
+            sign-in.sign_in_with_github
           </button>
           <div
             class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 grid-item-style css-ubb9a5-MuiGrid2-root"
@@ -771,7 +771,7 @@ exports[`SignIn Page Snapshot tests matches snapshot with loading state 1`] = `
           >
             ui.product_name
           </a>
-          2025
+          2026
           .
         </div>
       </div>

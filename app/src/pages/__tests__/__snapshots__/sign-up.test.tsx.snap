@@ -497,7 +497,7 @@ exports[`SignUp Page Snapshot tests matches snapshot in initial state 1`] = `
       >
         ui.product_name
       </a>
-      2025
+      2026
       .
     </div>
   </div>
@@ -1004,7 +1004,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with email exists error 1`]
           >
             ui.product_name
           </a>
-          2025
+          2026
           .
         </div>
       </div>
@@ -1506,7 +1506,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with email exists error 1`]
         >
           ui.product_name
         </a>
-        2025
+        2026
         .
       </div>
     </div>
@@ -2062,7 +2062,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with error state 1`] = `
       >
         ui.product_name
       </a>
-      2025
+      2026
       .
     </div>
   </div>
@@ -2590,7 +2590,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with form validation errors
           >
             ui.product_name
           </a>
-          2025
+          2026
           .
         </div>
       </div>
@@ -3113,7 +3113,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with form validation errors
         >
           ui.product_name
         </a>
-        2025
+        2026
         .
       </div>
     </div>
@@ -3669,7 +3669,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with loading state 1`] = `
       >
         ui.product_name
       </a>
-      2025
+      2026
       .
     </div>
   </div>
@@ -4178,7 +4178,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with network error state 1`
           >
             ui.product_name
           </a>
-          2025
+          2026
           .
         </div>
       </div>
@@ -4682,7 +4682,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with network error state 1`
         >
           ui.product_name
         </a>
-        2025
+        2026
         .
       </div>
     </div>
@@ -5243,7 +5243,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with successful sign up sta
           >
             ui.product_name
           </a>
-          2025
+          2026
           .
         </div>
       </div>
@@ -5747,7 +5747,7 @@ exports[`SignUp Page Snapshot tests matches snapshot with successful sign up sta
         >
           ui.product_name
         </a>
-        2025
+        2026
         .
       </div>
     </div>

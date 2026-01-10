@@ -1,3 +1,5 @@
+import { getBaseUrl } from "./swagger";
+
 // Устанавливаем необязательным env переменным значения по умолчанию
 export const PORT = process.env.PORT as "8008";
 export const HOST = process.env.HOST as "localhost";
@@ -61,6 +63,7 @@ export const BACKUP_JOB_SCHEDULE = process.env.BACKUP_JOB_SCHEDULE as string;
 // Далее пошли обычные переменные, используемые в проекте
 export const IS_DEV = NODE_ENV === "development";
 export const IS_HTTPS = MESSANGER_ENV !== "production";
+export const SERVER_URL = getBaseUrl();
 export const MB_1 = 1024 * 1024;
 export const SOCKET_MIDDLEWARE_ERROR = "SOCKET_MIDDLEWARE_ERROR";
 export const BACKUP_ENCYPTED_FILE = "backup.enc";
@@ -68,3 +71,12 @@ export const HEARTBEAT_TIMEOUT_MS = 1000 * 60 + 1000;
 export const RABBITMQ_RECONNECTION = 5000;
 // Временный маркер для пользователей без телефона после OAuth (должен соответствовать CHK_Users_Phone: начинаться с +[1-9])
 export const TEMP_PHONE_PLACEHOLDER = "+10000000000";
+// URL Google аккаунтов для CORS политики
+export const GOOGLE_ACCOUNTS_URL = "https://accounts.google.com/";
+// Google OAuth scope для получения номера телефона пользователя
+export const GOOGLE_PHONE_SCOPE_URL = "https://www.googleapis.com/auth/user.phonenumbers.read";
+// URL GitHub API для получения email-ов пользователя
+export const GITHUB_API_USER_EMAILS_URL = "https://api.github.com/user/emails";
+// URL редиректов после OAuth авторизации
+export const CLIENT_COMPLETE_PHONE_URL = `${CLIENT_URL}/complete-phone`;
+export const CLIENT_PROFILE_URL = `${CLIENT_URL}/profile`;

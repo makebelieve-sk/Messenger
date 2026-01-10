@@ -26,8 +26,7 @@ export async function getPhoneNumber(google, accessToken) {
 			logger.debug(t("oauth.google.phone_number.not_found"));
 			return null;
 		}
-	} catch (err) {
-		//TODO сделать локализацию, Лёха как проверит номер удалит логи
+	} catch (err: Error | unknown) {
 		const errorMessage = err instanceof Error ? err.message : String(err);
 		logger.error(t("oauth.google.phone_number.error", { error: errorMessage }));
 		throw new PassportError(

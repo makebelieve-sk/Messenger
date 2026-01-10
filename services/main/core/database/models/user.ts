@@ -5,8 +5,9 @@ import { type FriendAction } from "@core/database/models/friend-action";
 import { Photo } from "@core/database/models/photo";
 import { type ISafeUser } from "@custom-types/user.types";
 
-// eslint-disable-next-line max-len
-export type CreationAttributes = InferCreationAttributes<User, { omit: "id" | "googleId" | "githubId" | "secondName" | "avatarId" | "avatarUrl" | "avatarCreateDate" | "isDeleted" }>
+export type CreationAttributes = InferCreationAttributes<User, {
+	 omit: "id" | "googleId" | "githubId" | "secondName" | "avatarId" | "avatarUrl"
+	  | "avatarCreateDate" | "isDeleted" | "UserWithAvatar" | "SentFriendRequestsLog" | "ReceivedFriendRequestsLog" }>;
 
 export class User extends Model<InferAttributes<User, { omit: "avatarUrl" | "avatarCreateDate" }>, CreationAttributes> {
 	declare id: CreationOptional<string>;

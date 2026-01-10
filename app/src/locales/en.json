@@ -6,6 +6,8 @@
 	"sign-in.enter": "Enter",
 	"sign-in.forgot_password": "Forgot your password?",
 	"sign-in.register": "No account? Register!",
+	"sign-in.sign_in_with_google": "Sign in with Google",
+	"sign-in.sign_in_with_github": "Sign in with GitHub",
 
 	"sign-in.error.incorrect_login_or_password": "The username or password is incorrect.",
 

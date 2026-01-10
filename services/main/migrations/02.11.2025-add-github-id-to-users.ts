@@ -1,8 +1,3 @@
-// проверить наличие таблицы и проверить наличие столбца
-// use MESSENGER
-// ALTER TABLE Users
-// ADD github_id uniqueidentifier null
-
 import fs from "fs";
 import path from "path";
 import type { Sequelize, Transaction } from "sequelize";

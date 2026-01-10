@@ -193,5 +193,8 @@
 
 	"oauth.google.phone_number.success": "Телефон получен из Google: {{phone}}",
 	"oauth.google.phone_number.not_found": "Телефон не найден или пользователь не предоставил доступ",
-	"oauth.google.phone_number.error": "Не удалось получить номер телефона из Google OAuth: {{error}}"
+	"oauth.google.phone_number.error": "Не удалось получить номер телефона из Google OAuth: {{error}}",
+
+	"oauth.error.google_create_user": "Не удалось создать пользователя через Google OAuth",
+	"oauth.error.github_create_user": "Не удалось создать пользователя через GitHub OAuth"
 }

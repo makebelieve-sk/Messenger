@@ -16,9 +16,10 @@ import useMainClient from "@hooks/useMainClient";
 import i18next from "@service/i18n";
 import useAuthStore from "@store/auth";
 import { Pages } from "@custom-types/enums";
-import { REQUIRED_FIELD } from "@utils/constants";
+import { API_URL, REQUIRED_FIELD } from "@utils/constants";
 
 import styles from "@styles/pages/sign-in.module.scss";
+import { ApiRoutes } from "common-types";
 
 const initialValues = {
 	values: {
@@ -83,11 +84,11 @@ export default function SignIn() {
 		return loading || !formValues.values.login || !formValues.values.password || Object.values(formValues.errors).some(Boolean);
 	};
 	const onGoogleLogin = () => {
-		 window.location.href = "https://localhost:8008/auth/google";
+		 window.location.href = `${API_URL}${ApiRoutes.googleLogin}`;
 	};
 
 	const onGithubLogin = () => {
-		 window.location.href = "https://localhost:8008/auth/github";
+		 window.location.href = `${API_URL}${ApiRoutes.githubLogin}`;
 	};
 
 	// Изменение поля
@@ -203,7 +204,7 @@ export default function SignIn() {
 						className={styles.loadingButton}
 						loading={loading}
 					>
-						Sign in with Google
+						{i18next.t("sign-in.sign_in_with_google")}
 					</ButtonComponent>
 
 					<ButtonComponent
@@ -213,7 +214,7 @@ export default function SignIn() {
 						className={styles.loadingButton}
 						loading={loading}
 					>
-						Sign in with GitHub
+						{i18next.t("sign-in.sign_in_with_github")}
 					</ButtonComponent>
 
 					<GridComponent container className={styles.signInHelp__grid}>

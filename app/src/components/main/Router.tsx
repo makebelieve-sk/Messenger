@@ -53,6 +53,6 @@ export default memo(function Router({ isAuth }: { isAuth: boolean; }) {
 	 	: <Routes>
 			<Route path={Pages.signIn} element={<SignIn />} />
 			<Route path={Pages.signUp} element={<SignUp />} />
-			{/* <Route path={Pages.notExists} element={<Navigate to={Pages.signIn} />} /> */}
+			<Route path={Pages.notExists} element={<Navigate to={Pages.signIn} />} />
 		</Routes>;
 });

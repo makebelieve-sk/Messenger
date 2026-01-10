@@ -6,6 +6,8 @@
 	"sign-in.enter": "Войти",
 	"sign-in.forgot_password": "Забыли пароль?",
 	"sign-in.register": "Нет аккаунта? Зарегистрируйтесь!",
+	"sign-in.sign_in_with_google": "Войти через Google",
+	"sign-in.sign_in_with_github": "Войти через GitHub",
 
 	"sign-in.error.incorrect_login_or_password": "Не верно указан логин или пароль.",
 

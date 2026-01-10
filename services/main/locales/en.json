@@ -193,5 +193,8 @@
 
 	"oauth.google.phone_number.success": "Phone number retrieved from Google: {{phone}}",
 	"oauth.google.phone_number.not_found": "Phone number not found or user did not grant access",
-	"oauth.google.phone_number.error": "Failed to retrieve phone number from Google OAuth: {{error}}"
+	"oauth.google.phone_number.error": "Failed to retrieve phone number from Google OAuth: {{error}}",
+
+	"oauth.error.google_create_user": "Failed to create user via Google OAuth",
+	"oauth.error.github_create_user": "Failed to create user via GitHub OAuth"
 }

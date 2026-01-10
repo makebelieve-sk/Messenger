@@ -13,7 +13,7 @@ import { AuthError } from "@errors/controllers";
 import { PassportError } from "@errors/index";
 import { RedisKeys } from "@custom-types/enums";
 import { type ISafeUser } from "@custom-types/user.types";
-import { COOKIE_NAME, TEMP_PHONE_PLACEHOLDER } from "@utils/constants";
+import { CLIENT_COMPLETE_PHONE_URL, CLIENT_PROFILE_URL, COOKIE_NAME, GOOGLE_PHONE_SCOPE_URL, TEMP_PHONE_PLACEHOLDER } from "@utils/constants";
 import { updateSessionMaxAge } from "@utils/session";
 
 const logger = Logger("AuthController");
@@ -45,42 +45,42 @@ export default class AuthController {
 				next();
 			},
 			this._passport.authenticate("google", {
-				scope: [ "profile", "email", "https://www.googleapis.com/auth/user.phonenumbers.read" ],
+				scope: [ "profile", "email", GOOGLE_PHONE_SCOPE_URL ],
 				accessType: "offline",
 				prompt: "consent",
 			}));
-		this._app.get("/auth/google/callback",
+		this._app.get(ApiRoutes.googleCallback,
 			(_, __, next) => {
 				next();
 			},
-			this._passport.authenticate("google", { failureRedirect: "/sign-in" }),
+			this._passport.authenticate("google", { failureRedirect: ApiRoutes.signIn }),
 			function (req, res) {
 				// Проверяем, есть ли у пользователя валидный телефон
 				// Если телефон временный маркер - редиректим на страницу ввода телефона
 				if (req.user && req.user.phone === TEMP_PHONE_PLACEHOLDER) {
-					res.redirect("https://localhost:3000/complete-phone");
+					res.redirect(CLIENT_COMPLETE_PHONE_URL);
 				} else {
 					// Successful authentication, redirect home.
-					res.redirect("https://localhost:3000/profile");
+					res.redirect(CLIENT_PROFILE_URL);
 				}
 			});
 
-		this._app.get("/auth/github",
+		this._app.get(ApiRoutes.githubLogin,
 			(_, __, next) => {
 				next();
 			},
 			this._passport.authenticate("github", { scope: [ "user:email" ] }));
 
 		this._app.get("/auth/github/callback",
-			this._passport.authenticate("github", { failureRedirect: "/sign-in" }),
+			this._passport.authenticate("github", { failureRedirect: ApiRoutes.signIn }),
 			function (req, res) {
 				// Проверяем, есть ли у пользователя валидный телефон
 				// Если телефон временный маркер - редиректим на страницу ввода телефона
 				if (req.user && req.user.phone === TEMP_PHONE_PLACEHOLDER) {
-					res.redirect("https://localhost:3000/complete-phone");
+					res.redirect(CLIENT_COMPLETE_PHONE_URL);
 				} else {
 					// Successful authentication, redirect home.
-					res.redirect("https://localhost:3000/profile");
+					res.redirect(CLIENT_PROFILE_URL);
 				}
 			});
 
