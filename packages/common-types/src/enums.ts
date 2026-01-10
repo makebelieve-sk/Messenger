@@ -12,10 +12,16 @@ enum ApiRoutes {
 	signUp = "/sign-up",
 	signIn = "/sign-in",
 	logout = "/logout",
+	completePhone = "/complete-phone",
+	googleLogin = "/auth/google",
+	githubLogin = "/auth/github",
+	googleCallback = "/auth/google/callback",
+	githubCallback = "/auth/github/callback",
 	//----userInfo-------
 	getMe = "/get-me",
 	getUser = "/get-user",
 	editInfo = "/edit-info",
+	profile = "/profile",
 	//----images---------
 	uploadAvatar = "/upload-avatar",
 	changeAvatar = "/change-avatar",

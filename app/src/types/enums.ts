@@ -21,6 +21,7 @@ export enum Pages {
 	signUp = "/sign-up",
 	signIn = "/sign-in",
 	resetPassword = "/reset-password",
+	completePhone = "/complete-phone",
 	error = "/error",
 	help = "/help",
 	aboutUs = "/about-us",

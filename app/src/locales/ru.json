@@ -6,6 +6,8 @@
 	"sign-in.enter": "Войти",
 	"sign-in.forgot_password": "Забыли пароль?",
 	"sign-in.register": "Нет аккаунта? Зарегистрируйтесь!",
+	"sign-in.sign_in_with_google": "Войти через Google",
+	"sign-in.sign_in_with_github": "Войти через GitHub",
 
 	"sign-in.error.incorrect_login_or_password": "Не верно указан логин или пароль.",
 
@@ -18,6 +20,10 @@
 	"sign-up.choose_avatar_step": "Выбор аватара",
 
 	"sign-up.error.step_unknowed": "Возникла ошибка при генерации контента для шага {{step}}.",
+
+	"complete-phone.title": "Завершение регистрации",
+	"complete-phone.description": "Для завершения регистрации необходимо указать номер телефона",
+	"complete-phone.submit": "Продолжить",
 
 	"images-carousel-module.you": "Вы",
 	"images-carousel-module.further": "Далее",

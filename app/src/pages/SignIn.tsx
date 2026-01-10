@@ -16,9 +16,10 @@ import useMainClient from "@hooks/useMainClient";
 import i18next from "@service/i18n";
 import useAuthStore from "@store/auth";
 import { Pages } from "@custom-types/enums";
-import { REQUIRED_FIELD } from "@utils/constants";
+import { API_URL, REQUIRED_FIELD } from "@utils/constants";
 
 import styles from "@styles/pages/sign-in.module.scss";
+import { ApiRoutes } from "common-types";
 
 const initialValues = {
 	values: {
@@ -47,10 +48,10 @@ export default function SignIn() {
 	const navigate = useNavigate();
 
 	/**
-	 * Если своего пользователя перекинуло на страницу входа (после 401 статуса), его необходимо удалить
-	 * из контроллера профилей. Такое действие необходимо, так как в CatchErrors в обработке _redirect
-	 * нет возможности удалять профиль пользователя (только через Zustand, но это костыль, так как будет использована подписка).
-	 */
+		* Если своего пользователя перекинуло на страницу входа (после 401 статуса), его необходимо удалить
+		* из контроллера профилей. Такое действие необходимо, так как в CatchErrors в обработке _redirect
+		* нет возможности удалять профиль пользователя (только через Zustand, но это костыль, так как будет использована подписка).
+		*/
 	useEffect(() => {
 		mainClient.lifeTimeExpire();
 	}, []);
@@ -81,6 +82,13 @@ export default function SignIn() {
 
 	const disableSave = () => {
 		return loading || !formValues.values.login || !formValues.values.password || Object.values(formValues.errors).some(Boolean);
+	};
+	const onGoogleLogin = () => {
+		 window.location.href = `${API_URL}${ApiRoutes.googleLogin}`;
+	};
+
+	const onGithubLogin = () => {
+		 window.location.href = `${API_URL}${ApiRoutes.githubLogin}`;
 	};
 
 	// Изменение поля
@@ -187,6 +195,26 @@ export default function SignIn() {
 						disabled={saveDisabled}
 					>
 						{i18next.t("sign-in.enter")}
+					</ButtonComponent>
+
+					<ButtonComponent
+						fullWidth
+						onClick= { onGoogleLogin }
+						variant="contained"
+						className={styles.loadingButton}
+						loading={loading}
+					>
+						{i18next.t("sign-in.sign_in_with_google")}
+					</ButtonComponent>
+
+					<ButtonComponent
+						fullWidth
+						onClick= { onGithubLogin }
+						variant="contained"
+						className={styles.loadingButton}
+						loading={loading}
+					>
+						{i18next.t("sign-in.sign_in_with_github")}
 					</ButtonComponent>
 
 					<GridComponent container className={styles.signInHelp__grid}>

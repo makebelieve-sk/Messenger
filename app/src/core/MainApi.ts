@@ -11,9 +11,10 @@ import useFriendsStore from "@store/friends";
 import useUIStore from "@store/ui";
 import useUserStore from "@store/user";
 import { type IUserData } from "@custom-types/api.types";
+import { Cookies } from "@custom-types/enums";
 import type { IUser, IUserDetails } from "@custom-types/models.types";
 import { encrypt } from "@utils/index";
-import { Cookies } from "../types/enums";
+
 const logger = Logger.init("MainApi");
 
 // Класс, содержит все HTTP запросы, которые являются глобальными по отношению к приложению
@@ -35,6 +36,12 @@ export default class MainApi {
 				logger.info(`get info about another user: ${JSON.stringify(user)}`);
 				this._initNewUser({ user, userDetails });
 			},
+		});
+	}
+
+	googleLogin() {
+		this._request.get({
+			route: ApiRoutes.googleLogin,
 		});
 	}
 
@@ -89,6 +96,24 @@ export default class MainApi {
 
 	logout() {
 		this._request.get({ route: ApiRoutes.logout });
+	}
+
+	completePhone(phone: string) {
+		const formattedPhone = this._formatPhoneToE164(phone);
+		
+		this._request.put({
+			route: ApiRoutes.completePhone,
+			data: {
+				phone: formattedPhone,
+			},
+			successCb: (userData: { success: boolean; user: IUser; }) => {
+				logger.debug(`successfully complete phone: ${JSON.stringify(userData.user)}`);
+				// Обновляем пользователя в store
+				useUserStore.getState().setUser(userData.user);
+				// Редиректим на профиль
+				window.location.href = ApiRoutes.profile;
+			},
+		});
 	}
 
 	uploadAvatarAuth(
@@ -152,5 +177,11 @@ export default class MainApi {
 		if (userData.isMe) {
 			this._socket.init(userData.user.id);
 		}
+	}
+
+	// Форматируем телефон в формат E.164
+	private _formatPhoneToE164(phone: string): string {
+		const digits = phone.replace(/\s/g, "").replace("(", "").replace(")", "");
+		return "+" + digits;
 	}
 };

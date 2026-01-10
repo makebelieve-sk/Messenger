@@ -87,9 +87,9 @@ export interface IReadMessages {
 export interface IPhoto {
 	id: string;
 	userId: string;
-	size: string;
+	size: string | null; // null для внешних URL (OAuth)
 	path: string;
-	extension: string;
+	extension: string | null; // null для внешних URL (OAuth)
 	createdAt: string;
 };
 

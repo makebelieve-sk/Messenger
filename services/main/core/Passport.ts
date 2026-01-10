@@ -1,8 +1,12 @@
-import { HTTPErrorTypes, HTTPStatuses } from "common-types";
+import { ApiRoutes, HTTPErrorTypes, HTTPStatuses } from "common-types";
 import crypto from "crypto";
 import { type Express } from "express";
+import { google } from "googleapis";
 import Passport, { type PassportStatic } from "passport";
+import { Strategy as GitHubStrategy } from "passport-github2";
+import { Profile as GoogleProfile, Strategy as GoogleStrategy, VerifyCallback as GoogleVerifyCallback } from "passport-google-oauth20";
 import { type IVerifyOptions, Strategy } from "passport-local";
+import { VerifyCallback as OAuth2VerifyCallback } from "passport-oauth2";
 
 import type UsersController from "@core/controllers/UsersController";
 import type Database from "@core/database/Database";
@@ -10,9 +14,11 @@ import { type User } from "@core/database/models/user";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { PassportError } from "@errors/index";
-import { type ISafeUser } from "@custom-types/user.types";
+import { type GitHubProfile, type ISafeUser } from "@custom-types/user.types";
 import { validateEmail, validatePhoneNumber } from "@utils/auth";
-import { IS_DEV } from "@utils/constants";
+import { GITHUB_API_USER_EMAILS_URL, IS_DEV, TEMP_PHONE_PLACEHOLDER } from "@utils/constants";
+import { getPhoneNumber } from "@utils/get-google-phone-number";
+import { getBaseUrl } from "@utils/swagger";
 
 const logger = Logger("Passport");
 
@@ -43,6 +49,137 @@ export default class PassportWorks {
 
 		// Локальная стратегия входа пользователя (по логину/паролю)
 		this._passport.use(new Strategy({ usernameField: "login", passwordField: "password" }, this._verify.bind(this)));
+
+		// google Oauth strategy
+		this._passport.use(new GoogleStrategy({
+			clientID: process.env["GOOGLE_CLIENT_ID"] as string,
+			clientSecret: process.env["GOOGLE_CLIENT_SECRET"] as string,
+			callbackURL: `${getBaseUrl()}${ApiRoutes.googleCallback}`,
+		},
+		async (accessToken: string, _refreshToken: string, profile: GoogleProfile, done: GoogleVerifyCallback) => {
+			try {
+
+				let modelUser = await this._database.repo.users.findOneBy({ filters: { googleId: profile.id } });
+				if (modelUser) {
+					// Получаем пользователя с аватаром для существующего пользователя
+					const userWithAvatar = await this._database.repo.users.getUserWithAvatar({ user: modelUser });
+					return done(null, userWithAvatar);
+				}
+
+				if (!modelUser) {
+					// Пытаемся получить телефон из Google, при ошибке используем временный маркер
+					let phone = TEMP_PHONE_PLACEHOLDER;
+					try {
+						const googlePhone = await getPhoneNumber(google, accessToken);
+						if (googlePhone) {
+							phone = googlePhone;
+						}
+					} catch (error: Error | unknown) {
+						/* 
+						 * Ошибка получения телефона не должна ломать авторизацию
+						 * Используем временный маркер, пользователь введет телефон позже
+						*/
+						logger.debug("Не удалось получить телефон из Google OAuth, используется временный маркер", error);
+					}
+
+					const creationAttributes = {
+						firstName: profile.name?.givenName || "NoName",
+						thirdName: profile.name?.familyName || "NoLastName",
+						email: profile.emails?.[0]?.value || "test9998@gmail.com",
+						phone: phone, // Временный маркер или телефон из Google
+						password: "",
+						salt: "",
+						googleId: profile.id,
+						isDeleted: false,
+					};
+
+					const avatarOptions = {
+						avatarUrl: profile.photos?.[0]?.value || null,
+						photoUrl: profile.photos?.[0]?.value || null,
+					};
+
+					const transaction = await this._database.repo.sequelize.transaction();
+
+					try {
+
+						const created = await this._database.repo.users.create({ creationAttributes, avatarOptions, transaction });
+						await transaction.commit();
+
+						if (!created) throw new Error(t("oauth.error.google_create_user"));
+						// created.user уже содержит данные с аватаром через getUserWithAvatar()
+						return done(null, created.user);
+					} catch (e: Error | unknown) {
+						await transaction.rollback();
+						return done(e as Error);
+					}
+				}
+			} catch (error: Error | unknown) {
+				return done(error as Error);
+			}
+		},
+		));
+
+		// github Oauth strategy
+		this._passport.use(new GitHubStrategy({
+			clientID: process.env.GITHUB_CLIENT_ID,
+			clientSecret: process.env.GITHUB_CLIENT_SECRET,
+			callbackURL: `${getBaseUrl()}${ApiRoutes.githubCallback}`,
+		},
+		async (accessToken: string, _refreshToken: string, profile: GitHubProfile, done: OAuth2VerifyCallback) => {
+			try {
+				const emails = await fetch(GITHUB_API_USER_EMAILS_URL, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+						"User-Agent": "Messenger",
+					},
+				}).then(res => res.json());
+				const primaryEmail = emails.find(email => email.primary && email.verified)?.email || null;
+
+				let modelUser = await this._database.repo.users.findOneBy({ filters: { githubId: profile.id } });
+				if (modelUser) {
+					// Получаем пользователя с аватаром для существующего пользователя
+					const userWithAvatar = await this._database.repo.users.getUserWithAvatar({ user: modelUser });
+					return done(null, userWithAvatar);
+				}
+
+				if (!modelUser) {
+					const creationAttributes = {
+						firstName: profile.displayName.split(" ")[0] || "NoName",
+						thirdName: profile.displayName.split(" ")[1] || "NoLastName",
+						email: primaryEmail || "",
+						phone: TEMP_PHONE_PLACEHOLDER, // Временный маркер - пользователь должен ввести телефон
+						password: "",
+						salt: "",
+						githubId: profile.id,
+						isDeleted: false,
+					};
+
+					const avatarOptions = {
+						avatarUrl: profile.photos?.[0]?.value || null,
+						photoUrl: profile.photos?.[0]?.value || null,
+					};
+
+					const transaction = await this._database.repo.sequelize.transaction();
+
+					try {
+
+						const created = await this._database.repo.users.create({ creationAttributes, avatarOptions, transaction });
+						await transaction.commit();
+
+						if (!created) throw new Error(t("oauth.error.github_create_user"));
+						// created.user уже содержит данные с аватаром через getUserWithAvatar()
+						return done(null, created.user);
+					} catch (e: Error | unknown) {
+
+						await transaction.rollback();
+						return done(e as Error);
+					}
+				}
+			} catch (error: Error | unknown) {
+				return done(error as Error);
+			}
+		},
+		));
 
 		// Достаем данные о пользователе из его сессии при входе
 		this._passport.serializeUser<string>((user, done: (error: PassportError | null, userId: string) => void) => {
@@ -77,15 +214,15 @@ export default class PassportWorks {
 								});
 
 								/**
-								 * Напоминание
-								 * На сервере одна общая мапа пользователей
-								 * (это список онлайн, то есть те юзеры, которые прошли авторизацию -> значит подключаются к сокету).
-								 * В запросах (express) мы не должны использовать идентификатор сокет соединения (он там попросту не нужен).
-								 * В обработчиках событий сокет соединения нам необходимо использовать идентификатор сокет соединения.
-								 * Поэтому здесь (сериализация устанавливает объект пользователя в объект запроса req.user) мы устанавливаем поле
-								 * sockets = new Map(), потому что вскоре после этого действия произойдет установка сокет соединения на клиенте с сервером
-								 * и в этот момент произойдет установка sockets на нужный (добавятся сокет-соединения конкретного пользователя).
-								 */
+									* Напоминание
+									* На сервере одна общая мапа пользователей
+									* (это список онлайн, то есть те юзеры, которые прошли авторизацию -> значит подключаются к сокету).
+									* В запросах (express) мы не должны использовать идентификатор сокет соединения (он там попросту не нужен).
+									* В обработчиках событий сокет соединения нам необходимо использовать идентификатор сокет соединения.
+									* Поэтому здесь (сериализация устанавливает объект пользователя в объект запроса req.user) мы устанавливаем поле
+									* sockets = new Map(), потому что вскоре после этого действия произойдет установка сокет соединения на клиенте с сервером
+									* и в этот момент произойдет установка sockets на нужный (добавятся сокет-соединения конкретного пользователя).
+									*/
 								this._users.add(user);
 
 								done(null, user);
@@ -141,7 +278,7 @@ export default class PassportWorks {
 			}
 
 			throw new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.Unauthorized, { type: HTTPErrorTypes.SIGN_IN });
-		} catch (error) {
+		} catch (error: Error | unknown) {
 			const nextError = error instanceof PassportError ? error : new PassportError((error as Error).message);
 
 			done(nextError);
@@ -172,9 +309,9 @@ export default class PassportWorks {
 			}
 
 			throw new PassportError(t("auth.error.incorrect_login_or_password"), HTTPStatuses.Unauthorized, { type: HTTPErrorTypes.SIGN_IN });
-		} catch (error) {
+		} catch (error: Error | unknown) {
 			const nextError = error instanceof PassportError ? error : new PassportError((error as Error).message);
-			throw nextError;
+			done(nextError);
 		}
 	}
 }

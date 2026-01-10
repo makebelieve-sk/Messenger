@@ -13,7 +13,7 @@ import { AuthError } from "@errors/controllers";
 import { PassportError } from "@errors/index";
 import { RedisKeys } from "@custom-types/enums";
 import { type ISafeUser } from "@custom-types/user.types";
-import { COOKIE_NAME } from "@utils/constants";
+import { CLIENT_COMPLETE_PHONE_URL, CLIENT_PROFILE_URL, COOKIE_NAME, GOOGLE_PHONE_SCOPE_URL, TEMP_PHONE_PLACEHOLDER } from "@utils/constants";
 import { updateSessionMaxAge } from "@utils/session";
 
 const logger = Logger("AuthController");
@@ -40,11 +40,55 @@ export default class AuthController {
 
 	// Слушатели запросов контроллера AuthController
 	private _init() {
+		this._app.get("/auth/google",
+			(_, __, next) => {
+				next();
+			},
+			this._passport.authenticate("google", {
+				scope: [ "profile", "email", GOOGLE_PHONE_SCOPE_URL ],
+				accessType: "offline",
+				prompt: "consent",
+			}));
+		this._app.get(ApiRoutes.googleCallback,
+			(_, __, next) => {
+				next();
+			},
+			this._passport.authenticate("google", { failureRedirect: ApiRoutes.signIn }),
+			function (req, res) {
+				// Проверяем, есть ли у пользователя валидный телефон
+				// Если телефон временный маркер - редиректим на страницу ввода телефона
+				if (req.user && req.user.phone === TEMP_PHONE_PLACEHOLDER) {
+					res.redirect(CLIENT_COMPLETE_PHONE_URL);
+				} else {
+					// Successful authentication, redirect home.
+					res.redirect(CLIENT_PROFILE_URL);
+				}
+			});
+
+		this._app.get(ApiRoutes.githubLogin,
+			(_, __, next) => {
+				next();
+			},
+			this._passport.authenticate("github", { scope: [ "user:email" ] }));
+
+		this._app.get("/auth/github/callback",
+			this._passport.authenticate("github", { failureRedirect: ApiRoutes.signIn }),
+			function (req, res) {
+				// Проверяем, есть ли у пользователя валидный телефон
+				// Если телефон временный маркер - редиректим на страницу ввода телефона
+				if (req.user && req.user.phone === TEMP_PHONE_PLACEHOLDER) {
+					res.redirect(CLIENT_COMPLETE_PHONE_URL);
+				} else {
+					// Successful authentication, redirect home.
+					res.redirect(CLIENT_PROFILE_URL);
+				}
+			});
+
 		this._app.post(ApiRoutes.signUp, this._isAuthenticated.bind(this),
 			this._middleware.decryptKey.bind(this._middleware),
 			this._signUp.bind(this));
 		this._app.post(ApiRoutes.signIn, this._isAuthenticated.bind(this),
-		 this._middleware.decryptKey.bind(this._middleware),
+			this._middleware.decryptKey.bind(this._middleware),
 			this._signIn.bind(this));
 		this._app.get(ApiRoutes.logout, this._middleware.mustAuthenticated.bind(this._middleware), this._logout.bind(this));
 	}

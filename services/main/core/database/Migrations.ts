@@ -3,9 +3,11 @@ import type { Error, Sequelize } from "sequelize";
 import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import SequelizeError from "@errors/sequelize";
+import addGithubIdToUsers from "@migrations/02.11.2025-add-github-id-to-users";
 import initSchema from "@migrations/04.03.2025-init-schema";
 import addIsDeletedToUsers from "@migrations/05.05.2025-add-is-deleted-to-users";
 import changeIndexesInUsers from "@migrations/07.05.2025-change-indexes-in-users";
+import addGoogleIdToUsers from "@migrations/08.08.2025-add-google-id-to-users";
 import deleteFriendActions from "@migrations/26.05.2025-delete-friend-actions";
 
 const logger = Logger("Migrations");
@@ -27,6 +29,8 @@ export default class Migrations {
 			await addIsDeletedToUsers.up(this._sequelize, transaction);
 			await changeIndexesInUsers.up(this._sequelize, transaction);
 			await deleteFriendActions.up(this._sequelize, transaction);
+			await addGoogleIdToUsers.up(this._sequelize, transaction);
+			await addGithubIdToUsers.up(this._sequelize, transaction);
 
 			await transaction.commit();
 
@@ -54,6 +58,8 @@ export default class Migrations {
 			await changeIndexesInUsers.down(this._sequelize, transaction);
 			await addIsDeletedToUsers.down(this._sequelize, transaction);
 			await deleteFriendActions.down(this._sequelize, transaction);
+			await addGoogleIdToUsers.down(this._sequelize, transaction);
+			await addGithubIdToUsers.down(this._sequelize, transaction);
 
 			await transaction.commit();
 

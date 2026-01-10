@@ -7,6 +7,7 @@ import { t } from "@service/i18n";
 import Logger from "@service/logger";
 import { UsersError } from "@errors/controllers";
 import { validateEmail, validatePhoneNumber } from "@utils/auth";
+import { TEMP_PHONE_PLACEHOLDER } from "@utils/constants";
 
 const logger = Logger("UserController");
 
@@ -38,6 +39,7 @@ export default class UserController {
 		this._app.get(ApiRoutes.getMe, this._middleware.mustAuthenticated.bind(this._middleware), this._getMe.bind(this));
 		this._app.post(ApiRoutes.getUser, this._middleware.mustAuthenticated.bind(this._middleware), this._getUser.bind(this));
 		this._app.put(ApiRoutes.editInfo, this._middleware.mustAuthenticated.bind(this._middleware), this._editInfo.bind(this));
+		this._app.put(ApiRoutes.completePhone, this._middleware.mustAuthenticated.bind(this._middleware), this._completePhone.bind(this));
 	}
 
 	// Получение данных о себе
@@ -210,6 +212,100 @@ export default class UserController {
 				userDetails: foundUserDetails.getEntity(),
 			});
 		} catch (error) {
+			next(error);
+		}
+	}
+
+	// Завершение регистрации после OAuth - обновление телефона
+	private async _completePhone(req: Request, res: Response, next: NextFunction) {
+		logger.debug("_completePhone [req.body=%j]", req.body);
+
+		const transaction = await this._database.sequelize.transaction();
+
+		try {
+			const { phone }: { phone: string } = req.body;
+			const { id: userId } = req.user;
+
+			if (!phone) {
+				throw new UsersError(
+					t("users.error.edit_incorrect_data", { fields: "phone" }),
+					HTTPStatuses.BadRequest,
+					{
+						type: HTTPErrorTypes.EDIT_INFO,
+						field: "phone",
+					},
+				);
+			}
+
+			// Валидация введенного номера телефона
+			const validationPhone = validatePhoneNumber(phone);
+
+			if (!validationPhone) {
+				throw new UsersError(
+					t("users.error.edit_incorrect_format", { fields: "phone" }),
+					HTTPStatuses.BadRequest,
+					{
+						type: HTTPErrorTypes.EDIT_INFO,
+						field: "phone",
+					},
+				);
+			}
+
+			const foundUser = await this._database.repo.users.getById({
+				userId,
+				transaction,
+			});
+
+			if (!foundUser) {
+				throw new UsersError(t("users.error.user_with_id_not_found", { id: userId }), HTTPStatuses.NotFound);
+			}
+
+			// Проверяем, что у пользователя временный телефон (только для OAuth пользователей)
+			if (foundUser.phone !== TEMP_PHONE_PLACEHOLDER) {
+				throw new UsersError(
+					t("users.error.edit_incorrect_data", { fields: "phone" }),
+					HTTPStatuses.BadRequest,
+					{
+						type: HTTPErrorTypes.EDIT_INFO,
+						field: "phone",
+					},
+				);
+			}
+
+			// Проверка на дубликат телефона
+			const checkDublicatePhone = await this._database.repo.users.findOneBy({
+				filters: { phone: validationPhone },
+				transaction,
+			});
+
+			if (checkDublicatePhone && checkDublicatePhone.id !== userId) {
+				throw new UsersError(
+					t("auth.error.user_with_phone_already_exists", { phone: validationPhone }),
+					HTTPStatuses.Conflict,
+					{
+						type: HTTPErrorTypes.EDIT_INFO,
+						field: "phone",
+					},
+				);
+			}
+
+			// Обновляем телефон пользователя
+			foundUser.phone = validationPhone;
+			await foundUser.save({ transaction });
+
+			// Получаем объект пользователя с аватаром и безопасными полями
+			const user = await this._database.repo.users.getUserWithAvatar({
+				user: foundUser,
+			});
+
+			await transaction.commit();
+
+			res.json({
+				success: true,
+				user,
+			});
+		} catch (error: Error | unknown) {
+			await transaction.rollback();
 			next(error);
 		}
 	}

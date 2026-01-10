@@ -7,7 +7,10 @@ import { Pages } from "@custom-types/enums";
 
 jest.mock("@hooks/useMainClient");
 jest.mock("@service/i18n", () => ({
-	t: (key: string) => key,
+	__esModule: true,
+	default: {
+		t: (key: string) => key,
+	},
 }));
 jest.mock("@store/auth");
 
